@@ -1,0 +1,166 @@
+{
+  "records": [
+    {
+      "spec_id": "SPEC-001",
+      "checkpoint_introduced": "I01",
+      "commitment_id": "trial-access-until-trial-end",
+      "title": "Trial starts and grants access until trialEnd",
+      "intent": "Starting a trial records trial timing and grants trial-plan access until the exclusive trial end instant.",
+      "given": "an account with no active subscription and a trial-start event with startedAt and trialEnd timestamps",
+      "when": "the event is applied and access is checked before, at, and after trialEnd",
+      "then": "trial status is active and trial features are accessible before trialEnd; access is disabled at and after trialEnd unless a later rule grants access",
+      "scenario": [
+        "A trial-start event creates trial status, preserves the trial window, and grants trial entitlements.",
+        "Trial access expires by time rather than by a separate manual event."
+      ],
+      "active_checkpoints": ["I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "trial-access-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-002",
+      "checkpoint_introduced": "I02",
+      "commitment_id": "payment-activates-paid-period",
+      "title": "Successful payment activates paid subscription period",
+      "intent": "A successful payment moves the account to paid status, records invoice history, and extends currentPeriodEnd without losing prior trial history.",
+      "given": "an account in trial or inactive status and a successful payment event with amount, plan, paidAt, and currentPeriodEnd",
+      "when": "the payment event is applied",
+      "then": "billing status is paid active, paid-plan features are accessible through currentPeriodEnd, invoice summary includes the charge, and prior trial history remains inspectable",
+      "scenario": [
+        "Paid activation replaces trial access with paid entitlements.",
+        "The payment event contributes exactly one invoice charge."
+      ],
+      "active_checkpoints": ["I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "payment-activation-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-003",
+      "checkpoint_introduced": "I03",
+      "commitment_id": "cancel-at-period-end-preserves-access",
+      "title": "Cancel at period end preserves access until period end",
+      "intent": "Canceling at period end marks the subscription as pending cancellation while preserving current paid access until the already-paid period ends.",
+      "given": "an active paid subscription and a cancel-at-period-end event",
+      "when": "access and billing status are checked before and after currentPeriodEnd",
+      "then": "paid access remains available before currentPeriodEnd, status shows canceling, and access is disabled after currentPeriodEnd unless a later valid event grants access",
+      "scenario": [
+        "Cancel-at-period-end is not an immediate cancellation.",
+        "The end of the paid period disables access without resurrecting trial status."
+      ],
+      "active_checkpoints": ["I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "cancel-at-period-end-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-004",
+      "checkpoint_introduced": "I04",
+      "commitment_id": "payment-failure-grace-period",
+      "title": "Payment failure enters grace period",
+      "intent": "A payment failure puts the account into grace while preserving access only until the grace deadline.",
+      "given": "an active paid subscription and a payment-failed event with failedAt and graceEndsAt",
+      "when": "billing status and feature access are checked during and after grace",
+      "then": "status is past_due during grace, access survives until graceEndsAt, and access is disabled after graceEndsAt unless a retry succeeds before the deadline",
+      "scenario": [
+        "Grace period access is time bounded.",
+        "Grace does not remove prior invoice or period history."
+      ],
+      "active_checkpoints": ["I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "payment-failure-grace-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-005",
+      "checkpoint_introduced": "I05",
+      "commitment_id": "retry-success-during-grace-restores-active",
+      "title": "Retry success during grace restores active paid status",
+      "intent": "A successful retry during grace clears the past-due state, keeps period history coherent, and restores paid access without creating a new trial.",
+      "given": "an account in grace after a payment failure and a retry-success event before graceEndsAt",
+      "when": "the retry succeeds and billing status, access, and invoices are inspected",
+      "then": "status returns to paid active, paid access remains available through the paid period, invoice summary records the retry charge once, and failure history remains recorded",
+      "scenario": [
+        "Retry success repairs grace without losing accumulated event history.",
+        "Retry success after grace is not covered by this checkpoint unless a later rule grants access."
+      ],
+      "active_checkpoints": ["I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "retry-success-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-006",
+      "checkpoint_introduced": "I06",
+      "commitment_id": "duplicate-events-are-idempotent",
+      "title": "Duplicate event IDs are idempotent",
+      "intent": "Applying the same event ID more than once must not double-charge, double-extend access, duplicate history side effects, or change the final state after the first application.",
+      "given": "any supported lifecycle event with a stable event ID",
+      "when": "the same event is applied more than once",
+      "then": "state, entitlement windows, billing status, and invoice summary match the result of applying the event exactly once",
+      "scenario": [
+        "Duplicate successful payments do not double-charge or extend currentPeriodEnd twice.",
+        "Duplicate cancellation, failure, retry, suspension, downgrade, refund, and chargeback events are no-ops after the first application."
+      ],
+      "active_checkpoints": ["I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "duplicate-events-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-007",
+      "checkpoint_introduced": "I07",
+      "commitment_id": "fraud-suspension-overrides-all-access",
+      "title": "Fraud suspension overrides all access",
+      "intent": "Fraud suspension is a global access override that blocks trial, paid, grace, cancellation, grants, and downgrade entitlements without deleting prior billing history.",
+      "given": "an account in any prior lifecycle state and a fraud-suspension event",
+      "when": "feature access and billing status are checked after suspension",
+      "then": "all feature access is denied, status is suspended or restricted, and prior trial, period, invoice, cancellation, grace, and downgrade history remains recorded but not access-granting",
+      "scenario": [
+        "Suspension overrides otherwise valid paid or trial access.",
+        "Suspension does not erase accumulated billing history."
+      ],
+      "active_checkpoints": ["I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "fraud-suspension-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-008",
+      "checkpoint_introduced": "I08",
+      "commitment_id": "downgrade-takes-effect-next-period",
+      "title": "Plan downgrade takes effect next period",
+      "intent": "A downgrade request schedules the next plan while preserving current-period entitlements until the current period ends.",
+      "given": "an active paid subscription on a higher plan and a downgrade-scheduled event with nextPlan and effectiveAt",
+      "when": "access is checked before and after the effective period boundary",
+      "then": "old-plan features remain available before currentPeriodEnd, nextPlan is visible as scheduled, and only next-plan entitlements remain after the boundary unless an override blocks access",
+      "scenario": [
+        "Downgrade scheduling is not immediate feature removal.",
+        "Fraud suspension still overrides both old and next plan entitlements."
+      ],
+      "active_checkpoints": ["I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "downgrade-next-period-visible-check"
+      }
+    },
+    {
+      "spec_id": "SPEC-009",
+      "checkpoint_introduced": "I09",
+      "commitment_id": "refund-chargeback-restricts-without-resurrection",
+      "title": "Refund or chargeback creates restricted status",
+      "intent": "A refund or chargeback records reversal history and restricts access without resurrecting canceled, expired, suspended, or downgraded entitlements.",
+      "given": "an account with prior payments, cancellation, suspension, grace, or downgrade history and a refund or chargeback event",
+      "when": "the reversal event is applied and access, billing status, and invoice summary are inspected",
+      "then": "status is restricted or refunded, reversed invoice amounts are represented once, access is denied unless a later valid paid event grants it, and canceled or expired access is not resurrected",
+      "scenario": [
+        "Refunds and chargebacks are billing reversals plus access restrictions.",
+        "A reversal cannot bring back access that cancellation, expiration, grace timeout, suspension, or downgrade already removed."
+      ],
+      "active_checkpoints": ["I09"],
+      "feedback_binding": {
+        "asset_id": "refund-chargeback-visible-check"
+      }
+    }
+  ]
+}

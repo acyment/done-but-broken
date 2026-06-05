@@ -1,0 +1,9 @@
+{
+  "task_id": "sample-cart",
+  "checkpoints": ["I01", "I02", "I03"],
+  "template_workspace": "template-workspace",
+  "canonical_spec": "canonical-spec.json",
+  "feedback_assets": "feedback-assets/manifest.json",
+  "hidden_oracle_path": "hidden-oracle",
+  "public_api_contract": "export function renderCart(items: CartItem[], discounts: Discount[]): string"
+}

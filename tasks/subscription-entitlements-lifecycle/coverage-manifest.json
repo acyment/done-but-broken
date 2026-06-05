@@ -1,0 +1,188 @@
+{
+  "schema_version": "visible-hidden-coverage-v0",
+  "task_id": "subscription-entitlements-lifecycle",
+  "task_version": "subscription-entitlements-lifecycle-v0",
+  "entries": [
+    {
+      "spec_id": "SPEC-001",
+      "commitment_id": "trial-access-until-trial-end",
+      "checkpoint_introduced": "I01",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "trial-access-visible-check",
+        "relative_path": "spec/trial-access.spec.ts",
+        "notes": "Visible feedback should check trial window access without using private boundary cases."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/trial-access-private.txt"],
+        "check_ids": [
+          "trial-access-before-end-private",
+          "trial-access-at-end-private",
+          "trial-access-after-end-private"
+        ],
+        "notes": "Private checks should vary exact timestamps and feature names implied by the visible spec."
+      }
+    },
+    {
+      "spec_id": "SPEC-002",
+      "commitment_id": "payment-activates-paid-period",
+      "checkpoint_introduced": "I02",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "payment-activation-visible-check",
+        "relative_path": "spec/payment-activation.spec.ts",
+        "notes": "Visible feedback should check paid activation, access through currentPeriodEnd, and invoice charge presence."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/payment-activation-private.txt"],
+        "check_ids": [
+          "payment-activates-paid-status-private",
+          "payment-records-single-invoice-private",
+          "payment-preserves-trial-history-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-003",
+      "commitment_id": "cancel-at-period-end-preserves-access",
+      "checkpoint_introduced": "I03",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "cancel-at-period-end-visible-check",
+        "relative_path": "spec/cancel-at-period-end.spec.ts",
+        "notes": "Visible feedback should distinguish pending cancellation from immediate cancellation."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/cancel-at-period-end-private.txt"],
+        "check_ids": [
+          "cancel-preserves-access-before-period-end-private",
+          "cancel-disables-access-after-period-end-private",
+          "cancel-does-not-resurrect-trial-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-004",
+      "commitment_id": "payment-failure-grace-period",
+      "checkpoint_introduced": "I04",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "payment-failure-grace-visible-check",
+        "relative_path": "spec/payment-failure-grace.spec.ts",
+        "notes": "Visible feedback should check access during grace and denial after grace."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/payment-failure-grace-private.txt"],
+        "check_ids": [
+          "grace-survives-before-deadline-private",
+          "grace-expires-at-deadline-private",
+          "grace-preserves-invoice-history-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-005",
+      "commitment_id": "retry-success-during-grace-restores-active",
+      "checkpoint_introduced": "I05",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "retry-success-visible-check",
+        "relative_path": "spec/retry-success.spec.ts",
+        "notes": "Visible feedback should check repair from grace back to active paid status."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/retry-success-private.txt"],
+        "check_ids": [
+          "retry-clears-past-due-private",
+          "retry-records-one-charge-private",
+          "retry-preserves-failure-history-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-006",
+      "commitment_id": "duplicate-events-are-idempotent",
+      "checkpoint_introduced": "I06",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "duplicate-events-visible-check",
+        "relative_path": "spec/duplicate-events.spec.ts",
+        "notes": "Visible feedback should cover duplicate payment and duplicate cancellation behavior."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/duplicate-events-private.txt"],
+        "check_ids": [
+          "duplicate-payment-does-not-double-charge-private",
+          "duplicate-payment-does-not-double-extend-private",
+          "duplicate-lifecycle-events-are-noops-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-007",
+      "commitment_id": "fraud-suspension-overrides-all-access",
+      "checkpoint_introduced": "I07",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "fraud-suspension-visible-check",
+        "relative_path": "spec/fraud-suspension.spec.ts",
+        "notes": "Visible feedback should check suspension override for trial, paid, grace, and canceling states."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/fraud-suspension-private.txt"],
+        "check_ids": [
+          "suspension-overrides-paid-private",
+          "suspension-overrides-grace-private",
+          "suspension-preserves-history-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-008",
+      "commitment_id": "downgrade-takes-effect-next-period",
+      "checkpoint_introduced": "I08",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "downgrade-next-period-visible-check",
+        "relative_path": "spec/downgrade-next-period.spec.ts",
+        "notes": "Visible feedback should check old-plan access before the boundary and next-plan access after it."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/downgrade-next-period-private.txt"],
+        "check_ids": [
+          "downgrade-preserves-old-entitlements-before-boundary-private",
+          "downgrade-applies-next-plan-after-boundary-private",
+          "downgrade-remains-blocked-by-suspension-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-009",
+      "commitment_id": "refund-chargeback-restricts-without-resurrection",
+      "checkpoint_introduced": "I09",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "refund-chargeback-visible-check",
+        "relative_path": "spec/refund-chargeback.spec.ts",
+        "notes": "Visible feedback should check reversal history and no resurrection of canceled or expired access."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/refund-chargeback-private.txt"],
+        "check_ids": [
+          "refund-restricts-access-private",
+          "chargeback-restricts-access-private",
+          "reversal-does-not-resurrect-canceled-access-private"
+        ]
+      }
+    }
+  ]
+}

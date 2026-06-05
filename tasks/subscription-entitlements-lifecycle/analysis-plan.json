@@ -1,0 +1,69 @@
+{
+  "schema_version": "analysis-plan-v0",
+  "status": "sealed",
+  "task_id": "subscription-entitlements-lifecycle",
+  "task_version": "subscription-entitlements-lifecycle-v0",
+  "conditions": ["context_only_spec", "feedback_capable_spec"],
+  "run_classifications": ["difficulty_probe", "causal_pilot"],
+  "primary_metric": "final_checkpoint_pass_rate_delta",
+  "secondary_metrics": [
+    "regression_count_delta",
+    "regression_free_success_by_checkpoint",
+    "regression_free_auc"
+  ],
+  "planned_metrics": [],
+  "budget": {
+    "max_model_turns": 2,
+    "max_feedback_runs": 1
+  },
+  "model_provider": {
+    "provider": "openrouter",
+    "model": "deepseek/deepseek-v4-flash",
+    "adapter_id": "openrouter-loop"
+  },
+  "exclusion_rules": [
+    "exclude diagnostic_invalid runs from all aggregate summaries",
+    "exclude provider/network validity-flagged runs from primary causal estimates",
+    "exclude one-turn or no-feedback-path runs from causal feedback-use evidence",
+    "do not pool across compatibility profile changes"
+  ],
+  "pooling_rules": {
+    "compatibility_fields": [
+      "task_id",
+      "task_version",
+      "protocol_version",
+      "renderer_version",
+      "task_seal_hash",
+      "checkpoint_list_hash",
+      "visible_spec_hash",
+      "feedback_asset_hash",
+      "hidden_oracle_hash",
+      "budget_hash",
+      "model_provider_hash",
+      "provider_execution_profile_hash",
+      "metric_definition_hash"
+    ],
+    "reject_validity_flags": true,
+    "reject_unclassified_runs": true
+  },
+  "promotion_gates": [
+    "local_acceptance_criteria_all_pass",
+    "visible_feedback_assets_implemented_and_gated",
+    "hidden_oracle_reference_candidate_passes",
+    "no_provider_fake_pilot_validates",
+    "analysis_plan_sealed_before_provider_run"
+  ],
+  "frozen_inputs": [
+    "task_version",
+    "checkpoint_list",
+    "visible_specs",
+    "feedback_assets",
+    "hidden_oracle",
+    "budget",
+    "model_provider",
+    "exclusion_rules",
+    "primary_metric",
+    "secondary_metrics",
+    "pooling_rules"
+  ]
+}

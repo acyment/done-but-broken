@@ -1,0 +1,61 @@
+{
+  "schema_version": "fake-agent-validation-plan-v0",
+  "task_id": "subscription-entitlements-lifecycle",
+  "task_version": "subscription-entitlements-lifecycle-v0",
+  "scenarios": [
+    {
+      "scenario_id": "trial-window-reference",
+      "checkpoint_id": "I01",
+      "purpose": "Validate a scripted reference candidate can satisfy trial access before, at, and after trialEnd.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "payment-activation-history-reference",
+      "checkpoint_id": "I02",
+      "purpose": "Validate paid activation, currentPeriodEnd access, invoice summary, and retained trial history.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "cancel-at-period-end-reference",
+      "checkpoint_id": "I03",
+      "purpose": "Validate cancel-at-period-end preserves paid access before the boundary and disables it after the boundary.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "payment-failure-grace-reference",
+      "checkpoint_id": "I04",
+      "purpose": "Validate payment failure moves to grace, keeps access during grace, and denies access after grace.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "retry-success-during-grace-reference",
+      "checkpoint_id": "I05",
+      "purpose": "Validate retry success restores active paid status without losing failure or period history.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "duplicate-events-idempotency-reference",
+      "checkpoint_id": "I06",
+      "purpose": "Validate duplicate event IDs do not duplicate charges, period extensions, or lifecycle side effects.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "fraud-suspension-override-reference",
+      "checkpoint_id": "I07",
+      "purpose": "Validate fraud suspension overrides all prior access-granting states while preserving history.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "downgrade-next-period-reference",
+      "checkpoint_id": "I08",
+      "purpose": "Validate scheduled downgrade preserves old entitlements until the period boundary and applies next-plan entitlements after it.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "happy-path-through-downgrade-and-reversal",
+      "checkpoint_id": "I09",
+      "purpose": "Exercise all cumulative lifecycle commitments through refund or chargeback without provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    }
+  ]
+}

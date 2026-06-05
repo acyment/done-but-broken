@@ -1,0 +1,145 @@
+{
+  "schema_version": "result-schema-v1",
+  "run_id": "sample-cart-failing-fixture",
+  "task_id": "sample-cart",
+  "checkpoints": ["I01", "I02", "I03"],
+  "primary_metric": {
+    "name": "final_checkpoint_pass_rate",
+    "checkpoint_id": "I03",
+    "by_condition": {
+      "context_only_spec": {
+        "final_checkpoint_passed": 2,
+        "final_checkpoint_total": 3,
+        "pass_rate": 0.6666666666666666,
+        "regression_count": 0
+      },
+      "feedback_capable_spec": {
+        "final_checkpoint_passed": 3,
+        "final_checkpoint_total": 3,
+        "pass_rate": 1,
+        "regression_count": 0
+      }
+    },
+    "delta_feedback_minus_context": 0.33333333333333337
+  },
+  "condition_summaries": {
+    "context_only_spec": {
+      "final_checkpoint_passed": 2,
+      "final_checkpoint_total": 3,
+      "pass_rate": 0.6666666666666666,
+      "regression_count": 0
+    },
+    "feedback_capable_spec": {
+      "final_checkpoint_passed": 3,
+      "final_checkpoint_total": 3,
+      "pass_rate": 1,
+      "regression_count": 0
+    }
+  },
+  "regression_free_auc": {
+    "name": "regression_free_auc",
+    "by_condition": {
+      "context_only_spec": 0.6666666666666666,
+      "feedback_capable_spec": 1
+    },
+    "delta_feedback_minus_context": 0.33333333333333337
+  },
+  "evaluations": [
+    {
+      "condition_id": "context_only_spec",
+      "checkpoint_id": "I01",
+      "checks": [
+        {
+          "check_id": "sample-cart:I01:cart-total-visible",
+          "commitment_id": "cart-total-visible",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "condition_id": "context_only_spec",
+      "checkpoint_id": "I02",
+      "checks": [
+        {
+          "check_id": "sample-cart:I02:cart-total-visible",
+          "commitment_id": "cart-total-visible",
+          "passed": true
+        },
+        {
+          "check_id": "sample-cart:I02:discount-does-not-hide-total",
+          "commitment_id": "discount-does-not-hide-total",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "condition_id": "context_only_spec",
+      "checkpoint_id": "I03",
+      "checks": [
+        {
+          "check_id": "sample-cart:I03:cart-total-visible",
+          "commitment_id": "cart-total-visible",
+          "passed": true
+        },
+        {
+          "check_id": "sample-cart:I03:discount-does-not-hide-total",
+          "commitment_id": "discount-does-not-hide-total",
+          "passed": true
+        },
+        {
+          "check_id": "sample-cart:I03:item-names-remain-visible",
+          "commitment_id": "item-names-remain-visible",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "condition_id": "feedback_capable_spec",
+      "checkpoint_id": "I01",
+      "checks": [
+        {
+          "check_id": "sample-cart:I01:cart-total-visible",
+          "commitment_id": "cart-total-visible",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "condition_id": "feedback_capable_spec",
+      "checkpoint_id": "I02",
+      "checks": [
+        {
+          "check_id": "sample-cart:I02:cart-total-visible",
+          "commitment_id": "cart-total-visible",
+          "passed": true
+        },
+        {
+          "check_id": "sample-cart:I02:discount-does-not-hide-total",
+          "commitment_id": "discount-does-not-hide-total",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "condition_id": "feedback_capable_spec",
+      "checkpoint_id": "I03",
+      "checks": [
+        {
+          "check_id": "sample-cart:I03:cart-total-visible",
+          "commitment_id": "cart-total-visible",
+          "passed": true
+        },
+        {
+          "check_id": "sample-cart:I03:discount-does-not-hide-total",
+          "commitment_id": "discount-does-not-hide-total",
+          "passed": true
+        },
+        {
+          "check_id": "sample-cart:I03:item-names-remain-visible",
+          "commitment_id": "item-names-remain-visible",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

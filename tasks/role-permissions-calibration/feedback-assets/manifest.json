@@ -1,0 +1,44 @@
+[
+  {
+    "asset_id": "owner-edit-check",
+    "checkpoint_introduced": "I01",
+    "relative_path": "spec/owner-edit.spec.ts",
+    "source_path": "owner-edit.source.ts"
+  },
+  {
+    "asset_id": "org-admin-edit-check",
+    "checkpoint_introduced": "I02",
+    "relative_path": "spec/org-admin-edit.spec.ts",
+    "source_path": "org-admin-edit.source.ts"
+  },
+  {
+    "asset_id": "viewer-read-only-check",
+    "checkpoint_introduced": "I03",
+    "relative_path": "spec/viewer-read-only.spec.ts",
+    "source_path": "viewer-read-only.source.ts"
+  },
+  {
+    "asset_id": "suspended-users-blocked-check",
+    "checkpoint_introduced": "I04",
+    "relative_path": "spec/suspended-blocked.spec.ts",
+    "source_path": "suspended-blocked.source.ts"
+  },
+  {
+    "asset_id": "explicit-deny-overrides-check",
+    "checkpoint_introduced": "I05",
+    "relative_path": "spec/explicit-deny.spec.ts",
+    "source_path": "explicit-deny.source.ts"
+  },
+  {
+    "asset_id": "cross-org-access-forbidden-check",
+    "checkpoint_introduced": "I06",
+    "relative_path": "spec/cross-org-forbidden.spec.ts",
+    "source_path": "cross-org-forbidden.source.ts"
+  },
+  {
+    "asset_id": "temporary-project-grants-check",
+    "checkpoint_introduced": "I07",
+    "relative_path": "spec/temporary-project-grants.spec.ts",
+    "source_path": "temporary-project-grants.source.ts"
+  }
+]

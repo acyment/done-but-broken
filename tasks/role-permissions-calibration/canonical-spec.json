@@ -1,0 +1,141 @@
+{
+  "records": [
+    {
+      "spec_id": "SPEC-001",
+      "checkpoint_introduced": "I01",
+      "commitment_id": "owner-edit",
+      "title": "Project owners can edit same-org projects",
+      "intent": "A project owner may edit their own project, and non-owners are denied edit access by default.",
+      "given": "a non-suspended user and a project in the user's organization",
+      "when": "the user owns the project and requests edit access",
+      "then": "access is allowed; a non-owner without a role is denied edit access",
+      "scenario": [
+        "Same-org ownership is sufficient for edit access.",
+        "A same-org user without ownership or a role cannot edit."
+      ],
+      "active_checkpoints": ["I01", "I02", "I03", "I04", "I05", "I06", "I07"],
+      "feedback_binding": {
+        "asset_id": "owner-edit-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/owner-edit-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-002",
+      "checkpoint_introduced": "I02",
+      "commitment_id": "org-admin-edit",
+      "title": "Organization admins can edit same-org projects",
+      "intent": "A user with an org-level admin role may edit any project in that same organization without removing owner edit behavior.",
+      "given": "a non-suspended user with an admin role for the project organization",
+      "when": "the admin requests edit access to a project in that organization",
+      "then": "access is allowed; owner edit behavior remains allowed",
+      "scenario": [
+        "Org admin edit applies only to projects in the admin's organization.",
+        "Owner edit from the previous checkpoint remains valid."
+      ],
+      "active_checkpoints": ["I02", "I03", "I04", "I05", "I06", "I07"],
+      "feedback_binding": {
+        "asset_id": "org-admin-edit-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/org-admin-edit-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-003",
+      "checkpoint_introduced": "I03",
+      "commitment_id": "viewer-read-only",
+      "title": "Viewers can read but cannot edit",
+      "intent": "A viewer role grants read access but never edit access, and prior owner/admin edit behavior remains intact.",
+      "given": "a non-suspended user with a viewer role for the project or organization",
+      "when": "the viewer requests read or edit access",
+      "then": "read access is allowed and edit access is denied",
+      "scenario": [
+        "Project viewer and org viewer roles are read-only.",
+        "Viewer logic must not weaken owner or admin edit rules."
+      ],
+      "active_checkpoints": ["I03", "I04", "I05", "I06", "I07"],
+      "feedback_binding": {
+        "asset_id": "viewer-read-only-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/viewer-read-only-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-004",
+      "checkpoint_introduced": "I04",
+      "commitment_id": "suspended-users-blocked",
+      "title": "Suspended users are denied all access",
+      "intent": "Suspension denies read and edit access and overrides owner, admin, and viewer permissions.",
+      "given": "a user with suspended set to true",
+      "when": "the suspended user requests read or edit access",
+      "then": "access is denied regardless of ownership or roles",
+      "scenario": [
+        "Suspension blocks both read and edit.",
+        "Non-suspended users keep prior owner, admin, and viewer behavior."
+      ],
+      "active_checkpoints": ["I04", "I05", "I06", "I07"],
+      "feedback_binding": {
+        "asset_id": "suspended-users-blocked-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/suspended-users-blocked-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-005",
+      "checkpoint_introduced": "I05",
+      "commitment_id": "explicit-deny-overrides",
+      "title": "Explicit deny overrides role permissions",
+      "intent": "A policy deny for a user, action, and project or organization denies access before allow rules are considered.",
+      "given": "a policy with an explicit deny matching the user, action, and project or organization",
+      "when": "the user otherwise has owner, admin, or viewer permission",
+      "then": "access is denied; prior behavior remains unchanged when no deny matches",
+      "scenario": [
+        "A project-level deny overrides owner/admin/viewer allow rules.",
+        "An org-level deny overrides same-org role permissions.",
+        "Non-matching denies do not affect prior behavior."
+      ],
+      "active_checkpoints": ["I05", "I06", "I07"],
+      "feedback_binding": {
+        "asset_id": "explicit-deny-overrides-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/explicit-deny-overrides-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-006",
+      "checkpoint_introduced": "I06",
+      "commitment_id": "cross-org-access-forbidden",
+      "title": "Cross-org access is forbidden",
+      "intent": "Cross-org access is denied by default, even for admins and owners, unless a future explicit rule grants it.",
+      "given": "a user whose home organization differs from the project organization",
+      "when": "the user requests read or edit access",
+      "then": "access is denied; same-org owner, admin, and viewer behavior remains valid",
+      "scenario": [
+        "Admin roles apply only in the user's own organization.",
+        "Ownership does not bypass the cross-org boundary in this calibration task.",
+        "The cross-org restriction must not break same-org owner/admin/viewer behavior."
+      ],
+      "active_checkpoints": ["I06", "I07"],
+      "feedback_binding": {
+        "asset_id": "cross-org-access-forbidden-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/cross-org-access-forbidden-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-007",
+      "checkpoint_introduced": "I07",
+      "commitment_id": "temporary-project-grants",
+      "title": "Temporary project grants allow action-specific access",
+      "intent": "A valid temporary project-scoped grant may allow a matching read or edit request without weakening suspension, cross-org denial, explicit deny precedence, or prior owner/admin/viewer behavior.",
+      "given": "a same-org non-suspended user, a project, and a policy with ISO timestamp strings in now and temporaryGrants[].expiresAt",
+      "when": "a temporary grant matches the user, project, requested action, and expires after policy.now",
+      "then": "access for that action is allowed unless suspension, cross-org denial, or explicit deny applies first; expired grants deny; read grants do not allow edit and edit grants do not imply read",
+      "scenario": [
+        "Valid temporary read grants allow read for the matching same-org project.",
+        "Expired grants do not allow access.",
+        "Explicit deny, suspension, and cross-org denial override temporary grants.",
+        "Temporary grants are action-specific and preserve prior owner, admin, and viewer behavior."
+      ],
+      "active_checkpoints": ["I07"],
+      "feedback_binding": {
+        "asset_id": "temporary-project-grants-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/temporary-project-grants-private.txt"]
+    }
+  ]
+}

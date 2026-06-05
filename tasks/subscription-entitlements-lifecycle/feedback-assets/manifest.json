@@ -1,0 +1,56 @@
+[
+  {
+    "asset_id": "trial-access-visible-check",
+    "checkpoint_introduced": "I01",
+    "relative_path": "spec/trial-access.spec.ts",
+    "source_path": "trial-access.source.ts"
+  },
+  {
+    "asset_id": "payment-activation-visible-check",
+    "checkpoint_introduced": "I02",
+    "relative_path": "spec/payment-activation.spec.ts",
+    "source_path": "payment-activation.source.ts"
+  },
+  {
+    "asset_id": "cancel-at-period-end-visible-check",
+    "checkpoint_introduced": "I03",
+    "relative_path": "spec/cancel-at-period-end.spec.ts",
+    "source_path": "cancel-at-period-end.source.ts"
+  },
+  {
+    "asset_id": "payment-failure-grace-visible-check",
+    "checkpoint_introduced": "I04",
+    "relative_path": "spec/payment-failure-grace.spec.ts",
+    "source_path": "payment-failure-grace.source.ts"
+  },
+  {
+    "asset_id": "retry-success-visible-check",
+    "checkpoint_introduced": "I05",
+    "relative_path": "spec/retry-success.spec.ts",
+    "source_path": "retry-success.source.ts"
+  },
+  {
+    "asset_id": "duplicate-events-visible-check",
+    "checkpoint_introduced": "I06",
+    "relative_path": "spec/duplicate-events.spec.ts",
+    "source_path": "duplicate-events.source.ts"
+  },
+  {
+    "asset_id": "fraud-suspension-visible-check",
+    "checkpoint_introduced": "I07",
+    "relative_path": "spec/fraud-suspension.spec.ts",
+    "source_path": "fraud-suspension.source.ts"
+  },
+  {
+    "asset_id": "downgrade-next-period-visible-check",
+    "checkpoint_introduced": "I08",
+    "relative_path": "spec/downgrade-next-period.spec.ts",
+    "source_path": "downgrade-next-period.source.ts"
+  },
+  {
+    "asset_id": "refund-chargeback-visible-check",
+    "checkpoint_introduced": "I09",
+    "relative_path": "spec/refund-chargeback.spec.ts",
+    "source_path": "refund-chargeback.source.ts"
+  }
+]
