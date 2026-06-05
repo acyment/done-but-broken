@@ -1,0 +1,24 @@
+{
+  "protocol_version": "two-arm-feedback-spec-v0",
+  "renderer_version": "semantic-spec-renderer-v0",
+  "condition_id": "feedback_capable_spec",
+  "checkpoint_id": "I05",
+  "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I05",
+  "workspace_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/workspace",
+  "prompt_packet_hash": "b2fef16f5b341bd4ea1f3ee1949d9220f5618f51d2c52b087b9a1ca0f218f715",
+  "agent_result_hash": "1f95239b1d255bfaed86f7367d401c23c4d414c8a58af7887afd9d6c6e3904e9",
+  "expected_feedback_asset_hashes": {
+    "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+    "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848",
+    "spec/viewer-read-only.spec.ts": "cf1e04d804b780b6df226198ef03cd54415ecf5b0058be9836968a54cc8fdfe1",
+    "spec/suspended-blocked.spec.ts": "3eb9be17b4a13805150db78e9864ff0553954d5e72a92d80d0ca6be8ed3e099b",
+    "spec/explicit-deny.spec.ts": "76a8624dbbb252187da24826164f448b17d60034cd05607f4548532652377406"
+  },
+  "hidden_oracle_result_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I05/hidden-oracle-result.json",
+  "hidden_oracle_result_hash": "8823b68b281174af787b0b33afd80ea649b0ae8d54713b7fe2075762e103962d",
+  "snapshot_before_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I05/workspace-before.json",
+  "snapshot_after_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I05/workspace-after.json",
+  "snapshot_before_hash": "cb194ad2be640b49b4766a158024392276970fe9725670e3b630cd240602244e",
+  "snapshot_after_hash": "1e16e1c4ebfe2c0cd0e2b725dc469618d00dbc691c2fe16f3c0e472f959be16d",
+  "agent_status": "ok"
+}

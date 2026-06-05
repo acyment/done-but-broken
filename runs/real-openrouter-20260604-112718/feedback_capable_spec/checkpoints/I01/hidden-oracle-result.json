@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "checks": [
+    {
+      "check_id": "sample-cart:I01:cart-total-visible",
+      "commitment_id": "cart-total-visible",
+      "passed": true,
+      "details": "src/cart.ts renders a Total label."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "protocol_version": "two-arm-feedback-spec-v0",
+  "renderer_version": "semantic-spec-renderer-v0",
+  "condition_id": "feedback_capable_spec",
+  "checkpoint_id": "I02",
+  "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I02",
+  "workspace_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/workspace",
+  "prompt_packet_hash": "0ebae8faa8af1e5f9a6b37ff010411ef16fd27e83eea4b879927b3e55bf2652b",
+  "agent_result_hash": "03e416cb50e324e7fba44f0fcb9cc39c56a0781459d14e42dc4a5df884e43eba",
+  "expected_feedback_asset_hashes": {
+    "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+    "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848"
+  },
+  "hidden_oracle_result_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I02/hidden-oracle-result.json",
+  "hidden_oracle_result_hash": "43f4ae258e122641abaa146ae33b1faea19f7dd611833622f88a2c043310a4b2",
+  "snapshot_before_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I02/workspace-before.json",
+  "snapshot_after_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I02/workspace-after.json",
+  "snapshot_before_hash": "b6229768cbbf593ff9fbbfbdf450b8445b383f27c7724611cc0a884fc4be1f49",
+  "snapshot_after_hash": "0a9d3336c5e049a51e8197175444b8430e868a6be70f68a392eae6c8092cfeb0",
+  "agent_status": "ok"
+}

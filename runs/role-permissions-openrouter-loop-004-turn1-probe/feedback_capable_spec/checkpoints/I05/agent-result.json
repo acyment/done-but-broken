@@ -1,0 +1,18 @@
+{
+  "status": "failed",
+  "adapter_id": "openrouter-loop:deepseek/deepseek-v4-flash",
+  "notes": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+  "transcript": [
+    {
+      "event": "model_loop_error",
+      "detail": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()"
+    }
+  ],
+  "model_turns": 1,
+  "feedback_runs": 0,
+  "feedback_available": true,
+  "feedback_command": "bun run spec",
+  "feedback_summaries": [],
+  "final_file_writes": [],
+  "feedback_assets_modified": false
+}

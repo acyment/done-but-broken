@@ -1,0 +1,196 @@
+{
+  "protocol_version": "two-arm-feedback-spec-v0",
+  "renderer_version": "semantic-spec-renderer-v0",
+  "run_id": "role-permissions-openrouter-loop-001",
+  "task_id": "role-permissions-calibration",
+  "conditions": [
+    "context_only_spec",
+    "feedback_capable_spec"
+  ],
+  "checkpoints": [
+    "I01",
+    "I02",
+    "I03",
+    "I04",
+    "I05",
+    "I06"
+  ],
+  "task_package_path": "/Users/acyment/dev/hit-sdd-bench/tasks/role-permissions-calibration",
+  "task_package_hash": "f7e7a0a7759a295ba5af053ce5fdd86412cfc8f1c19b734b27f4f2e87c7fcf3e",
+  "canonical_spec_hash": "741149b49abb2321a6cecf34fed65c56ab8802330c241453dc373acb24615cd6",
+  "result_record_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/result.json",
+  "result_record_hash": "ce8b24a834ec99598885a0c6e80b822a71c2acf598c16ace2942bdd456686a77",
+  "result_summary_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/summary.md",
+  "result_summary_hash": "f658d7a6ac1a0e87118d11168b9fef8091218bad3706e5e5f97f0d08b440bb5f",
+  "condition_results": {
+    "context_only_spec": {
+      "workspace_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/workspace",
+      "checkpoints": [
+        {
+          "checkpoint_id": "I01",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/checkpoints/I01",
+          "prompt_packet_hash": "64e30a904e8f5926c5b0bd1a46d1e252fa9ea968be96f25d9c23c8bc6c3da407",
+          "agent_result_hash": "dbb7b878dd8a718a4099181c08333e6fe93a36e9c5cf712d9aabc3077dc8f7a2",
+          "expected_feedback_asset_hashes": {},
+          "hidden_oracle_result_hash": "eaf46280b3fffe02844e0aedcd11a43fcfd6c664f4bb2e464f103340378bcd9a",
+          "snapshot_before_hash": "025940e638ba7425ccbf61de023eff5c4d23654410d7e57953b9af4a056fee95",
+          "snapshot_after_hash": "5732ddc070ba93aad642e778f73d7be38bd6eae9d6399ff9e075837822525c48",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I02",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/checkpoints/I02",
+          "prompt_packet_hash": "755e8f2ebc33cdc0c01aaa3f7ef5666e3e23cfb75e02500ab983c6924a4857ed",
+          "agent_result_hash": "57cedf413a6d29a32866b0302ebc3b47bd68775faf250a6dec10017e3542c7a6",
+          "expected_feedback_asset_hashes": {},
+          "hidden_oracle_result_hash": "43f4ae258e122641abaa146ae33b1faea19f7dd611833622f88a2c043310a4b2",
+          "snapshot_before_hash": "5732ddc070ba93aad642e778f73d7be38bd6eae9d6399ff9e075837822525c48",
+          "snapshot_after_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I03",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/checkpoints/I03",
+          "prompt_packet_hash": "b03d0007116b860287744c248e7dde2942b08211693a33cde70fe47f2a3630b0",
+          "agent_result_hash": "8084634ccec9c434ed48662f78666de128a3ab438230a6f09a650863c0255dac",
+          "expected_feedback_asset_hashes": {},
+          "hidden_oracle_result_hash": "a45ffa09268c8c73984c1a4e7db584c6a0d2c3c88185261b80df89edb0c0e696",
+          "snapshot_before_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "snapshot_after_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I04",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/checkpoints/I04",
+          "prompt_packet_hash": "a68f5b1c8d7d791406c8e793a2406cd44ef2a48e158dcb7897e19d7b14e9650f",
+          "agent_result_hash": "d9ffca2518766d235c06b653376ae6ca552348afe48b9969256ee754b29c7ba6",
+          "expected_feedback_asset_hashes": {},
+          "hidden_oracle_result_hash": "f07647de91cc9f98e7682c46e0236fe296f8b5f4e69e3bc1290fd2d521660d72",
+          "snapshot_before_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "snapshot_after_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I05",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/checkpoints/I05",
+          "prompt_packet_hash": "8063927cb529a03f5421ef742765f1e58acb31f9ab599abb3469d6636dca2fcd",
+          "agent_result_hash": "f7efbbc967dee6984d0417d7aec4cccecb9399afac248e3fdac26621863380c6",
+          "expected_feedback_asset_hashes": {},
+          "hidden_oracle_result_hash": "8823b68b281174af787b0b33afd80ea649b0ae8d54713b7fe2075762e103962d",
+          "snapshot_before_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "snapshot_after_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I06",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/context_only_spec/checkpoints/I06",
+          "prompt_packet_hash": "53b6433739d2b363769c501b265d82ff1f1fdf7c3716cd6c438f8ecad5de320d",
+          "agent_result_hash": "1d2199f5dbe5a4b1e23a38c21495cbd05013ba43a6d3d31b3ad276f26d578d3f",
+          "expected_feedback_asset_hashes": {},
+          "hidden_oracle_result_hash": "d928ad7df6da445428e4d022c5c9758055121fb03f5b49469f11c8d6b6e9b1c9",
+          "snapshot_before_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "snapshot_after_hash": "3b2bd78db4828b2ce512795fa94c618163e729e0580d37022da682e6dc5a957a",
+          "agent_status": "ok"
+        }
+      ]
+    },
+    "feedback_capable_spec": {
+      "workspace_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/workspace",
+      "checkpoints": [
+        {
+          "checkpoint_id": "I01",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/checkpoints/I01",
+          "prompt_packet_hash": "89350e2c7996558b507a26aa3cf10095f5e1c3b7a97b68a83b9217e1e5a80c4e",
+          "agent_result_hash": "ab91876aa2911cbb2568604f86a34a3a7d902a13e07c2c4b02bca4d082da2969",
+          "expected_feedback_asset_hashes": {
+            "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109"
+          },
+          "hidden_oracle_result_hash": "eaf46280b3fffe02844e0aedcd11a43fcfd6c664f4bb2e464f103340378bcd9a",
+          "snapshot_before_hash": "025940e638ba7425ccbf61de023eff5c4d23654410d7e57953b9af4a056fee95",
+          "snapshot_after_hash": "77acf9f3a8a3dbccf1380a866c9c2b65d6e6dd0d381d003a73190f3c84fd3ad9",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I02",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/checkpoints/I02",
+          "prompt_packet_hash": "d235a98aa0c3dfe71b0c769bf133ebe996c99a4f1863ba7031f8af3d545ac03a",
+          "agent_result_hash": "473b1c62d17e386fbb08614bb8d543acc99e7a926166fedafb364e38b4f5a029",
+          "expected_feedback_asset_hashes": {
+            "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+            "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848"
+          },
+          "hidden_oracle_result_hash": "43f4ae258e122641abaa146ae33b1faea19f7dd611833622f88a2c043310a4b2",
+          "snapshot_before_hash": "77acf9f3a8a3dbccf1380a866c9c2b65d6e6dd0d381d003a73190f3c84fd3ad9",
+          "snapshot_after_hash": "58c22404c3d2281e4ffbf7103233e9f8997864339c1d3ce8dd5cf7f1ebc838ff",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I03",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/checkpoints/I03",
+          "prompt_packet_hash": "e490fc537c99d29720101507df19d66204864e0e5fe75b7485ffc395d21d7d1b",
+          "agent_result_hash": "8b717b8d89b4bd254a291754c4e440f603aef4da5e34ed932add3f52fa8fc821",
+          "expected_feedback_asset_hashes": {
+            "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+            "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848",
+            "spec/viewer-read-only.spec.ts": "64dced795ec4b6850ee8c672d49d2b6d1660b6c901bb326bc1225df2baa4cf68"
+          },
+          "hidden_oracle_result_hash": "dfa5a148256bf0440f34a5746b44b8596dfa7b63f5454bbb7e1722bb61d7b9a3",
+          "snapshot_before_hash": "58c22404c3d2281e4ffbf7103233e9f8997864339c1d3ce8dd5cf7f1ebc838ff",
+          "snapshot_after_hash": "86bb9a9893e420ed5f46b269643376487e632b5a0f1470b62cf3d063c86893ea",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I04",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/checkpoints/I04",
+          "prompt_packet_hash": "ad67c43fb5680108a370c9135d46ad7df47f5d444b2165611576820fbf49c94a",
+          "agent_result_hash": "c59d92f0cc82d0bd5ff2d5ce1acf8df92d114892fa4d8aeeb2fbf84272664eef",
+          "expected_feedback_asset_hashes": {
+            "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+            "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848",
+            "spec/viewer-read-only.spec.ts": "64dced795ec4b6850ee8c672d49d2b6d1660b6c901bb326bc1225df2baa4cf68",
+            "spec/suspended-blocked.spec.ts": "3eb9be17b4a13805150db78e9864ff0553954d5e72a92d80d0ca6be8ed3e099b"
+          },
+          "hidden_oracle_result_hash": "43a709fe2a617f5d9c398417d2f7dc0be1d0916ecc336f3446e3259b39f73070",
+          "snapshot_before_hash": "86bb9a9893e420ed5f46b269643376487e632b5a0f1470b62cf3d063c86893ea",
+          "snapshot_after_hash": "c0bc1b80ae12cc01314595c09b5ba71b1dbdbd64afcb4fc2f3d2889307a3201d",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I05",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/checkpoints/I05",
+          "prompt_packet_hash": "b27cd4f550d0123d2a5fccf2fc26dbb17e45616c4323faa60bc2b76fc108c02a",
+          "agent_result_hash": "aa1de098c6e677d5b3a4db1780c6a8c41a1e93ff58552db5228fa114176d1a3d",
+          "expected_feedback_asset_hashes": {
+            "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+            "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848",
+            "spec/viewer-read-only.spec.ts": "64dced795ec4b6850ee8c672d49d2b6d1660b6c901bb326bc1225df2baa4cf68",
+            "spec/suspended-blocked.spec.ts": "3eb9be17b4a13805150db78e9864ff0553954d5e72a92d80d0ca6be8ed3e099b",
+            "spec/explicit-deny.spec.ts": "76a8624dbbb252187da24826164f448b17d60034cd05607f4548532652377406"
+          },
+          "hidden_oracle_result_hash": "8823b68b281174af787b0b33afd80ea649b0ae8d54713b7fe2075762e103962d",
+          "snapshot_before_hash": "c0bc1b80ae12cc01314595c09b5ba71b1dbdbd64afcb4fc2f3d2889307a3201d",
+          "snapshot_after_hash": "565a66754d6f336a7f464619b7ae64e86dc71e691ae4b1e824c8fbbaf0688d57",
+          "agent_status": "ok"
+        },
+        {
+          "checkpoint_id": "I06",
+          "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-001/feedback_capable_spec/checkpoints/I06",
+          "prompt_packet_hash": "f92f5ae1382b0be201bc3f231325e2600c6dc0c7f358f2c0df592221aa6486a1",
+          "agent_result_hash": "0d012cb5f70aead782d8dd8e1aff486c44b84700b0c0bc52d4ed4a25c21205e6",
+          "expected_feedback_asset_hashes": {
+            "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+            "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848",
+            "spec/viewer-read-only.spec.ts": "64dced795ec4b6850ee8c672d49d2b6d1660b6c901bb326bc1225df2baa4cf68",
+            "spec/suspended-blocked.spec.ts": "3eb9be17b4a13805150db78e9864ff0553954d5e72a92d80d0ca6be8ed3e099b",
+            "spec/explicit-deny.spec.ts": "76a8624dbbb252187da24826164f448b17d60034cd05607f4548532652377406",
+            "spec/cross-org-forbidden.spec.ts": "35ce25854758274194ece42cf03d41071dd5b3553c92f761e2a34155de7f2178"
+          },
+          "hidden_oracle_result_hash": "d928ad7df6da445428e4d022c5c9758055121fb03f5b49469f11c8d6b6e9b1c9",
+          "snapshot_before_hash": "565a66754d6f336a7f464619b7ae64e86dc71e691ae4b1e824c8fbbaf0688d57",
+          "snapshot_after_hash": "24db73f51236515d08d07c598a7c11d48f7ca38bdc039e291c233f08acd82442",
+          "agent_status": "ok"
+        }
+      ]
+    }
+  }
+}

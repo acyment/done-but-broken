@@ -1,0 +1,10 @@
+{
+  "condition_id": "context_only_spec",
+  "task_id": "sample-cart",
+  "checkpoint_id": "I02",
+  "visible_spec_text": "# Semantic spec for sample-cart at I02\n\n## SPEC-001: Cart total remains visible\nCommitment: cart-total-visible\nIntent: Users can always see the current cart total after adding an item.\nGiven: a cart with one existing item\nWhen: the user adds another item\nThen: the displayed cart total reflects both items\n\n## SPEC-002: Discounts do not hide totals\nCommitment: discount-does-not-hide-total\nIntent: A discount message must not replace the cart total.\nGiven: a cart with an active discount\nWhen: the cart is rendered\nThen: the discount and cart total are both visible\n",
+  "prompt_text": "Task: sample-cart\nCheckpoint: I02\nCondition: context_only_spec\n\nPublic API contract:\nexport function renderCart(items: CartItem[], discounts: Discount[]): string\n\n# Semantic spec for sample-cart at I02\n\n## SPEC-001: Cart total remains visible\nCommitment: cart-total-visible\nIntent: Users can always see the current cart total after adding an item.\nGiven: a cart with one existing item\nWhen: the user adds another item\nThen: the displayed cart total reflects both items\n\n## SPEC-002: Discounts do not hide totals\nCommitment: discount-does-not-hide-total\nIntent: A discount message must not replace the cart total.\nGiven: a cart with an active discount\nWhen: the cart is rendered\nThen: the discount and cart total are both visible\n\nUse the semantic spec as durable context. No executable feedback assets are provided.\n",
+  "executable_feedback_paths": [],
+  "feedback_assets": [],
+  "public_api_contract": "export function renderCart(items: CartItem[], discounts: Discount[]): string"
+}

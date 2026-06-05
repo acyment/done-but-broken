@@ -1,0 +1,17 @@
+{
+  "status": "ok",
+  "checks": [
+    {
+      "check_id": "sample-cart:I02:cart-total-visible",
+      "commitment_id": "cart-total-visible",
+      "passed": true,
+      "details": "src/cart.ts renders a Total label."
+    },
+    {
+      "check_id": "sample-cart:I02:discount-does-not-hide-total",
+      "commitment_id": "discount-does-not-hide-total",
+      "passed": true,
+      "details": "src/cart.ts renders both Total and Discounts labels."
+    }
+  ]
+}

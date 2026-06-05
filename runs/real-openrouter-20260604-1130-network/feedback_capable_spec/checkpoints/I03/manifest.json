@@ -1,0 +1,22 @@
+{
+  "protocol_version": "two-arm-feedback-spec-v0",
+  "renderer_version": "semantic-spec-renderer-v0",
+  "condition_id": "feedback_capable_spec",
+  "checkpoint_id": "I03",
+  "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/real-openrouter-20260604-1130-network/feedback_capable_spec/checkpoints/I03",
+  "workspace_path": "/Users/acyment/dev/hit-sdd-bench/runs/real-openrouter-20260604-1130-network/feedback_capable_spec/workspace",
+  "prompt_packet_hash": "390be91d809b4263b42ed49a0a060f4ab4d8d27775c39875ef207d5ac09ec29a",
+  "agent_result_hash": "0b99ea46717775a9930f58bded2a0cfee4914b68119993b769502ccc2f047dac",
+  "expected_feedback_asset_hashes": {
+    "spec/cart-total-visible.spec.ts": "b5d4004cce8040ae5d5ee2e01df1acc1555103e57b41a636d6332621f4cabc7e",
+    "spec/discount-total.spec.ts": "b208a8d2ac5a41c76ad0d98feda750eaf7bfa9a93ae95a2b8f4f0b717bb43a34",
+    "spec/item-names-visible.spec.ts": "d35089d65ecacab9194d1af9c5942e79d4513a96d4c47eac665fd83de6f84cc8"
+  },
+  "hidden_oracle_result_path": "/Users/acyment/dev/hit-sdd-bench/runs/real-openrouter-20260604-1130-network/feedback_capable_spec/checkpoints/I03/hidden-oracle-result.json",
+  "hidden_oracle_result_hash": "0d6e7c8fcf6bbcf4bfde2bf26a1983aca9387577c2ec3b2fdf93b3f0b5b271dd",
+  "snapshot_before_path": "/Users/acyment/dev/hit-sdd-bench/runs/real-openrouter-20260604-1130-network/feedback_capable_spec/checkpoints/I03/workspace-before.json",
+  "snapshot_after_path": "/Users/acyment/dev/hit-sdd-bench/runs/real-openrouter-20260604-1130-network/feedback_capable_spec/checkpoints/I03/workspace-after.json",
+  "snapshot_before_hash": "bc33444b0d87f7afc8938537382c93fabd07fd836f25f256e0392a423c20bdb4",
+  "snapshot_after_hash": "6812522d11389033aef202ab66ac17e5a63f80769e880859ace0d09d6c93908d",
+  "agent_status": "ok"
+}

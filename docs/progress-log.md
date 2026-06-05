@@ -1,0 +1,115 @@
+# Progress Log
+
+This log records completed protocol decisions for quick review.
+
+## 2026-06-01
+
+- Established the two-condition protocol with exactly `context_only_spec` and `feedback_capable_spec`.
+- Added neutral canonical semantic specs and renderer tests proving visible spec text is equal across conditions.
+- Added feedback gating so executable feedback assets are available only to `feedback_capable_spec`.
+- Added the `sample-cart` task package with checkpoints `I01`, `I02`, and `I03`.
+- Added continuing workspaces per condition and per-checkpoint workspace snapshots.
+- Added hidden oracle isolation and the `sample-cart` hidden oracle.
+- Added `result-schema-v0` with final-checkpoint pass rate and regression count.
+- Added `run.json`, checkpoint manifests, replay validation, artifact tamper detection, and task package hash checks.
+- Added `pilot:fake` and `inspect:run` CLIs for fake-pilot execution and inspection.
+- Added `summary.md`, result-summary validation, a fake-pilot readiness checklist, and operator documentation.
+- Added duplicate task-package ID validation for specs, commitments, and feedback assets.
+- Added duplicate oracle `check_id` validation within a checkpoint evaluation.
+- Added `inspect:run` non-zero reporting for invalid and malformed run manifests.
+- Added explicit `--help` output for both fake-pilot CLIs.
+- Added deep `run.json` checkpoint-entry validation before replay and artifact verification.
+- Added result metadata checks so `result.json` `run_id`, `task_id`, and checkpoints must match `run.json`.
+- Added duplicate task checkpoint validation and optional feedback-binding checkpoint validation.
+- Added a compact malformed-inspection output fixture.
+- Added result check field-shape validation for `check_id`, `commitment_id`, and `passed`.
+- Added agent-result status drift detection against checkpoint manifest `agent_status`.
+- Added duplicate per-condition checkpoint entry validation in `run.json`.
+- Added a compact result metadata drift fixture distinct from hash tampering.
+- Added evaluation field-shape validation for `condition_id`, `checkpoint_id`, and `checks`.
+- Added agent-result schema validation for status, adapter IDs, and transcript entries.
+- Added workspace snapshot record hash checks against checkpoint manifest snapshot hashes.
+- Added a compact agent-result status drift fixture distinct from hash tampering.
+- Added checkpoint manifest agent status and snapshot path declarations.
+- Added hidden-oracle check field validation during artifact verification.
+- Added clean schema-error reporting for invalid checkpoint manifests before dependent artifact reads.
+- Added a compact workspace snapshot drift fixture.
+- Added hidden-oracle result metadata validation for status and notes fields.
+- Added checkpoint manifest hidden-oracle result path declarations when hidden oracle hashes are present.
+- Added run manifest validation requiring result and summary declarations to be present together.
+- Added a compact invalid checkpoint manifest schema-error fixture.
+- Added run manifest validation for result and summary path/hash field shapes when declarations are present.
+- Added hidden-oracle result validation requiring non-empty checks arrays.
+- Added hidden-oracle status consistency validation so any failing check requires failed status.
+- Added a compact one-sided result/summary declaration fixture.
+- Added replay validation that checkpoint manifest hashes match the corresponding `run.json` checkpoint entry.
+- Added agent-result notes field validation.
+- Added hidden-oracle check details field validation.
+- Added a compact hidden-oracle failed-status mismatch fixture.
+- Added replay validation that checkpoint manifest `agent_status` matches the corresponding `run.json` checkpoint entry.
+- Added checkpoint manifest hidden-oracle path/hash declaration symmetry.
+- Added run artifact verification that uses declared hidden-oracle result paths.
+- Added a compact replay checkpoint hash drift fixture.
+- Added checkpoint manifest validation that declared snapshot paths stay under the checkpoint artifact directory.
+- Added checkpoint manifest validation that hidden-oracle result paths stay under the checkpoint artifact directory.
+- Added run artifact verification that uses declared workspace snapshot paths.
+- Added a compact replay agent-status drift fixture.
+- Added run manifest validation that each condition checkpoint sequence matches the top-level checkpoint sequence.
+- Added checkpoint manifest validation that declared snapshot before/after paths are distinct.
+- Added a compact checkpoint manifest path-containment schema-error fixture.
+- Added a run artifact verification fixture for missing declared hidden-oracle result paths.
+- Added a direct OpenRouter agent adapter using `deepseek/deepseek-v4-flash` as the default model.
+- Added mocked OpenRouter adapter tests for chat-completions requests, workspace file writes, path-containment rejection, and API failure recording.
+- Hardened the OpenRouter adapter so model-returned writes to executable feedback assets fail before any workspace writes are applied.
+- Added `pilot:run` as a neutral CLI alias plus `--agent openrouter`, `--openrouter-model`, and `--openrouter-endpoint`.
+- Decided to use direct OpenRouter before an opencode CLI bridge so the first real adapter stays inside the existing provenance and `AgentAdapter` contract.
+- Added a bounded model-loop adapter with default `max_model_turns=3` and `max_feedback_runs=2`.
+- Added an OpenRouter loop adapter mode, `--agent openrouter-loop`, for real model turns with visible feedback in `feedback_capable_spec`.
+- Added model-loop tests for feedback gating, bounded turns, context-only self-review without feedback output, feedback summary isolation, feedback asset immutability, and loop-run provenance.
+- Added model-loop agent-result provenance fields for model turns, feedback runs, feedback availability, feedback command, feedback summaries, final file writes, and feedback asset mutation detection.
+- Added the six-checkpoint `role-permissions-calibration` task to stress cumulative permission regressions.
+- Added role-permissions feedback assets that accumulate from owner edit through cross-org denial.
+- Added the role-permissions hidden oracle with private checks for admin scope, viewer read-only, suspension, explicit-deny precedence, and cross-org denial.
+- Added checkpoint `I07` for temporary project grants with visible feedback and hidden oracle cases for expiration, explicit deny precedence, suspension, cross-org denial, action specificity, and prior behavior preservation.
+- Added checkpoint-level `regression_free_success` metrics to `result-schema-v0` records and summaries for behavior-survival analysis.
+- Added `bunfig.toml` test discovery ignores so generated `runs/**` feedback specs are not executed by root `bun test`.
+- Evaluated the optional Python analysis utility and kept it out of the fake-pilot skeleton; Bun remains the only runtime owner.
+- Deferred charts until metrics and result schemas move beyond the current fake-pilot stabilization work.
+- Decided not to salvage old benchmark behavior from `../hit-sdd-bench.old` in this skeleton.
+- Added `task-seal.json` run artifacts that freeze checkpoint order, visible spec hashes, feedback asset hashes, hidden oracle hash, template workspace hash, package hashes, and public API contract.
+- Added run classification, validity flags, task version, budget, model/provider, exclusion-rule, metric-version, and compatibility metadata to run manifests.
+- Added pooling compatibility validation for task seal, checkpoint list, visible specs, feedback assets, hidden oracle, budget, model/provider, protocol, renderer, task version, and metric definition boundaries.
+- Added causal-pilot max-turn budget validation so causal runs must declare at least two model turns.
+- Added model-loop agent-result provenance for configured `max_model_turns` and `max_feedback_runs`.
+- Added run artifact verification that rejects context-only feedback availability, feedback runs, feedback commands, or feedback summaries in persisted agent results.
+- Added the non-runnable `subscription-entitlements-lifecycle-v0` task draft with checkpoints `I01` through `I09`, public API contract, cumulative semantic spec records, and sealable placeholder workspace/oracle directories.
+- Added `coverage-manifest.json` for `subscription-entitlements-lifecycle-v0`, mapping each visible commitment to planned visible feedback and hidden oracle coverage without exposing hidden oracle content to prompt packets.
+- Added `fake-agent-validation-plan.json` for `subscription-entitlements-lifecycle-v0`, covering every checkpoint with scripted-reference validation scenarios.
+- Added task package loading and validation for optional coverage manifests and fake-agent validation plans.
+- Added no-provider fake-pilot validation coverage for `subscription-entitlements-lifecycle-v0`, including run manifest validation, replay validation, artifact verification, task seal hash checks, 18 replay steps, no hidden-oracle result output while the oracle is deferred, and compatibility pooling checks across identical local fake runs.
+- Verified the public fake-pilot and inspection CLIs for the subscription lifecycle draft locally with `result=none`, `summary=none`, `valid=true`, and zero artifact mismatches.
+- Added `local-acceptance-criteria.json` for `subscription-entitlements-lifecycle-v0`, mapping every coverage commitment to required visible feedback and hidden-oracle acceptance criteria plus every fake-agent validation scenario to a local pre-probe evidence gate.
+- Added `analysis-plan.json` for `subscription-entitlements-lifecycle-v0`, initially drafting the pre-provider analysis plan with the two conditions, difficulty-probe and causal-pilot classifications, final-checkpoint pass-rate delta, secondary regression metrics, planned `regression_free_auc`, equal 2/1 loop budget, OpenRouter loop settings, exclusion rules, pooling compatibility fields, frozen inputs, and promotion gates.
+- Added task package loading and validation for local acceptance criteria and draft analysis plans.
+- Added the `subscription-entitlements-lifecycle-v0` reference template implementation for `applyEvent`, `canAccessFeature`, `getBillingStatus`, and `getInvoiceSummary`.
+- Added nine visible feedback assets for the subscription lifecycle task and verified they execute locally with `bun run spec`.
+- Added the executable subscription hidden oracle with private checks for trial, payment, cancellation, grace, retry, idempotency, suspension, downgrade, refund, and chargeback commitments.
+- Added hidden-oracle tests proving the subscription reference candidate passes every checkpoint and targeted regressions fail for duplicate event IDs, fraud suspension override, and refund restriction.
+- Wired `bun run pilot:fake` to run the subscription hidden oracle; local inspection now reports `result.json`, `summary.md`, 18 replay steps, and zero mismatches for the subscription task.
+- Added structured provider/network validity details to run manifests and validation so validity flags require explanatory detail records.
+- Added causal feedback-use evidence checks requiring feedback-capable causal pilots to record available feedback, at least one feedback run, a later model turn, and non-empty feedback summaries when feedback assets are present.
+- Upgraded results to `result-schema-v1` with `regression_free_auc`, recomputed from checkpoint-level `regression_free_success`, and included the AUC delta in summaries.
+- Sealed `tasks/subscription-entitlements-lifecycle/analysis-plan.json` after the feedback-use, provider-validity, and AUC gates passed focused local tests.
+- Added CLI support for explicit `--run-classification` so provider probes can write `difficulty_probe`, `causal_pilot`, `calibration`, or `diagnostic_invalid` directly into `run.json`.
+- Added whole-request OpenRouter timeouts and automatic provider validity flag/detail propagation from agent results into run manifests.
+- Ran the explicit OpenRouter loop difficulty probe `subscription-entitlements-difficulty-probe-20260605-003` for `subscription-entitlements-lifecycle-v0` with the sealed 2/1 budget. Inspection was structurally valid with 18 replay steps and zero artifact mismatches, but the run is provider-timeout validity-flagged and must not be treated as clean primary evidence.
+- Added provider execution profiles to run manifests and compatibility hashes so timeout, retry, output-token, temperature, prompt-renderer, and feedback-summary settings are pooling boundaries.
+- Added `clean_primary_evidence_eligible` to run manifests; only validity-clean causal pilots can be treated as primary causal evidence.
+- Added provider timeout phase classification, retry count, model-response receipt, feedback availability, code-change state, and provider-failure workspace carry-forward fields to validity details.
+- Added checkpoint-level `workspace_carried_forward_due_to_provider_failure` provenance and replay validation.
+- Tightened feedback-capable causal-pilot verification to require a persisted `model_turn -> feedback_run -> model_turn` transcript sequence before treating a run as causal feedback-use evidence.
+- Added CLI controls for OpenRouter request timeout, max output tokens, and temperature, with those values recorded in the provider execution profile.
+- Added public evidence-status rendering to generated summaries and `inspect-run` output, including clean primary evidence eligibility, provider flags, timeout phases, provider carry-forward checkpoint counts, and feedback opportunity integrity.
+- Added checkpoint-level `feedback_opportunity_integrity` to run and checkpoint manifests for causal pilots.
+- Updated provider profile IDs to include timeout, output-token, temperature, and retry settings.
+- Added `docs/provider-smoke-test-plan.md` for the next provider reliability smoke; no provider smoke has been run.

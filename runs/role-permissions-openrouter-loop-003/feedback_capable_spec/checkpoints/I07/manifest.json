@@ -1,0 +1,26 @@
+{
+  "protocol_version": "two-arm-feedback-spec-v0",
+  "renderer_version": "semantic-spec-renderer-v0",
+  "condition_id": "feedback_capable_spec",
+  "checkpoint_id": "I07",
+  "artifact_dir": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I07",
+  "workspace_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/workspace",
+  "prompt_packet_hash": "d1d800788bc65432ba3ab8dd1ee7c31d5e1d42eae65fd845a4e38694151af184",
+  "agent_result_hash": "cba175602d73124c2da170a44aca8c2a7388c7e6807e66af466f363a21f2ecc5",
+  "expected_feedback_asset_hashes": {
+    "spec/owner-edit.spec.ts": "5e5490e317d7c0bc300af66ddc6b18884961911089d7a64f7e8daeac64986109",
+    "spec/org-admin-edit.spec.ts": "23c68f07abc69e2f73a10940a2cd8dfb17edd25bc474e7e09d6476db4e7fc848",
+    "spec/viewer-read-only.spec.ts": "cf1e04d804b780b6df226198ef03cd54415ecf5b0058be9836968a54cc8fdfe1",
+    "spec/suspended-blocked.spec.ts": "3eb9be17b4a13805150db78e9864ff0553954d5e72a92d80d0ca6be8ed3e099b",
+    "spec/explicit-deny.spec.ts": "76a8624dbbb252187da24826164f448b17d60034cd05607f4548532652377406",
+    "spec/cross-org-forbidden.spec.ts": "35ce25854758274194ece42cf03d41071dd5b3553c92f761e2a34155de7f2178",
+    "spec/temporary-project-grants.spec.ts": "b815dd70c8e581effb03ea08b1a5396412610c2d327c08f04906417a26155218"
+  },
+  "hidden_oracle_result_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I07/hidden-oracle-result.json",
+  "hidden_oracle_result_hash": "e616ba7222e845e38eb4f73d3e4c60aeaf66f5e025a44a85f7a4b03fcd2c6931",
+  "snapshot_before_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I07/workspace-before.json",
+  "snapshot_after_path": "/Users/acyment/dev/hit-sdd-bench/runs/role-permissions-openrouter-loop-003/feedback_capable_spec/checkpoints/I07/workspace-after.json",
+  "snapshot_before_hash": "8f2338eee99ab1e4c528bbf780d728ac0be6dbd0c9a43ee2ecb6efe5554ae6cf",
+  "snapshot_after_hash": "236d68170b64b85ff4b4fd144dacb8ad44f5e916acaa31dde650b34bdcf13278",
+  "agent_status": "ok"
+}
