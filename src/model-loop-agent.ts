@@ -1,0 +1,753 @@
+import { execFile } from "node:child_process";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { promisify } from "node:util";
+import {
+  DEFAULT_OPENROUTER_REQUEST_TIMEOUT_MS,
+  DEFAULT_OPENROUTER_ENDPOINT,
+  DEFAULT_OPENROUTER_MODEL,
+  classifyOpenRouterError,
+  fetchOpenRouterResponse,
+  type FetchLike
+} from "./openrouter-agent";
+import type { AgentAdapter, AgentRunInput, AgentRunResult, AgentTranscriptEvent } from "./runner";
+
+const execFileAsync = promisify(execFile);
+const DEFAULT_MAX_WORKSPACE_BYTES = 256_000;
+const DEFAULT_FEEDBACK_OUTPUT_BYTES = 12_000;
+const SKIPPED_WORKSPACE_ENTRIES = new Set([
+  ".DS_Store",
+  ".git",
+  ".turbo",
+  "coverage",
+  "dist",
+  "node_modules",
+  "runs"
+]);
+
+export const DEFAULT_MODEL_LOOP_POLICY = {
+  max_model_turns: 3,
+  max_feedback_runs: 2
+} as const;
+
+export type ModelLoopCall = {
+  turn_index: number;
+  condition_id: AgentRunInput["condition_id"];
+  checkpoint_id: string;
+  prompt: string;
+  feedback_available: boolean;
+  feedback_summaries: string[];
+};
+
+export type ModelLoopResponse = {
+  status?: "ok" | "failed";
+  notes?: string;
+  files?: Array<{
+    path: string;
+    content: string;
+  }>;
+  transcript?: AgentTranscriptEvent[];
+};
+
+export type ModelLoopModel = (input: ModelLoopCall) => Promise<ModelLoopResponse | string>;
+
+export type FeedbackCommandRunInput = {
+  command: string;
+  workspace_path: string;
+};
+
+export type FeedbackCommandRunResult = {
+  command: string;
+  exit_code: number;
+  stdout: string;
+  stderr: string;
+  summary?: string;
+};
+
+export type FeedbackCommandRunner = (
+  input: FeedbackCommandRunInput
+) => Promise<FeedbackCommandRunResult>;
+
+export type ModelLoopAgentOptions = {
+  adapter_id?: string;
+  model: ModelLoopModel;
+  feedbackRunner?: FeedbackCommandRunner;
+  max_model_turns?: number;
+  max_feedback_runs?: number;
+  maxWorkspaceBytes?: number;
+  maxFeedbackOutputBytes?: number;
+};
+
+export type OpenRouterFeedbackLoopAgentOptions = {
+  apiKey: string;
+  model?: string;
+  endpoint?: string;
+  appTitle?: string;
+  siteUrl?: string;
+  maxTokens?: number;
+  temperature?: number;
+  max_model_turns?: number;
+  max_feedback_runs?: number;
+  maxWorkspaceBytes?: number;
+  maxFeedbackOutputBytes?: number;
+  requestTimeoutMs?: number;
+  fetch?: FetchLike;
+};
+
+type WorkspaceContext = {
+  text: string;
+  truncated: boolean;
+  bytes: number;
+  file_count: number;
+};
+
+export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapter {
+  const max_model_turns = options.max_model_turns ?? DEFAULT_MODEL_LOOP_POLICY.max_model_turns;
+  const max_feedback_runs = options.max_feedback_runs ?? DEFAULT_MODEL_LOOP_POLICY.max_feedback_runs;
+  const maxWorkspaceBytes = options.maxWorkspaceBytes ?? DEFAULT_MAX_WORKSPACE_BYTES;
+  const maxFeedbackOutputBytes = options.maxFeedbackOutputBytes ?? DEFAULT_FEEDBACK_OUTPUT_BYTES;
+  const feedbackRunner = options.feedbackRunner ?? runVisibleFeedbackCommand;
+
+  if (max_model_turns < 1) {
+    throw new Error("max_model_turns must be at least 1.");
+  }
+
+  if (max_feedback_runs < 0) {
+    throw new Error("max_feedback_runs cannot be negative.");
+  }
+
+  return {
+    async run(input): Promise<AgentRunResult> {
+      const feedbackAvailable = Boolean(
+        input.condition_id === "feedback_capable_spec" && input.packet.feedback_command
+      );
+      const feedbackCommand = feedbackAvailable ? input.packet.feedback_command : undefined;
+      const feedbackSummaries: string[] = [];
+      const transcript: AgentTranscriptEvent[] = [];
+      const finalFileWrites: string[] = [];
+      let feedbackRuns = 0;
+      let modelTurns = 0;
+      let currentTurnStartedAt = Date.now();
+
+      try {
+        for (let turn = 1; turn <= max_model_turns; turn += 1) {
+          modelTurns = turn;
+          currentTurnStartedAt = Date.now();
+          const workspaceContext = await renderWorkspaceContext(input.workspace_path, maxWorkspaceBytes);
+          const prompt = buildTurnPrompt({
+            input,
+            turn,
+            feedbackAvailable,
+            feedbackSummaries,
+            workspaceContext
+          });
+          const modelResponse = await normalizeModelResponse(
+            await options.model({
+              turn_index: turn,
+              condition_id: input.condition_id,
+              checkpoint_id: input.checkpoint_id,
+              prompt,
+              feedback_available: feedbackAvailable,
+              feedback_summaries: feedbackSummaries
+            })
+          );
+          const writtenPaths = await applyReturnedFiles(
+            input.workspace_path,
+            modelResponse.files ?? [],
+            input.packet.executable_feedback_paths
+          );
+
+          finalFileWrites.push(...writtenPaths);
+          transcript.push(
+            {
+              event: "model_turn",
+              detail: `turn=${turn} writes=${writtenPaths.join(", ") || "none"}`
+            },
+            ...(modelResponse.transcript ?? [])
+          );
+
+          if (feedbackAvailable && feedbackCommand && feedbackRuns < max_feedback_runs && turn < max_model_turns) {
+            const feedbackResult = await feedbackRunner({
+              command: feedbackCommand,
+              workspace_path: input.workspace_path
+            });
+            const feedbackSummary = summarizeFeedbackResult(
+              feedbackResult,
+              input.workspace_path,
+              maxFeedbackOutputBytes
+            );
+
+            feedbackRuns += 1;
+            feedbackSummaries.push(feedbackSummary);
+            transcript.push({
+              event: "feedback_run",
+              detail: `run=${feedbackRuns} exit_code=${feedbackResult.exit_code}`
+            });
+
+            if (feedbackResult.exit_code === 0) {
+              break;
+            }
+          }
+        }
+
+        return {
+          status: "ok",
+          adapter_id: options.adapter_id ?? "model-loop",
+          notes: `model loop completed ${modelTurns} turn(s)`,
+          transcript,
+          model_turns: modelTurns,
+          max_model_turns,
+          feedback_runs: feedbackRuns,
+          max_feedback_runs,
+          feedback_available: feedbackAvailable,
+          feedback_command: feedbackCommand,
+          feedback_summaries: feedbackSummaries,
+          final_file_writes: finalFileWrites,
+          feedback_assets_modified: false
+        };
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : String(error);
+        const feedbackAssetMutation = detail.includes("read-only feedback asset");
+        const validityFlag = feedbackAssetMutation ? undefined : classifyOpenRouterError(detail);
+        const workspaceCarriedForward = validityFlag !== undefined && finalFileWrites.length === 0;
+
+        return {
+          status: "failed",
+          adapter_id: options.adapter_id ?? "model-loop",
+          notes: detail,
+          transcript: [
+            ...transcript,
+            {
+              event: "model_loop_error",
+              detail
+            }
+          ],
+          model_turns: modelTurns,
+          max_model_turns,
+          feedback_runs: feedbackRuns,
+          max_feedback_runs,
+          feedback_available: feedbackAvailable,
+          feedback_command: feedbackCommand,
+          feedback_summaries: feedbackSummaries,
+          final_file_writes: finalFileWrites,
+          feedback_assets_modified: feedbackAssetMutation,
+          workspace_carried_forward_due_to_provider_failure: workspaceCarriedForward,
+          validity_flags: validityFlag ? [validityFlag] : undefined,
+          validity_details: validityFlag
+            ? [
+                {
+                  flag: validityFlag,
+                  scope: "checkpoint",
+                  condition_id: input.condition_id,
+                  checkpoint_id: input.checkpoint_id,
+                  provider: "openrouter",
+                  message: detail,
+                  retryable: validityFlag === "provider_timeout" || validityFlag === "provider_quota_or_rate_limit",
+                  provider_failure_phase: classifyProviderFailurePhase({
+                    feedbackAvailable,
+                    feedbackRuns,
+                    modelTurns
+                  }),
+                  model_turn_number: modelTurns || undefined,
+                  feedback_had_run: feedbackRuns > 0,
+                  model_response_received: false,
+                  code_changed: finalFileWrites.length > 0,
+                  workspace_carried_forward_due_to_provider_failure: workspaceCarriedForward,
+                  retry_count: 0,
+                  elapsed_ms: Math.max(0, Date.now() - currentTurnStartedAt)
+                }
+              ]
+            : undefined
+        };
+      }
+    }
+  };
+}
+
+function classifyProviderFailurePhase(input: {
+  feedbackAvailable: boolean;
+  feedbackRuns: number;
+  modelTurns: number;
+}) {
+  if (input.feedbackAvailable && input.feedbackRuns > 0 && input.modelTurns > 1) {
+    return "repair_turn_timeout" as const;
+  }
+
+  return "pre_model_action_timeout" as const;
+}
+
+export function createOpenRouterFeedbackLoopAgent(
+  options: OpenRouterFeedbackLoopAgentOptions
+): AgentAdapter {
+  const apiKey = options.apiKey.trim();
+  const model = options.model ?? DEFAULT_OPENROUTER_MODEL;
+  const endpoint = options.endpoint ?? DEFAULT_OPENROUTER_ENDPOINT;
+  const maxTokens = options.maxTokens ?? 16_000;
+  const temperature = options.temperature ?? 0.2;
+  const requestTimeoutMs = options.requestTimeoutMs ?? DEFAULT_OPENROUTER_REQUEST_TIMEOUT_MS;
+  const fetchImpl = options.fetch ?? globalThis.fetch;
+
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is required for the OpenRouter feedback-loop agent adapter.");
+  }
+
+  if (!fetchImpl) {
+    throw new Error("No fetch implementation is available for the OpenRouter feedback-loop agent adapter.");
+  }
+
+  return createModelLoopAgent({
+    adapter_id: `openrouter-loop:${model}`,
+    max_model_turns: options.max_model_turns,
+    max_feedback_runs: options.max_feedback_runs,
+    maxWorkspaceBytes: options.maxWorkspaceBytes,
+    maxFeedbackOutputBytes: options.maxFeedbackOutputBytes,
+    model: async (call) => {
+      const { response, responseText } = await fetchOpenRouterResponse({
+        fetchImpl,
+        endpoint,
+        timeoutMs: requestTimeoutMs,
+        init: {
+          method: "POST",
+          headers: requestHeaders({
+            apiKey,
+            appTitle: options.appTitle,
+            siteUrl: options.siteUrl
+          }),
+          body: JSON.stringify({
+            model,
+            messages: [
+              {
+                role: "system",
+                content: [
+                  "You are running inside a bounded benchmark harness.",
+                  "Return only JSON. Do not wrap it in prose.",
+                  "The JSON shape is:",
+                  '{"status":"ok","notes":"short summary","files":[{"path":"relative/path","content":"full file content"}],"transcript":[{"event":"short_event","detail":"optional detail"}]}'
+                ].join("\n")
+              },
+              {
+                role: "user",
+                content: call.prompt
+              }
+            ],
+            stream: false,
+            temperature,
+            max_completion_tokens: maxTokens
+          })
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `OpenRouter loop request failed: ${response.status} ${response.statusText}: ${responseText}`.trim()
+        );
+      }
+
+      return parseModelResult(extractMessageContent(parseJson(responseText, "OpenRouter response")));
+    }
+  });
+}
+
+async function normalizeModelResponse(response: ModelLoopResponse | string): Promise<ModelLoopResponse> {
+  if (typeof response === "string") {
+    return parseModelResult(response);
+  }
+
+  if (!response || typeof response !== "object" || Array.isArray(response)) {
+    throw new Error("Model loop response must be an object or JSON string.");
+  }
+
+  return parseModelResult(JSON.stringify(response));
+}
+
+function buildTurnPrompt(input: {
+  input: AgentRunInput;
+  turn: number;
+  feedbackAvailable: boolean;
+  feedbackSummaries: string[];
+  workspaceContext: WorkspaceContext;
+}): string {
+  const promptLines = [
+    `Task: ${input.input.packet.task_id}`,
+    `Checkpoint: ${input.input.checkpoint_id}`,
+    `Condition: ${input.input.condition_id}`,
+    `Turn: ${input.turn}`,
+    "",
+    "Visible semantic spec:",
+    input.input.packet.visible_spec_text.trimEnd(),
+    ""
+  ];
+
+  if (input.input.packet.public_api_contract) {
+    promptLines.push("Public API contract:", input.input.packet.public_api_contract, "");
+  }
+
+  if (input.feedbackAvailable) {
+    promptLines.push(
+      "Executable feedback is available for this condition.",
+      `Feedback command: ${input.input.packet.feedback_command}`,
+      "Do not edit executable feedback assets; they are benchmark-provided read-only files.",
+      "Read-only executable feedback assets:",
+      ...input.input.packet.executable_feedback_paths.map((path) => `- ${path}`),
+      ""
+    );
+
+    for (const [index, summary] of input.feedbackSummaries.entries()) {
+      promptLines.push(`Feedback result ${index + 1}:`, summary, "");
+    }
+  } else if (input.turn > 1) {
+    promptLines.push(
+      "Self-review against the visible semantic spec only.",
+      "No executable feedback output is available in this condition.",
+      ""
+    );
+  } else {
+    promptLines.push(
+      "Use the semantic spec as durable context. No executable feedback output is provided.",
+      ""
+    );
+  }
+
+  promptLines.push(
+    "Workspace snapshot:",
+    input.workspaceContext.text || "(workspace has no readable text files)",
+    "",
+    "Return only JSON file writes needed for this turn."
+  );
+
+  return promptLines.join("\n").trimEnd() + "\n";
+}
+
+export async function runVisibleFeedbackCommand(
+  input: FeedbackCommandRunInput
+): Promise<FeedbackCommandRunResult> {
+  const [executable, ...args] = splitCommand(input.command);
+
+  if (!executable) {
+    throw new Error("Feedback command is empty.");
+  }
+
+  try {
+    const result = await execFileAsync(executable, args, {
+      cwd: input.workspace_path,
+      timeout: 15_000,
+      maxBuffer: 1024 * 1024
+    });
+
+    return {
+      command: input.command,
+      exit_code: 0,
+      stdout: result.stdout,
+      stderr: result.stderr
+    };
+  } catch (error) {
+    const childError = error as {
+      code?: number;
+      stdout?: string;
+      stderr?: string;
+      message?: string;
+    };
+
+    return {
+      command: input.command,
+      exit_code: typeof childError.code === "number" ? childError.code : 1,
+      stdout: childError.stdout ?? "",
+      stderr: childError.stderr ?? childError.message ?? ""
+    };
+  }
+}
+
+function summarizeFeedbackResult(
+  result: FeedbackCommandRunResult,
+  workspacePath: string,
+  maxFeedbackOutputBytes: number
+): string {
+  if (result.summary) {
+    return sanitizeFeedbackText(result.summary, workspacePath, maxFeedbackOutputBytes);
+  }
+
+  return sanitizeFeedbackText(
+    [
+      `command: ${result.command}`,
+      `exit_code: ${result.exit_code}`,
+      "stdout:",
+      result.stdout,
+      "stderr:",
+      result.stderr
+    ].join("\n"),
+    workspacePath,
+    maxFeedbackOutputBytes
+  );
+}
+
+function sanitizeFeedbackText(text: string, workspacePath: string, maxBytes: number): string {
+  const workspace = resolve(workspacePath);
+  const sanitized = text
+    .split("\n")
+    .filter((line) => isPublicFeedbackLine(line, workspace))
+    .map((line) => line.replaceAll(workspace, "<workspace>"))
+    .join("\n")
+    .trim();
+
+  const buffer = Buffer.from(sanitized);
+
+  if (buffer.byteLength <= maxBytes) {
+    return sanitized;
+  }
+
+  return `${buffer.subarray(0, maxBytes).toString("utf8")}\n[feedback output truncated]`;
+}
+
+function isPublicFeedbackLine(line: string, workspacePath: string): boolean {
+  const lowered = line.toLowerCase();
+
+  if (
+    lowered.includes("hidden-oracle") ||
+    lowered.includes("private_oracle") ||
+    lowered.includes("private oracle") ||
+    /[a-z0-9-]+:i\d\d:[a-z0-9-]+/i.test(line)
+  ) {
+    return false;
+  }
+
+  const lineForPathScan = line.replaceAll("<workspace>", workspacePath);
+  const absolutePaths = lineForPathScan.match(/\/[^\s:)]+/g) ?? [];
+
+  return absolutePaths.every((path) => path.startsWith(workspacePath) || path.startsWith("<workspace>"));
+}
+
+async function renderWorkspaceContext(workspacePath: string, maxBytes: number): Promise<WorkspaceContext> {
+  const root = resolve(workspacePath);
+  const files = await listWorkspaceFiles(root);
+  const chunks: string[] = [];
+  let bytes = 0;
+  let truncated = false;
+
+  for (const file of files) {
+    const absolutePath = resolve(root, file);
+    const content = await readFile(absolutePath, "utf8").catch(() => undefined);
+
+    if (content === undefined || content.includes("\u0000")) {
+      continue;
+    }
+
+    const chunk = [`file: ${file}`, "```", content.trimEnd(), "```", ""].join("\n");
+    const chunkBytes = Buffer.byteLength(chunk);
+
+    if (bytes + chunkBytes > maxBytes) {
+      truncated = true;
+      break;
+    }
+
+    chunks.push(chunk);
+    bytes += chunkBytes;
+  }
+
+  return {
+    text: chunks.join("\n").trimEnd(),
+    truncated,
+    bytes,
+    file_count: files.length
+  };
+}
+
+async function listWorkspaceFiles(root: string, current = root): Promise<string[]> {
+  const entries = await readdir(current, { withFileTypes: true });
+  const files: string[] = [];
+
+  for (const entry of entries) {
+    if (SKIPPED_WORKSPACE_ENTRIES.has(entry.name)) {
+      continue;
+    }
+
+    const absolutePath = resolve(current, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...(await listWorkspaceFiles(root, absolutePath)));
+    } else if (entry.isFile()) {
+      files.push(toWorkspacePath(relative(root, absolutePath)));
+    }
+  }
+
+  return files.sort();
+}
+
+function parseModelResult(content: string): ModelLoopResponse {
+  const result = parseJson(stripJsonFence(content), "Model loop JSON");
+
+  if (!isRecord(result)) {
+    throw new Error("Model loop JSON must be an object.");
+  }
+
+  if (result.status !== undefined && result.status !== "ok" && result.status !== "failed") {
+    throw new Error("Model loop JSON status must be ok or failed.");
+  }
+
+  if (result.notes !== undefined && typeof result.notes !== "string") {
+    throw new Error("Model loop JSON notes must be a string when present.");
+  }
+
+  if (result.files !== undefined && !Array.isArray(result.files)) {
+    throw new Error("Model loop JSON files must be an array when present.");
+  }
+
+  if (result.transcript !== undefined && !Array.isArray(result.transcript)) {
+    throw new Error("Model loop JSON transcript must be an array when present.");
+  }
+
+  return {
+    status: result.status,
+    notes: result.notes,
+    files: (result.files ?? []).map(parseFileWrite),
+    transcript: (result.transcript ?? []).map(parseTranscriptEvent)
+  };
+}
+
+function parseFileWrite(file: unknown, index: number): { path: string; content: string } {
+  if (!isRecord(file) || typeof file.path !== "string" || typeof file.content !== "string") {
+    throw new Error(`Model loop JSON files[${index}] must include string path and content.`);
+  }
+
+  return {
+    path: file.path,
+    content: file.content
+  };
+}
+
+function parseTranscriptEvent(event: unknown, index: number): AgentTranscriptEvent {
+  if (!isRecord(event) || typeof event.event !== "string" || event.event.length === 0) {
+    throw new Error(`Model loop JSON transcript[${index}] must include an event string.`);
+  }
+
+  if (event.detail !== undefined && typeof event.detail !== "string") {
+    throw new Error(`Model loop JSON transcript[${index}].detail must be a string when present.`);
+  }
+
+  return {
+    event: event.event,
+    detail: event.detail
+  };
+}
+
+async function applyReturnedFiles(
+  workspacePath: string,
+  files: Array<{ path: string; content: string }>,
+  readOnlyFeedbackPaths: string[]
+): Promise<string[]> {
+  const readOnlyPaths = new Set(readOnlyFeedbackPaths.map(toWorkspacePath));
+  const writes = files.map((file) => {
+    const workspacePathForFile = toWorkspacePath(file.path);
+
+    if (readOnlyPaths.has(workspacePathForFile)) {
+      throw new Error(`Model loop returned a write to read-only feedback asset: ${file.path}`);
+    }
+
+    return {
+      workspacePathForFile,
+      destination: workspaceDestination(workspacePath, workspacePathForFile),
+      content: file.content
+    };
+  });
+  const writtenPaths: string[] = [];
+
+  for (const write of writes) {
+    await mkdir(dirname(write.destination), { recursive: true });
+    await writeFile(write.destination, write.content);
+    writtenPaths.push(write.workspacePathForFile);
+  }
+
+  return writtenPaths;
+}
+
+function workspaceDestination(workspacePath: string, relativePath: string): string {
+  const root = resolve(workspacePath);
+  const normalizedPath = toWorkspacePath(relativePath);
+
+  if (!normalizedPath.trim()) {
+    throw new Error("Model loop returned an empty file path.");
+  }
+
+  if (isAbsolute(normalizedPath)) {
+    throw new Error(`Model loop returned a path that must stay inside the workspace: ${relativePath}`);
+  }
+
+  if (normalizedPath.split("/").includes("..")) {
+    throw new Error(`Model loop returned a path that must stay inside the workspace: ${relativePath}`);
+  }
+
+  const destination = resolve(root, normalizedPath);
+
+  if (destination !== root && !destination.startsWith(root + sep)) {
+    throw new Error(`Model loop returned a path that must stay inside the workspace: ${relativePath}`);
+  }
+
+  return destination;
+}
+
+function requestHeaders(input: {
+  apiKey: string;
+  appTitle?: string;
+  siteUrl?: string;
+}): Record<string, string> {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${input.apiKey}`,
+    "Content-Type": "application/json"
+  };
+
+  if (input.appTitle) {
+    headers["X-Title"] = input.appTitle;
+  }
+
+  if (input.siteUrl) {
+    headers["HTTP-Referer"] = input.siteUrl;
+  }
+
+  return headers;
+}
+
+function extractMessageContent(payload: unknown): string {
+  if (!isRecord(payload) || !Array.isArray(payload.choices)) {
+    throw new Error("OpenRouter response must include a choices array.");
+  }
+
+  const firstChoice = payload.choices[0];
+
+  if (!isRecord(firstChoice) || !isRecord(firstChoice.message)) {
+    throw new Error("OpenRouter response must include choices[0].message.");
+  }
+
+  if (typeof firstChoice.message.content !== "string") {
+    throw new Error("OpenRouter response message content must be a string.");
+  }
+
+  return firstChoice.message.content;
+}
+
+function splitCommand(command: string): string[] {
+  return command.match(/"[^"]+"|'[^']+'|\S+/g)?.map((part) => part.replace(/^['"]|['"]$/g, "")) ?? [];
+}
+
+function stripJsonFence(content: string): string {
+  const trimmed = content.trim();
+  const match = /^```(?:json)?\s*([\s\S]*?)\s*```$/i.exec(trimmed);
+
+  return match ? match[1].trim() : trimmed;
+}
+
+function parseJson(content: string, label: string): unknown {
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+
+    throw new Error(`${label} could not be parsed as JSON: ${detail}`);
+  }
+}
+
+function isRecord(value: unknown): value is Record<string, any> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function toWorkspacePath(path: string): string {
+  return path.replace(/\\/g, "/").split(sep).join("/");
+}

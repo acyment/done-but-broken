@@ -1,0 +1,13 @@
+{
+  "name": "hit-sdd-bench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "inspect:run": "bun run bin/inspect-run.ts",
+    "pilot:run": "bun run bin/run-fake-pilot.ts",
+    "pilot:fake": "bun run bin/run-fake-pilot.ts",
+    "test": "bun test --path-ignore-patterns='runs/**'",
+    "spec": "bun test"
+  }
+}
