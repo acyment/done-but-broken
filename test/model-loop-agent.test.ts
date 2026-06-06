@@ -232,8 +232,8 @@ describe("model loop agent", () => {
       )
     );
 
-    expect(feedbackAgentResult.model_turns).toBe(1);
-    expect(feedbackAgentResult.feedback_runs).toBe(1);
+    expect(feedbackAgentResult.model_turns).toBe(DEFAULT_MODEL_LOOP_POLICY.max_model_turns);
+    expect(feedbackAgentResult.feedback_runs).toBe(DEFAULT_MODEL_LOOP_POLICY.max_feedback_runs);
     expect(feedbackAgentResult.feedback_available).toBe(true);
     expect(feedbackAgentResult.feedback_command).toBe("bun run spec");
     expect(feedbackAgentResult.final_file_writes).toEqual([]);
@@ -282,6 +282,240 @@ describe("model loop agent", () => {
     expect(requests[1].body.messages[1].content).toContain("Self-review against the visible semantic spec only");
   });
 
+  test("OpenRouter loop accepts text-part message content arrays", async () => {
+    const workspace = await setupWorkspace();
+    const agent = createOpenRouterFeedbackLoopAgent({
+      apiKey: "sk-or-test",
+      max_model_turns: 1,
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            choices: [
+              {
+                message: {
+                  content: [
+                    {
+                      type: "text",
+                      text: JSON.stringify({
+                        status: "ok",
+                        files: [
+                          {
+                            path: "src/subject.ts",
+                            content: "changed through text part\n"
+                          }
+                        ]
+                      })
+                    }
+                  ]
+                }
+              }
+            ]
+          }),
+          { status: 200 }
+        )
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(result.status).toBe("ok");
+    expect(await readFile(join(workspace, "src", "subject.ts"), "utf8")).toBe("changed through text part\n");
+  });
+
+  test("OpenRouter loop can request strict JSON schema structured outputs", async () => {
+    const workspace = await setupWorkspace();
+    const requests: Array<{ body: any }> = [];
+    const agent = createOpenRouterFeedbackLoopAgent({
+      apiKey: "sk-or-test",
+      max_model_turns: 1,
+      responseFormat: "json_schema",
+      requireParameters: true,
+      fetch: async (_url, init) => {
+        requests.push({ body: JSON.parse(String(init.body)) });
+
+        return new Response(
+          JSON.stringify({
+            choices: [
+              {
+                message: {
+                  content: JSON.stringify({
+                    status: "ok",
+                    notes: "schema output",
+                    files: [],
+                    transcript: []
+                  })
+                }
+              }
+            ]
+          }),
+          { status: 200 }
+        );
+      }
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(result.status).toBe("ok");
+    expect(requests[0].body.max_tokens).toBe(16_000);
+    expect(requests[0].body.max_completion_tokens).toBeUndefined();
+    expect(requests[0].body.provider).toEqual({ require_parameters: true });
+    expect(requests[0].body.response_format).toMatchObject({
+      type: "json_schema",
+      json_schema: {
+        name: "model_loop_response",
+        strict: true,
+        schema: {
+          type: "object",
+          required: ["status", "notes", "files", "transcript"],
+          additionalProperties: false
+        }
+      }
+    });
+    expect(requests[0].body.response_format.json_schema.schema.properties.files.items).toMatchObject({
+      type: "object",
+      required: ["path", "content"],
+      additionalProperties: false
+    });
+  });
+
+  test("OpenRouter loop retries malformed JSON once and records recovered provider validity", async () => {
+    const workspace = await setupWorkspace();
+    let callCount = 0;
+    const agent = createOpenRouterFeedbackLoopAgent({
+      apiKey: "sk-or-test",
+      max_model_turns: 1,
+      maxProviderRetries: 1,
+      fetch: async () => {
+        callCount += 1;
+
+        if (callCount === 1) {
+          return new Response(
+            JSON.stringify({
+              choices: [
+                {
+                  message: {
+                    content: '{"status":"ok","files":[{"path":"src/subject.ts","content":"unterminated'
+                  }
+                }
+              ]
+            }),
+            { status: 200 }
+          );
+        }
+
+        return new Response(
+          JSON.stringify({
+            choices: [
+              {
+                message: {
+                  content: JSON.stringify({
+                    status: "ok",
+                    files: [
+                      {
+                        path: "src/subject.ts",
+                        content: "recovered retry write\n"
+                      }
+                    ],
+                    transcript: []
+                  })
+                }
+              }
+            ]
+          }),
+          { status: 200 }
+        );
+      }
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(callCount).toBe(2);
+    expect(result.status).toBe("ok");
+    expect(await readFile(join(workspace, "src", "subject.ts"), "utf8")).toBe("recovered retry write\n");
+    expect(result.validity_flags).toEqual(["provider_malformed_response"]);
+    expect(result.workspace_carried_forward_due_to_provider_failure).toBeUndefined();
+    expect(result.validity_details?.[0]).toMatchObject({
+      flag: "provider_malformed_response",
+      scope: "checkpoint",
+      condition_id: "context_only_spec",
+      checkpoint_id: "I01",
+      provider: "openrouter",
+      retryable: true,
+      model_turn_number: 1,
+      feedback_had_run: false,
+      model_response_received: true,
+      code_changed: false,
+      workspace_carried_forward_due_to_provider_failure: false,
+      retry_count: 1
+    });
+    expect(result.validity_details?.[0].provider_failure_phase).toBeUndefined();
+  });
+
+  test("OpenRouter loop records retry-recovered timeout details", async () => {
+    const workspace = await setupWorkspace();
+    let callCount = 0;
+    const agent = createOpenRouterFeedbackLoopAgent({
+      apiKey: "sk-or-test",
+      requestTimeoutMs: 1,
+      max_model_turns: 1,
+      maxProviderRetries: 1,
+      fetch: async (_url, init) => {
+        callCount += 1;
+
+        if (callCount === 1) {
+          return new Promise<Response>((_resolve, reject) => {
+            init.signal?.addEventListener("abort", () => reject(new Error("aborted")));
+          });
+        }
+
+        return new Response(
+          JSON.stringify({
+            choices: [
+              {
+                message: {
+                  content: JSON.stringify({
+                    status: "ok",
+                    files: [],
+                    transcript: []
+                  })
+                }
+              }
+            ]
+          }),
+          { status: 200 }
+        );
+      }
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(callCount).toBe(2);
+    expect(result.status).toBe("ok");
+    expect(result.validity_flags).toEqual(["provider_timeout"]);
+    expect(result.validity_details?.[0]).toMatchObject({
+      flag: "provider_timeout",
+      retryable: true,
+      provider_failure_phase: "retry_recovered_timeout",
+      model_turn_number: 1,
+      feedback_had_run: false,
+      model_response_received: false,
+      code_changed: false,
+      workspace_carried_forward_due_to_provider_failure: false,
+      retry_count: 1
+    });
+  });
+
   test("OpenRouter loop records provider timeout validity details", async () => {
     const workspace = await setupWorkspace();
     const agent = createOpenRouterFeedbackLoopAgent({
@@ -315,6 +549,41 @@ describe("model loop agent", () => {
       workspace_carried_forward_due_to_provider_failure: true,
       retry_count: 0
     });
+  });
+
+  test("OpenRouter loop records malformed JSON without a timeout phase", async () => {
+    const workspace = await setupWorkspace();
+    const agent = createOpenRouterFeedbackLoopAgent({
+      apiKey: "sk-or-test",
+      max_model_turns: 1,
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            choices: [
+              {
+                message: {
+                  content: '{"status":"ok","files":[{"path":"src/subject.ts","content":"unterminated'
+                }
+              }
+            ]
+          }),
+          { status: 200 }
+        )
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(result.status).toBe("failed");
+    expect(result.validity_flags).toEqual(["provider_malformed_response"]);
+    expect(result.validity_details?.[0]).toMatchObject({
+      flag: "provider_malformed_response",
+      model_response_received: true,
+      workspace_carried_forward_due_to_provider_failure: true
+    });
+    expect(result.validity_details?.[0].provider_failure_phase).toBeUndefined();
   });
 
   test("OpenRouter loop classifies repair-turn timeouts after feedback ran", async () => {

@@ -84,24 +84,70 @@ describe("run classification and compatibility", () => {
     });
     expect(manifest.provider_execution_profile.provider_profile_id).toBe("fake-agent-v1");
     expect(manifest.clean_primary_evidence_eligible).toBe(false);
+    expect(manifest.protocol_profile_id).toBe("final-checkpoint-primary-v1");
     expect(manifest.metric_version).toBe("result-schema-v1");
+    expect(manifest.compatibility.protocol_profile_id).toBe("final-checkpoint-primary-v1");
     expect(manifest.compatibility.task_seal_hash).toBe(manifest.task_seal_hash);
     expect(manifest.compatibility.budget_hash).toMatch(/^[a-f0-9]{64}$/);
     expect(manifest.compatibility.model_provider_hash).toMatch(/^[a-f0-9]{64}$/);
     expect(manifest.compatibility.provider_execution_profile_hash).toMatch(/^[a-f0-9]{64}$/);
+    expect(manifest.compatibility.metric_definition_hash).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  test("changing protocol profile creates a pooling compatibility boundary", async () => {
+    const root = await setupTemplateWorkspace();
+    const task = createSampleTask(join(root, "template"));
+
+    const historical = await runPilot({
+      task,
+      run_id: "compat-final-primary",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent()
+    });
+    const pathSurvival = await runPilot({
+      task,
+      run_id: "compat-path-primary",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      protocol_profile_id: "path-survival-primary-v1"
+    });
+    const historicalManifest = JSON.parse(await readFile(historical.run_manifest_path, "utf8"));
+    const pathManifest = JSON.parse(await readFile(pathSurvival.run_manifest_path, "utf8"));
+
+    expect(validateRunManifest(historicalManifest).ok).toBe(true);
+    expect(validateRunManifest(pathManifest).ok).toBe(true);
+    expect(pathManifest.protocol_profile_id).toBe("path-survival-primary-v1");
+    expect(pathManifest.compatibility.protocol_profile_id).toBe("path-survival-primary-v1");
+    expect(pathManifest.compatibility.metric_definition_hash).not.toBe(
+      historicalManifest.compatibility.metric_definition_hash
+    );
+    expect(validateRunCompatibilityForPooling([historicalManifest, pathManifest])).toEqual({
+      ok: false,
+      errors: [
+        "Incompatible run compat-path-primary: compatibility.protocol_profile_id differs from compat-final-primary",
+        "Incompatible run compat-path-primary: compatibility.metric_definition_hash differs from compat-final-primary"
+      ]
+    });
   });
 
   test("run manifests derive clean primary evidence eligibility and provider execution profile boundaries", async () => {
     const root = await setupTemplateWorkspace();
     const task = createSampleTask(join(root, "template"));
     const providerExecutionProfile = {
-      provider_profile_id: "openrouter-loop-v1-timeout120-retry1",
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-timeout120000-output16000-workspace256000-feedback12000-temp0.2-retry1",
+      model_id: "deepseek/deepseek-v4-flash",
+      provider_route: "openrouter-chat-completions",
+      provider_endpoint: "https://openrouter.ai/api/v1/chat/completions",
+      response_parser_version: "openrouter-response-parser-v1",
       per_call_timeout_ms: 120_000,
       retry_policy: {
         max_retries: 1,
         retryable_errors: ["timeout", "socket", "rate_limit_transient"]
       },
       max_output_tokens: 16_000,
+      max_workspace_bytes: 256_000,
+      max_feedback_output_bytes: 12_000,
       temperature: 0.2,
       prompt_renderer_version: "semantic-spec-renderer-v0",
       feedback_summary_version: "public-feedback-summary-v0"
@@ -110,6 +156,48 @@ describe("run classification and compatibility", () => {
     const clean = await runPilot({
       task,
       run_id: "clean-causal-profile",
+      runs_root: join(root, "runs"),
+      agent: {
+        async run(input) {
+          const feedbackCapable = input.condition_id === "feedback_capable_spec";
+
+          return {
+            status: "ok",
+            adapter_id: "loop",
+            model_turns: 2,
+            max_model_turns: 2,
+            max_feedback_runs: 1,
+            feedback_available: feedbackCapable,
+            feedback_runs: feedbackCapable ? 1 : 0,
+            feedback_summaries: feedbackCapable ? ["visible feedback summary"] : [],
+            transcript: feedbackCapable
+              ? [
+                  { event: "model_turn", detail: "turn=1" },
+                  { event: "feedback_run", detail: "run=1" },
+                  { event: "model_turn", detail: "turn=2" }
+                ]
+              : [
+                  { event: "model_turn", detail: "turn=1" },
+                  { event: "model_turn", detail: "turn=2" }
+                ]
+          };
+        }
+      },
+      run_classification: "causal_pilot",
+      budget: {
+        max_model_turns: 2,
+        max_feedback_runs: 1
+      },
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: providerExecutionProfile
+    });
+    const incomplete = await runPilot({
+      task,
+      run_id: "incomplete-causal-profile",
       runs_root: join(root, "runs"),
       agent: createFakeAgent(),
       run_classification: "causal_pilot",
@@ -162,17 +250,20 @@ describe("run classification and compatibility", () => {
       provider_execution_profile: providerExecutionProfile
     });
     const cleanManifest = JSON.parse(await readFile(clean.run_manifest_path, "utf8"));
+    const incompleteManifest = JSON.parse(await readFile(incomplete.run_manifest_path, "utf8"));
     const flaggedManifest = JSON.parse(await readFile(flagged.run_manifest_path, "utf8"));
 
     expect(validateRunManifest(cleanManifest).ok).toBe(true);
     expect(cleanManifest.provider_execution_profile).toEqual(providerExecutionProfile);
     expect(cleanManifest.clean_primary_evidence_eligible).toBe(true);
+    expect(incompleteManifest.validity_flags).toEqual([]);
+    expect(incompleteManifest.clean_primary_evidence_eligible).toBe(false);
     expect(flaggedManifest.clean_primary_evidence_eligible).toBe(false);
     expect(flaggedManifest.validity_details[0].provider_failure_phase).toBe("pre_model_action_timeout");
     expect(flaggedManifest.validity_details[0].workspace_carried_forward_due_to_provider_failure).toBe(true);
   });
 
-  test("default OpenRouter profile IDs version timeout, output, temperature, and retry settings", async () => {
+  test("default OpenRouter profile IDs version route, model, request shape, timeout, prompt pressure, temperature, and retry settings", async () => {
     const root = await setupTemplateWorkspace();
     const task = createSampleTask(join(root, "template"));
 
@@ -190,7 +281,310 @@ describe("run classification and compatibility", () => {
     const manifest = JSON.parse(await readFile(result.run_manifest_path, "utf8"));
 
     expect(manifest.provider_execution_profile.provider_profile_id).toBe(
-      "openrouter-loop-v1-timeout60000-output16000-temp0.2-retry0"
+      "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout60000-output16000-workspace256000-feedback12000-temp0.2-retry0"
+    );
+    expect(manifest.provider_execution_profile).toMatchObject({
+      model_id: "deepseek/deepseek-v4-flash",
+      provider_route: "openrouter-chat-completions",
+      provider_endpoint: "https://openrouter.ai/api/v1/chat/completions",
+      response_parser_version: "openrouter-response-parser-v1",
+      request_parameter_version: "openrouter-chat-request-max-tokens-v1",
+      model_loop_policy_version: "model-loop-feedback-continues-after-feedback-v1",
+      per_call_timeout_ms: 60_000,
+      max_output_tokens: 16_000,
+      max_workspace_bytes: 256_000,
+      max_feedback_output_bytes: 12_000,
+      temperature: 0.2,
+      prompt_renderer_version: "semantic-spec-renderer-v0",
+      feedback_summary_version: "public-feedback-summary-v0"
+    });
+  });
+
+  test("provider route and prompt-pressure settings are compatibility boundaries", async () => {
+    const root = await setupTemplateWorkspace();
+    const task = createSampleTask(join(root, "template"));
+    const baseProfile = {
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      model_id: "deepseek/deepseek-v4-flash",
+      provider_route: "openrouter-chat-completions",
+      provider_endpoint: "https://openrouter.ai/api/v1/chat/completions",
+      response_parser_version: "openrouter-response-parser-v1",
+      request_parameter_version: "openrouter-chat-request-max-tokens-v1",
+      per_call_timeout_ms: 120_000,
+      retry_policy: {
+        max_retries: 0,
+        retryable_errors: ["timeout", "socket", "rate_limit_transient"]
+      },
+      max_output_tokens: 4_000,
+      max_workspace_bytes: 64_000,
+      max_feedback_output_bytes: 4_000,
+      temperature: 0.2,
+      prompt_renderer_version: "semantic-spec-renderer-v0",
+      feedback_summary_version: "public-feedback-summary-v0"
+    };
+    const changedPromptPressureProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-timeout120000-output4000-workspace128000-feedback4000-temp0.2-retry0",
+      max_workspace_bytes: 128_000
+    };
+    const changedRouteProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routecustom-openrouter-route-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      provider_route: "custom-openrouter-route",
+      provider_endpoint: "https://example.invalid/openrouter"
+    };
+    const changedParserProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v2-requestopenrouter-chat-request-max-tokens-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      response_parser_version: "openrouter-response-parser-v2"
+    };
+    const changedRequestProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-completion-tokens-v0-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      request_parameter_version: "openrouter-chat-request-max-completion-tokens-v0"
+    };
+    const changedRetryProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-retrypolicyprovider-retry-timeout-rate-malformed-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1",
+      retry_policy_version: "provider-retry-timeout-rate-malformed-v1",
+      retry_policy: {
+        max_retries: 1,
+        retryable_errors: ["timeout", "socket", "rate_limit_transient", "malformed_response"]
+      }
+    };
+
+    const baseline = await runPilot({
+      task,
+      run_id: "provider-profile-baseline",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: baseProfile
+    });
+    const changedPromptPressure = await runPilot({
+      task,
+      run_id: "provider-profile-prompt-pressure",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedPromptPressureProfile
+    });
+    const changedRoute = await runPilot({
+      task,
+      run_id: "provider-profile-route",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedRouteProfile
+    });
+    const changedParser = await runPilot({
+      task,
+      run_id: "provider-profile-parser",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedParserProfile
+    });
+    const changedRequest = await runPilot({
+      task,
+      run_id: "provider-profile-request",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedRequestProfile
+    });
+    const changedRetry = await runPilot({
+      task,
+      run_id: "provider-profile-retry",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedRetryProfile
+    });
+    const baselineManifest = JSON.parse(await readFile(baseline.run_manifest_path, "utf8"));
+    const changedPromptPressureManifest = JSON.parse(
+      await readFile(changedPromptPressure.run_manifest_path, "utf8")
+    );
+    const changedRouteManifest = JSON.parse(await readFile(changedRoute.run_manifest_path, "utf8"));
+    const changedParserManifest = JSON.parse(await readFile(changedParser.run_manifest_path, "utf8"));
+    const changedRequestManifest = JSON.parse(await readFile(changedRequest.run_manifest_path, "utf8"));
+    const changedRetryManifest = JSON.parse(await readFile(changedRetry.run_manifest_path, "utf8"));
+
+    expect(validateRunManifest(baselineManifest).ok).toBe(true);
+    expect(validateRunManifest(changedPromptPressureManifest).ok).toBe(true);
+    expect(validateRunManifest(changedRouteManifest).ok).toBe(true);
+    expect(validateRunManifest(changedParserManifest).ok).toBe(true);
+    expect(validateRunManifest(changedRequestManifest).ok).toBe(true);
+    expect(validateRunManifest(changedRetryManifest).ok).toBe(true);
+    expect(changedPromptPressureManifest.compatibility.provider_execution_profile_hash).not.toBe(
+      baselineManifest.compatibility.provider_execution_profile_hash
+    );
+    expect(changedRouteManifest.compatibility.provider_execution_profile_hash).not.toBe(
+      baselineManifest.compatibility.provider_execution_profile_hash
+    );
+    expect(changedParserManifest.compatibility.provider_execution_profile_hash).not.toBe(
+      baselineManifest.compatibility.provider_execution_profile_hash
+    );
+    expect(changedRequestManifest.compatibility.provider_execution_profile_hash).not.toBe(
+      baselineManifest.compatibility.provider_execution_profile_hash
+    );
+    expect(changedRetryManifest.compatibility.provider_execution_profile_hash).not.toBe(
+      baselineManifest.compatibility.provider_execution_profile_hash
+    );
+
+    const validation = validateRunCompatibilityForPooling([
+      baselineManifest,
+      changedPromptPressureManifest,
+      changedRouteManifest,
+      changedParserManifest,
+      changedRequestManifest,
+      changedRetryManifest
+    ]);
+
+    expect(validation.ok).toBe(false);
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-prompt-pressure: compatibility.provider_execution_profile_hash differs from provider-profile-baseline"
+    );
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-route: compatibility.provider_execution_profile_hash differs from provider-profile-baseline"
+    );
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-parser: compatibility.provider_execution_profile_hash differs from provider-profile-baseline"
+    );
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-request: compatibility.provider_execution_profile_hash differs from provider-profile-baseline"
+    );
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-retry: compatibility.provider_execution_profile_hash differs from provider-profile-baseline"
+    );
+  });
+
+  test("response-format settings are provider execution compatibility boundaries", async () => {
+    const root = await setupTemplateWorkspace();
+    const task = createSampleTask(join(root, "template"));
+    const baseProfile = {
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      model_id: "deepseek/deepseek-v4-flash",
+      provider_route: "openrouter-chat-completions",
+      provider_endpoint: "https://openrouter.ai/api/v1/chat/completions",
+      response_parser_version: "openrouter-response-parser-v1",
+      request_parameter_version: "openrouter-chat-request-max-tokens-v1",
+      response_format_version: "model-loop-response-json-schema-v1",
+      provider_require_parameters: true,
+      per_call_timeout_ms: 120_000,
+      retry_policy: {
+        max_retries: 0,
+        retryable_errors: ["timeout", "socket", "rate_limit_transient"]
+      },
+      max_output_tokens: 4_000,
+      max_workspace_bytes: 64_000,
+      max_feedback_output_bytes: 4_000,
+      temperature: 0.2,
+      prompt_renderer_version: "semantic-spec-renderer-v0",
+      feedback_summary_version: "public-feedback-summary-v0"
+    };
+    const changedFormatProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatnone-requireparams1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      response_format_version: "none"
+    };
+    const changedRequireParametersProfile = {
+      ...baseProfile,
+      provider_profile_id:
+        "openrouter-loop-v1-modeldeepseek-deepseek-v4-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams0-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry0",
+      provider_require_parameters: false
+    };
+
+    const baseline = await runPilot({
+      task,
+      run_id: "provider-profile-structured-baseline",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: baseProfile
+    });
+    const changedFormat = await runPilot({
+      task,
+      run_id: "provider-profile-response-format",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedFormatProfile
+    });
+    const changedRequireParameters = await runPilot({
+      task,
+      run_id: "provider-profile-require-parameters",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-flash",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile: changedRequireParametersProfile
+    });
+    const baselineManifest = JSON.parse(await readFile(baseline.run_manifest_path, "utf8"));
+    const changedFormatManifest = JSON.parse(await readFile(changedFormat.run_manifest_path, "utf8"));
+    const changedRequireParametersManifest = JSON.parse(
+      await readFile(changedRequireParameters.run_manifest_path, "utf8")
+    );
+
+    expect(validateRunManifest(baselineManifest).ok).toBe(true);
+    expect(validateRunManifest(changedFormatManifest).ok).toBe(true);
+    expect(validateRunManifest(changedRequireParametersManifest).ok).toBe(true);
+
+    const validation = validateRunCompatibilityForPooling([
+      baselineManifest,
+      changedFormatManifest,
+      changedRequireParametersManifest
+    ]);
+
+    expect(validation.ok).toBe(false);
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-response-format: compatibility.provider_execution_profile_hash differs from provider-profile-structured-baseline"
+    );
+    expect(validation.errors).toContain(
+      "Incompatible run provider-profile-require-parameters: compatibility.provider_execution_profile_hash differs from provider-profile-structured-baseline"
     );
   });
 

@@ -7,10 +7,13 @@ import {
   type CheckpointFeedbackOpportunityIntegrity
 } from "./evidence-status";
 import {
+  buildProviderProfileId,
   buildRunCompatibilityProfile,
   buildTaskSealManifest,
   expectedFeedbackAssetHashes,
+  MODEL_LOOP_POLICY_VERSION,
   type ModelProviderSettings,
+  OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
   type ProviderExecutionProfile,
   PROTOCOL_VERSION,
   RENDERER_VERSION,
@@ -20,6 +23,10 @@ import {
   type RunValidityDetail,
   type RunValidityFlag
 } from "./provenance";
+import {
+  defaultProtocolProfileId,
+  type ProtocolProfileId
+} from "./protocol-profile";
 import { renderSpecPacket, writeFeedbackAssets, type RenderedSpecPacket } from "./renderer";
 import {
   buildRunResultRecord,
@@ -30,6 +37,12 @@ import {
 import { writeResultSummary } from "./result-summary";
 import { hashFile, hashWorkspace, type WorkspaceSnapshot } from "./snapshot";
 import type { CheckpointId, TaskDefinition } from "./task-model";
+
+const DEFAULT_OPENROUTER_PROVIDER_ROUTE = "openrouter-chat-completions";
+const DEFAULT_OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
+const DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION = "openrouter-response-parser-v1";
+const DEFAULT_OPENROUTER_MAX_WORKSPACE_BYTES = 256_000;
+const DEFAULT_OPENROUTER_FEEDBACK_OUTPUT_BYTES = 12_000;
 
 export type AgentRunInput = {
   condition_id: ConditionId;
@@ -99,6 +112,7 @@ export type RunPilotInput = {
   provider_execution_profile?: ProviderExecutionProfile;
   exclusion_rules?: string[];
   metric_version?: string;
+  protocol_profile_id?: ProtocolProfileId;
 };
 
 export type CheckpointRunResult = {
@@ -138,6 +152,7 @@ export type PilotRunResult = {
   clean_primary_evidence_eligible: boolean;
   exclusion_rules: string[];
   metric_version: string;
+  protocol_profile_id: ProtocolProfileId;
   compatibility: RunCompatibilityProfile;
   run_manifest_path: string;
   result_record_path?: string;
@@ -151,6 +166,7 @@ export async function runPilot(input: RunPilotInput): Promise<PilotRunResult> {
   const condition_results = {} as Record<ConditionId, ConditionRunResult>;
   const runRoot = join(input.runs_root, input.run_id);
   const metricVersion = input.metric_version ?? RESULT_SCHEMA_VERSION;
+  const protocolProfileId = input.protocol_profile_id ?? defaultProtocolProfileId();
   const budget = input.budget ?? {};
   const modelProvider = input.model_provider ?? {};
   const providerExecutionProfile =
@@ -169,7 +185,8 @@ export async function runPilot(input: RunPilotInput): Promise<PilotRunResult> {
     budget,
     model_provider: modelProvider,
     provider_execution_profile: providerExecutionProfile,
-    metric_version: metricVersion
+    metric_version: metricVersion,
+    protocol_profile_id: protocolProfileId
   });
 
   for (const condition_id of CONDITION_IDS) {
@@ -273,10 +290,12 @@ export async function runPilot(input: RunPilotInput): Promise<PilotRunResult> {
     provider_execution_profile: providerExecutionProfile,
     clean_primary_evidence_eligible: isCleanPrimaryEvidenceEligible({
       run_classification: runClassification,
-      validity_flags: validityFlags
+      validity_flags: validityFlags,
+      condition_results
     }),
     exclusion_rules: exclusionRules,
     metric_version: metricVersion,
+    protocol_profile_id: protocolProfileId,
     compatibility,
     run_manifest_path: join(runRoot, "run.json"),
     condition_results
@@ -335,30 +354,78 @@ function defaultProviderExecutionProfile(
   modelProvider: ModelProviderSettings
 ): ProviderExecutionProfile {
   if (modelProvider.provider === "openrouter" && modelProvider.adapter_id === "openrouter-loop") {
+    const perCallTimeoutMs = 60_000;
+    const maxOutputTokens = 16_000;
+    const temperature = 0.2;
+    const maxRetries = 0;
+
     return {
-      provider_profile_id: "openrouter-loop-v1-timeout60000-output16000-temp0.2-retry0",
-      per_call_timeout_ms: 60_000,
+      provider_profile_id: buildProviderProfileId({
+        adapter_id: "openrouter-loop",
+        model_id: modelProvider.model,
+        provider_route: DEFAULT_OPENROUTER_PROVIDER_ROUTE,
+        response_parser_version: DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
+        request_parameter_version: OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
+        model_loop_policy_version: MODEL_LOOP_POLICY_VERSION,
+        per_call_timeout_ms: perCallTimeoutMs,
+        max_output_tokens: maxOutputTokens,
+        max_workspace_bytes: DEFAULT_OPENROUTER_MAX_WORKSPACE_BYTES,
+        max_feedback_output_bytes: DEFAULT_OPENROUTER_FEEDBACK_OUTPUT_BYTES,
+        temperature,
+        max_retries: maxRetries
+      }),
+      model_id: modelProvider.model,
+      provider_route: DEFAULT_OPENROUTER_PROVIDER_ROUTE,
+      provider_endpoint: DEFAULT_OPENROUTER_ENDPOINT,
+      response_parser_version: DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
+      request_parameter_version: OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
+      model_loop_policy_version: MODEL_LOOP_POLICY_VERSION,
+      per_call_timeout_ms: perCallTimeoutMs,
       retry_policy: {
-        max_retries: 0,
+        max_retries: maxRetries,
         retryable_errors: ["timeout", "socket", "rate_limit_transient"]
       },
-      max_output_tokens: 16_000,
-      temperature: 0.2,
+      max_output_tokens: maxOutputTokens,
+      max_workspace_bytes: DEFAULT_OPENROUTER_MAX_WORKSPACE_BYTES,
+      max_feedback_output_bytes: DEFAULT_OPENROUTER_FEEDBACK_OUTPUT_BYTES,
+      temperature,
       prompt_renderer_version: RENDERER_VERSION,
       feedback_summary_version: "public-feedback-summary-v0"
     };
   }
 
   if (modelProvider.provider === "openrouter") {
+    const perCallTimeoutMs = 60_000;
+    const maxOutputTokens = 16_000;
+    const temperature = 0.2;
+    const maxRetries = 0;
+
     return {
-      provider_profile_id: "openrouter-single-shot-v1-timeout60000-output16000-temp0.2-retry0",
-      per_call_timeout_ms: 60_000,
+      provider_profile_id: buildProviderProfileId({
+        adapter_id: "openrouter-single-shot",
+        model_id: modelProvider.model,
+        provider_route: DEFAULT_OPENROUTER_PROVIDER_ROUTE,
+        response_parser_version: DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
+        request_parameter_version: OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
+        per_call_timeout_ms: perCallTimeoutMs,
+        max_output_tokens: maxOutputTokens,
+        max_workspace_bytes: DEFAULT_OPENROUTER_MAX_WORKSPACE_BYTES,
+        temperature,
+        max_retries: maxRetries
+      }),
+      model_id: modelProvider.model,
+      provider_route: DEFAULT_OPENROUTER_PROVIDER_ROUTE,
+      provider_endpoint: DEFAULT_OPENROUTER_ENDPOINT,
+      response_parser_version: DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
+      request_parameter_version: OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
+      per_call_timeout_ms: perCallTimeoutMs,
       retry_policy: {
-        max_retries: 0,
+        max_retries: maxRetries,
         retryable_errors: ["timeout", "socket", "rate_limit_transient"]
       },
-      max_output_tokens: 16_000,
-      temperature: 0.2,
+      max_output_tokens: maxOutputTokens,
+      max_workspace_bytes: DEFAULT_OPENROUTER_MAX_WORKSPACE_BYTES,
+      temperature,
       prompt_renderer_version: RENDERER_VERSION,
       feedback_summary_version: "none"
     };
@@ -379,8 +446,18 @@ function defaultProviderExecutionProfile(
 function isCleanPrimaryEvidenceEligible(input: {
   run_classification: RunClassification;
   validity_flags: RunValidityFlag[];
+  condition_results: Record<ConditionId, ConditionRunResult>;
 }): boolean {
-  return input.run_classification === "causal_pilot" && input.validity_flags.length === 0;
+  if (input.run_classification !== "causal_pilot" || input.validity_flags.length > 0) {
+    return false;
+  }
+
+  const feedbackCheckpoints = input.condition_results.feedback_capable_spec?.checkpoints ?? [];
+
+  return feedbackCheckpoints.every((checkpoint) => {
+    const integrity = checkpoint.feedback_opportunity_integrity;
+    return integrity?.required !== true || integrity.complete === true;
+  });
 }
 
 function checkpointManifest(checkpoint: CheckpointRunResult) {
@@ -431,6 +508,7 @@ function runManifest(result: PilotRunResult, task: TaskDefinition) {
     model_provider: result.model_provider,
     provider_execution_profile: result.provider_execution_profile,
     exclusion_rules: result.exclusion_rules,
+    protocol_profile_id: result.protocol_profile_id,
     metric_version: result.metric_version,
     compatibility: result.compatibility,
     result_record_path: result.result_record_path,

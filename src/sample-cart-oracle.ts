@@ -34,7 +34,7 @@ export async function evaluateSampleCartWorkspace(
   );
 
   return {
-    status: "ok",
+    status: checks.every((check) => check.passed) ? "ok" : "failed",
     checks
   };
 }

@@ -1,0 +1,250 @@
+{
+  "schema_version": "local-acceptance-criteria-v0",
+  "task_id": "inventory-reservations-lifecycle",
+  "task_version": "inventory-reservations-lifecycle-v0",
+  "criteria": [
+    {
+      "criterion_id": "visible-feedback-stock-received-increases-sellable",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I01",
+      "commitment_id": "stock-received-increases-sellable",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for stock receipt and sellable availability.",
+      "evidence": ["local:coverage-manifest.json#stock-received-visible-check", "local:spec/stock-received.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-reservation-holds-stock-until-expiration",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I02",
+      "commitment_id": "reservation-holds-stock-until-expiration",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for held reservations before expiration.",
+      "evidence": ["local:coverage-manifest.json#reservation-hold-visible-check", "local:spec/reservation-hold.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-order-confirmation-commits-held-stock",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I03",
+      "commitment_id": "order-confirmation-commits-held-stock",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for confirmation from held to committed.",
+      "evidence": ["local:coverage-manifest.json#order-confirmation-visible-check", "local:spec/order-confirmation.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-reservation-expiration-releases-stock",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I04",
+      "commitment_id": "reservation-expiration-releases-stock",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for expiration boundary release.",
+      "evidence": ["local:coverage-manifest.json#reservation-expiration-visible-check", "local:spec/reservation-expiration.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-cancellation-releases-unshipped-allocations",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I05",
+      "commitment_id": "cancellation-releases-unshipped-allocations",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for cancellation before shipment.",
+      "evidence": ["local:coverage-manifest.json#cancellation-release-visible-check", "local:spec/cancellation-release.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-duplicate-events-are-idempotent",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I06",
+      "commitment_id": "duplicate-events-are-idempotent",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for duplicate stock and reservation IDs.",
+      "evidence": ["local:coverage-manifest.json#duplicate-events-visible-check", "local:spec/duplicate-events.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-shipment-consumes-committed-stock",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I07",
+      "commitment_id": "shipment-consumes-committed-stock",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for shipment consumption and cancellation after shipment.",
+      "evidence": ["local:coverage-manifest.json#shipment-consumption-visible-check", "local:spec/shipment-consumption.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-restock-fills-backorders-fifo",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I08",
+      "commitment_id": "restock-fills-backorders-fifo",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for FIFO backorder allocation.",
+      "evidence": ["local:coverage-manifest.json#backorder-fifo-visible-check", "local:spec/backorder-fifo.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-returns-restore-only-sellable-stock",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I09",
+      "commitment_id": "returns-restore-only-sellable-stock",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for sellable and damaged return dispositions.",
+      "evidence": ["local:coverage-manifest.json#returns-disposition-visible-check", "local:spec/returns-disposition.spec.ts"]
+    },
+    {
+      "criterion_id": "hidden-oracle-stock-received-increases-sellable",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I01",
+      "commitment_id": "stock-received-increases-sellable",
+      "required_before": "hidden_oracle",
+      "description": "Add private stock receipt quantity and canReserve boundary checks implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/stock-received-private.txt", "local:stock-received-sellable-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-reservation-holds-stock-until-expiration",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I02",
+      "commitment_id": "reservation-holds-stock-until-expiration",
+      "required_before": "hidden_oracle",
+      "description": "Add private hold-before-expiration checks implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/reservation-hold-private.txt", "local:reservation-hold-before-expiration-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-order-confirmation-commits-held-stock",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I03",
+      "commitment_id": "order-confirmation-commits-held-stock",
+      "required_before": "hidden_oracle",
+      "description": "Add private confirmation and committed-stock checks implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/order-confirmation-private.txt", "local:confirmation-commits-held-stock-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-reservation-expiration-releases-stock",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I04",
+      "commitment_id": "reservation-expiration-releases-stock",
+      "required_before": "hidden_oracle",
+      "description": "Add private expiration boundary checks implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/reservation-expiration-private.txt", "local:expiration-releases-held-stock-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-cancellation-releases-unshipped-allocations",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I05",
+      "commitment_id": "cancellation-releases-unshipped-allocations",
+      "required_before": "hidden_oracle",
+      "description": "Add private cancellation release checks implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/cancellation-release-private.txt", "local:cancellation-releases-confirmed-stock-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-duplicate-events-are-idempotent",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I06",
+      "commitment_id": "duplicate-events-are-idempotent",
+      "required_before": "hidden_oracle",
+      "description": "Add private duplicate event checks for stock and reservation events.",
+      "evidence": ["local:hidden-oracle/duplicate-events-private.txt", "local:duplicate-stock-and-reservation-ids-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-shipment-consumes-committed-stock",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I07",
+      "commitment_id": "shipment-consumes-committed-stock",
+      "required_before": "hidden_oracle",
+      "description": "Add private shipment consumption and post-shipment cancellation checks.",
+      "evidence": ["local:hidden-oracle/shipment-consumption-private.txt", "local:shipment-consumes-stock-and-cannot-be-canceled-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-restock-fills-backorders-fifo",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I08",
+      "commitment_id": "restock-fills-backorders-fifo",
+      "required_before": "hidden_oracle",
+      "description": "Add private FIFO backorder allocation checks with partial restock.",
+      "evidence": ["local:hidden-oracle/backorder-fifo-private.txt", "local:restock-fills-oldest-backorder-first-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-returns-restore-only-sellable-stock",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I09",
+      "commitment_id": "returns-restore-only-sellable-stock",
+      "required_before": "hidden_oracle",
+      "description": "Add private sellable and damaged return checks implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/returns-disposition-private.txt", "local:sellable-return-restores-stock-private", "local:damaged-return-does-not-restore-stock-private"]
+    },
+    {
+      "criterion_id": "fake-validation-stock-receipt-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I01",
+      "scenario_id": "stock-receipt-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for stock receipt before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#stock-receipt-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-reservation-hold-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I02",
+      "scenario_id": "reservation-hold-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for reservation holds before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#reservation-hold-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-order-confirmation-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I03",
+      "scenario_id": "order-confirmation-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for confirmation before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#order-confirmation-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-reservation-expiration-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I04",
+      "scenario_id": "reservation-expiration-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for expiration before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#reservation-expiration-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-cancellation-release-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I05",
+      "scenario_id": "cancellation-release-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for cancellation release before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#cancellation-release-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-duplicate-events-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I06",
+      "scenario_id": "duplicate-events-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for duplicate event IDs before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#duplicate-events-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-shipment-consumption-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I07",
+      "scenario_id": "shipment-consumption-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for shipment consumption before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#shipment-consumption-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-backorder-fifo-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I08",
+      "scenario_id": "backorder-fifo-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for backorder FIFO before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#backorder-fifo-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-returns-disposition-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I09",
+      "scenario_id": "returns-disposition-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for return disposition before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#returns-disposition-reference", "local:bun test test/inventory-reservations-lifecycle.test.ts"]
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": "visible-hidden-coverage-v0",
+  "task_id": "inventory-reservations-lifecycle",
+  "task_version": "inventory-reservations-lifecycle-v0",
+  "entries": [
+    {
+      "spec_id": "SPEC-001",
+      "commitment_id": "stock-received-increases-sellable",
+      "checkpoint_introduced": "I01",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "stock-received-visible-check",
+        "relative_path": "spec/stock-received.spec.ts",
+        "notes": "Visible feedback checks stock receipt, sellable quantity, and canReserve boundaries."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/stock-received-private.txt"],
+        "check_ids": ["stock-received-sellable-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-002",
+      "commitment_id": "reservation-holds-stock-until-expiration",
+      "checkpoint_introduced": "I02",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "reservation-hold-visible-check",
+        "relative_path": "spec/reservation-hold.spec.ts",
+        "notes": "Visible feedback checks held status and reduced sellable quantity before expiresAt."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/reservation-hold-private.txt"],
+        "check_ids": ["reservation-hold-before-expiration-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-003",
+      "commitment_id": "order-confirmation-commits-held-stock",
+      "checkpoint_introduced": "I03",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "order-confirmation-visible-check",
+        "relative_path": "spec/order-confirmation.spec.ts",
+        "notes": "Visible feedback checks confirmed status, committed quantity, and unchanged sellable reduction."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/order-confirmation-private.txt"],
+        "check_ids": ["confirmation-commits-held-stock-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-004",
+      "commitment_id": "reservation-expiration-releases-stock",
+      "checkpoint_introduced": "I04",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "reservation-expiration-visible-check",
+        "relative_path": "spec/reservation-expiration.spec.ts",
+        "notes": "Visible feedback checks expiration at the boundary and release of held stock."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/reservation-expiration-private.txt"],
+        "check_ids": ["expiration-releases-held-stock-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-005",
+      "commitment_id": "cancellation-releases-unshipped-allocations",
+      "checkpoint_introduced": "I05",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "cancellation-release-visible-check",
+        "relative_path": "spec/cancellation-release.spec.ts",
+        "notes": "Visible feedback checks confirmed reservation cancellation and sellable restoration before shipment."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/cancellation-release-private.txt"],
+        "check_ids": ["cancellation-releases-confirmed-stock-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-006",
+      "commitment_id": "duplicate-events-are-idempotent",
+      "checkpoint_introduced": "I06",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "duplicate-events-visible-check",
+        "relative_path": "spec/duplicate-events.spec.ts",
+        "notes": "Visible feedback checks duplicate stock and reservation events do not double-apply."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/duplicate-events-private.txt"],
+        "check_ids": ["duplicate-stock-and-reservation-ids-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-007",
+      "commitment_id": "shipment-consumes-committed-stock",
+      "checkpoint_introduced": "I07",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "shipment-consumption-visible-check",
+        "relative_path": "spec/shipment-consumption.spec.ts",
+        "notes": "Visible feedback checks shipment stock consumption and no cancellation restoration after shipment."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/shipment-consumption-private.txt"],
+        "check_ids": ["shipment-consumes-stock-and-cannot-be-canceled-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-008",
+      "commitment_id": "restock-fills-backorders-fifo",
+      "checkpoint_introduced": "I08",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "backorder-fifo-visible-check",
+        "relative_path": "spec/backorder-fifo.spec.ts",
+        "notes": "Visible feedback checks oldest full backorder allocation and later backorder preservation."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/backorder-fifo-private.txt"],
+        "check_ids": ["restock-fills-oldest-backorder-first-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-009",
+      "commitment_id": "returns-restore-only-sellable-stock",
+      "checkpoint_introduced": "I09",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "returns-disposition-visible-check",
+        "relative_path": "spec/returns-disposition.spec.ts",
+        "notes": "Visible feedback checks sellable return restoration and damaged return quarantine."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/returns-disposition-private.txt"],
+        "check_ids": [
+          "sellable-return-restores-stock-private",
+          "damaged-return-does-not-restore-stock-private"
+        ]
+      }
+    }
+  ]
+}

@@ -122,7 +122,8 @@ describe("task package loading", () => {
         checkpoints: ["I01"],
         template_workspace: "template-workspace",
         canonical_spec: "canonical-spec.json",
-        hidden_oracle_path: "hidden-oracle"
+        hidden_oracle_path: "hidden-oracle",
+        analysis_plans: ["analysis-plan.sonnet-provider-v0.json"]
       }).ok
     ).toBe(true);
 
@@ -138,6 +139,75 @@ describe("task package loading", () => {
         hidden_oracle_path: "hidden-oracle"
       }).errors
     ).toContain("Duplicate checkpoint I01");
+    expect(
+      validateTaskPackageJson({
+        task_id: "bad-analysis-plans",
+        checkpoints: ["I01"],
+        template_workspace: "template-workspace",
+        canonical_spec: "canonical-spec.json",
+        hidden_oracle_path: "hidden-oracle",
+        analysis_plans: ["analysis-plan.json", "analysis-plan.json", ""]
+      }).errors
+    ).toEqual(
+      expect.arrayContaining([
+        "analysis_plans must be a non-empty string",
+        "Duplicate analysis_plan analysis-plan.json"
+      ])
+    );
+    expect(
+      validateAnalysisPlanJson(
+        {
+          schema_version: "analysis-plan-v0",
+          analysis_plan_id: "sonnet-causal-plan",
+          protocol_profile_id: "path-survival-primary-v1",
+          provider_execution_profile_id: "provider-profile-v1",
+          status: "sealed",
+          task_id: "task",
+          task_version: "task-v0",
+          conditions: ["context_only_spec", "feedback_capable_spec"],
+          run_classifications: ["difficulty_probe", "causal_pilot"],
+          primary_metric: "final_checkpoint_pass_rate_delta",
+          secondary_metrics: [],
+          planned_metrics: [],
+          budget: {
+            max_model_turns: 2,
+            max_feedback_runs: 1
+          },
+          model_provider: {
+            provider: "openrouter",
+            model: "anthropic/claude-sonnet-4.6",
+            adapter_id: "openrouter-loop"
+          },
+          exclusion_rules: ["do not pool across compatibility profile changes"],
+          pooling_rules: {
+            compatibility_fields: [
+              "task_id",
+              "task_version",
+              "protocol_version",
+              "renderer_version",
+              "task_seal_hash",
+              "checkpoint_list_hash",
+              "visible_spec_hash",
+              "feedback_asset_hash",
+              "hidden_oracle_hash",
+              "budget_hash",
+              "model_provider_hash",
+              "provider_execution_profile_hash",
+              "protocol_profile_id",
+              "metric_definition_hash"
+            ],
+            reject_validity_flags: true,
+            reject_unclassified_runs: true
+          },
+          promotion_gates: ["analysis_plan_sealed_before_provider_run"],
+          frozen_inputs: ["provider_execution_profile_id"]
+        },
+        {
+          task_id: "task",
+          task_version: "task-v0"
+        }
+      ).ok
+    ).toBe(true);
     expect(
       validateCanonicalSpecJson(
         {
@@ -487,6 +557,7 @@ describe("task package loading", () => {
     const analysisValidation = validateAnalysisPlanJson(
       {
         schema_version: "analysis-plan-v0",
+        protocol_profile_id: "unsupported-protocol-profile",
         status: "draft",
         task_id: "task",
         task_version: "task-v0",
@@ -537,6 +608,9 @@ describe("task package loading", () => {
     );
     expect(analysisValidation.errors).toContain(
       "analysis_plan.conditions must exactly match the two pilot condition IDs"
+    );
+    expect(analysisValidation.errors).toContain(
+      "analysis_plan.protocol_profile_id must be final-checkpoint-primary-v1 or path-survival-primary-v1"
     );
     expect(analysisValidation.errors).toContain(
       "analysis_plan.run_classifications must include difficulty_probe before provider promotion"

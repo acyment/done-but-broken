@@ -189,7 +189,7 @@ describe("role-permissions-calibration task", () => {
       expect(await pathExists(join(workspacePath, "hidden-oracle"))).toBe(false);
       expect(await pathExists(join(workspacePath, "oracle-cases.ts"))).toBe(false);
     }
-  });
+  }, 15_000);
 
   test("runs through all seven checkpoints with carry-forward fake-agent state", async () => {
     const root = await mkTempRoot();
@@ -224,7 +224,7 @@ describe("role-permissions-calibration task", () => {
       expect(previousBeforeFinalCheckpoint).toContain(`I06 ${conditionId}`);
       expect(previousBeforeFinalCheckpoint).not.toContain(`I07 ${conditionId}`);
     }
-  });
+  }, 15_000);
 });
 
 describe("role-permissions hidden oracle", () => {

@@ -2,6 +2,11 @@ import { readFile, stat } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
 import { CONDITION_IDS, type ConditionId } from "./conditions";
 import { buildEvidenceStatusSummary, type CheckpointFeedbackOpportunityIntegrity } from "./evidence-status";
+import {
+  defaultProtocolProfileId,
+  isProtocolProfileId,
+  type ProtocolProfileId
+} from "./protocol-profile";
 import { renderSpecPacket, type RenderedSpecPacket } from "./renderer";
 import { RESULT_SCHEMA_VERSION, validateRunResultRecord } from "./result-schema";
 import { renderResultSummary } from "./result-summary";
@@ -11,6 +16,9 @@ import { defaultTaskVersion, type CheckpointId, type TaskDefinition } from "./ta
 export const PROTOCOL_VERSION = "two-arm-feedback-spec-v0";
 export const RENDERER_VERSION = "semantic-spec-renderer-v0";
 export const TASK_SEAL_SCHEMA_VERSION = "task-seal-v0";
+export const OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION = "openrouter-chat-request-max-tokens-v1";
+export const OPENROUTER_RETRY_POLICY_VERSION = "provider-retry-timeout-rate-malformed-v1";
+export const MODEL_LOOP_POLICY_VERSION = "model-loop-feedback-continues-after-feedback-v1";
 
 export const RUN_CLASSIFICATIONS = [
   "calibration",
@@ -76,15 +84,44 @@ export type ModelProviderSettings = {
 
 export type ProviderExecutionProfile = {
   provider_profile_id: string;
+  model_id?: string;
+  provider_route?: string;
+  provider_endpoint?: string;
+  response_parser_version?: string;
+  request_parameter_version?: string;
+  response_format_version?: string;
+  provider_require_parameters?: boolean;
+  retry_policy_version?: string;
+  model_loop_policy_version?: string;
   per_call_timeout_ms: number;
   retry_policy: {
     max_retries: number;
     retryable_errors: string[];
   };
   max_output_tokens?: number;
+  max_workspace_bytes?: number;
+  max_feedback_output_bytes?: number;
   temperature?: number;
   prompt_renderer_version: string;
   feedback_summary_version: string;
+};
+
+export type ProviderProfileIdInput = {
+  adapter_id: string;
+  model_id?: string;
+  provider_route?: string;
+  response_parser_version?: string;
+  request_parameter_version?: string;
+  response_format_version?: string;
+  provider_require_parameters?: boolean;
+  retry_policy_version?: string;
+  model_loop_policy_version?: string;
+  per_call_timeout_ms: number;
+  max_output_tokens?: number;
+  max_workspace_bytes?: number;
+  max_feedback_output_bytes?: number;
+  temperature?: number;
+  max_retries: number;
 };
 
 export type TaskSealManifest = {
@@ -114,6 +151,7 @@ export type RunCompatibilityProfile = {
   budget_hash: string;
   model_provider_hash: string;
   provider_execution_profile_hash: string;
+  protocol_profile_id: string;
   metric_definition_hash: string;
 };
 
@@ -206,7 +244,10 @@ export function buildRunCompatibilityProfile(input: {
   model_provider: ModelProviderSettings;
   provider_execution_profile: ProviderExecutionProfile;
   metric_version: string;
+  protocol_profile_id?: ProtocolProfileId;
 }): RunCompatibilityProfile {
+  const protocolProfileId = input.protocol_profile_id ?? defaultProtocolProfileId();
+
   return {
     task_id: input.task_seal.task_id,
     task_version: input.task_seal.task_version,
@@ -220,8 +261,70 @@ export function buildRunCompatibilityProfile(input: {
     budget_hash: hashStable(input.budget),
     model_provider_hash: hashStable(input.model_provider),
     provider_execution_profile_hash: hashStable(input.provider_execution_profile),
-    metric_definition_hash: hashStable(input.metric_version)
+    protocol_profile_id: protocolProfileId,
+    metric_definition_hash: hashStable({
+      metric_version: input.metric_version,
+      protocol_profile_id: protocolProfileId
+    })
   };
+}
+
+export function buildProviderProfileId(input: ProviderProfileIdInput): string {
+  const parts = [`${sanitizeProfileIdPart(input.adapter_id)}-v1`];
+
+  if (input.model_id) {
+    parts.push(`model${sanitizeProfileIdPart(input.model_id)}`);
+  }
+
+  if (input.provider_route) {
+    parts.push(`route${sanitizeProfileIdPart(input.provider_route)}`);
+  }
+
+  if (input.response_parser_version) {
+    parts.push(`parser${sanitizeProfileIdPart(input.response_parser_version)}`);
+  }
+
+  if (input.request_parameter_version) {
+    parts.push(`request${sanitizeProfileIdPart(input.request_parameter_version)}`);
+  }
+
+  if (input.response_format_version) {
+    parts.push(`format${sanitizeProfileIdPart(input.response_format_version)}`);
+  }
+
+  if (input.provider_require_parameters !== undefined) {
+    parts.push(`requireparams${input.provider_require_parameters ? 1 : 0}`);
+  }
+
+  if (input.retry_policy_version) {
+    parts.push(`retrypolicy${sanitizeProfileIdPart(input.retry_policy_version)}`);
+  }
+
+  if (input.model_loop_policy_version) {
+    parts.push(`looppolicy${sanitizeProfileIdPart(input.model_loop_policy_version)}`);
+  }
+
+  parts.push(`timeout${input.per_call_timeout_ms}`);
+
+  if (input.max_output_tokens !== undefined) {
+    parts.push(`output${input.max_output_tokens}`);
+  }
+
+  if (input.max_workspace_bytes !== undefined) {
+    parts.push(`workspace${input.max_workspace_bytes}`);
+  }
+
+  if (input.max_feedback_output_bytes !== undefined) {
+    parts.push(`feedback${input.max_feedback_output_bytes}`);
+  }
+
+  if (input.temperature !== undefined) {
+    parts.push(`temp${input.temperature}`);
+  }
+
+  parts.push(`retry${input.max_retries}`);
+
+  return parts.join("-");
 }
 
 export function validateTaskSealManifest(manifest: unknown): SchemaValidation {
@@ -290,8 +393,15 @@ export function validateRunManifest(manifest: unknown): SchemaValidation {
   validateProviderExecutionProfile(candidate.provider_execution_profile, errors);
   validateCleanPrimaryEvidenceEligibility(candidate.clean_primary_evidence_eligible, errors);
   requireStringArray(candidate.exclusion_rules, "exclusion_rules", errors);
+  validateOptionalProtocolProfileId(candidate.protocol_profile_id, "protocol_profile_id", errors);
   requireString(candidate.metric_version, "metric_version", errors);
   validateCompatibilityProfile(candidate.compatibility, errors);
+  if (
+    candidate.protocol_profile_id !== undefined &&
+    candidate.compatibility?.protocol_profile_id !== candidate.protocol_profile_id
+  ) {
+    errors.push("compatibility.protocol_profile_id must match protocol_profile_id");
+  }
 
   if (!Array.isArray(candidate.conditions) || !sameStringArray(candidate.conditions, CONDITION_IDS)) {
     errors.push("conditions must exactly match the two pilot condition IDs");
@@ -501,12 +611,53 @@ function validateProviderExecutionProfile(value: unknown, errors: string[]) {
   }
 
   requireString(profile.provider_profile_id, "provider_execution_profile.provider_profile_id", errors);
+  validateOptionalNonEmptyString(profile.model_id, "provider_execution_profile.model_id", errors);
+  validateOptionalNonEmptyString(profile.provider_route, "provider_execution_profile.provider_route", errors);
+  validateOptionalNonEmptyString(profile.provider_endpoint, "provider_execution_profile.provider_endpoint", errors);
+  validateOptionalNonEmptyString(
+    profile.response_parser_version,
+    "provider_execution_profile.response_parser_version",
+    errors
+  );
+  validateOptionalNonEmptyString(
+    profile.request_parameter_version,
+    "provider_execution_profile.request_parameter_version",
+    errors
+  );
+  validateOptionalNonEmptyString(
+    profile.response_format_version,
+    "provider_execution_profile.response_format_version",
+    errors
+  );
+  validateOptionalBooleanField(
+    profile.provider_require_parameters,
+    "provider_execution_profile.provider_require_parameters",
+    errors
+  );
+  validateOptionalNonEmptyString(
+    profile.retry_policy_version,
+    "provider_execution_profile.retry_policy_version",
+    errors
+  );
+  validateOptionalNonEmptyString(
+    profile.model_loop_policy_version,
+    "provider_execution_profile.model_loop_policy_version",
+    errors
+  );
   validateNonNegativeInteger(profile.per_call_timeout_ms, "provider_execution_profile.per_call_timeout_ms", errors);
   requireString(profile.prompt_renderer_version, "provider_execution_profile.prompt_renderer_version", errors);
   requireString(profile.feedback_summary_version, "provider_execution_profile.feedback_summary_version", errors);
 
   if (profile.max_output_tokens !== undefined) {
     validatePositiveInteger(profile.max_output_tokens, "provider_execution_profile.max_output_tokens", errors);
+  }
+
+  if (profile.max_workspace_bytes !== undefined) {
+    validatePositiveInteger(profile.max_workspace_bytes, "provider_execution_profile.max_workspace_bytes", errors);
+  }
+
+  if (profile.max_feedback_output_bytes !== undefined) {
+    validatePositiveInteger(profile.max_feedback_output_bytes, "provider_execution_profile.max_feedback_output_bytes", errors);
   }
 
   if (profile.temperature !== undefined && typeof profile.temperature !== "number") {
@@ -604,6 +755,11 @@ function validateCompatibilityProfile(value: unknown, errors: string[]) {
   requireHash(compatibility.budget_hash, "compatibility.budget_hash", errors);
   requireHash(compatibility.model_provider_hash, "compatibility.model_provider_hash", errors);
   requireHash(compatibility.provider_execution_profile_hash, "compatibility.provider_execution_profile_hash", errors);
+  validateOptionalProtocolProfileId(
+    compatibility.protocol_profile_id,
+    "compatibility.protocol_profile_id",
+    errors
+  );
   requireHash(compatibility.metric_definition_hash, "compatibility.metric_definition_hash", errors);
 }
 
@@ -659,6 +815,7 @@ const COMPATIBILITY_FIELDS = [
   "budget_hash",
   "model_provider_hash",
   "provider_execution_profile_hash",
+  "protocol_profile_id",
   "metric_definition_hash"
 ] as const;
 
@@ -2087,6 +2244,16 @@ function stableValue(value: unknown): unknown {
   );
 }
 
+function sanitizeProfileIdPart(value: string): string {
+  const sanitized = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return sanitized.length > 0 ? sanitized : "unknown";
+}
+
 function requireString(value: unknown, field: string, errors: string[]) {
   if (typeof value !== "string" || value.length === 0) {
     errors.push(`${field} must be a non-empty string`);
@@ -2096,6 +2263,12 @@ function requireString(value: unknown, field: string, errors: string[]) {
 function validateOptionalNonEmptyString(value: unknown, field: string, errors: string[]) {
   if (value !== undefined && (typeof value !== "string" || value.length === 0)) {
     errors.push(`${field} must be a non-empty string when provided`);
+  }
+}
+
+function validateOptionalProtocolProfileId(value: unknown, field: string, errors: string[]) {
+  if (value !== undefined && !isProtocolProfileId(value)) {
+    errors.push(`${field} must be final-checkpoint-primary-v1 or path-survival-primary-v1`);
   }
 }
 

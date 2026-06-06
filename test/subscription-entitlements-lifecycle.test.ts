@@ -185,6 +185,55 @@ describe("subscription-entitlements-lifecycle task draft", () => {
       "provider_execution_profile_hash",
       "metric_definition_hash"
     ]);
+
+    const sonnetPlan = task.analysis_plans?.find(
+      (plan) => plan.analysis_plan_id === "subscription-entitlements-lifecycle-v0-sonnet-causal-pilot-plan-v0"
+    );
+    expect(sonnetPlan).toMatchObject({
+      schema_version: "analysis-plan-v0",
+      status: "sealed",
+      task_id: "subscription-entitlements-lifecycle",
+      task_version: "subscription-entitlements-lifecycle-v0",
+      conditions: ["context_only_spec", "feedback_capable_spec"],
+      run_classifications: ["difficulty_probe", "causal_pilot"],
+      budget: {
+        max_model_turns: 2,
+        max_feedback_runs: 1
+      },
+      model_provider: {
+        provider: "openrouter",
+        model: "anthropic/claude-sonnet-4.6",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile_id:
+        "openrouter-loop-v1-modelanthropic-claude-sonnet-4.6-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1"
+    });
+    expect(sonnetPlan?.promotion_gates).toContain("clean_provider_difficulty_probe_completed");
+    expect(sonnetPlan?.frozen_inputs).toContain("provider_execution_profile_id");
+
+    const mistralPlan = task.analysis_plans?.find(
+      (plan) => plan.analysis_plan_id === "subscription-entitlements-lifecycle-v0-mistral-small-causal-pilot-plan-v0"
+    );
+    expect(mistralPlan).toMatchObject({
+      schema_version: "analysis-plan-v0",
+      status: "sealed",
+      task_id: "subscription-entitlements-lifecycle",
+      task_version: "subscription-entitlements-lifecycle-v0",
+      conditions: ["context_only_spec", "feedback_capable_spec"],
+      run_classifications: ["difficulty_probe", "causal_pilot"],
+      budget: {
+        max_model_turns: 2,
+        max_feedback_runs: 1
+      },
+      model_provider: {
+        provider: "openrouter",
+        model: "mistralai/mistral-small-2603",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile_id:
+        "openrouter-loop-v1-modelmistralai-mistral-small-2603-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1"
+    });
+    expect(mistralPlan?.frozen_inputs).toContain("provider_execution_profile_id");
   });
 
   test("renders cumulative visible specs equally while gating feedback assets to the feedback arm", async () => {

@@ -1,0 +1,139 @@
+{
+  "records": [
+    {
+      "spec_id": "SPEC-001",
+      "checkpoint_introduced": "I01",
+      "commitment_id": "stock-received-increases-sellable",
+      "title": "Received stock becomes sellable inventory",
+      "intent": "A stock receipt increases on-hand and sellable quantity for its SKU, and reservations cannot exceed the derived sellable quantity.",
+      "given": "An empty inventory state and a stock_received event for a SKU and quantity.",
+      "when": "The event is applied and availability is queried at a later timestamp.",
+      "then": "onHand and sellable both increase by the receipt quantity; canReserve is true at or below sellable quantity and false above it.",
+      "active_checkpoints": ["I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "stock-received-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/stock-received-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-002",
+      "checkpoint_introduced": "I02",
+      "commitment_id": "reservation-holds-stock-until-expiration",
+      "title": "Reservations hold stock until expiration",
+      "intent": "A reservation request with sufficient sellable stock creates a held reservation that subtracts from sellable availability until its expiration boundary.",
+      "given": "A SKU has stock on hand and a reservation_requested event includes reservationId, quantity, requestedAt, and expiresAt.",
+      "when": "Availability and reservation status are queried before expiresAt.",
+      "then": "The reservation status is held, held quantity increases, and sellable quantity is reduced by the held amount.",
+      "active_checkpoints": ["I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "reservation-hold-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/reservation-hold-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-003",
+      "checkpoint_introduced": "I03",
+      "commitment_id": "order-confirmation-commits-held-stock",
+      "title": "Order confirmation commits held stock",
+      "intent": "Confirming a held reservation converts it from held to committed stock without returning it to the sellable pool.",
+      "given": "A held reservation exists for a SKU.",
+      "when": "An order_confirmed event is applied before the reservation expires.",
+      "then": "The reservation status becomes confirmed, committed quantity increases, held quantity decreases, and sellable remains reduced by the committed quantity.",
+      "active_checkpoints": ["I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "order-confirmation-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/order-confirmation-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-004",
+      "checkpoint_introduced": "I04",
+      "commitment_id": "reservation-expiration-releases-stock",
+      "title": "Reservation expiration releases held stock",
+      "intent": "A held reservation is no longer active at its expiresAt boundary and its stock returns to sellable availability.",
+      "given": "A held reservation has an expiresAt timestamp.",
+      "when": "Availability and reservation status are queried at or after expiresAt.",
+      "then": "The reservation status is expired, held quantity is zero for that reservation, and sellable quantity includes the released units.",
+      "active_checkpoints": ["I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "reservation-expiration-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/reservation-expiration-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-005",
+      "checkpoint_introduced": "I05",
+      "commitment_id": "cancellation-releases-unshipped-allocations",
+      "title": "Cancellation releases unshipped allocations",
+      "intent": "Canceling a held, confirmed, or backordered reservation makes it inactive and releases any held or committed units back to sellable inventory.",
+      "given": "A reservation is held, confirmed, or backordered and has not shipped.",
+      "when": "A reservation_cancelled event is applied.",
+      "then": "The reservation status becomes canceled and availability no longer counts it as held, committed, or backordered.",
+      "active_checkpoints": ["I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "cancellation-release-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/cancellation-release-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-006",
+      "checkpoint_introduced": "I06",
+      "commitment_id": "duplicate-events-are-idempotent",
+      "title": "Duplicate event IDs are idempotent",
+      "intent": "Applying the same event ID more than once must not duplicate stock, reservations, commitments, shipments, or returns.",
+      "given": "Any lifecycle event has already been processed.",
+      "when": "The exact same event ID is applied again.",
+      "then": "State and derived availability are unchanged by the duplicate event.",
+      "active_checkpoints": ["I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "duplicate-events-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/duplicate-events-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-007",
+      "checkpoint_introduced": "I07",
+      "commitment_id": "shipment-consumes-committed-stock",
+      "title": "Shipment consumes committed stock",
+      "intent": "Shipping a confirmed reservation removes the committed units from on-hand stock and later cancellation must not restore them.",
+      "given": "A reservation has been confirmed.",
+      "when": "An order_shipped event is applied and a later cancellation is attempted.",
+      "then": "The reservation remains shipped, onHand decreases by the shipped quantity, shipped quantity increases, and sellable stock is not inflated by the later cancellation.",
+      "active_checkpoints": ["I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "shipment-consumption-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/shipment-consumption-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-008",
+      "checkpoint_introduced": "I08",
+      "commitment_id": "restock-fills-backorders-fifo",
+      "title": "Restock fills backorders FIFO",
+      "intent": "Reservation requests that cannot be fully held become backordered, and later stock receipts allocate full reservations to the oldest backorders first.",
+      "given": "Multiple backordered reservations exist for the same SKU.",
+      "when": "A stock_received event adds fewer units than needed to fill all backorders.",
+      "then": "The oldest fully satisfiable backorder becomes held first; later backorders remain backordered until enough sellable stock exists.",
+      "active_checkpoints": ["I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "backorder-fifo-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/backorder-fifo-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-009",
+      "checkpoint_introduced": "I09",
+      "commitment_id": "returns-restore-only-sellable-stock",
+      "title": "Returns restore only sellable stock",
+      "intent": "A return for a shipped reservation restores on-hand stock only when the return disposition is sellable; damaged returns are tracked but not sellable.",
+      "given": "A reservation has shipped and an item_returned event includes disposition sellable or damaged.",
+      "when": "The return is applied.",
+      "then": "Sellable returns increase onHand and returnedSellable; damaged returns increase damagedReturns without increasing onHand or sellable availability.",
+      "active_checkpoints": ["I09"],
+      "feedback_binding": {
+        "asset_id": "returns-disposition-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/returns-disposition-private.txt"]
+    }
+  ]
+}

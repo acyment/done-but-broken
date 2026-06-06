@@ -9,6 +9,7 @@
 - Keep the bounded loop budget at 2/1 for causal feedback-use runs unless a later analysis plan precommits a different equal-turn budget.
 - Treat one-turn runs as difficulty probes only unless feedback can actually influence a later model turn.
 - Avoid adding arms, legacy condition IDs, ordinary-test comparisons, spec-format comparisons, permission-checkpoint extensions, formal statistical replication, many-model matrices, or a general benchmark platform while clean provider execution is the bottleneck.
+- The next internal validation phase is `path-survival-primary-v1`: path survival / `regression_free_auc` is primary only for future runs that explicitly declare that protocol profile. Existing clean pilots remain historical final-pass-primary evidence with retrospective AUC observations.
 
 ## Current Evidence State
 
@@ -39,7 +40,8 @@
 ## P0 - Freeze Path-Survival-Primary Protocol
 
 - Status: protocol profile support added locally; operator approval is still required before evidence-generating provider runs.
-- Freeze protocol matrix before Stage 1: review diff, preserve unrelated dirty changes, ensure the provider-failure stop rule exists, commit protocol/matrix docs, and record the commit hash as the protocol freeze point.
+- `matrix_freeze_commit=fe50a43de8162e1ccce21856b7119161290971c1` freezes the validation matrix only; it is not execution-ready by itself.
+- Freeze Stage 1 execution state before provider runs: include protocol-profile runtime support, CLI profile selection, both Stage 1 task packages, and the matrix docs in a clean `stage1_execution_freeze_commit`.
 - Protocol/profile ID: `path-survival-primary-v1`.
 - Primary metric for future runs under this profile: `regression_free_auc` delta, feedback minus context.
 - Secondary metrics: final checkpoint pass-rate delta, regression count delta, checkpoint-level `regression_free_success`, feedback opportunity integrity, provider validity, and clean-primary-evidence eligibility.

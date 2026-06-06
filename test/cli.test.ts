@@ -29,8 +29,14 @@ describe("fake pilot CLI", () => {
     expect(process.stdout.toString()).toContain("--fake-agent-mode");
     expect(process.stdout.toString()).toContain("--openrouter-model");
     expect(process.stdout.toString()).toContain("--run-classification");
+    expect(process.stdout.toString()).toContain("--protocol-profile-id");
     expect(process.stdout.toString()).toContain("--request-timeout-ms");
     expect(process.stdout.toString()).toContain("--max-output-tokens");
+    expect(process.stdout.toString()).toContain("--max-workspace-bytes");
+    expect(process.stdout.toString()).toContain("--max-feedback-output-bytes");
+    expect(process.stdout.toString()).toContain("--openrouter-response-format");
+    expect(process.stdout.toString()).toContain("--openrouter-require-parameters");
+    expect(process.stdout.toString()).toContain("--provider-max-retries");
     expect(process.stdout.toString()).toContain("--temperature");
     expect(process.stdout.toString()).toContain("--max-model-turns");
     expect(process.stdout.toString()).toContain("--max-feedback-runs");
@@ -83,6 +89,7 @@ describe("fake pilot CLI", () => {
 
     expect(runManifest.task_id).toBe("sample-cart");
     expect(runManifest.checkpoints).toEqual(["I01", "I02", "I03"]);
+    expect(runManifest.protocol_profile_id).toBe("final-checkpoint-primary-v1");
     expect(runManifest.result_record_hash).toMatch(/^[a-f0-9]{64}$/);
     expect(runManifest.result_summary_path).toBe(join(root, "runs", runId, "summary.md"));
     expect(runManifest.result_summary_hash).toMatch(/^[a-f0-9]{64}$/);
@@ -122,6 +129,7 @@ describe("fake pilot CLI", () => {
     expect(stdout).toContain("replay_steps=6");
     expect(stdout).toContain("mismatches=0");
     expect(stdout).toContain("run_classification=calibration");
+    expect(stdout).toContain("protocol_profile_id=final-checkpoint-primary-v1");
     expect(stdout).toContain("clean_primary_evidence_eligible=false");
     expect(stdout).toContain("validity_flags=none");
     expect(stdout).toContain("provider_profile_id=fake-agent-v1");
@@ -296,6 +304,29 @@ describe("fake pilot CLI", () => {
 
     expect(runManifest.run_classification).toBe("difficulty_probe");
   });
+
+  test("records an explicit protocol profile from the CLI without running providers", async () => {
+    const root = await mkTempRoot();
+    const runId = "cli-path-survival-profile-001";
+
+    const process = runFakePilot({
+      root,
+      runId,
+      extraArgs: ["--protocol-profile-id", "path-survival-primary-v1"]
+    });
+
+    expect(process.exitCode).toBe(0);
+
+    const runManifest = JSON.parse(await readFile(join(root, "runs", runId, "run.json"), "utf8"));
+    const resultSummary = await readFile(join(root, "runs", runId, "summary.md"), "utf8");
+
+    expect(runManifest.model_provider.provider).toBe("fake");
+    expect(runManifest.protocol_profile_id).toBe("path-survival-primary-v1");
+    expect(runManifest.compatibility.protocol_profile_id).toBe("path-survival-primary-v1");
+    expect(resultSummary).toContain("- Protocol profile: path-survival-primary-v1");
+    expect(resultSummary).toContain("- Protocol primary metric: regression_free_auc_delta");
+    expect(resultSummary).toContain("- Secondary final checkpoint pass-rate delta:");
+  }, 15_000);
 
   test("rejects openrouter agent runs without an API key", async () => {
     const root = await mkTempRoot();

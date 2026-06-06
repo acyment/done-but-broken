@@ -102,7 +102,7 @@ export function createOpenRouterAgent(options: OpenRouterAgentOptions): AgentAda
               messages: requestMessages(input, workspaceContext),
               stream: false,
               temperature,
-              max_completion_tokens: maxTokens
+              max_tokens: maxTokens
             })
           }
         });

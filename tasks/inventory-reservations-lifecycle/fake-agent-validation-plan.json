@@ -1,0 +1,61 @@
+{
+  "schema_version": "fake-agent-validation-plan-v0",
+  "task_id": "inventory-reservations-lifecycle",
+  "task_version": "inventory-reservations-lifecycle-v0",
+  "scenarios": [
+    {
+      "scenario_id": "stock-receipt-reference",
+      "checkpoint_id": "I01",
+      "purpose": "Exercise local reference stock receipt behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "reservation-hold-reference",
+      "checkpoint_id": "I02",
+      "purpose": "Exercise local reference reservation hold behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "order-confirmation-reference",
+      "checkpoint_id": "I03",
+      "purpose": "Exercise local reference order confirmation behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "reservation-expiration-reference",
+      "checkpoint_id": "I04",
+      "purpose": "Exercise local reference expiration behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "cancellation-release-reference",
+      "checkpoint_id": "I05",
+      "purpose": "Exercise local reference cancellation behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "duplicate-events-reference",
+      "checkpoint_id": "I06",
+      "purpose": "Exercise local reference idempotency behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "shipment-consumption-reference",
+      "checkpoint_id": "I07",
+      "purpose": "Exercise local reference shipment behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "backorder-fifo-reference",
+      "checkpoint_id": "I08",
+      "purpose": "Exercise local reference backorder allocation behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "returns-disposition-reference",
+      "checkpoint_id": "I09",
+      "purpose": "Exercise local reference returns behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    }
+  ]
+}

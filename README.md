@@ -25,6 +25,7 @@ This repo intentionally contains only a small framework skeleton:
 - on-disk task package loading
 - run and checkpoint provenance hashes
 - run classification, provider execution profile hashes, clean primary evidence eligibility, and provider/network validity details
+- protocol profile IDs for metric compatibility boundaries
 - prompt packet and feedback asset tamper checks
 - per-checkpoint agent result records
 - optional hidden oracle result capture
@@ -57,6 +58,8 @@ The runner writes replay-oriented records under `runs/<run_id>/`, including `run
 When a hidden oracle adapter is supplied, the runner also writes per-checkpoint `hidden-oracle-result.json` files and a run-level `result.json`. Hidden oracle files stay outside the template workspace and are not rendered into agent-visible prompt packets.
 
 `result-schema-v1` records are rendered into `summary.md`, a compact Markdown summary of pass rates, regressions, checkpoint survival, feedback-minus-context delta, and regression-free AUC delta. `run.json` records both result and summary paths and hashes.
+
+Generated manifests include `protocol_profile_id`. The default profile is `final-checkpoint-primary-v1`, preserving the historical final-pass-primary interpretation. Future internal validation runs may use `path-survival-primary-v1`, where `regression_free_auc` is the protocol primary metric and final checkpoint pass rate remains reported as secondary.
 
 ## Fake Pilot CLI
 
@@ -106,6 +109,8 @@ OPENROUTER_API_KEY=sk-or-... bun run pilot:run --task tasks/role-permissions-cal
 
 OpenRouter request settings are recorded as a provider execution profile. `--request-timeout-ms`, `--max-output-tokens`, and `--temperature` are compatibility boundaries and must not be pooled across different profile hashes.
 
+`--protocol-profile-id path-survival-primary-v1` selects the future path-survival primary metric profile for local or explicitly authorized runs. Do not use it for provider/model experiments until the protocol and run matrix are reviewed and approved.
+
 Both adapters send the rendered packet plus a bounded text snapshot of the current workspace and expect a JSON response containing full file contents to write. Returned paths must be relative and stay inside the condition workspace. Model writes to executable feedback assets are rejected before any workspace writes are applied.
 
 Provider/API/timeout/quota/network failures are validity-flagged. Timeout details include failure phase, whether feedback had run, whether a model response was received, whether code changed, retry count, and whether the next checkpoint carried the workspace forward because no usable provider action was available. Validity-flagged provider runs are not clean primary evidence.
@@ -140,11 +145,13 @@ Checkpoint `regression_free_success` is recorded in `result.json` and summarized
 
 `regression_free_auc` is the mean checkpoint-level `regression_free_success` score per condition. It summarizes how much of the checkpoint sequence survived without a failing hidden-oracle checkpoint.
 
-The primary comparison is the final-checkpoint pass-rate delta:
+Under the default historical profile, the primary comparison is the final-checkpoint pass-rate delta:
 
 ```text
 feedback_capable_spec pass rate - context_only_spec pass rate
 ```
+
+Under `path-survival-primary-v1`, the protocol primary comparison is `regression_free_auc` delta. Existing clean pilots were not designed with this profile as primary; their AUC values remain retrospective secondary observations unless a future compatibility decision says otherwise.
 
 ## Commands
 

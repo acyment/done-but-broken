@@ -79,9 +79,47 @@ describe("OpenRouter agent adapter", () => {
     expect((requests[0].init.headers as Record<string, string>).Authorization).toBe("Bearer sk-or-test");
     expect(requests[0].body.model).toBe(DEFAULT_OPENROUTER_MODEL);
     expect(requests[0].body.stream).toBe(false);
-    expect(requests[0].body.max_completion_tokens).toBe(16_000);
+    expect(requests[0].body.max_tokens).toBe(16_000);
+    expect(requests[0].body.max_completion_tokens).toBeUndefined();
     expect(requests[0].body.messages[1].content).toContain("Checkpoint: I01");
     expect(requests[0].body.messages[1].content).toContain("file: src/cart.ts");
+  });
+
+  test("accepts OpenRouter text-part message content arrays", async () => {
+    const workspace = await mkWorkspace();
+    const agent = createOpenRouterAgent({
+      apiKey: "sk-or-test",
+      fetch: async () =>
+        jsonResponse({
+          choices: [
+            {
+              message: {
+                content: [
+                  {
+                    type: "text",
+                    text: JSON.stringify({
+                      status: "ok",
+                      files: [
+                        {
+                          path: "src/cart.ts",
+                          content: "export function renderCart() { return 'Total: 10'; }\n"
+                        }
+                      ]
+                    })
+                  }
+                ]
+              }
+            }
+          ]
+        })
+    });
+
+    const result = await agent.run(agentInput(workspace));
+
+    expect(result.status).toBe("ok");
+    expect(await readFile(join(workspace, "src", "cart.ts"), "utf8")).toBe(
+      "export function renderCart() { return 'Total: 10'; }\n"
+    );
   });
 
   test("rejects returned file paths that escape the workspace", async () => {

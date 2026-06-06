@@ -123,6 +123,11 @@ Avoid wording:
 - Do not mutate `subscription-entitlements-lifecycle-v0` in response to the timeout-flagged 9/9 difficulty probe.
 - Do not treat the timeout-flagged 9/9 provider probe as clean evidence that the task is too easy.
 - Mitigate and version provider timeout/retry/profile settings before another clean provider difficulty probe.
+- The project is not ready for public validation claims that executable feedback wins.
+- Future evidence-generating runs should use the frozen `path-survival-primary-v1` profile once explicitly approved.
+- `regression_free_auc` is primary only for runs whose manifest declares `protocol_profile_id=path-survival-primary-v1`; older runs may mention AUC only as retrospective secondary observations.
+- Do not run provider/model experiments unless explicitly authorized.
+- Do not change primary metrics after observing outcomes, and preserve compatibility boundaries for task, provider, budget, loop policy, protocol profile, and metric definition.
 - Do not build a general benchmark platform yet.
 
 ## Smart TDD Policy

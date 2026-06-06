@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, normalize, resolve, sep } from "node:path";
 import { CONDITION_IDS } from "./conditions";
+import { isProtocolProfileId } from "./protocol-profile";
 import { hashDirectory, hashFile } from "./snapshot";
 import { defaultTaskVersion } from "./task-model";
 import type {
@@ -32,6 +33,7 @@ type TaskPackageJson = {
   fake_agent_validation_plan?: string;
   local_acceptance_criteria?: string;
   analysis_plan?: string;
+  analysis_plans?: string[];
   public_api_contract?: string;
   condition_ids?: string[];
 };
@@ -101,6 +103,15 @@ export async function loadTaskPackage(packagePath: string): Promise<TaskDefiniti
         resolveInsidePackage(taskPackagePath, taskJson.analysis_plan, "analysis_plan")
       )
     : undefined;
+  const additionalAnalysisPlans = taskJson.analysis_plans
+    ? await Promise.all(
+        taskJson.analysis_plans.map((analysisPlanPath) =>
+          readJson<AnalysisPlanManifest>(
+            resolveInsidePackage(taskPackagePath, analysisPlanPath, "analysis_plans")
+          )
+        )
+      )
+    : [];
 
   if (coverageManifest) {
     assertValid(
@@ -145,6 +156,15 @@ export async function loadTaskPackage(packagePath: string): Promise<TaskDefiniti
     );
   }
 
+  for (const additionalAnalysisPlan of additionalAnalysisPlans) {
+    assertValid(
+      validateAnalysisPlanJson(additionalAnalysisPlan, {
+        task_id: taskJson.task_id,
+        task_version: taskVersion
+      })
+    );
+  }
+
   return {
     task_id: taskJson.task_id,
     task_version: taskVersion,
@@ -156,6 +176,7 @@ export async function loadTaskPackage(packagePath: string): Promise<TaskDefiniti
     fake_agent_validation_plan: fakeAgentValidationPlan,
     local_acceptance_criteria: localAcceptanceCriteria,
     analysis_plan: analysisPlan,
+    analysis_plans: [...(analysisPlan ? [analysisPlan] : []), ...additionalAnalysisPlans],
     hidden_oracle_path: hiddenOraclePath,
     public_api_contract: taskJson.public_api_contract,
     package_provenance: {
@@ -248,6 +269,14 @@ export function validateTaskPackageJson(taskJson: unknown): TaskPackageJsonValid
 
   if (candidate.analysis_plan !== undefined) {
     collectStringError(candidate.analysis_plan, "analysis_plan", errors);
+  }
+
+  if (candidate.analysis_plans !== undefined) {
+    validateStringArray(candidate.analysis_plans, "analysis_plans", errors);
+
+    if (Array.isArray(candidate.analysis_plans)) {
+      errors.push(...findDuplicateStringErrors(candidate.analysis_plans, "analysis_plan"));
+    }
   }
 
   if (candidate.condition_ids !== undefined) {
@@ -548,6 +577,25 @@ export function validateAnalysisPlanJson(
     errors.push("analysis_plan.schema_version must be analysis-plan-v0");
   }
 
+  if (candidate.analysis_plan_id !== undefined) {
+    collectStringError(candidate.analysis_plan_id, "analysis_plan.analysis_plan_id", errors);
+  }
+
+  if (
+    candidate.protocol_profile_id !== undefined &&
+    !isProtocolProfileId(candidate.protocol_profile_id)
+  ) {
+    errors.push("analysis_plan.protocol_profile_id must be final-checkpoint-primary-v1 or path-survival-primary-v1");
+  }
+
+  if (candidate.provider_execution_profile_id !== undefined) {
+    collectStringError(
+      candidate.provider_execution_profile_id,
+      "analysis_plan.provider_execution_profile_id",
+      errors
+    );
+  }
+
   if (candidate.status !== "draft" && candidate.status !== "sealed") {
     errors.push("analysis_plan.status must be draft or sealed");
   }
@@ -572,6 +620,13 @@ export function validateAnalysisPlanJson(
   validateAnalysisModelProvider(candidate.model_provider, errors);
   validateStringArray(candidate.exclusion_rules, "analysis_plan.exclusion_rules", errors);
   validateAnalysisPoolingRules(candidate.pooling_rules, errors);
+  if (
+    candidate.protocol_profile_id !== undefined &&
+    Array.isArray(candidate.pooling_rules?.compatibility_fields) &&
+    !candidate.pooling_rules.compatibility_fields.includes("protocol_profile_id")
+  ) {
+    errors.push("analysis_plan.pooling_rules.compatibility_fields must include protocol_profile_id");
+  }
   validateNonEmptyStringArray(candidate.promotion_gates, "analysis_plan.promotion_gates", errors);
   validateNonEmptyStringArray(candidate.frozen_inputs, "analysis_plan.frozen_inputs", errors);
 

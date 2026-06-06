@@ -2,6 +2,12 @@
 
 This document predeclares the next internal validation phase for `path-survival-primary-v1`. It is not a public validation claim and does not reinterpret historical `final-checkpoint-primary-v1` runs.
 
+## Freeze Provenance
+
+- `matrix_freeze_commit=fe50a43de8162e1ccce21856b7119161290971c1` freezes this validation matrix.
+- Stage 1 execution must use a later clean `stage1_execution_freeze_commit` that includes this matrix, protocol-profile runtime support, CLI profile selection, and both Stage 1 task packages.
+- Do not execute Stage 1 from the matrix freeze commit alone.
+
 ## Protocol
 
 - Protocol profile: `path-survival-primary-v1`.

@@ -18,6 +18,7 @@ export type FeedbackOpportunityStatus = {
 
 export type EvidenceStatusSummary = {
   run_classification: string;
+  protocol_profile_id?: string;
   clean_primary_evidence_eligible: boolean;
   validity_flags: string[];
   provider_profile_id?: string;
@@ -35,6 +36,8 @@ export async function buildEvidenceStatusSummary(manifest: any): Promise<Evidenc
 
   return {
     run_classification: typeof manifest?.run_classification === "string" ? manifest.run_classification : "unknown",
+    protocol_profile_id:
+      typeof manifest?.protocol_profile_id === "string" ? manifest.protocol_profile_id : undefined,
     clean_primary_evidence_eligible: manifest?.clean_primary_evidence_eligible === true,
     validity_flags: validityFlags,
     provider_profile_id:

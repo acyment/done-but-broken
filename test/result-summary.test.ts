@@ -87,6 +87,44 @@ describe("result summary writer", () => {
     expect(summary).toContain("- Feedback opportunity integrity: complete (1/1)");
   });
 
+  test("renders path-survival protocol primary metric distinctly from final pass rate", () => {
+    const summary = renderResultSummary(
+      buildRunResultRecord({
+        run_id: "summary-path-primary-001",
+        task_id: "sample-cart",
+        checkpoints: ["I01", "I02", "I03"],
+        evaluations: [
+          checkpoint("context_only_spec", "I01", [{ commitment_id: "cart-total-visible", passed: true }]),
+          checkpoint("context_only_spec", "I02", [
+            { commitment_id: "cart-total-visible", passed: false },
+            { commitment_id: "discount-does-not-hide-total", passed: false }
+          ]),
+          checkpoint("context_only_spec", "I03", [
+            { commitment_id: "cart-total-visible", passed: true },
+            { commitment_id: "discount-does-not-hide-total", passed: true }
+          ]),
+          checkpoint("feedback_capable_spec", "I01", [{ commitment_id: "cart-total-visible", passed: true }]),
+          checkpoint("feedback_capable_spec", "I02", [
+            { commitment_id: "cart-total-visible", passed: true },
+            { commitment_id: "discount-does-not-hide-total", passed: true }
+          ]),
+          checkpoint("feedback_capable_spec", "I03", [
+            { commitment_id: "cart-total-visible", passed: true },
+            { commitment_id: "discount-does-not-hide-total", passed: true }
+          ])
+        ]
+      }),
+      undefined,
+      { protocol_profile_id: "path-survival-primary-v1" }
+    );
+
+    expect(summary).toContain("- Protocol profile: path-survival-primary-v1");
+    expect(summary).toContain("- Protocol primary metric: regression_free_auc_delta");
+    expect(summary).toContain("- Protocol primary delta: 0.3333");
+    expect(summary).toContain("- Secondary final checkpoint pass-rate delta: 0");
+    expect(summary).toContain("- Primary metric: final_checkpoint_pass_rate at I03");
+  });
+
   test("writes the summary to disk", async () => {
     const root = await mkTempRoot();
     const outputPath = join(root, "summary.md");

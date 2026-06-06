@@ -2,18 +2,36 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { CONDITION_IDS } from "./conditions";
 import type { EvidenceStatusSummary } from "./evidence-status";
+import {
+  protocolPrimaryDelta,
+  protocolPrimaryMetricName,
+  protocolProfileIdOrDefault,
+  protocolSecondaryDelta,
+  protocolSecondaryDeltaLabel,
+  type ProtocolProfileId
+} from "./protocol-profile";
 import type { RunResultRecord } from "./result-schema";
 
 export function renderResultSummary(
   result: RunResultRecord,
-  evidenceStatus?: EvidenceStatusSummary
+  evidenceStatus?: EvidenceStatusSummary,
+  options?: {
+    protocol_profile_id?: ProtocolProfileId;
+  }
 ): string {
   const metric = result.primary_metric;
+  const protocolProfileId = protocolProfileIdOrDefault(
+    options?.protocol_profile_id ?? evidenceStatus?.protocol_profile_id
+  );
   const lines = [
     `# Run summary: ${result.run_id}`,
     "",
     `- Task: ${result.task_id}`,
     `- Schema: ${result.schema_version}`,
+    `- Protocol profile: ${protocolProfileId}`,
+    `- Protocol primary metric: ${protocolPrimaryMetricName(protocolProfileId)}`,
+    `- Protocol primary delta: ${formatNumber(protocolPrimaryDelta(result, protocolProfileId))}`,
+    `- ${protocolSecondaryDeltaLabel(protocolProfileId)}: ${formatNumber(protocolSecondaryDelta(result, protocolProfileId))}`,
     `- Primary metric: ${metric.name} at ${metric.checkpoint_id}`,
     `- Feedback minus context delta: ${formatNumber(metric.delta_feedback_minus_context)}`,
     `- Regression-free AUC delta: ${formatNumber(result.regression_free_auc.delta_feedback_minus_context)}`,

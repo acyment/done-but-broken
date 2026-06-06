@@ -1,0 +1,58 @@
+{
+  "assets": [
+    {
+      "asset_id": "stock-received-visible-check",
+      "checkpoint_introduced": "I01",
+      "relative_path": "spec/stock-received.spec.ts",
+      "source_path": "stock-received.source.ts"
+    },
+    {
+      "asset_id": "reservation-hold-visible-check",
+      "checkpoint_introduced": "I02",
+      "relative_path": "spec/reservation-hold.spec.ts",
+      "source_path": "reservation-hold.source.ts"
+    },
+    {
+      "asset_id": "order-confirmation-visible-check",
+      "checkpoint_introduced": "I03",
+      "relative_path": "spec/order-confirmation.spec.ts",
+      "source_path": "order-confirmation.source.ts"
+    },
+    {
+      "asset_id": "reservation-expiration-visible-check",
+      "checkpoint_introduced": "I04",
+      "relative_path": "spec/reservation-expiration.spec.ts",
+      "source_path": "reservation-expiration.source.ts"
+    },
+    {
+      "asset_id": "cancellation-release-visible-check",
+      "checkpoint_introduced": "I05",
+      "relative_path": "spec/cancellation-release.spec.ts",
+      "source_path": "cancellation-release.source.ts"
+    },
+    {
+      "asset_id": "duplicate-events-visible-check",
+      "checkpoint_introduced": "I06",
+      "relative_path": "spec/duplicate-events.spec.ts",
+      "source_path": "duplicate-events.source.ts"
+    },
+    {
+      "asset_id": "shipment-consumption-visible-check",
+      "checkpoint_introduced": "I07",
+      "relative_path": "spec/shipment-consumption.spec.ts",
+      "source_path": "shipment-consumption.source.ts"
+    },
+    {
+      "asset_id": "backorder-fifo-visible-check",
+      "checkpoint_introduced": "I08",
+      "relative_path": "spec/backorder-fifo.spec.ts",
+      "source_path": "backorder-fifo.source.ts"
+    },
+    {
+      "asset_id": "returns-disposition-visible-check",
+      "checkpoint_introduced": "I09",
+      "relative_path": "spec/returns-disposition.spec.ts",
+      "source_path": "returns-disposition.source.ts"
+    }
+  ]
+}

@@ -72,6 +72,7 @@ describe("sample-cart hidden oracle", () => {
       hidden_oracle_path: join(root, "hidden-oracle")
     });
 
+    expect(result.status).toBe("failed");
     expect(result.checks).toEqual([
       {
         check_id: "sample-cart:I02:cart-total-visible",
@@ -102,6 +103,7 @@ describe("sample-cart hidden oracle", () => {
       hidden_oracle_path: join(root, "hidden-oracle")
     });
 
+    expect(result.status).toBe("failed");
     expect(result.checks.find((check) => check.commitment_id === "item-names-remain-visible")).toEqual({
       check_id: "sample-cart:I03:item-names-remain-visible",
       commitment_id: "item-names-remain-visible",
@@ -130,6 +132,7 @@ describe("sample-cart hidden oracle", () => {
       hidden_oracle_path: join(root, "hidden-oracle")
     });
 
+    expect(result.status).toBe("failed");
     expect(result.checks.map((check) => check.passed)).toEqual([false, false, false]);
   });
 });

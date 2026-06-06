@@ -4,6 +4,8 @@
 
 Claude Code must not run provider/model experiments, call OpenRouter, or create new runs unless explicitly asked.
 
+The project is not ready for public validation claims. Future evidence-generating runs should use `path-survival-primary-v1` only after it is reviewed and explicitly authorized; `regression_free_auc` is primary only for runs that declare that protocol profile. Older final-pass-primary runs must remain historical observations, with AUC described only as retrospective secondary context.
+
 Preserve run classifications and validity language in all docs and summaries. Do not rewrite docs to overclaim causal evidence, and do not describe `calibration`, `difficulty_probe`, or `diagnostic_invalid` runs as causal evidence.
 
 Treat `subscription-entitlements-difficulty-probe-20260605-003` as structurally valid and replay-valid, with both arms passing 9/9, but provider-timeout flagged and therefore not clean primary evidence.

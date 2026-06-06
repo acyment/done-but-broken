@@ -47,6 +47,7 @@ async function main() {
   console.log(`replay_steps=${replaySteps}`);
   console.log(`mismatches=${artifactVerification.mismatches.length}`);
   console.log(`run_classification=${evidenceStatus.run_classification}`);
+  console.log(`protocol_profile_id=${evidenceStatus.protocol_profile_id ?? "final-checkpoint-primary-v1"}`);
   console.log(`clean_primary_evidence_eligible=${evidenceStatus.clean_primary_evidence_eligible}`);
   console.log(`validity_flags=${formatList(evidenceStatus.validity_flags)}`);
   console.log(`provider_profile_id=${evidenceStatus.provider_profile_id ?? "unknown"}`);

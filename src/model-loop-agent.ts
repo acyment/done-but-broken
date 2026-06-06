@@ -10,6 +10,7 @@ import {
   fetchOpenRouterResponse,
   type FetchLike
 } from "./openrouter-agent";
+import type { RunValidityDetail, RunValidityFlag } from "./provenance";
 import type { AgentAdapter, AgentRunInput, AgentRunResult, AgentTranscriptEvent } from "./runner";
 
 const execFileAsync = promisify(execFile);
@@ -30,6 +31,10 @@ export const DEFAULT_MODEL_LOOP_POLICY = {
   max_feedback_runs: 2
 } as const;
 
+export const OPENROUTER_MODEL_LOOP_RESPONSE_SCHEMA_VERSION = "model-loop-response-json-schema-v1";
+
+export type OpenRouterResponseFormat = "none" | "json_schema";
+
 export type ModelLoopCall = {
   turn_index: number;
   condition_id: AgentRunInput["condition_id"];
@@ -47,6 +52,8 @@ export type ModelLoopResponse = {
     content: string;
   }>;
   transcript?: AgentTranscriptEvent[];
+  validity_flags?: RunValidityFlag[];
+  validity_details?: RunValidityDetail[];
 };
 
 export type ModelLoopModel = (input: ModelLoopCall) => Promise<ModelLoopResponse | string>;
@@ -90,6 +97,9 @@ export type OpenRouterFeedbackLoopAgentOptions = {
   max_feedback_runs?: number;
   maxWorkspaceBytes?: number;
   maxFeedbackOutputBytes?: number;
+  responseFormat?: OpenRouterResponseFormat;
+  requireParameters?: boolean;
+  maxProviderRetries?: number;
   requestTimeoutMs?: number;
   fetch?: FetchLike;
 };
@@ -125,6 +135,7 @@ export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapt
       const feedbackSummaries: string[] = [];
       const transcript: AgentTranscriptEvent[] = [];
       const finalFileWrites: string[] = [];
+      const providerValidityDetails: RunValidityDetail[] = [];
       let feedbackRuns = 0;
       let modelTurns = 0;
       let currentTurnStartedAt = Date.now();
@@ -151,6 +162,7 @@ export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapt
               feedback_summaries: feedbackSummaries
             })
           );
+          providerValidityDetails.push(...(modelResponse.validity_details ?? []));
           const writtenPaths = await applyReturnedFiles(
             input.workspace_path,
             modelResponse.files ?? [],
@@ -183,10 +195,6 @@ export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapt
               event: "feedback_run",
               detail: `run=${feedbackRuns} exit_code=${feedbackResult.exit_code}`
             });
-
-            if (feedbackResult.exit_code === 0) {
-              break;
-            }
           }
         }
 
@@ -203,13 +211,53 @@ export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapt
           feedback_command: feedbackCommand,
           feedback_summaries: feedbackSummaries,
           final_file_writes: finalFileWrites,
-          feedback_assets_modified: false
+          feedback_assets_modified: false,
+          validity_flags: uniqueValidityFlags(providerValidityDetails),
+          validity_details: providerValidityDetails.length > 0 ? providerValidityDetails : undefined
         };
       } catch (error) {
         const detail = error instanceof Error ? error.message : String(error);
         const feedbackAssetMutation = detail.includes("read-only feedback asset");
-        const validityFlag = feedbackAssetMutation ? undefined : classifyOpenRouterError(detail);
+        const providerError = error instanceof ModelLoopProviderError ? error : undefined;
+        const validityFlag = feedbackAssetMutation
+          ? undefined
+          : providerError?.validityDetails[0]?.flag ?? classifyOpenRouterError(detail);
         const workspaceCarriedForward = validityFlag !== undefined && finalFileWrites.length === 0;
+        const modelResponseReceived = modelResponseWasReceived(validityFlag, detail);
+        const terminalValidityDetails = providerError
+          ? adjustTerminalProviderDetails(providerError.validityDetails, {
+              codeChanged: finalFileWrites.length > 0,
+              workspaceCarriedForward
+            })
+          : validityFlag
+            ? [
+                {
+                  flag: validityFlag,
+                  scope: "checkpoint" as const,
+                  condition_id: input.condition_id,
+                  checkpoint_id: input.checkpoint_id,
+                  provider: "openrouter",
+                  message: detail,
+                  retryable: isRetryableProviderFailure(validityFlag),
+                  provider_failure_phase:
+                    validityFlag === "provider_timeout"
+                      ? classifyProviderFailurePhase({
+                          feedbackAvailable,
+                          feedbackRuns,
+                          modelTurns
+                        })
+                      : undefined,
+                  model_turn_number: modelTurns || undefined,
+                  feedback_had_run: feedbackRuns > 0,
+                  model_response_received: modelResponseReceived,
+                  code_changed: finalFileWrites.length > 0,
+                  workspace_carried_forward_due_to_provider_failure: workspaceCarriedForward,
+                  retry_count: 0,
+                  elapsed_ms: Math.max(0, Date.now() - currentTurnStartedAt)
+                }
+              ]
+            : [];
+        const validityDetails = [...providerValidityDetails, ...terminalValidityDetails];
 
         return {
           status: "failed",
@@ -232,32 +280,8 @@ export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapt
           final_file_writes: finalFileWrites,
           feedback_assets_modified: feedbackAssetMutation,
           workspace_carried_forward_due_to_provider_failure: workspaceCarriedForward,
-          validity_flags: validityFlag ? [validityFlag] : undefined,
-          validity_details: validityFlag
-            ? [
-                {
-                  flag: validityFlag,
-                  scope: "checkpoint",
-                  condition_id: input.condition_id,
-                  checkpoint_id: input.checkpoint_id,
-                  provider: "openrouter",
-                  message: detail,
-                  retryable: validityFlag === "provider_timeout" || validityFlag === "provider_quota_or_rate_limit",
-                  provider_failure_phase: classifyProviderFailurePhase({
-                    feedbackAvailable,
-                    feedbackRuns,
-                    modelTurns
-                  }),
-                  model_turn_number: modelTurns || undefined,
-                  feedback_had_run: feedbackRuns > 0,
-                  model_response_received: false,
-                  code_changed: finalFileWrites.length > 0,
-                  workspace_carried_forward_due_to_provider_failure: workspaceCarriedForward,
-                  retry_count: 0,
-                  elapsed_ms: Math.max(0, Date.now() - currentTurnStartedAt)
-                }
-              ]
-            : undefined
+          validity_flags: uniqueValidityFlags(validityDetails),
+          validity_details: validityDetails.length > 0 ? validityDetails : undefined
         };
       }
     }
@@ -276,6 +300,55 @@ function classifyProviderFailurePhase(input: {
   return "pre_model_action_timeout" as const;
 }
 
+function modelResponseWasReceived(validityFlag: ReturnType<typeof classifyOpenRouterError> | undefined, detail: string): boolean {
+  if (validityFlag !== "provider_malformed_response") {
+    return false;
+  }
+
+  return (
+    detail.includes("Model loop JSON") ||
+    detail.includes("OpenRouter response") ||
+    detail.includes("message content")
+  );
+}
+
+class ModelLoopProviderError extends Error {
+  constructor(message: string, readonly validityDetails: RunValidityDetail[]) {
+    super(message);
+    this.name = "ModelLoopProviderError";
+  }
+}
+
+function uniqueValidityFlags(details: RunValidityDetail[]): RunValidityFlag[] | undefined {
+  if (details.length === 0) {
+    return undefined;
+  }
+
+  return [...new Set(details.map((detail) => detail.flag))];
+}
+
+function isRetryableProviderFailure(flag: RunValidityFlag): boolean {
+  return (
+    flag === "provider_timeout" ||
+    flag === "provider_quota_or_rate_limit" ||
+    flag === "provider_malformed_response"
+  );
+}
+
+function adjustTerminalProviderDetails(
+  details: RunValidityDetail[],
+  input: {
+    codeChanged: boolean;
+    workspaceCarriedForward: boolean;
+  }
+): RunValidityDetail[] {
+  return details.map((detail) => ({
+    ...detail,
+    code_changed: input.codeChanged,
+    workspace_carried_forward_due_to_provider_failure: input.workspaceCarriedForward
+  }));
+}
+
 export function createOpenRouterFeedbackLoopAgent(
   options: OpenRouterFeedbackLoopAgentOptions
 ): AgentAdapter {
@@ -285,6 +358,9 @@ export function createOpenRouterFeedbackLoopAgent(
   const maxTokens = options.maxTokens ?? 16_000;
   const temperature = options.temperature ?? 0.2;
   const requestTimeoutMs = options.requestTimeoutMs ?? DEFAULT_OPENROUTER_REQUEST_TIMEOUT_MS;
+  const responseFormat = options.responseFormat ?? "none";
+  const requireParameters = options.requireParameters ?? false;
+  const maxProviderRetries = options.maxProviderRetries ?? 0;
   const fetchImpl = options.fetch ?? globalThis.fetch;
 
   if (!apiKey) {
@@ -295,45 +371,95 @@ export function createOpenRouterFeedbackLoopAgent(
     throw new Error("No fetch implementation is available for the OpenRouter feedback-loop agent adapter.");
   }
 
+  if (!Number.isInteger(maxProviderRetries) || maxProviderRetries < 0) {
+    throw new Error("maxProviderRetries must be a non-negative integer.");
+  }
+
   return createModelLoopAgent({
     adapter_id: `openrouter-loop:${model}`,
     max_model_turns: options.max_model_turns,
     max_feedback_runs: options.max_feedback_runs,
     maxWorkspaceBytes: options.maxWorkspaceBytes,
     maxFeedbackOutputBytes: options.maxFeedbackOutputBytes,
-    model: async (call) => {
-      const { response, responseText } = await fetchOpenRouterResponse({
+    model: async (call) =>
+      requestOpenRouterModelLoopResponse({
+        call,
         fetchImpl,
         endpoint,
-        timeoutMs: requestTimeoutMs,
+        requestTimeoutMs,
+        apiKey,
+        appTitle: options.appTitle,
+        siteUrl: options.siteUrl,
+        model,
+        maxTokens,
+        temperature,
+        responseFormat,
+        requireParameters,
+        maxProviderRetries
+      })
+  });
+}
+
+async function requestOpenRouterModelLoopResponse(input: {
+  call: ModelLoopCall;
+  fetchImpl: FetchLike;
+  endpoint: string;
+  requestTimeoutMs: number;
+  apiKey: string;
+  appTitle?: string;
+  siteUrl?: string;
+  model: string;
+  maxTokens: number;
+  temperature: number;
+  responseFormat: OpenRouterResponseFormat;
+  requireParameters: boolean;
+  maxProviderRetries: number;
+}): Promise<ModelLoopResponse> {
+  const failedAttemptDetails: RunValidityDetail[] = [];
+
+  for (let attempt = 0; attempt <= input.maxProviderRetries; attempt += 1) {
+    const attemptStartedAt = Date.now();
+
+    try {
+      const requestBody = {
+        model: input.model,
+        messages: [
+          {
+            role: "system",
+            content: [
+              "You are running inside a bounded benchmark harness.",
+              "Return only JSON. Do not wrap it in prose.",
+              "Use empty strings or empty arrays when a field has no useful value.",
+              "The JSON shape is:",
+              '{"status":"ok","notes":"short summary","files":[{"path":"relative/path","content":"full file content"}],"transcript":[{"event":"short_event","detail":"optional detail"}]}'
+            ].join("\n")
+          },
+          {
+            role: "user",
+            content: input.call.prompt
+          }
+        ],
+        stream: false,
+        temperature: input.temperature,
+        max_tokens: input.maxTokens,
+        ...(input.responseFormat === "json_schema"
+          ? { response_format: modelLoopResponseFormatJsonSchema() }
+          : {}),
+        ...(input.requireParameters ? { provider: { require_parameters: true } } : {})
+      };
+
+      const { response, responseText } = await fetchOpenRouterResponse({
+        fetchImpl: input.fetchImpl,
+        endpoint: input.endpoint,
+        timeoutMs: input.requestTimeoutMs,
         init: {
           method: "POST",
           headers: requestHeaders({
-            apiKey,
-            appTitle: options.appTitle,
-            siteUrl: options.siteUrl
+            apiKey: input.apiKey,
+            appTitle: input.appTitle,
+            siteUrl: input.siteUrl
           }),
-          body: JSON.stringify({
-            model,
-            messages: [
-              {
-                role: "system",
-                content: [
-                  "You are running inside a bounded benchmark harness.",
-                  "Return only JSON. Do not wrap it in prose.",
-                  "The JSON shape is:",
-                  '{"status":"ok","notes":"short summary","files":[{"path":"relative/path","content":"full file content"}],"transcript":[{"event":"short_event","detail":"optional detail"}]}'
-                ].join("\n")
-              },
-              {
-                role: "user",
-                content: call.prompt
-              }
-            ],
-            stream: false,
-            temperature,
-            max_completion_tokens: maxTokens
-          })
+          body: JSON.stringify(requestBody)
         }
       });
 
@@ -343,9 +469,138 @@ export function createOpenRouterFeedbackLoopAgent(
         );
       }
 
-      return parseModelResult(extractMessageContent(parseJson(responseText, "OpenRouter response")));
+      const modelResponse = parseModelResult(extractMessageContent(parseJson(responseText, "OpenRouter response")));
+      const recoveredDetails = recoveredRetryDetails(failedAttemptDetails);
+
+      return {
+        ...modelResponse,
+        validity_flags: uniqueValidityFlags(recoveredDetails),
+        validity_details: recoveredDetails.length > 0 ? recoveredDetails : undefined
+      };
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      const validityFlag = classifyOpenRouterError(detail);
+      const canRetry = isRetryableProviderFailure(validityFlag) && attempt < input.maxProviderRetries;
+      const retryCount = Math.min(attempt + 1, input.maxProviderRetries);
+      const failureDetail = providerFailureDetail({
+        call: input.call,
+        detail,
+        validityFlag,
+        retryable: isRetryableProviderFailure(validityFlag),
+        retryCount,
+        elapsedMs: Math.max(0, Date.now() - attemptStartedAt)
+      });
+
+      failedAttemptDetails.push(failureDetail);
+
+      if (!canRetry) {
+        throw new ModelLoopProviderError(detail, failedAttemptDetails);
+      }
     }
-  });
+  }
+
+  throw new Error("OpenRouter retry loop exited unexpectedly.");
+}
+
+function providerFailureDetail(input: {
+  call: ModelLoopCall;
+  detail: string;
+  validityFlag: RunValidityFlag;
+  retryable: boolean;
+  retryCount: number;
+  elapsedMs: number;
+}): RunValidityDetail {
+  return {
+    flag: input.validityFlag,
+    scope: "checkpoint",
+    condition_id: input.call.condition_id,
+    checkpoint_id: input.call.checkpoint_id,
+    provider: "openrouter",
+    message: input.detail,
+    retryable: input.retryable,
+    provider_failure_phase:
+      input.validityFlag === "provider_timeout"
+        ? classifyProviderFailurePhase({
+            feedbackAvailable: input.call.feedback_available,
+            feedbackRuns: input.call.feedback_summaries.length,
+            modelTurns: input.call.turn_index
+          })
+        : undefined,
+    model_turn_number: input.call.turn_index,
+    feedback_had_run: input.call.feedback_summaries.length > 0,
+    model_response_received: modelResponseWasReceived(input.validityFlag, input.detail),
+    code_changed: false,
+    workspace_carried_forward_due_to_provider_failure: false,
+    retry_count: input.retryCount,
+    elapsed_ms: input.elapsedMs
+  };
+}
+
+function recoveredRetryDetails(details: RunValidityDetail[]): RunValidityDetail[] {
+  return details.map((detail) => ({
+    ...detail,
+    retryable: true,
+    provider_failure_phase:
+      detail.flag === "provider_timeout" ? "retry_recovered_timeout" : detail.provider_failure_phase,
+    code_changed: false,
+    workspace_carried_forward_due_to_provider_failure: false
+  }));
+}
+
+function modelLoopResponseFormatJsonSchema() {
+  return {
+    type: "json_schema",
+    json_schema: {
+      name: "model_loop_response",
+      strict: true,
+      schema: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ok", "failed"]
+          },
+          notes: {
+            type: "string"
+          },
+          files: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                path: {
+                  type: "string"
+                },
+                content: {
+                  type: "string"
+                }
+              },
+              required: ["path", "content"]
+            }
+          },
+          transcript: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                event: {
+                  type: "string"
+                },
+                detail: {
+                  type: "string"
+                }
+              },
+              required: ["event", "detail"]
+            }
+          }
+        },
+        required: ["status", "notes", "files", "transcript"]
+      }
+    }
+  } as const;
 }
 
 async function normalizeModelResponse(response: ModelLoopResponse | string): Promise<ModelLoopResponse> {
@@ -357,7 +612,13 @@ async function normalizeModelResponse(response: ModelLoopResponse | string): Pro
     throw new Error("Model loop response must be an object or JSON string.");
   }
 
-  return parseModelResult(JSON.stringify(response));
+  const parsed = parseModelResult(JSON.stringify(response));
+
+  return {
+    ...parsed,
+    validity_flags: response.validity_flags,
+    validity_details: response.validity_details
+  };
 }
 
 function buildTurnPrompt(input: {
@@ -716,11 +977,33 @@ function extractMessageContent(payload: unknown): string {
     throw new Error("OpenRouter response must include choices[0].message.");
   }
 
-  if (typeof firstChoice.message.content !== "string") {
-    throw new Error("OpenRouter response message content must be a string.");
+  const content = firstChoice.message.content;
+
+  if (typeof content === "string") {
+    return content;
   }
 
-  return firstChoice.message.content;
+  if (Array.isArray(content)) {
+    const text = content.map(extractTextPart).join("");
+
+    if (text.length > 0) {
+      return text;
+    }
+  }
+
+  throw new Error("OpenRouter response message content must be a string or text content array.");
+}
+
+function extractTextPart(part: unknown): string {
+  if (typeof part === "string") {
+    return part;
+  }
+
+  if (isRecord(part) && typeof part.text === "string") {
+    return part.text;
+  }
+
+  return "";
 }
 
 function splitCommand(command: string): string[] {

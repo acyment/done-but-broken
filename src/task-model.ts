@@ -92,6 +92,9 @@ export type LocalAcceptanceCriterion = {
 
 export type AnalysisPlanManifest = {
   schema_version: "analysis-plan-v0";
+  analysis_plan_id?: string;
+  protocol_profile_id?: string;
+  provider_execution_profile_id?: string;
   status: "draft" | "sealed";
   task_id: string;
   task_version: string;
@@ -131,6 +134,7 @@ export type TaskDefinition = {
   fake_agent_validation_plan?: FakeAgentValidationPlan;
   local_acceptance_criteria?: LocalAcceptanceCriteriaManifest;
   analysis_plan?: AnalysisPlanManifest;
+  analysis_plans?: AnalysisPlanManifest[];
   hidden_oracle_path: string;
   public_api_contract?: string;
   package_provenance?: TaskPackageProvenance;
