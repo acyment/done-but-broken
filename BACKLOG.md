@@ -36,6 +36,33 @@
 - A run may be classified as causal feedback-use evidence only if feedback ran and had a possible path to influence a later model turn.
 - One-turn runs where feedback cannot influence a later turn are difficulty calibration only.
 
+## P0 - Freeze Path-Survival-Primary Protocol
+
+- Status: protocol profile support added locally; operator approval is still required before evidence-generating provider runs.
+- Freeze protocol matrix before Stage 1: review diff, preserve unrelated dirty changes, ensure the provider-failure stop rule exists, commit protocol/matrix docs, and record the commit hash as the protocol freeze point.
+- Protocol/profile ID: `path-survival-primary-v1`.
+- Primary metric for future runs under this profile: `regression_free_auc` delta, feedback minus context.
+- Secondary metrics: final checkpoint pass-rate delta, regression count delta, checkpoint-level `regression_free_success`, feedback opportunity integrity, provider validity, and clean-primary-evidence eligibility.
+- Compatibility boundary includes `protocol_profile_id` and `metric_definition_hash`.
+- Summaries and manifests identify the run's protocol profile and protocol primary metric.
+- Existing final-pass-primary run interpretation remains unchanged; old AUC values are retrospective secondary observations only.
+- Do not run providers while freezing protocol docs and manifests.
+
+## P1 - Predeclared Internal Validation Runs
+
+Predeclared matrix: `docs/protocols/path-survival-primary-v1-validation-matrix.md`.
+
+Only after `path-survival-primary-v1` and the validation matrix are reviewed and approved:
+
+- Stage 1 primary internal validation uses `subscription-entitlements-lifecycle-v0` and `inventory-reservations-lifecycle-v0`.
+- Stage 1 model/provider profile is `mistralai/mistral-small-2603`.
+- Stage 1 requires 3 clean causal pilots per task, 6 clean causal pilots total.
+- Stage 1 support requires feedback-capable AUC higher in at least 4 of 6 clean runs, mean AUC delta `>= +0.10`, no systematic final checkpoint pass-rate harm, and all included runs `clean_primary_evidence_eligible=true`.
+- Stage 2 is optional after Stage 1 is completed and interpreted: same two tasks, `anthropic/claude-sonnet-4.6`, 1 or 2 clean causal pilots per task for ceiling/control comparison only.
+- Replacement runs may only replace invalid or provider-flagged scheduled runs under the same compatibility settings; do not replace unfavorable clean runs.
+- Provider-flagged and invalid runs must be recorded, excluded from clean primary evidence, and not silently deleted.
+- Keep `max_model_turns=2` and `max_feedback_runs=1`; avoid task semantic changes, checkpoint additions, hidden-oracle patches, feedback-asset patches, or metric changes in response to outcomes.
+
 ## Frozen Calibration Artifact
 
 `role-permissions-calibration-v0`
