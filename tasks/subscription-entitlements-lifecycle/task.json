@@ -11,7 +11,8 @@
   "analysis_plan": "analysis-plan.json",
   "analysis_plans": [
     "analysis-plan.sonnet-causal-pilot-v0.json",
-    "analysis-plan.mistral-small-causal-pilot-v0.json"
+    "analysis-plan.mistral-small-causal-pilot-v0.json",
+    "analysis-plan.path-survival-stage1-v0.json"
   ],
   "hidden_oracle_path": "hidden-oracle",
   "public_api_contract": "applyEvent(state, event): State; canAccessFeature(state, feature, now): boolean; getBillingStatus(state, now): BillingStatus; getInvoiceSummary(state): InvoiceSummary"

@@ -35,6 +35,23 @@ Stage 1 total: 6 clean causal pilots.
 
 Stage 1 uses the same Mistral model/provider compatibility boundary for both tasks. Replacement runs may be added only under the invalid-run rules below.
 
+### Sealed Stage 1 analysis plans
+
+Each Stage 1 task now carries a sealed analysis plan that declares the path-survival protocol explicitly, so a run is interpretable against it:
+
+| Task version | Sealed plan ID | `protocol_profile_id` | `primary_metric` |
+| --- | --- | --- | --- |
+| `subscription-entitlements-lifecycle-v0` | `subscription-entitlements-lifecycle-v0-path-survival-stage1-plan-v0` | `path-survival-primary-v1` | `regression_free_auc_delta` |
+| `inventory-reservations-lifecycle-v0` | `inventory-reservations-lifecycle-v0-path-survival-stage1-plan-v0` | `path-survival-primary-v1` | `regression_free_auc_delta` |
+
+Both plans seal the same frozen Mistral provider execution profile used by the existing clean Mistral pilots, add `protocol_profile_id` to their pooling compatibility fields, and keep `final_checkpoint_pass_rate_delta` only as a secondary metric. The pre-existing `analysis-plan.json` (and the Sonnet/Mistral causal-pilot plans) remain unchanged as the historical `final-checkpoint-primary-v1` boundary; the path-survival plans are a separate, non-pooled boundary.
+
+Runtime/CLI execution support already exists: `bin/run-fake-pilot.ts` accepts `--protocol-profile-id path-survival-primary-v1` and records it on the run manifest and compatibility profile. What remains before execution is a clean `stage1_execution_freeze_commit` and explicit operator approval.
+
+### Framing
+
+This phase targets credible, replayable industry evidence for "BDD with AI" (executable BDD-style feedback helping agents preserve behavior as the implementation evolves), not a peer-reviewed paper. Keep the anti-cheating controls (freeze inputs, hidden oracle, replay, validity flags, honest flat/null reporting) but do not add paper-grade ceremony. "BDD with AI" is a public-narrative interpretation layer only; the protocol conditions remain exactly `context_only_spec` and `feedback_capable_spec` (no third arm, no new condition IDs).
+
 ## Stage 2 - Optional Ceiling Comparison
 
 Stage 2 is optional and only begins after Stage 1 is completed, inspected, and interpreted.
