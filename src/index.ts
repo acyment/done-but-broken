@@ -3,6 +3,7 @@ export * from "./fake-agent";
 export * from "./inventory-reservations-oracle";
 export * from "./model-loop-agent";
 export * from "./openrouter-agent";
+export * from "./pricing-discount-oracle";
 export * from "./protocol-profile";
 export * from "./provenance";
 export * from "./renderer";

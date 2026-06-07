@@ -12,6 +12,7 @@ import {
   type OpenRouterResponseFormat
 } from "../src/model-loop-agent";
 import { createInventoryReservationsOracle } from "../src/inventory-reservations-oracle";
+import { createPricingDiscountOracle } from "../src/pricing-discount-oracle";
 import { createRolePermissionsOracle } from "../src/role-permissions-oracle";
 import { createSampleCartOracle } from "../src/sample-cart-oracle";
 import { createSubscriptionEntitlementsOracle } from "../src/subscription-entitlements-oracle";
@@ -443,6 +444,10 @@ function createHiddenOracle(taskId: string): HiddenOracleAdapter | undefined {
 
   if (taskId === "inventory-reservations-lifecycle") {
     return createInventoryReservationsOracle();
+  }
+
+  if (taskId === "pricing-discount-lifecycle") {
+    return createPricingDiscountOracle();
   }
 
   return undefined;

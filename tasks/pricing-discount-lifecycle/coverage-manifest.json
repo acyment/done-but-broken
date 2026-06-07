@@ -1,0 +1,155 @@
+{
+  "schema_version": "visible-hidden-coverage-v0",
+  "task_id": "pricing-discount-lifecycle",
+  "task_version": "pricing-discount-lifecycle-v0",
+  "entries": [
+    {
+      "spec_id": "SPEC-001",
+      "commitment_id": "base-subtotal-sums-line-prices",
+      "checkpoint_introduced": "I01",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "base-subtotal-visible-check",
+        "relative_path": "spec/base-subtotal.spec.ts",
+        "notes": "Visible feedback checks list subtotal, per-line totals, and total with no discounts."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/base-subtotal-private.txt"],
+        "check_ids": ["base-two-items-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-002",
+      "commitment_id": "line-sale-reduces-line-total",
+      "checkpoint_introduced": "I02",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "line-sale-visible-check",
+        "relative_path": "spec/line-sale.spec.ts",
+        "notes": "Visible feedback checks a per-line sale reduces line total and order total while subtotal stays at list."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/line-sale-private.txt"],
+        "check_ids": ["line-sale-three-subcent-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-003",
+      "commitment_id": "order-percent-coupon-on-post-line-subtotal",
+      "checkpoint_introduced": "I03",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "order-coupon-visible-check",
+        "relative_path": "spec/order-coupon.spec.ts",
+        "notes": "Visible feedback checks the order percentage coupon applies to the post-line-discount subtotal."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/order-coupon-private.txt"],
+        "check_ids": ["order-percent-coupon-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-004",
+      "commitment_id": "bulk-tier-stacks-with-line-sale",
+      "checkpoint_introduced": "I04",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "bulk-tier-visible-check",
+        "relative_path": "spec/bulk-tier.spec.ts",
+        "notes": "Visible feedback checks bulk tier stacks multiplicatively with the line sale and only at or above the minimum quantity."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/bulk-tier-private.txt"],
+        "check_ids": ["bulk-tier-meets-threshold-private", "bulk-tier-below-threshold-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-005",
+      "commitment_id": "duplicate-coupon-application-is-idempotent",
+      "checkpoint_introduced": "I05",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "coupon-idempotency-visible-check",
+        "relative_path": "spec/coupon-idempotency.spec.ts",
+        "notes": "Visible feedback checks a repeated coupon code counts once and a distinct code is not dropped."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/coupon-idempotency-private.txt"],
+        "check_ids": ["duplicate-coupon-code-private", "distinct-coupons-not-dropped-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-006",
+      "commitment_id": "fixed-coupon-applies-after-percent-coupons",
+      "checkpoint_introduced": "I06",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "fixed-coupon-visible-check",
+        "relative_path": "spec/fixed-coupon.spec.ts",
+        "notes": "Visible feedback checks the fixed-amount coupon applies after percentage coupons."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/fixed-coupon-private.txt"],
+        "check_ids": ["fixed-after-percent-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-007",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "checkpoint_introduced": "I07",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "discount-cap-visible-check",
+        "relative_path": "spec/discount-cap.spec.ts",
+        "notes": "Visible feedback checks the discount cap binds when exceeded and is a no-op otherwise."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/discount-cap-private.txt"],
+        "check_ids": [
+          "discount-cap-binding-private",
+          "discount-cap-non-binding-private",
+          "non-negative-floor-private"
+        ]
+      }
+    },
+    {
+      "spec_id": "SPEC-008",
+      "commitment_id": "tax-applies-to-post-discount-taxable-base",
+      "checkpoint_introduced": "I08",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "tax-visible-check",
+        "relative_path": "spec/tax.spec.ts",
+        "notes": "Visible feedback checks tax applies to the post-discount taxable base and skips exempt SKUs."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/tax-private.txt"],
+        "check_ids": ["tax-post-discount-exempt-private"]
+      }
+    },
+    {
+      "spec_id": "SPEC-009",
+      "commitment_id": "single-final-currency-rounding",
+      "checkpoint_introduced": "I09",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "rounding-visible-check",
+        "relative_path": "spec/rounding.spec.ts",
+        "notes": "Visible feedback checks the final total is rounded once, half-up, to two decimals."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": ["hidden-oracle/rounding-private.txt"],
+        "check_ids": ["single-final-rounding-private"]
+      }
+    }
+  ]
+}

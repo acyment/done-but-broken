@@ -1,0 +1,267 @@
+{
+  "schema_version": "pricing-discount-oracle-cases-v1",
+  "money_tolerance": 0.005,
+  "commitments_by_checkpoint": {
+    "I01": ["base-subtotal-sums-line-prices"],
+    "I02": ["base-subtotal-sums-line-prices", "line-sale-reduces-line-total"],
+    "I03": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal"
+    ],
+    "I04": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal",
+      "bulk-tier-stacks-with-line-sale"
+    ],
+    "I05": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal",
+      "bulk-tier-stacks-with-line-sale",
+      "duplicate-coupon-application-is-idempotent"
+    ],
+    "I06": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal",
+      "bulk-tier-stacks-with-line-sale",
+      "duplicate-coupon-application-is-idempotent",
+      "fixed-coupon-applies-after-percent-coupons"
+    ],
+    "I07": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal",
+      "bulk-tier-stacks-with-line-sale",
+      "duplicate-coupon-application-is-idempotent",
+      "fixed-coupon-applies-after-percent-coupons",
+      "discount-cap-and-non-negative-floor"
+    ],
+    "I08": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal",
+      "bulk-tier-stacks-with-line-sale",
+      "duplicate-coupon-application-is-idempotent",
+      "fixed-coupon-applies-after-percent-coupons",
+      "discount-cap-and-non-negative-floor",
+      "tax-applies-to-post-discount-taxable-base"
+    ],
+    "I09": [
+      "base-subtotal-sums-line-prices",
+      "line-sale-reduces-line-total",
+      "order-percent-coupon-on-post-line-subtotal",
+      "bulk-tier-stacks-with-line-sale",
+      "duplicate-coupon-application-is-idempotent",
+      "fixed-coupon-applies-after-percent-coupons",
+      "discount-cap-and-non-negative-floor",
+      "tax-applies-to-post-discount-taxable-base",
+      "single-final-currency-rounding"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "base-two-items-private",
+      "commitment_id": "base-subtotal-sums-line-prices",
+      "events": [
+        { "id": "p-item-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 12.0, "quantity": 2 },
+        { "id": "p-item-beta", "type": "item_added", "sku": "beta-band", "unitPrice": 8.5, "quantity": 1 }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "subtotal", "expected": 32.5 },
+        { "kind": "quote_number", "field": "total", "expected": 32.5 },
+        { "kind": "line_total", "sku": "alpha-kit", "expected": 24 },
+        { "kind": "line_total", "sku": "beta-band", "expected": 8.5 }
+      ]
+    },
+    {
+      "case_id": "line-sale-three-subcent-private",
+      "commitment_id": "line-sale-reduces-line-total",
+      "events": [
+        { "id": "p-sub-1", "type": "item_added", "sku": "thread-spool", "unitPrice": 3.34, "quantity": 1 },
+        { "id": "p-sub-2", "type": "item_added", "sku": "thread-reel", "unitPrice": 3.34, "quantity": 1 },
+        { "id": "p-sub-3", "type": "item_added", "sku": "thread-cone", "unitPrice": 3.34, "quantity": 1 },
+        { "id": "p-sub-ls-1", "type": "line_sale_set", "sku": "thread-spool", "percentOff": 40 },
+        { "id": "p-sub-ls-2", "type": "line_sale_set", "sku": "thread-reel", "percentOff": 40 },
+        { "id": "p-sub-ls-3", "type": "line_sale_set", "sku": "thread-cone", "percentOff": 40 }
+      ],
+      "assertions": [
+        { "kind": "line_total", "sku": "thread-spool", "expected": 2.004 },
+        { "kind": "line_total", "sku": "thread-reel", "expected": 2.004 },
+        { "kind": "line_total", "sku": "thread-cone", "expected": 2.004 },
+        { "kind": "quote_number", "field": "subtotal", "expected": 10.02 },
+        { "kind": "quote_number", "field": "total", "expected": 6.012 }
+      ]
+    },
+    {
+      "case_id": "order-percent-coupon-private",
+      "commitment_id": "order-percent-coupon-on-post-line-subtotal",
+      "events": [
+        { "id": "p-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-alpha-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-c-save25", "type": "coupon_applied", "code": "SAVE25", "couponKind": "percent", "value": 25 }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "total", "expected": 13.5 },
+        { "kind": "quote_number", "field": "discountTotal", "expected": 6.5 },
+        { "kind": "line_total", "sku": "alpha-kit", "expected": 18 }
+      ]
+    },
+    {
+      "case_id": "bulk-tier-meets-threshold-private",
+      "commitment_id": "bulk-tier-stacks-with-line-sale",
+      "events": [
+        { "id": "p-bulk-item", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 4 },
+        { "id": "p-bulk-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-bulk-rule", "type": "bulk_rule_set", "sku": "alpha-kit", "minQuantity": 3, "percentOff": 20 }
+      ],
+      "assertions": [
+        { "kind": "line_total", "sku": "alpha-kit", "expected": 28.8 },
+        { "kind": "line_number", "sku": "alpha-kit", "field": "lineDiscount", "expected": 11.2 },
+        { "kind": "quote_number", "field": "total", "expected": 28.8 }
+      ]
+    },
+    {
+      "case_id": "bulk-tier-below-threshold-private",
+      "commitment_id": "bulk-tier-stacks-with-line-sale",
+      "events": [
+        { "id": "p-bulk2-item", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-bulk2-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-bulk2-rule", "type": "bulk_rule_set", "sku": "alpha-kit", "minQuantity": 3, "percentOff": 20 }
+      ],
+      "assertions": [
+        { "kind": "line_total", "sku": "alpha-kit", "expected": 18 },
+        { "kind": "quote_number", "field": "total", "expected": 18 }
+      ]
+    },
+    {
+      "case_id": "duplicate-coupon-code-private",
+      "commitment_id": "duplicate-coupon-application-is-idempotent",
+      "events": [
+        { "id": "p-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-alpha-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-dup-1", "type": "coupon_applied", "code": "SAVE25", "couponKind": "percent", "value": 25 },
+        { "id": "p-dup-2", "type": "coupon_applied", "code": "SAVE25", "couponKind": "percent", "value": 25 }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "total", "expected": 13.5 },
+        { "kind": "can_apply_coupon", "code": "SAVE25", "expected": false },
+        { "kind": "can_apply_coupon", "code": "NEW10", "expected": true }
+      ]
+    },
+    {
+      "case_id": "distinct-coupons-not-dropped-private",
+      "commitment_id": "duplicate-coupon-application-is-idempotent",
+      "events": [
+        { "id": "p-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-alpha-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-dist-1", "type": "coupon_applied", "code": "SAVE25", "couponKind": "percent", "value": 25 },
+        { "id": "p-dist-2", "type": "coupon_applied", "code": "EXTRA10", "couponKind": "percent", "value": 10 }
+      ],
+      "assertions": [{ "kind": "quote_number", "field": "total", "expected": 12.15 }]
+    },
+    {
+      "case_id": "fixed-after-percent-private",
+      "commitment_id": "fixed-coupon-applies-after-percent-coupons",
+      "events": [
+        { "id": "p-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-alpha-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-fap-1", "type": "coupon_applied", "code": "SAVE25", "couponKind": "percent", "value": 25 },
+        { "id": "p-fap-2", "type": "coupon_applied", "code": "FIVEOFF", "couponKind": "fixed", "value": 5 }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "total", "expected": 8.5 },
+        { "kind": "quote_number", "field": "discountTotal", "expected": 11.5 }
+      ]
+    },
+    {
+      "case_id": "discount-cap-binding-private",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "events": [
+        { "id": "p-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-alpha-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-cap-1", "type": "coupon_applied", "code": "HALF", "couponKind": "percent", "value": 50 },
+        { "id": "p-cap-2", "type": "coupon_applied", "code": "FIVEOFF", "couponKind": "fixed", "value": 5 },
+        { "id": "p-cap-3", "type": "cap_set", "maxDiscountPercent": 60 }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "total", "expected": 8 },
+        { "kind": "quote_number", "field": "discountTotal", "expected": 12 }
+      ]
+    },
+    {
+      "case_id": "discount-cap-non-binding-private",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "events": [
+        { "id": "p-alpha", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-alpha-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-capn-1", "type": "coupon_applied", "code": "SAVE25", "couponKind": "percent", "value": 25 },
+        { "id": "p-capn-2", "type": "cap_set", "maxDiscountPercent": 60 }
+      ],
+      "assertions": [{ "kind": "quote_number", "field": "total", "expected": 13.5 }]
+    },
+    {
+      "case_id": "non-negative-floor-private",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "events": [
+        { "id": "p-floor-item", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 1 },
+        { "id": "p-floor-coupon", "type": "coupon_applied", "code": "BIG", "couponKind": "fixed", "value": 20 }
+      ],
+      "assertions": [{ "kind": "quote_number", "field": "total", "expected": 0 }]
+    },
+    {
+      "case_id": "tax-post-discount-exempt-private",
+      "commitment_id": "tax-applies-to-post-discount-taxable-base",
+      "events": [
+        { "id": "p-tax-a", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-tax-a-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-tax-b", "type": "item_added", "sku": "beta-band", "unitPrice": 5.0, "quantity": 1 },
+        { "id": "p-tax-coupon", "type": "coupon_applied", "code": "SAVE10", "couponKind": "percent", "value": 10 },
+        { "id": "p-tax-rate", "type": "tax_rate_set", "percent": 10 },
+        { "id": "p-tax-exempt", "type": "tax_exempt_set", "sku": "beta-band" }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "subtotal", "expected": 25 },
+        { "kind": "quote_number", "field": "taxTotal", "expected": 1.62 },
+        { "kind": "quote_number", "field": "total", "expected": 22.32 }
+      ]
+    },
+    {
+      "case_id": "single-final-rounding-private",
+      "commitment_id": "single-final-currency-rounding",
+      "events": [
+        { "id": "p-sub-1", "type": "item_added", "sku": "thread-spool", "unitPrice": 3.34, "quantity": 1 },
+        { "id": "p-sub-2", "type": "item_added", "sku": "thread-reel", "unitPrice": 3.34, "quantity": 1 },
+        { "id": "p-sub-3", "type": "item_added", "sku": "thread-cone", "unitPrice": 3.34, "quantity": 1 },
+        { "id": "p-sub-ls-1", "type": "line_sale_set", "sku": "thread-spool", "percentOff": 40 },
+        { "id": "p-sub-ls-2", "type": "line_sale_set", "sku": "thread-reel", "percentOff": 40 },
+        { "id": "p-sub-ls-3", "type": "line_sale_set", "sku": "thread-cone", "percentOff": 40 },
+        { "id": "p-round-coupon", "type": "coupon_applied", "code": "TENOFF", "couponKind": "percent", "value": 10 }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "subtotal", "expected": 10.02 },
+        { "kind": "quote_number", "field": "total", "expected": 5.4108 },
+        { "kind": "is_rounded", "field": "total", "decimals": 2 }
+      ]
+    },
+    {
+      "case_id": "single-final-rounding-with-tax-private",
+      "commitment_id": "single-final-currency-rounding",
+      "events": [
+        { "id": "p-rt-a", "type": "item_added", "sku": "alpha-kit", "unitPrice": 10.0, "quantity": 2 },
+        { "id": "p-rt-a-ls", "type": "line_sale_set", "sku": "alpha-kit", "percentOff": 10 },
+        { "id": "p-rt-b", "type": "item_added", "sku": "beta-band", "unitPrice": 5.0, "quantity": 1 },
+        { "id": "p-rt-coupon", "type": "coupon_applied", "code": "SAVE13", "couponKind": "percent", "value": 13 },
+        { "id": "p-rt-rate", "type": "tax_rate_set", "percent": 10 },
+        { "id": "p-rt-exempt", "type": "tax_exempt_set", "sku": "beta-band" }
+      ],
+      "assertions": [
+        { "kind": "quote_number", "field": "taxTotal", "expected": 1.566, "tolerance": 0.000001 },
+        { "kind": "quote_number", "field": "total", "expected": 21.576 },
+        { "kind": "is_rounded", "field": "total", "decimals": 2 }
+      ]
+    }
+  ]
+}
