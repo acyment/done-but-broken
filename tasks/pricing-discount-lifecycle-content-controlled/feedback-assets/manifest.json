@@ -1,0 +1,58 @@
+{
+  "assets": [
+    {
+      "asset_id": "base-subtotal-visible-check",
+      "checkpoint_introduced": "I01",
+      "relative_path": "spec/base-subtotal.spec.ts",
+      "source_path": "base-subtotal.source.ts"
+    },
+    {
+      "asset_id": "line-sale-visible-check",
+      "checkpoint_introduced": "I02",
+      "relative_path": "spec/line-sale.spec.ts",
+      "source_path": "line-sale.source.ts"
+    },
+    {
+      "asset_id": "order-coupon-visible-check",
+      "checkpoint_introduced": "I03",
+      "relative_path": "spec/order-coupon.spec.ts",
+      "source_path": "order-coupon.source.ts"
+    },
+    {
+      "asset_id": "bulk-tier-visible-check",
+      "checkpoint_introduced": "I04",
+      "relative_path": "spec/bulk-tier.spec.ts",
+      "source_path": "bulk-tier.source.ts"
+    },
+    {
+      "asset_id": "coupon-idempotency-visible-check",
+      "checkpoint_introduced": "I05",
+      "relative_path": "spec/coupon-idempotency.spec.ts",
+      "source_path": "coupon-idempotency.source.ts"
+    },
+    {
+      "asset_id": "fixed-coupon-visible-check",
+      "checkpoint_introduced": "I06",
+      "relative_path": "spec/fixed-coupon.spec.ts",
+      "source_path": "fixed-coupon.source.ts"
+    },
+    {
+      "asset_id": "discount-cap-visible-check",
+      "checkpoint_introduced": "I07",
+      "relative_path": "spec/discount-cap.spec.ts",
+      "source_path": "discount-cap.source.ts"
+    },
+    {
+      "asset_id": "tax-visible-check",
+      "checkpoint_introduced": "I08",
+      "relative_path": "spec/tax.spec.ts",
+      "source_path": "tax.source.ts"
+    },
+    {
+      "asset_id": "rounding-visible-check",
+      "checkpoint_introduced": "I09",
+      "relative_path": "spec/rounding.spec.ts",
+      "source_path": "rounding.source.ts"
+    }
+  ]
+}

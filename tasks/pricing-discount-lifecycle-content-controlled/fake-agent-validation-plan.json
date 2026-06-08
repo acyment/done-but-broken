@@ -1,0 +1,61 @@
+{
+  "schema_version": "fake-agent-validation-plan-v0",
+  "task_id": "pricing-discount-lifecycle-content-controlled",
+  "task_version": "pricing-discount-lifecycle-content-controlled-v1",
+  "scenarios": [
+    {
+      "scenario_id": "base-subtotal-reference",
+      "checkpoint_id": "I01",
+      "purpose": "Exercise the local reference base subtotal behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "line-sale-reference",
+      "checkpoint_id": "I02",
+      "purpose": "Exercise the local reference line-sale behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "order-coupon-reference",
+      "checkpoint_id": "I03",
+      "purpose": "Exercise the local reference order-coupon behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "bulk-tier-reference",
+      "checkpoint_id": "I04",
+      "purpose": "Exercise the local reference bulk-tier behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "coupon-idempotency-reference",
+      "checkpoint_id": "I05",
+      "purpose": "Exercise the local reference coupon idempotency behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "fixed-coupon-reference",
+      "checkpoint_id": "I06",
+      "purpose": "Exercise the local reference fixed-coupon precedence behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "discount-cap-reference",
+      "checkpoint_id": "I07",
+      "purpose": "Exercise the local reference discount cap and floor behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "tax-reference",
+      "checkpoint_id": "I08",
+      "purpose": "Exercise the local reference post-discount tax behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "rounding-reference",
+      "checkpoint_id": "I09",
+      "purpose": "Exercise the local reference single-final-rounding behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    }
+  ]
+}

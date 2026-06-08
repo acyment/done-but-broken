@@ -1,0 +1,139 @@
+{
+  "records": [
+    {
+      "spec_id": "SPEC-001",
+      "checkpoint_introduced": "I01",
+      "commitment_id": "base-subtotal-sums-line-prices",
+      "title": "Cart subtotal sums each line's list price",
+      "intent": "A storefront quote starts from the cart subtotal: the sum of unit list price times quantity across every line. With no discounts or tax configured, the order total equals the subtotal.",
+      "given": "A cart has one or more lines, each added with an item_added event carrying a SKU, unit price, and quantity.",
+      "when": "getQuote is called with no discounts, coupons, or tax configured.",
+      "then": "subtotal equals the sum of unitPrice times quantity for every line, each line's lineTotal equals its unitPrice times quantity, and total equals subtotal. Worked example: a cart with mug at 6.00 x 3 and lid at 2.00 x 2 has line totals 18.00 and 4.00, subtotal 22.00, and total 22.00.",
+      "active_checkpoints": ["I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "base-subtotal-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/base-subtotal-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-002",
+      "checkpoint_introduced": "I02",
+      "commitment_id": "line-sale-reduces-line-total",
+      "title": "A line on sale reduces that line's total",
+      "intent": "Merchants put individual SKUs on sale. A line with a sale of P percent off has its line total reduced to unitPrice times (1 - P/100) times quantity. The subtotal still reports the pre-sale list total; the sale shows up as that line's lineDiscount and in the order total.",
+      "given": "A cart line has a per-line sale percentage configured for its SKU via a line_sale_set event.",
+      "when": "getQuote is called.",
+      "then": "the line's lineTotal equals unitPrice times (1 - P/100) times quantity, lineDiscount equals the list total minus that lineTotal, subtotal still equals the list total, and total equals the sum of post-sale line totals. Worked example: mug at 6.00 x 2 with a 25 percent line sale has line total 9.00 (6.00 x 0.75 x 2), line discount 3.00, subtotal 12.00, and total 9.00.",
+      "active_checkpoints": ["I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "line-sale-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/line-sale-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-003",
+      "checkpoint_introduced": "I03",
+      "commitment_id": "order-percent-coupon-on-post-line-subtotal",
+      "title": "Order percentage coupon applies after line sales",
+      "intent": "An order-level percentage coupon discounts the cart after per-line sales are applied. The coupon reduces the post-line-discount subtotal (the sum of post-sale line totals), not the original list subtotal.",
+      "given": "A cart already has per-line sales applied and an order percentage coupon of C percent is applied via a coupon_applied event with couponKind 'percent'.",
+      "when": "getQuote is called.",
+      "then": "the coupon reduces the running total by C percent of the post-line-discount subtotal, so total equals the post-line-discount subtotal times (1 - C/100), and discountTotal includes both the line sales and the coupon. Worked example: mug at 10.00 x 2 with a 20 percent line sale gives line total 16.00; a WELCOME coupon of couponKind 'percent' value 10 makes total 14.40 and discountTotal 5.60.",
+      "active_checkpoints": ["I03", "I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "order-coupon-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/order-coupon-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-004",
+      "checkpoint_introduced": "I04",
+      "commitment_id": "bulk-tier-stacks-with-line-sale",
+      "title": "Bulk tier discount stacks with the line sale",
+      "intent": "A SKU can carry a bulk tier via a bulk_rule_set event: when its line quantity is at or above a minimum, an extra B percent comes off that line. The bulk discount stacks multiplicatively with the line sale, so the net unit price is unitPrice times (1 - sale/100) times (1 - B/100). Below the minimum quantity the bulk tier does not apply.",
+      "given": "A SKU has both a per-line sale and a bulk tier rule with a minimum quantity.",
+      "when": "getQuote is called for a line at or above the minimum quantity, and separately for a line below it.",
+      "then": "at or above the minimum, the line total equals unitPrice times (1 - sale/100) times (1 - B/100) times quantity; below the minimum, only the line sale applies. Worked example: mug at 5.00 each with a 10 percent line sale and a bulk rule of 20 percent off at quantity at or above 10: at quantity 10 the line total is 36.00 (5.00 x 0.9 x 0.8 x 10); at quantity 5 only the line sale applies and the line total is 22.50.",
+      "active_checkpoints": ["I04", "I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "bulk-tier-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/bulk-tier-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-005",
+      "checkpoint_introduced": "I05",
+      "commitment_id": "duplicate-coupon-application-is-idempotent",
+      "title": "Applying the same coupon code twice counts once",
+      "intent": "Customers sometimes submit the same coupon code more than once. A coupon code that is already applied must not stack with itself, but applying a different valid code must still take effect. canApplyCoupon reports whether a code is not yet applied.",
+      "given": "A cart has an order coupon applied and then the same coupon code is applied a second time.",
+      "when": "getQuote and canApplyCoupon are called, and separately a different valid coupon code is also applied.",
+      "then": "the duplicated code is counted only once so the total matches a single application, canApplyCoupon returns false for an already-applied code and true for a not-yet-applied code, and a distinct second code is not dropped. Worked example: mug at 10.00 with SAVE20 (couponKind 'percent' value 20) applied twice totals 8.00 (counted once, not 6.40); canApplyCoupon returns false for SAVE20 and true for FRESH; SAVE20 then a distinct PLUS5 (value 5) totals 7.60.",
+      "active_checkpoints": ["I05", "I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "coupon-idempotency-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/coupon-idempotency-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-006",
+      "checkpoint_introduced": "I06",
+      "commitment_id": "fixed-coupon-applies-after-percent-coupons",
+      "title": "Fixed-amount coupon applies after percentage coupons",
+      "intent": "A fixed-amount coupon (couponKind 'fixed', for example five dollars off) is subtracted from the running total only after every percentage coupon has been applied. A fixed-amount coupon never reduces the running total below zero.",
+      "given": "A cart has a percentage coupon and a fixed-amount coupon applied.",
+      "when": "getQuote is called.",
+      "then": "the percentage coupon is applied first to the post-line-discount subtotal, then the fixed amount is subtracted from that result, and the fixed amount subtracted never exceeds the running total. Worked example: mug at 10.00 x 2 with SAVE20 (percent 20) gives 16.00, then a THREE coupon (couponKind 'fixed' value 3) gives total 13.00; applying the fixed amount first would wrongly give 13.60.",
+      "active_checkpoints": ["I06", "I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "fixed-coupon-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/fixed-coupon-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-007",
+      "checkpoint_introduced": "I07",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "title": "Total discount is capped, and the total floors at zero",
+      "intent": "A configured discount cap (cap_set event with maxDiscountPercent) limits the total discount to at most C percent of the pre-discount subtotal (the list subtotal). The cap applies to the combined line and order discounts. When the combined discount is at or below the cap the cap changes nothing (an exact no-op). The order total can never be negative.",
+      "given": "A cart has line and order discounts and a discount cap of C percent of the list subtotal configured.",
+      "when": "getQuote is called when the combined discount exceeds the cap, and separately when it does not.",
+      "then": "when the combined discount exceeds C percent of the list subtotal it is reduced so the discount equals exactly C percent of the list subtotal; when it does not exceed the cap the total is unchanged; and the total is never less than 0.00. Worked example: list subtotal 20.00 with SAVE20 (percent 20) and a TEN fixed coupon (value 10) is a combined discount of 14.00 (70 percent); a 50 percent cap limits the discount to 10.00 so the total is 10.00. With only SAVE20 the discount is 4.00 (20 percent), under the cap, so the total stays 16.00.",
+      "active_checkpoints": ["I07", "I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "discount-cap-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/discount-cap-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-008",
+      "checkpoint_introduced": "I08",
+      "commitment_id": "tax-applies-to-post-discount-taxable-base",
+      "title": "Tax applies to the post-discount taxable base",
+      "intent": "Tax is charged on the discounted price of taxable goods only. A tax_rate_set event sets the rate; a tax_exempt_set event marks a SKU exempt. The post-discount total is allocated back to lines in proportion to each line's post-line-discount total; tax-exempt SKUs contribute nothing to the taxable base. Tax equals the configured rate times the taxable base.",
+      "given": "A cart has taxable and tax-exempt lines, an order coupon, and a tax rate configured.",
+      "when": "getQuote is called.",
+      "then": "the post-discount total is allocated to lines pro rata by post-line-discount line total, only non-exempt lines contribute to the taxable base, taxTotal equals the rate times that base, and total equals the post-discount total plus taxTotal. Worked example: pen at 4.00 x 2 (taxable) and book at 12.00 (tax-exempt), list subtotal 20.00; a SAVE10 coupon (percent 10) gives a post-discount total of 18.00; the pen's share is 18.00 x 8/20 = 7.20; at a 10 percent tax rate the tax is 0.72 and the total is 18.72.",
+      "active_checkpoints": ["I08", "I09"],
+      "feedback_binding": {
+        "asset_id": "tax-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/tax-private.txt"]
+    },
+    {
+      "spec_id": "SPEC-009",
+      "checkpoint_introduced": "I09",
+      "commitment_id": "single-final-currency-rounding",
+      "title": "Round once, at the final total",
+      "intent": "Because sales, coupons, and tax can produce fractions of a cent, the final total is rounded half-up to two decimal places. Rounding happens exactly once, on the final total; intermediate line totals, discounts, and tax are kept at full precision and are not rounded per line or per stage.",
+      "given": "A cart whose discounts produce a total with more than two decimal places.",
+      "when": "getQuote is called.",
+      "then": "total is the full-precision final amount rounded half-up to two decimal places, and no per-line or per-stage rounding is applied before the final total. Worked example: three lines of 3.33 at 50 percent off each compute to 1.665 = 4.995 total, which rounds once to 5.00; rounding each line to 1.67 first would wrongly give 5.01.",
+      "active_checkpoints": ["I09"],
+      "feedback_binding": {
+        "asset_id": "rounding-visible-check"
+      },
+      "hidden_oracle_refs": ["hidden-oracle/rounding-private.txt"]
+    }
+  ]
+}

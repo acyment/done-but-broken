@@ -1,0 +1,250 @@
+{
+  "schema_version": "local-acceptance-criteria-v0",
+  "task_id": "pricing-discount-lifecycle-content-controlled",
+  "task_version": "pricing-discount-lifecycle-content-controlled-v1",
+  "criteria": [
+    {
+      "criterion_id": "visible-feedback-base-subtotal",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I01",
+      "commitment_id": "base-subtotal-sums-line-prices",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for the cart subtotal and line totals with no discounts.",
+      "evidence": ["local:coverage-manifest.json#base-subtotal-visible-check", "local:spec/base-subtotal.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-line-sale",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I02",
+      "commitment_id": "line-sale-reduces-line-total",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for a per-line sale reducing the line total.",
+      "evidence": ["local:coverage-manifest.json#line-sale-visible-check", "local:spec/line-sale.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-order-coupon",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I03",
+      "commitment_id": "order-percent-coupon-on-post-line-subtotal",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for the order percentage coupon on the post-line-discount subtotal.",
+      "evidence": ["local:coverage-manifest.json#order-coupon-visible-check", "local:spec/order-coupon.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-bulk-tier",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I04",
+      "commitment_id": "bulk-tier-stacks-with-line-sale",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for bulk tier stacking with the line sale and the below-threshold case.",
+      "evidence": ["local:coverage-manifest.json#bulk-tier-visible-check", "local:spec/bulk-tier.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-coupon-idempotency",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I05",
+      "commitment_id": "duplicate-coupon-application-is-idempotent",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for duplicate coupon idempotency and distinct coupon preservation.",
+      "evidence": ["local:coverage-manifest.json#coupon-idempotency-visible-check", "local:spec/coupon-idempotency.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-fixed-coupon",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I06",
+      "commitment_id": "fixed-coupon-applies-after-percent-coupons",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for fixed-amount coupon precedence after percentage coupons.",
+      "evidence": ["local:coverage-manifest.json#fixed-coupon-visible-check", "local:spec/fixed-coupon.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-discount-cap",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I07",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for the discount cap binding and no-op cases.",
+      "evidence": ["local:coverage-manifest.json#discount-cap-visible-check", "local:spec/discount-cap.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-tax",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I08",
+      "commitment_id": "tax-applies-to-post-discount-taxable-base",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for post-discount taxable base with exempt SKUs.",
+      "evidence": ["local:coverage-manifest.json#tax-visible-check", "local:spec/tax.spec.ts"]
+    },
+    {
+      "criterion_id": "visible-feedback-rounding",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "I09",
+      "commitment_id": "single-final-currency-rounding",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for single final half-up rounding to two decimals.",
+      "evidence": ["local:coverage-manifest.json#rounding-visible-check", "local:spec/rounding.spec.ts"]
+    },
+    {
+      "criterion_id": "hidden-oracle-base-subtotal",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I01",
+      "commitment_id": "base-subtotal-sums-line-prices",
+      "required_before": "hidden_oracle",
+      "description": "Add a non-visible subtotal case with different SKUs and prices implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/base-subtotal-private.txt", "local:base-two-items-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-line-sale",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I02",
+      "commitment_id": "line-sale-reduces-line-total",
+      "required_before": "hidden_oracle",
+      "description": "Add a non-visible multi-line sale case implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/line-sale-private.txt", "local:line-sale-three-subcent-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-order-coupon",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I03",
+      "commitment_id": "order-percent-coupon-on-post-line-subtotal",
+      "required_before": "hidden_oracle",
+      "description": "Add a non-visible order-coupon case implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/order-coupon-private.txt", "local:order-percent-coupon-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-bulk-tier",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I04",
+      "commitment_id": "bulk-tier-stacks-with-line-sale",
+      "required_before": "hidden_oracle",
+      "description": "Add non-visible bulk-tier threshold and below-threshold cases implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/bulk-tier-private.txt", "local:bulk-tier-meets-threshold-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-coupon-idempotency",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I05",
+      "commitment_id": "duplicate-coupon-application-is-idempotent",
+      "required_before": "hidden_oracle",
+      "description": "Add non-visible duplicate-code and distinct-code cases implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/coupon-idempotency-private.txt", "local:duplicate-coupon-code-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-fixed-coupon",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I06",
+      "commitment_id": "fixed-coupon-applies-after-percent-coupons",
+      "required_before": "hidden_oracle",
+      "description": "Add a non-visible fixed-after-percent case implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/fixed-coupon-private.txt", "local:fixed-after-percent-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-discount-cap",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I07",
+      "commitment_id": "discount-cap-and-non-negative-floor",
+      "required_before": "hidden_oracle",
+      "description": "Add non-visible cap binding, cap no-op, and floor cases implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/discount-cap-private.txt", "local:discount-cap-binding-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-tax",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I08",
+      "commitment_id": "tax-applies-to-post-discount-taxable-base",
+      "required_before": "hidden_oracle",
+      "description": "Add a non-visible post-discount tax case with an exempt SKU implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/tax-private.txt", "local:tax-post-discount-exempt-private"]
+    },
+    {
+      "criterion_id": "hidden-oracle-rounding",
+      "target": "hidden_oracle",
+      "checkpoint_id": "I09",
+      "commitment_id": "single-final-currency-rounding",
+      "required_before": "hidden_oracle",
+      "description": "Add a non-visible sub-cent rounding case implied by the visible spec.",
+      "evidence": ["local:hidden-oracle/rounding-private.txt", "local:single-final-rounding-private"]
+    },
+    {
+      "criterion_id": "fake-validation-base-subtotal-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I01",
+      "scenario_id": "base-subtotal-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for the base subtotal before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#base-subtotal-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-line-sale-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I02",
+      "scenario_id": "line-sale-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for the line sale before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#line-sale-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-order-coupon-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I03",
+      "scenario_id": "order-coupon-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for the order coupon before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#order-coupon-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-bulk-tier-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I04",
+      "scenario_id": "bulk-tier-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for the bulk tier before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#bulk-tier-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-coupon-idempotency-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I05",
+      "scenario_id": "coupon-idempotency-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for coupon idempotency before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#coupon-idempotency-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-fixed-coupon-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I06",
+      "scenario_id": "fixed-coupon-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for fixed-coupon precedence before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#fixed-coupon-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-discount-cap-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I07",
+      "scenario_id": "discount-cap-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for the discount cap before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#discount-cap-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-tax-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I08",
+      "scenario_id": "tax-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for post-discount tax before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#tax-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    },
+    {
+      "criterion_id": "fake-validation-rounding-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "I09",
+      "scenario_id": "rounding-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for final rounding before any provider difficulty probe.",
+      "evidence": ["local:fake-agent-validation-plan.json#rounding-reference", "local:bun test test/pricing-discount-lifecycle.test.ts"]
+    }
+  ]
+}

@@ -450,6 +450,10 @@ function createHiddenOracle(taskId: string): HiddenOracleAdapter | undefined {
     return createPricingDiscountOracle();
   }
 
+  if (taskId === "pricing-discount-lifecycle-content-controlled") {
+    return createPricingDiscountOracle();
+  }
+
   return undefined;
 }
 
