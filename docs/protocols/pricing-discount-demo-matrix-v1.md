@@ -4,9 +4,11 @@ Matrix profile ID: `pricing-discount-demo-v1`
 
 Original freeze status: predeclared and sealed before any provider run. At freeze time, no provider/model runs had been performed. Execution required a clean freeze commit and explicit operator authorization. Post-run outcomes are documented in run cards, not in this matrix.
 
+Post-run caveat (2026-06-08): artifact inspection found that this matrix does not isolate feedback-loop effects from interface/worked-example disclosure. The context-only prompt exposed prose semantics but not concrete event names and fields such as `coupon_applied`, `couponKind`, `bulk_rule_set`, `cap_set`, or `tax_rate_set`; the feedback-capable arm received runnable spec files containing those exact event calls and expected numbers. This matrix remains the frozen record for the executed contrast, but public claims from it must be framed as executable, example-bearing BDD-style specs versus prose-only specs, not as proof that feedback alone reduces regression drift.
+
 ## Purpose and framing
 
-This is a credible, replayable **industry demo**, not a peer-reviewed study. It tests whether executable spec-derived (BDD-style) feedback helps an AI coding agent **preserve earlier behavior while it implements later requirements** — i.e. catch regression drift mid-implementation — on a task where regression drift is actually plausible.
+This is a credible, replayable **industry demo**, not a peer-reviewed study. It was designed to test whether executable spec-derived (BDD-style) feedback helps an AI coding agent **preserve earlier behavior while it implements later requirements** — i.e. catch regression drift mid-implementation — on a task where regression drift is actually plausible. The post-run caveat above narrows the public interpretation: the executed matrix is stronger as evidence that executable, example-bearing specs outperform prose-only specs than as evidence isolating feedback-loop effects.
 
 The conditions remain exactly `context_only_spec` and `feedback_capable_spec`. "BDD with AI" is the public-narrative interpretation layer (the visible feedback is spec-derived executable checks); it is not a third arm or a new condition ID.
 
@@ -92,11 +94,11 @@ Do not change these thresholds after seeing outcomes.
 
 ## Allowed claim wording
 
-- "On a sealed pricing lifecycle task under `mistral-small` with a 2-turn / 1-feedback budget, executable spec-derived (BDD-style) feedback [reduced / did not reduce] regression drift versus context-only specs, measured by regression-free path survival across nine cumulative checkpoints."
+- "On a sealed pricing lifecycle task under `mistral-small` with a 2-turn / 1-feedback budget, executable, example-bearing BDD-style specs [improved / did not improve] implementation-and-survival versus prose-only specs, measured by regression-free path survival across nine cumulative checkpoints."
 - "Earlier subscription and inventory lifecycle tasks were easier and produced limited regression signal; they are calibration/difficulty context, not headline evidence."
 - Always qualify: sealed task, replay-valid, under this model/budget, preliminary.
 
-Disallowed: "proves"; "BDD always helps"; any generalized claim across tasks/models; pooling pricing with subscription/inventory; citing the local naive-agent design artifact as a treatment result.
+Disallowed: "proves"; "BDD always helps"; any generalized claim across tasks/models; pooling pricing with subscription/inventory; citing the local naive-agent design artifact as a treatment result; claiming this matrix proves feedback alone reduces regression drift once both arms know the interface.
 
 ## Execution prerequisites (all required before any provider call)
 
