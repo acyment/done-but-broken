@@ -1,0 +1,90 @@
+{
+  "schema_version": "analysis-plan-v0",
+  "analysis_plan_id": "pricing-discount-lifecycle-v0-qwen-strong-control-plan-v0",
+  "protocol_profile_id": "path-survival-primary-v1",
+  "provider_execution_profile_id": "openrouter-loop-v1-modelqwen-qwen3.7-max-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1",
+  "status": "sealed",
+  "task_id": "pricing-discount-lifecycle",
+  "task_version": "pricing-discount-lifecycle-v0",
+  "conditions": ["context_only_spec", "feedback_capable_spec"],
+  "run_classifications": ["diagnostic_invalid", "difficulty_probe", "causal_pilot"],
+  "primary_metric": "regression_free_auc_delta",
+  "secondary_metrics": [
+    "final_checkpoint_pass_rate_delta",
+    "regression_count_delta",
+    "regression_free_success_by_checkpoint",
+    "feedback_opportunity_integrity",
+    "clean_primary_evidence_eligible",
+    "context_arm_progression_beyond_seed"
+  ],
+  "planned_metrics": [],
+  "budget": {
+    "max_model_turns": 2,
+    "max_feedback_runs": 1
+  },
+  "model_provider": {
+    "provider": "openrouter",
+    "model": "qwen/qwen3.7-max",
+    "adapter_id": "openrouter-loop"
+  },
+  "exclusion_rules": [
+    "exclude diagnostic_invalid runs from all aggregate summaries",
+    "exclude provider/network validity-flagged runs from primary causal estimates",
+    "exclude one-turn or no-feedback-path runs from causal feedback-use evidence",
+    "exclude runs whose provider profile ID differs from this sealed Qwen profile",
+    "do not pool Qwen runs with the Mistral pricing-discount-demo-v1 runs",
+    "do not pool this task with subscription-entitlements or inventory-reservations runs",
+    "do not pool path-survival-primary-v1 runs with final-checkpoint-primary-v1 evidence"
+  ],
+  "pooling_rules": {
+    "compatibility_fields": [
+      "task_id",
+      "task_version",
+      "protocol_version",
+      "protocol_profile_id",
+      "renderer_version",
+      "task_seal_hash",
+      "checkpoint_list_hash",
+      "visible_spec_hash",
+      "feedback_asset_hash",
+      "hidden_oracle_hash",
+      "budget_hash",
+      "model_provider_hash",
+      "provider_execution_profile_hash",
+      "metric_definition_hash"
+    ],
+    "reject_validity_flags": true,
+    "reject_unclassified_runs": true
+  },
+  "promotion_gates": [
+    "qwen_slug_and_structured_output_support_confirmed_read_only",
+    "local_acceptance_criteria_all_pass",
+    "visible_feedback_assets_implemented_and_gated",
+    "hidden_oracle_reference_candidate_passes",
+    "pricing_discount_strong_control_matrix_reviewed_and_approved",
+    "analysis_plan_sealed_before_provider_run",
+    "clean_provider_smoke_completed",
+    "clean_provider_difficulty_probe_completed"
+  ],
+  "frozen_inputs": [
+    "task_version",
+    "checkpoint_list",
+    "visible_specs",
+    "feedback_assets",
+    "hidden_oracle",
+    "budget",
+    "model_provider",
+    "provider_execution_profile_id",
+    "exclusion_rules",
+    "protocol_profile_id",
+    "primary_metric",
+    "secondary_metrics",
+    "pooling_rules"
+  ],
+  "metadata": {
+    "matrix_profile_id": "pricing-discount-strong-control-v1",
+    "model_slug_source": "OpenRouter model metadata read-only check, 2026-06-08",
+    "structured_output_support_confirmed": true,
+    "single_causal_pilot_is_directional": true
+  }
+}

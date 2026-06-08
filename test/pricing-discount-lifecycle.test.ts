@@ -26,6 +26,8 @@ const tempRoots: string[] = [];
 const checkpointIds = ["I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"];
 const mistralProviderExecutionProfileId =
   "openrouter-loop-v1-modelmistralai-mistral-small-2603-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
+const qwenStrongControlProviderExecutionProfileId =
+  "openrouter-loop-v1-modelqwen-qwen3.7-max-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
 const execFileAsync = promisify(execFile);
 
 afterEach(async () => {
@@ -126,6 +128,38 @@ describe("pricing-discount-lifecycle task", () => {
     expect(task.analysis_plan?.pooling_rules.compatibility_fields).toContain("protocol_profile_id");
     expect(task.analysis_plan?.pooling_rules.compatibility_fields).toContain("provider_execution_profile_hash");
     expect(task.analysis_plan?.frozen_inputs).toContain("provider_execution_profile_id");
+
+    const qwenPlan = task.analysis_plans?.find(
+      (plan) => plan.analysis_plan_id === "pricing-discount-lifecycle-v0-qwen-strong-control-plan-v0"
+    );
+
+    expect(qwenPlan).toMatchObject({
+      schema_version: "analysis-plan-v0",
+      status: "sealed",
+      task_id: "pricing-discount-lifecycle",
+      task_version: "pricing-discount-lifecycle-v0",
+      conditions: ["context_only_spec", "feedback_capable_spec"],
+      protocol_profile_id: "path-survival-primary-v1",
+      run_classifications: ["diagnostic_invalid", "difficulty_probe", "causal_pilot"],
+      primary_metric: "regression_free_auc_delta",
+      budget: {
+        max_model_turns: 2,
+        max_feedback_runs: 1
+      },
+      model_provider: {
+        provider: "openrouter",
+        model: "qwen/qwen3.7-max",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile_id: qwenStrongControlProviderExecutionProfileId
+    });
+    expect(qwenPlan?.secondary_metrics).toContain("context_arm_progression_beyond_seed");
+    expect(qwenPlan?.exclusion_rules).toContain(
+      "do not pool Qwen runs with the Mistral pricing-discount-demo-v1 runs"
+    );
+    expect(qwenPlan?.promotion_gates).toContain("qwen_slug_and_structured_output_support_confirmed_read_only");
+    expect(qwenPlan?.pooling_rules.compatibility_fields).toContain("provider_execution_profile_hash");
+    expect(qwenPlan?.frozen_inputs).toContain("provider_execution_profile_id");
   });
 
   test("renders cumulative visible specs equally while gating feedback assets to the feedback arm", async () => {
