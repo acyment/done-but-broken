@@ -2,7 +2,7 @@
 
 Matrix profile ID: `pricing-discount-demo-v1`
 
-Status: predeclared and sealed before any provider run. No provider/model runs have been performed. Execution requires a clean freeze commit and explicit operator authorization.
+Original freeze status: predeclared and sealed before any provider run. At freeze time, no provider/model runs had been performed. Execution required a clean freeze commit and explicit operator authorization. Post-run outcomes are documented in run cards, not in this matrix.
 
 ## Purpose and framing
 
@@ -40,6 +40,8 @@ This matters because the task was intentionally built so that a naive implementa
     --agent openrouter-loop \
     --openrouter-model mistralai/mistral-small-2603 \
     --protocol-profile-id path-survival-primary-v1 \
+    --max-model-turns 2 \
+    --max-feedback-runs 1 \
     --run-classification <diagnostic_invalid|difficulty_probe|causal_pilot> \
     --openrouter-response-format json_schema \
     --openrouter-require-parameters true \
@@ -52,6 +54,8 @@ This matters because the task was intentionally built so that a naive implementa
   ```
 
   A run whose manifest does not declare `protocol_profile_id=path-survival-primary-v1` is not path-survival evidence; `regression_free_auc` is only secondary for such a run.
+
+  Errata (2026-06-08): the first sealed version of this command omitted `--max-model-turns 2 --max-feedback-runs 1`, so the runner used its defaults (`3`/`2`) instead of the frozen `2`/`1` budget. The frozen budget itself never changed (it is declared above and in the analysis plan); only the command text was incomplete. The first three provider runs of the matrix were recorded but excluded for that budget mismatch and re-run at the correct `2`/`1`. The command above is corrected.
 
 ## Compact matrix
 
