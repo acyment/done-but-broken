@@ -9,6 +9,9 @@
   "fake_agent_validation_plan": "fake-agent-validation-plan.json",
   "local_acceptance_criteria": "local-acceptance-criteria.json",
   "analysis_plan": "analysis-plan.json",
+  "analysis_plans": [
+    "analysis-plan.gemini-3.1-pro-control-v0.json"
+  ],
   "hidden_oracle_path": "hidden-oracle",
   "public_api_contract": "applyEvent(state, event): State; getQuote(state): Quote; getLineTotal(state, sku): number; canApplyCoupon(state, code): boolean. Both conditions receive this concrete event API. Event types (the `event` argument to applyEvent, each with a unique string `id`): item_added {id, type:'item_added', sku, unitPrice, quantity}; line_sale_set {id, type:'line_sale_set', sku, percentOff}; bulk_rule_set {id, type:'bulk_rule_set', sku, minQuantity, percentOff}; coupon_applied {id, type:'coupon_applied', code, couponKind, value} where couponKind is 'percent' or 'fixed'; cap_set {id, type:'cap_set', maxDiscountPercent}; tax_rate_set {id, type:'tax_rate_set', percent}; tax_exempt_set {id, type:'tax_exempt_set', sku}. getQuote returns {currency, lines:[{sku, unitPrice, quantity, lineDiscount, lineTotal}], subtotal, discountTotal, taxTotal, total}. getLineTotal returns a line's post-discount lineTotal. canApplyCoupon returns false once a coupon code has already been applied, true otherwise."
 }

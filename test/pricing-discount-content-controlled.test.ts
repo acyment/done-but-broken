@@ -21,6 +21,8 @@ const eventTypes = [
   "tax_rate_set",
   "tax_exempt_set"
 ];
+const gemini31ProProviderExecutionProfileId =
+  "openrouter-loop-v1-modelgoogle-gemini-3.1-pro-preview-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
 const tempRoots: string[] = [];
 
 afterEach(async () => {
@@ -41,6 +43,45 @@ describe("pricing-discount-lifecycle-content-controlled", () => {
     expect(task.checkpoints).toEqual(checkpointIds);
     expect(task.analysis_plan?.protocol_profile_id).toBe("path-survival-primary-v1");
     expect(task.analysis_plan?.primary_metric).toBe("regression_free_auc_delta");
+  });
+
+  test("registers the Gemini 3.1 Pro content-controlled control plan as a separate provider boundary", async () => {
+    const task = await loadTask();
+    const geminiPlan = task.analysis_plans?.find(
+      (plan) =>
+        plan.analysis_plan_id ===
+        "pricing-discount-lifecycle-content-controlled-v1-gemini-3.1-pro-control-plan-v0"
+    );
+
+    expect(geminiPlan).toMatchObject({
+      schema_version: "analysis-plan-v0",
+      status: "sealed",
+      task_id: "pricing-discount-lifecycle-content-controlled",
+      task_version: "pricing-discount-lifecycle-content-controlled-v1",
+      conditions: ["context_only_spec", "feedback_capable_spec"],
+      protocol_profile_id: "path-survival-primary-v1",
+      run_classifications: ["diagnostic_invalid", "difficulty_probe", "causal_pilot"],
+      primary_metric: "regression_free_auc_delta",
+      budget: {
+        max_model_turns: 2,
+        max_feedback_runs: 1
+      },
+      model_provider: {
+        provider: "openrouter",
+        model: "google/gemini-3.1-pro-preview",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile_id: gemini31ProProviderExecutionProfileId
+    });
+    expect(geminiPlan?.secondary_metrics).toContain("context_arm_progression_beyond_seed");
+    expect(geminiPlan?.exclusion_rules).toContain(
+      "do not pool Gemini 3.1 Pro runs with the Mistral pricing-discount-content-controlled-demo-v1 runs"
+    );
+    expect(geminiPlan?.promotion_gates).toContain(
+      "gemini_3.1_pro_openrouter_slug_and_structured_output_support_confirmed_read_only"
+    );
+    expect(geminiPlan?.pooling_rules.compatibility_fields).toContain("provider_execution_profile_hash");
+    expect(geminiPlan?.frozen_inputs).toContain("provider_execution_profile_id");
   });
 
   test("both conditions receive an identical event API in the prompt", async () => {
