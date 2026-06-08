@@ -28,6 +28,8 @@ const mistralProviderExecutionProfileId =
   "openrouter-loop-v1-modelmistralai-mistral-small-2603-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
 const qwenStrongControlProviderExecutionProfileId =
   "openrouter-loop-v1-modelqwen-qwen3.7-max-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
+const deepseekProControlProviderExecutionProfileId =
+  "openrouter-loop-v1-modeldeepseek-deepseek-v4-pro-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
 const execFileAsync = promisify(execFile);
 
 afterEach(async () => {
@@ -160,6 +162,40 @@ describe("pricing-discount-lifecycle task", () => {
     expect(qwenPlan?.promotion_gates).toContain("qwen_slug_and_structured_output_support_confirmed_read_only");
     expect(qwenPlan?.pooling_rules.compatibility_fields).toContain("provider_execution_profile_hash");
     expect(qwenPlan?.frozen_inputs).toContain("provider_execution_profile_id");
+
+    const deepseekProPlan = task.analysis_plans?.find(
+      (plan) => plan.analysis_plan_id === "pricing-discount-lifecycle-v0-deepseek-pro-control-plan-v0"
+    );
+
+    expect(deepseekProPlan).toMatchObject({
+      schema_version: "analysis-plan-v0",
+      status: "sealed",
+      task_id: "pricing-discount-lifecycle",
+      task_version: "pricing-discount-lifecycle-v0",
+      conditions: ["context_only_spec", "feedback_capable_spec"],
+      protocol_profile_id: "path-survival-primary-v1",
+      run_classifications: ["diagnostic_invalid", "difficulty_probe", "causal_pilot"],
+      primary_metric: "regression_free_auc_delta",
+      budget: {
+        max_model_turns: 2,
+        max_feedback_runs: 1
+      },
+      model_provider: {
+        provider: "openrouter",
+        model: "deepseek/deepseek-v4-pro",
+        adapter_id: "openrouter-loop"
+      },
+      provider_execution_profile_id: deepseekProControlProviderExecutionProfileId
+    });
+    expect(deepseekProPlan?.secondary_metrics).toContain("context_arm_progression_beyond_seed");
+    expect(deepseekProPlan?.exclusion_rules).toContain(
+      "do not pool DeepSeek Pro runs with the Qwen pricing-discount-strong-control-v1 runs"
+    );
+    expect(deepseekProPlan?.promotion_gates).toContain(
+      "deepseek_pro_slug_and_structured_output_support_confirmed_read_only"
+    );
+    expect(deepseekProPlan?.pooling_rules.compatibility_fields).toContain("provider_execution_profile_hash");
+    expect(deepseekProPlan?.frozen_inputs).toContain("provider_execution_profile_id");
   });
 
   test("renders cumulative visible specs equally while gating feedback assets to the feedback arm", async () => {
