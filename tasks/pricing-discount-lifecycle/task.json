@@ -11,7 +11,8 @@
   "analysis_plan": "analysis-plan.json",
   "analysis_plans": [
     "analysis-plan.qwen-strong-control-v0.json",
-    "analysis-plan.deepseek-pro-control-v0.json"
+    "analysis-plan.deepseek-pro-control-v0.json",
+    "analysis-plan.gemini-2.5-flash-no-schema-control-v0.json"
   ],
   "hidden_oracle_path": "hidden-oracle",
   "public_api_contract": "applyEvent(state, event): State; getQuote(state): Quote; getLineTotal(state, sku): number; canApplyCoupon(state, code): boolean"
