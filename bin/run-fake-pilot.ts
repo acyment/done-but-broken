@@ -605,6 +605,10 @@ function createHiddenOracle(taskId: string): HiddenOracleAdapter | undefined {
     return createPayrollNetPayOracle();
   }
 
+  if (taskId === "payroll-net-pay-lifecycle-skeleton-seed") {
+    return createPayrollNetPayOracle("payroll-net-pay-lifecycle-skeleton-seed");
+  }
+
   return undefined;
 }
 

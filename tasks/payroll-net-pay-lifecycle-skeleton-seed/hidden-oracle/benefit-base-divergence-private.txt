@@ -1,0 +1,4 @@
+Benefit elections are pre-tax federal but post-tax state
+
+preTaxTotal includes ordinary pre-tax deductions and benefits; taxableBaseFederal subtracts both, while taxableBaseState subtracts only ordinary pre-tax deductions. Worked example: gross 2000.00, ordinary pre-tax 100.00, benefit 50.00. Expected values: paycheck.preTaxTotal 150.00, paycheck.taxableBaseFederal 1850.00, paycheck.taxableBaseState 1900.00, paycheck.withholding.stateish 95.00, lineItems.benefit 50.00.
+Hidden oracle case: benefit-base-divergence-private.

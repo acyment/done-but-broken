@@ -1,0 +1,385 @@
+{
+  "schema_version": "visible-hidden-coverage-v0",
+  "task_id": "payroll-net-pay-lifecycle-skeleton-seed",
+  "task_version": "payroll-net-pay-lifecycle-skeleton-seed-v1",
+  "entries": [
+    {
+      "spec_id": "SPEC-001",
+      "commitment_id": "gross-pay-per-period",
+      "checkpoint_introduced": "C01",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "gross-pay-visible-check",
+        "relative_path": "spec/gross-pay.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/gross-pay-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C01:gross-pay-per-period"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-002",
+      "commitment_id": "pre-tax-deductions-reduce-taxable-base",
+      "checkpoint_introduced": "C02",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "pre-tax-deductions-visible-check",
+        "relative_path": "spec/pre-tax-deductions.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/pre-tax-deductions-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C02:pre-tax-deductions-reduce-taxable-base"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-003",
+      "commitment_id": "federalish-bracketed-withholding",
+      "checkpoint_introduced": "C03",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "federalish-brackets-visible-check",
+        "relative_path": "spec/federalish-brackets.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/federalish-brackets-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C03:federalish-bracketed-withholding"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-004",
+      "commitment_id": "filing-status-selects-bracket-table",
+      "checkpoint_introduced": "C04",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "filing-status-visible-check",
+        "relative_path": "spec/filing-status.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/filing-status-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C04:filing-status-selects-bracket-table"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-005",
+      "commitment_id": "allowances-reduce-federalish-base",
+      "checkpoint_introduced": "C05",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "allowances-visible-check",
+        "relative_path": "spec/allowances.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/allowances-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C05:allowances-reduce-federalish-base"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-006",
+      "commitment_id": "stateish-flat-withholding-different-base",
+      "checkpoint_introduced": "C06",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "stateish-flat-visible-check",
+        "relative_path": "spec/stateish-flat.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/stateish-flat-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C06:stateish-flat-withholding-different-base"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-007",
+      "commitment_id": "socialish-ytd-wage-base-cap",
+      "checkpoint_introduced": "C07",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "socialish-cap-visible-check",
+        "relative_path": "spec/socialish-cap.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/socialish-cap-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C07:socialish-ytd-wage-base-cap"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-008",
+      "commitment_id": "medicareish-ytd-surtax-threshold",
+      "checkpoint_introduced": "C08",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "medicareish-surtax-visible-check",
+        "relative_path": "spec/medicareish-surtax.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/medicareish-surtax-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C08:medicareish-ytd-surtax-threshold"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-009",
+      "commitment_id": "refundable-credit-phases-out",
+      "checkpoint_introduced": "C09",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "credit-phaseout-visible-check",
+        "relative_path": "spec/credit-phaseout.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/credit-phaseout-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C09:refundable-credit-phases-out"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-010",
+      "commitment_id": "post-tax-deductions-after-withholding",
+      "checkpoint_introduced": "C10",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "post-tax-deductions-visible-check",
+        "relative_path": "spec/post-tax-deductions.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/post-tax-deductions-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C10:post-tax-deductions-after-withholding"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-011",
+      "commitment_id": "benefit-pre-tax-federal-post-tax-state",
+      "checkpoint_introduced": "C11",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "benefit-base-divergence-visible-check",
+        "relative_path": "spec/benefit-base-divergence.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/benefit-base-divergence-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C11:benefit-pre-tax-federal-post-tax-state"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-012",
+      "commitment_id": "bonus-supplemental-rate-counts-ytd",
+      "checkpoint_introduced": "C12",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "bonus-supplemental-visible-check",
+        "relative_path": "spec/bonus-supplemental.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/bonus-supplemental-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C12:bonus-supplemental-rate-counts-ytd"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-013",
+      "commitment_id": "single-garnishment-disposable-earnings-cap",
+      "checkpoint_introduced": "C13",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "single-garnishment-visible-check",
+        "relative_path": "spec/single-garnishment.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/single-garnishment-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C13:single-garnishment-disposable-earnings-cap"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-014",
+      "commitment_id": "priority-garnishments-combined-cap",
+      "checkpoint_introduced": "C14",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "priority-garnishments-visible-check",
+        "relative_path": "spec/priority-garnishments.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/priority-garnishments-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C14:priority-garnishments-combined-cap"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-015",
+      "commitment_id": "additional-flat-withholding",
+      "checkpoint_introduced": "C15",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "additional-withholding-visible-check",
+        "relative_path": "spec/additional-withholding.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/additional-withholding-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C15:additional-flat-withholding"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-016",
+      "commitment_id": "bonus-recomputes-credit-phaseout",
+      "checkpoint_introduced": "C16",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "bonus-credit-phaseout-visible-check",
+        "relative_path": "spec/bonus-credit-phaseout.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/bonus-credit-phaseout-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C16:bonus-recomputes-credit-phaseout"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-017",
+      "commitment_id": "single-stage-rounding-net-residual",
+      "checkpoint_introduced": "C17",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "rounding-discipline-visible-check",
+        "relative_path": "spec/rounding-discipline.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/rounding-discipline-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C17:single-stage-rounding-net-residual"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    },
+    {
+      "spec_id": "SPEC-018",
+      "commitment_id": "event-idempotency-and-bonus-void",
+      "checkpoint_introduced": "C18",
+      "visible_feedback": {
+        "status": "implemented",
+        "asset_id": "idempotency-bonus-void-visible-check",
+        "relative_path": "spec/idempotency-bonus-void.spec.ts",
+        "notes": "Public-safe worked example mirrored in the visible spec and executable feedback asset."
+      },
+      "hidden_oracle": {
+        "status": "implemented",
+        "refs": [
+          "hidden-oracle/idempotency-bonus-void-private.txt"
+        ],
+        "check_ids": [
+          "payroll-net-pay-lifecycle-skeleton-seed:C18:event-idempotency-and-bonus-void"
+        ],
+        "notes": "Hidden case is derivable from the visible fictional payroll rule and uses the same public API."
+      }
+    }
+  ]
+}

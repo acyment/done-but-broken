@@ -1,0 +1,4 @@
+Stateish withholding uses a flat rate on its own base
+
+stateish equals taxableBaseState times 5 percent and is reported separately from federalish. Worked example: gross 2000.00 with pre-tax deduction 100.00. Expected values: paycheck.taxableBaseState 1900.00, paycheck.withholding.stateish 95.00.
+Hidden oracle case: stateish-flat-private.

@@ -1,0 +1,4 @@
+Pre-tax deductions reduce both taxable bases
+
+preTaxTotal is the sum of pre-tax deductions, both taxable bases equal gross minus preTaxTotal, and the pre_tax line item reports the same total. Worked example: gross 2000.00 plus retirement pre-tax deduction 100.00. Expected values: paycheck.preTaxTotal 100.00, paycheck.taxableBaseFederal 1900.00, paycheck.taxableBaseState 1900.00, lineItems.pre_tax 100.00.
+Hidden oracle case: pre-tax-deductions-private.

@@ -1,0 +1,4 @@
+Post-tax deductions reduce net after withholding and credits
+
+postTaxTotal sums post-tax deductions, lineItems includes post_tax, and net is reduced after withholding and credits. Worked example: gross 1200.00 with post-tax deduction 75.00. Expected values: paycheck.postTaxTotal 75.00, lineItems.post_tax 75.00, paycheck.net 821.15.
+Hidden oracle case: post-tax-deductions-private.

@@ -1,0 +1,4 @@
+Bonuses use supplemental withholding and count toward YTD wages
+
+bonusGross equals bonus amount, gross includes regular plus bonus, federalish includes 22 percent of bonusGross, and YTD wages include the bonus. Worked example: regular gross 1500.00 with bonus 500.00. Expected values: paycheck.bonusGross 500.00, paycheck.gross 2000.00, paycheck.withholding.federalish 363.85, ytd.gross 2000.00, ytd.socialishWages 2000.00.
+Hidden oracle case: bonus-supplemental-private.

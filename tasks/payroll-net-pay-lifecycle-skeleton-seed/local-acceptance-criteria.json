@@ -1,0 +1,655 @@
+{
+  "schema_version": "local-acceptance-criteria-v0",
+  "task_id": "payroll-net-pay-lifecycle-skeleton-seed",
+  "task_version": "payroll-net-pay-lifecycle-skeleton-seed-v1",
+  "criteria": [
+    {
+      "criterion_id": "visible-feedback-gross-pay",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C01",
+      "commitment_id": "gross-pay-per-period",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for gross-pay-per-period.",
+      "evidence": [
+        "local:coverage-manifest.json#gross-pay-visible-check",
+        "local:spec/gross-pay.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-gross-pay",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C01",
+      "commitment_id": "gross-pay-per-period",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for gross-pay-per-period.",
+      "evidence": [
+        "local:hidden-oracle/gross-pay-private.txt",
+        "local:gross-pay-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-pre-tax-deductions",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C02",
+      "commitment_id": "pre-tax-deductions-reduce-taxable-base",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for pre-tax-deductions-reduce-taxable-base.",
+      "evidence": [
+        "local:coverage-manifest.json#pre-tax-deductions-visible-check",
+        "local:spec/pre-tax-deductions.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-pre-tax-deductions",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C02",
+      "commitment_id": "pre-tax-deductions-reduce-taxable-base",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for pre-tax-deductions-reduce-taxable-base.",
+      "evidence": [
+        "local:hidden-oracle/pre-tax-deductions-private.txt",
+        "local:pre-tax-deductions-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-federalish-brackets",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C03",
+      "commitment_id": "federalish-bracketed-withholding",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for federalish-bracketed-withholding.",
+      "evidence": [
+        "local:coverage-manifest.json#federalish-brackets-visible-check",
+        "local:spec/federalish-brackets.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-federalish-brackets",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C03",
+      "commitment_id": "federalish-bracketed-withholding",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for federalish-bracketed-withholding.",
+      "evidence": [
+        "local:hidden-oracle/federalish-brackets-private.txt",
+        "local:federalish-brackets-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-filing-status",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C04",
+      "commitment_id": "filing-status-selects-bracket-table",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for filing-status-selects-bracket-table.",
+      "evidence": [
+        "local:coverage-manifest.json#filing-status-visible-check",
+        "local:spec/filing-status.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-filing-status",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C04",
+      "commitment_id": "filing-status-selects-bracket-table",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for filing-status-selects-bracket-table.",
+      "evidence": [
+        "local:hidden-oracle/filing-status-private.txt",
+        "local:filing-status-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-allowances",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C05",
+      "commitment_id": "allowances-reduce-federalish-base",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for allowances-reduce-federalish-base.",
+      "evidence": [
+        "local:coverage-manifest.json#allowances-visible-check",
+        "local:spec/allowances.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-allowances",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C05",
+      "commitment_id": "allowances-reduce-federalish-base",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for allowances-reduce-federalish-base.",
+      "evidence": [
+        "local:hidden-oracle/allowances-private.txt",
+        "local:allowances-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-stateish-flat",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C06",
+      "commitment_id": "stateish-flat-withholding-different-base",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for stateish-flat-withholding-different-base.",
+      "evidence": [
+        "local:coverage-manifest.json#stateish-flat-visible-check",
+        "local:spec/stateish-flat.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-stateish-flat",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C06",
+      "commitment_id": "stateish-flat-withholding-different-base",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for stateish-flat-withholding-different-base.",
+      "evidence": [
+        "local:hidden-oracle/stateish-flat-private.txt",
+        "local:stateish-flat-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-socialish-cap",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C07",
+      "commitment_id": "socialish-ytd-wage-base-cap",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for socialish-ytd-wage-base-cap.",
+      "evidence": [
+        "local:coverage-manifest.json#socialish-cap-visible-check",
+        "local:spec/socialish-cap.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-socialish-cap",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C07",
+      "commitment_id": "socialish-ytd-wage-base-cap",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for socialish-ytd-wage-base-cap.",
+      "evidence": [
+        "local:hidden-oracle/socialish-cap-private.txt",
+        "local:socialish-cap-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-medicareish-surtax",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C08",
+      "commitment_id": "medicareish-ytd-surtax-threshold",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for medicareish-ytd-surtax-threshold.",
+      "evidence": [
+        "local:coverage-manifest.json#medicareish-surtax-visible-check",
+        "local:spec/medicareish-surtax.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-medicareish-surtax",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C08",
+      "commitment_id": "medicareish-ytd-surtax-threshold",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for medicareish-ytd-surtax-threshold.",
+      "evidence": [
+        "local:hidden-oracle/medicareish-surtax-private.txt",
+        "local:medicareish-surtax-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-credit-phaseout",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C09",
+      "commitment_id": "refundable-credit-phases-out",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for refundable-credit-phases-out.",
+      "evidence": [
+        "local:coverage-manifest.json#credit-phaseout-visible-check",
+        "local:spec/credit-phaseout.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-credit-phaseout",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C09",
+      "commitment_id": "refundable-credit-phases-out",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for refundable-credit-phases-out.",
+      "evidence": [
+        "local:hidden-oracle/credit-phaseout-private.txt",
+        "local:credit-phaseout-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-post-tax-deductions",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C10",
+      "commitment_id": "post-tax-deductions-after-withholding",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for post-tax-deductions-after-withholding.",
+      "evidence": [
+        "local:coverage-manifest.json#post-tax-deductions-visible-check",
+        "local:spec/post-tax-deductions.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-post-tax-deductions",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C10",
+      "commitment_id": "post-tax-deductions-after-withholding",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for post-tax-deductions-after-withholding.",
+      "evidence": [
+        "local:hidden-oracle/post-tax-deductions-private.txt",
+        "local:post-tax-deductions-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-benefit-base-divergence",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C11",
+      "commitment_id": "benefit-pre-tax-federal-post-tax-state",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for benefit-pre-tax-federal-post-tax-state.",
+      "evidence": [
+        "local:coverage-manifest.json#benefit-base-divergence-visible-check",
+        "local:spec/benefit-base-divergence.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-benefit-base-divergence",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C11",
+      "commitment_id": "benefit-pre-tax-federal-post-tax-state",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for benefit-pre-tax-federal-post-tax-state.",
+      "evidence": [
+        "local:hidden-oracle/benefit-base-divergence-private.txt",
+        "local:benefit-base-divergence-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-bonus-supplemental",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C12",
+      "commitment_id": "bonus-supplemental-rate-counts-ytd",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for bonus-supplemental-rate-counts-ytd.",
+      "evidence": [
+        "local:coverage-manifest.json#bonus-supplemental-visible-check",
+        "local:spec/bonus-supplemental.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-bonus-supplemental",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C12",
+      "commitment_id": "bonus-supplemental-rate-counts-ytd",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for bonus-supplemental-rate-counts-ytd.",
+      "evidence": [
+        "local:hidden-oracle/bonus-supplemental-private.txt",
+        "local:bonus-supplemental-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-single-garnishment",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C13",
+      "commitment_id": "single-garnishment-disposable-earnings-cap",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for single-garnishment-disposable-earnings-cap.",
+      "evidence": [
+        "local:coverage-manifest.json#single-garnishment-visible-check",
+        "local:spec/single-garnishment.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-single-garnishment",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C13",
+      "commitment_id": "single-garnishment-disposable-earnings-cap",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for single-garnishment-disposable-earnings-cap.",
+      "evidence": [
+        "local:hidden-oracle/single-garnishment-private.txt",
+        "local:single-garnishment-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-priority-garnishments",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C14",
+      "commitment_id": "priority-garnishments-combined-cap",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for priority-garnishments-combined-cap.",
+      "evidence": [
+        "local:coverage-manifest.json#priority-garnishments-visible-check",
+        "local:spec/priority-garnishments.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-priority-garnishments",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C14",
+      "commitment_id": "priority-garnishments-combined-cap",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for priority-garnishments-combined-cap.",
+      "evidence": [
+        "local:hidden-oracle/priority-garnishments-private.txt",
+        "local:priority-garnishments-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-additional-withholding",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C15",
+      "commitment_id": "additional-flat-withholding",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for additional-flat-withholding.",
+      "evidence": [
+        "local:coverage-manifest.json#additional-withholding-visible-check",
+        "local:spec/additional-withholding.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-additional-withholding",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C15",
+      "commitment_id": "additional-flat-withholding",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for additional-flat-withholding.",
+      "evidence": [
+        "local:hidden-oracle/additional-withholding-private.txt",
+        "local:additional-withholding-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-bonus-credit-phaseout",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C16",
+      "commitment_id": "bonus-recomputes-credit-phaseout",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for bonus-recomputes-credit-phaseout.",
+      "evidence": [
+        "local:coverage-manifest.json#bonus-credit-phaseout-visible-check",
+        "local:spec/bonus-credit-phaseout.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-bonus-credit-phaseout",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C16",
+      "commitment_id": "bonus-recomputes-credit-phaseout",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for bonus-recomputes-credit-phaseout.",
+      "evidence": [
+        "local:hidden-oracle/bonus-credit-phaseout-private.txt",
+        "local:bonus-credit-phaseout-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-rounding-discipline",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C17",
+      "commitment_id": "single-stage-rounding-net-residual",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for single-stage-rounding-net-residual.",
+      "evidence": [
+        "local:coverage-manifest.json#rounding-discipline-visible-check",
+        "local:spec/rounding-discipline.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-rounding-discipline",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C17",
+      "commitment_id": "single-stage-rounding-net-residual",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for single-stage-rounding-net-residual.",
+      "evidence": [
+        "local:hidden-oracle/rounding-discipline-private.txt",
+        "local:rounding-discipline-private"
+      ]
+    },
+    {
+      "criterion_id": "visible-feedback-idempotency-bonus-void",
+      "target": "visible_feedback_asset",
+      "checkpoint_id": "C18",
+      "commitment_id": "event-idempotency-and-bonus-void",
+      "required_before": "feedback_assets",
+      "description": "Add a visible feedback check for event-idempotency-and-bonus-void.",
+      "evidence": [
+        "local:coverage-manifest.json#idempotency-bonus-void-visible-check",
+        "local:spec/idempotency-bonus-void.spec.ts"
+      ]
+    },
+    {
+      "criterion_id": "hidden-oracle-idempotency-bonus-void",
+      "target": "hidden_oracle",
+      "checkpoint_id": "C18",
+      "commitment_id": "event-idempotency-and-bonus-void",
+      "required_before": "hidden_oracle",
+      "description": "Add a hidden oracle case for event-idempotency-and-bonus-void.",
+      "evidence": [
+        "local:hidden-oracle/idempotency-bonus-void-private.txt",
+        "local:idempotency-bonus-void-private"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-gross-pay-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C01",
+      "scenario_id": "gross-pay-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for gross-pay-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#gross-pay-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-pre-tax-deductions-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C02",
+      "scenario_id": "pre-tax-deductions-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for pre-tax-deductions-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#pre-tax-deductions-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-federalish-brackets-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C03",
+      "scenario_id": "federalish-brackets-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for federalish-brackets-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#federalish-brackets-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-filing-status-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C04",
+      "scenario_id": "filing-status-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for filing-status-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#filing-status-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-allowances-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C05",
+      "scenario_id": "allowances-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for allowances-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#allowances-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-stateish-flat-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C06",
+      "scenario_id": "stateish-flat-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for stateish-flat-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#stateish-flat-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-socialish-cap-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C07",
+      "scenario_id": "socialish-cap-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for socialish-cap-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#socialish-cap-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-medicareish-surtax-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C08",
+      "scenario_id": "medicareish-surtax-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for medicareish-surtax-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#medicareish-surtax-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-credit-phaseout-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C09",
+      "scenario_id": "credit-phaseout-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for credit-phaseout-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#credit-phaseout-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-post-tax-deductions-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C10",
+      "scenario_id": "post-tax-deductions-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for post-tax-deductions-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#post-tax-deductions-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-benefit-base-divergence-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C11",
+      "scenario_id": "benefit-base-divergence-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for benefit-base-divergence-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#benefit-base-divergence-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-bonus-supplemental-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C12",
+      "scenario_id": "bonus-supplemental-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for bonus-supplemental-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#bonus-supplemental-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-single-garnishment-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C13",
+      "scenario_id": "single-garnishment-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for single-garnishment-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#single-garnishment-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-priority-garnishments-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C14",
+      "scenario_id": "priority-garnishments-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for priority-garnishments-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#priority-garnishments-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-additional-withholding-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C15",
+      "scenario_id": "additional-withholding-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for additional-withholding-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#additional-withholding-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-bonus-credit-phaseout-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C16",
+      "scenario_id": "bonus-credit-phaseout-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for bonus-credit-phaseout-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#bonus-credit-phaseout-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-rounding-discipline-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C17",
+      "scenario_id": "rounding-discipline-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for rounding-discipline-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#rounding-discipline-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    },
+    {
+      "criterion_id": "fake-validation-idempotency-bonus-void-reference",
+      "target": "fake_agent_validation",
+      "checkpoint_id": "C18",
+      "scenario_id": "idempotency-bonus-void-reference",
+      "required_before": "difficulty_probe",
+      "description": "Run the local reference path for idempotency-bonus-void-reference before any provider difficulty probe.",
+      "evidence": [
+        "local:fake-agent-validation-plan.json#idempotency-bonus-void-reference",
+        "local:bun test test/payroll-net-pay.test.ts"
+      ]
+    }
+  ]
+}

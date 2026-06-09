@@ -1,0 +1,4 @@
+Gross pay starts each pay period
+
+gross and regularGross equal the event gross amount, bonusGross is zero, and YTD gross starts from current gross. Worked example: gross 2000.00, 26 periods, single filing, 0 allowances. Expected values: paycheck.gross 2000.00, paycheck.regularGross 2000.00, paycheck.bonusGross 0.00, ytd.gross 2000.00.
+Hidden oracle case: gross-pay-private.

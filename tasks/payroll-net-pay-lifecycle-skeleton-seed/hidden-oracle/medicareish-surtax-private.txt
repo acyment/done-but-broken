@@ -1,0 +1,4 @@
+Medicareish tax adds a YTD surtax above threshold
+
+the surtax is computed only on newly-crossed wages, not all prior YTD wages. Worked example: prior medicareishWages 29500.00 and current gross 1000.00. Expected values: paycheck.withholding.medicareish 19.50, ytd.medicareishWages 30500.00, ytd.medicareishTax 19.50.
+Hidden oracle case: medicareish-surtax-private.

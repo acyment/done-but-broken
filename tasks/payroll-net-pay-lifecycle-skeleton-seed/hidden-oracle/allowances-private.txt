@@ -1,0 +1,4 @@
+Allowances reduce the annual federalish base before bracketing
+
+federalish uses max(0, taxableBaseFederal times periodsPerYear minus allowances times 4000.00), then de-annualizes bracket tax. Worked example: gross 2000.00, pre-tax 100.00, 26 periods, single, 2 allowances. Expected values: paycheck.withholding.federalish 272.31.
+Hidden oracle case: allowances-private.

@@ -1,0 +1,4 @@
+Bonus gross recomputes the credit phase-out
+
+annualizedGross for the credit equals regularGross plus bonusGross times periodsPerYear, so bonusGross is included in the phase-out. Worked example: regular gross 1500.00 with bonus 500.00. Expected values: paycheck.creditTotal 16.92.
+Hidden oracle case: bonus-credit-phaseout-private.

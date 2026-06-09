@@ -30,16 +30,19 @@ type CaseEvaluation = OracleCase & {
   error?: string;
 };
 
-export function createPayrollNetPayOracle(): HiddenOracleAdapter {
+export function createPayrollNetPayOracle(
+  checkIdTaskId = "payroll-net-pay-lifecycle"
+): HiddenOracleAdapter {
   return {
     async run(input) {
-      return evaluatePayrollNetPayWorkspace(input);
+      return evaluatePayrollNetPayWorkspace(input, checkIdTaskId);
     }
   };
 }
 
 export async function evaluatePayrollNetPayWorkspace(
-  input: HiddenOracleRunInput
+  input: HiddenOracleRunInput,
+  checkIdTaskId = "payroll-net-pay-lifecycle"
 ): Promise<HiddenOracleRunResult> {
   let casesFile: OracleCasesFile;
 
@@ -52,7 +55,7 @@ export async function evaluatePayrollNetPayWorkspace(
       status: "failed",
       checks: [
         {
-          check_id: `payroll-net-pay-lifecycle:${input.checkpoint_id}:oracle-cases`,
+          check_id: `${checkIdTaskId}:${input.checkpoint_id}:oracle-cases`,
           commitment_id: "oracle-cases",
           passed: false,
           details: `Could not load sealed oracle cases: ${detail}`
@@ -70,7 +73,7 @@ export async function evaluatePayrollNetPayWorkspace(
     moneyTolerance
   );
   const checks = activeList.map((commitment_id) =>
-    evaluateCommitment(input.checkpoint_id, commitment_id, caseEvaluations)
+    evaluateCommitment(checkIdTaskId, input.checkpoint_id, commitment_id, caseEvaluations)
   );
   const passed = checks.length > 0 && checks.every((check) => check.passed);
 
@@ -92,6 +95,7 @@ async function loadOracleCases(hiddenOraclePath: string): Promise<OracleCasesFil
 }
 
 function evaluateCommitment(
+  check_id_task_id: string,
   checkpoint_id: string,
   commitment_id: string,
   caseEvaluations: CaseEvaluation[]
@@ -101,7 +105,7 @@ function evaluateCommitment(
   const passed = cases.length > 0 && failingCases.length === 0;
 
   return {
-    check_id: `payroll-net-pay-lifecycle:${checkpoint_id}:${commitment_id}`,
+    check_id: `${check_id_task_id}:${checkpoint_id}:${commitment_id}`,
     commitment_id,
     passed,
     details: passed

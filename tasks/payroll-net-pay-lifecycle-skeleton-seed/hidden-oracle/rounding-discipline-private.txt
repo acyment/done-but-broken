@@ -1,0 +1,4 @@
+Components are rounded once and net is the residual
+
+reported component values have cent precision, and net is the one-time rounded residual after all full-precision components are applied. Worked example: gross 1234.56, pre-tax 123.45, benefit 67.89, post-tax 12.34, additional 7.89. Expected values: paycheck.withholding.federalish 131.72, paycheck.withholding.stateish 55.56, paycheck.withholding.socialish 74.07, paycheck.withholding.medicareish 18.52, paycheck.creditTotal 40.00, paycheck.net 783.12; paycheck.net rounded to 2 decimals.
+Hidden oracle case: rounding-discipline-private.

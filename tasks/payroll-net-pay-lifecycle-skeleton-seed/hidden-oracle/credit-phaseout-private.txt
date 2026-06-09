@@ -1,0 +1,4 @@
+Refundable credit phases out as annualized gross rises
+
+creditTotal equals max(0, 40.00 minus max(0, annualizedGross minus 40000.00) times 5 percent divided by periodsPerYear). Worked example: current regular gross 2000.00 over 26 periods. Expected values: paycheck.creditTotal 16.92.
+Hidden oracle case: credit-phaseout-private.

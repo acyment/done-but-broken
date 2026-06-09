@@ -1,0 +1,4 @@
+Additional flat withholding reduces net but not garnishment base
+
+withholding.additional equals the declared amount, net is reduced by that amount, and garnishmentTotal remains based on disposable earnings before additional withholding. Worked example: gross 1200.00, additional withholding 25.00, one 15 percent garnishment. Expected values: paycheck.withholding.additional 25.00, paycheck.garnishmentTotal 134.42, paycheck.net 736.73, lineItems.additional 25.00.
+Hidden oracle case: additional-withholding-private.
