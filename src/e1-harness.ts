@@ -4,6 +4,7 @@ import { lstat, mkdir, readdir, readFile, realpath, writeFile } from "node:fs/pr
 import { dirname, extname, isAbsolute, join, normalize, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 import type { ConditionId } from "./conditions";
+import type { E1ParsedTurn } from "./e1-l1-parser";
 
 const execFileAsync = promisify(execFile);
 
@@ -19,6 +20,7 @@ const REPLACEMENT_HEADER = /^<<<FILE ([^>]+)>>>$/;
 const REPLACEMENT_END = "<<<END>>>";
 const ENV_ASSIGNMENT_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*=/;
 const SAFE_RELATIVE_POSIX_PATH_PATTERN = /^[A-Za-z0-9._-][A-Za-z0-9._/-]*$/;
+const MAX_RELATIVE_PATH_LENGTH = 200;
 const PROTECTED_DIRECTORY_PATHS = ["specs"] as const;
 
 export type FullFileReplacement = {
@@ -39,6 +41,12 @@ export type ProtectedPathHashMismatch = {
   path: string;
   expected: string | null | undefined;
   actual: string | null | undefined;
+};
+
+export type E1ParsedTurnL0Result = {
+  replacement_result: ApplyReplacementResult | null;
+  post_replacement_integrity?: { ok: true } | { ok: false; mismatches: ProtectedPathHashMismatch[] };
+  verification_result: VerificationRunResult | null;
 };
 
 export type VerificationExecution =
@@ -97,11 +105,25 @@ export async function applyFullFileReplacements(input: {
     return { applied: false, replacements: [], confirmations: [], errors: parsed.errors };
   }
 
+  return applyFullFileReplacementEntries({
+    workspacePath: input.workspacePath,
+    replacements: parsed.replacements
+  });
+}
+
+export async function applyFullFileReplacementEntries(input: {
+  workspacePath: string;
+  replacements: FullFileReplacement[];
+}): Promise<ApplyReplacementResult> {
+  if (!input.replacements.length) {
+    return { applied: false, replacements: [], confirmations: [], errors: [] };
+  }
+
   const workspaceReal = await realpath(input.workspacePath);
   const validationErrors: string[] = [];
   const targets: Array<FullFileReplacement & { absolutePath: string; beforeLines: number }> = [];
 
-  for (const replacement of parsed.replacements) {
+  for (const replacement of input.replacements) {
     const validation = await validateWritableWorkspacePath({
       workspaceReal,
       workspacePath: input.workspacePath,
@@ -123,7 +145,7 @@ export async function applyFullFileReplacements(input: {
   if (validationErrors.length) {
     return {
       applied: false,
-      replacements: parsed.replacements,
+      replacements: input.replacements,
       confirmations: [],
       errors: validationErrors
     };
@@ -136,11 +158,60 @@ export async function applyFullFileReplacements(input: {
 
   return {
     applied: true,
-    replacements: parsed.replacements,
+    replacements: input.replacements,
     confirmations: targets.map(
       (target) => `applied: ${target.path} (${target.beforeLines} -> ${countTextLines(target.content)} lines)`
     ),
     errors: []
+  };
+}
+
+export async function applyParsedTurnToL0(input: {
+  workspacePath: string;
+  conditionId: ConditionId;
+  parsedTurn: E1ParsedTurn;
+  checkpoints: string[];
+  timeoutMs?: number;
+  outputLimit?: number;
+  protectedPathBaseline?: ProtectedPathHashes;
+}): Promise<E1ParsedTurnL0Result> {
+  const replacementResult = input.parsedTurn.replacements.length
+    ? await applyFullFileReplacementEntries({
+        workspacePath: input.workspacePath,
+        replacements: input.parsedTurn.replacements
+      })
+    : null;
+  const postReplacementIntegrity = input.protectedPathBaseline
+    ? await verifyProtectedPathHashes({
+        workspacePath: input.workspacePath,
+        baseline: input.protectedPathBaseline
+      })
+    : undefined;
+
+  if (postReplacementIntegrity && !postReplacementIntegrity.ok) {
+    return {
+      replacement_result: replacementResult,
+      post_replacement_integrity: postReplacementIntegrity,
+      verification_result: null
+    };
+  }
+
+  const verificationResult = input.parsedTurn.verification
+    ? await runVerificationRequest({
+        workspacePath: input.workspacePath,
+        conditionId: input.conditionId,
+        command: input.parsedTurn.verification.raw,
+        checkpoints: input.checkpoints,
+        timeoutMs: input.timeoutMs,
+        outputLimit: input.outputLimit,
+        protectedPathBaseline: input.protectedPathBaseline
+      })
+    : null;
+
+  return {
+    replacement_result: replacementResult,
+    ...(postReplacementIntegrity ? { post_replacement_integrity: postReplacementIntegrity } : {}),
+    verification_result: verificationResult
   };
 }
 
@@ -213,12 +284,21 @@ export async function buildVerificationExecution(input: {
     return { ok: false, reason: "Only Bun command templates are allowed." };
   }
 
-  if (tokens.length === 3 && tokens[1] === "test" && tokens[2] === "scratch/") {
-    const scratch = await resolveScratchDir(input.workspacePath);
+  if (tokens.length === 3 && tokens[1] === "test") {
+    const scratchTest = await validateScratchPath({
+      workspacePath: input.workspacePath,
+      pathToken: tokens[2],
+      requireFile: true
+    });
+
+    if (!scratchTest.ok) {
+      return { ok: false, reason: scratchTest.error };
+    }
+
     return {
       ok: true,
       command_kind: "bun_test_scratch",
-      argv: ["bun", ["--no-install", "test", scratch]]
+      argv: ["bun", ["--no-install", "test", scratchTest.absolutePath]]
     };
   }
 
@@ -256,7 +336,11 @@ export async function buildVerificationExecution(input: {
     if (tokens.length === 5 && tokens[3] === "--" && tokens[4].startsWith("--cp=")) {
       const checkpoint = tokens[4].slice("--cp=".length);
 
-      if (!/^[0-9]+$/.test(checkpoint) || !input.checkpoints.includes(checkpoint)) {
+      if (
+        !/^[0-9]+$/.test(checkpoint) ||
+        (checkpoint.length > 1 && checkpoint.startsWith("0")) ||
+        !input.checkpoints.includes(checkpoint)
+      ) {
         return { ok: false, reason: "Checkpoint argument is not in the sealed range." };
       }
 
@@ -532,12 +616,24 @@ function validatePosixPathSyntax(value: string): string | undefined {
     return "Path contains disallowed syntax.";
   }
 
+  if (value.length > MAX_RELATIVE_PATH_LENGTH) {
+    return `Path exceeds max length ${MAX_RELATIVE_PATH_LENGTH}.`;
+  }
+
   if (value.startsWith("-")) {
     return "Path must not start with a dash.";
   }
 
-  if (value.split("/").includes("..")) {
-    return "Path must not contain .. segments.";
+  if (value.endsWith("/")) {
+    return "Path must not end with a slash.";
+  }
+
+  if (value.includes("//")) {
+    return "Path must not contain double slashes.";
+  }
+
+  if (value.split("/").some((segment) => segment === "." || segment === "..")) {
+    return "Path must not contain . or .. segments.";
   }
 
   return undefined;

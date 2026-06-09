@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.json`.
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json`.
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -37,10 +37,12 @@ L0 exists today:
 - protected-path hashing;
 - verification-budget counters.
 
-L1 is missing:
+L1 parser/shakedown exists; the full provider turn adapter is still missing:
 
 - parse model output into protocol blocks;
 - strip one outer markdown fence layer before parsing;
+- classify verification commands against the sealed grammar;
+- feed parsed replacements and verification requests into L0 mechanics;
 - assemble provider turns with cached-prefix accounting;
 - inject verification output and no-op notices;
 - debit model output and injected-output tokens;
@@ -55,7 +57,7 @@ L2 is missing:
 - classify checkpoint termination;
 - emit replayable artifact bundles.
 
-CartCalc cannot be considered Step 0 complete until L1 and L2 exist and one orchestrator command runs the full calibration bundle.
+CartCalc cannot be considered Step 0 complete until the full L1 provider turn adapter and L2 exist and one orchestrator command runs the full calibration bundle.
 
 ## Editing And Parser Policy
 
@@ -75,7 +77,7 @@ Stall/no-op rates are public evidence, not cleanup. If arm stall rates differ by
 
 Both arms may request:
 
-- `bun test scratch/`
+- `bun test scratch/<test-file>.ts`
 - `bun scratch/<script>.ts`
 
 Only `feedback_capable_spec` may request:

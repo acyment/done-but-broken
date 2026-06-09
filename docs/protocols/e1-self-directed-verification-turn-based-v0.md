@@ -1,6 +1,6 @@
 # e1-self-directed-verification-turn-based-v0
 
-Status: draft protocol profile. Step 0 local L0 mechanics are implemented in `src/e1-harness.ts`; the L1 agent loop and L2 run orchestrator are not implemented. No provider run is authorized by this document.
+Status: draft protocol profile. Step 0 local L0 mechanics and the L1 parser shakedown are implemented; the full L1 provider turn adapter and L2 run orchestrator are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -14,13 +14,13 @@ This is the industry-relevant question. A production frontier coding agent can u
 
 ## Layer Decomposition
 
-"E1 harness" means three layers. Only L0 exists today.
+"E1 harness" means three layers. L0 exists today, and the L1 block parser exists; the full L1 provider turn adapter and L2 orchestrator do not.
 
 - L0 mechanics library: full-file replacement parsing/application, command validation, protected-path checks, verification execution, truncation, hashes, and counters.
-- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers.
+- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers. The parser portion is implemented in `src/e1-l1-parser.ts`; provider-turn assembly is still missing.
 - L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications.
 
-CartCalc calibration and any Billing v2 run require L1 and L2. L0 mechanics alone are not an evidence-generating harness.
+CartCalc calibration and any Billing v2 run require the full L1 adapter and L2. L0 mechanics plus the parser alone are not an evidence-generating harness.
 
 ## Turn Structure
 
@@ -51,7 +51,7 @@ Allowed command patterns are sealed per task language. For this repo's default J
 
 | Command pattern | `context_only_spec` | `feedback_capable_spec` |
 | --- | --- | --- |
-| `bun test scratch/` | allowed | allowed |
+| `bun test scratch/<test-file>.ts` | allowed | allowed |
 | `bun scratch/<script>.ts` | allowed | allowed |
 | `bun run spec` or `bun run spec -- --cp=<checkpoint>` | not available | allowed |
 
@@ -118,7 +118,7 @@ Environment boundary:
 - sandbox setup uses `bun install --frozen-lockfile` whenever a Bun lockfile exists;
 - runtime verification commands use `--no-install`;
 - Bun version and lockfile hash are compatibility fields;
-- while the package has zero dependencies and Bun deletes an empty lockfile, record `deps: none` plus `lockfile_absent_zero_dependency_package` as the compatibility value rather than adding a fake dependency;
+- while the package has zero dependencies and Bun deletes an empty lockfile, record `deps: none` plus `lockfile: absent` as the compatibility value rather than adding a fake dependency;
 - from the first commit where `package.json` declares any runtime or dev dependency, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
 ## Budgets
@@ -189,7 +189,7 @@ The isolated mechanism is the cost of self-authoring and self-maintaining verifi
 
 ## Harness Gap
 
-The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
+The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, and the constants-driven L1 block parser exists in `src/e1-l1-parser.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
 
 Before any E1 evidence-generating run, add test-first harness support for:
 

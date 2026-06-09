@@ -113,6 +113,8 @@ describe("E1 harness mechanics", () => {
       "bun scratch/a.ts\nrm",
       "bun scratch\\..\\src\\x.ts",
       "bun scratch/a\u0000.ts",
+      "bun scratch//a.ts",
+      "bun scratch/./a.ts",
       `bun ${join(workspace, "scratch", "a.ts")}`,
       `${join(workspace, "src", "x.ts")}`,
       "bun scratch/src-link/escape.ts",
@@ -124,8 +126,10 @@ describe("E1 harness mechanics", () => {
       "FOO=1 bun scratch/a.ts",
       "bun --eval console.log(1)",
       "bun run spec",
+      "bun test scratch/",
       "bun test src/",
       "bun test",
+      "bun run spec -- --cp=01",
       "bun run spec -- --cp=not-an-int"
     ];
 
@@ -256,7 +260,7 @@ describe("E1 harness mechanics", () => {
     const result = await runVerificationRequest({
       workspacePath: workspace,
       conditionId: "context_only_spec",
-      command: "bun test scratch/",
+      command: "bun test scratch/example.test.ts",
       checkpoints: ["1", "2", "3"],
       outputLimit: 2000
     });

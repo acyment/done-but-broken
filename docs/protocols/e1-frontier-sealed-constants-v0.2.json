@@ -1,0 +1,122 @@
+{
+  "schema": "e1-sealed-constants",
+  "version": "0.2.0",
+  "supersedes": "e1-frontier-sealed-constants-v0.json",
+  "status": "draft-pre-seal",
+  "condition_ids": ["context_only_spec", "feedback_capable_spec"],
+  "deferred_before_provider_seal": ["token_estimator"],
+
+  "token_estimator": {
+    "status": "TBD",
+    "rule": "Provider-reported usage is the ledger of record. This estimator runs in shadow mode on every turn. It MUST be selected and sealed before any provider calibration run; the orchestrator must refuse to start provider runs while status is TBD.",
+    "divergence_review_threshold": 0.15
+  },
+
+  "turn_protocol": {
+    "max_turns_per_checkpoint": 12,
+    "max_verification_executions_per_checkpoint": 6,
+    "consecutive_noop_stall_threshold": 3,
+    "stall_classification": "agent_stalled",
+    "verification_output_token_cap": 4000,
+    "truncation_head_tokens": 2500,
+    "truncation_tail_tokens": 1500
+  },
+
+  "stall_reporting": {
+    "asymmetry_ratio_flag": 2.0,
+    "min_stall_rate_flag": 0.05,
+    "rule": "If arm stall rates differ by more than asymmetry_ratio_flag AND the higher arm exceeds min_stall_rate_flag of checkpoints, the model's primary endpoint carries a protocol-usability caveat."
+  },
+
+  "block_grammar": {
+    "encoding": "Delimiters are recognized only at the start of a line. Leading whitespace disqualifies a delimiter line. Trailing whitespace on delimiter lines is tolerated and stripped before matching. Block content is verbatim, joined with \\n, never trimmed.",
+    "file_open_regex": "^<<<FILE ([^>]+)>>>$",
+    "verify_open_literal": "<<<VERIFY>>>",
+    "end_literal": "<<<END>>>",
+    "done_literal": "<<<DONE>>>",
+    "verify_content_rule": "Exactly one non-empty line. Zero lines, blank-only lines, or multiple non-blank lines invalidate the block.",
+    "multiple_verify_policy": "first_wins",
+    "multiple_verify_violation": "multiple_verify_blocks",
+    "duplicate_file_path_policy": "last_wins",
+    "duplicate_file_path_violation": "duplicate_file_path",
+    "unclosed_block_policy": "An opener with no matching <<<END>>> consumes all remaining lines to EOF; the block is discarded and a violation is recorded.",
+    "orphan_end_policy": "An <<<END>>> with no open block is a violation and is otherwise ignored.",
+    "done_semantics": "Standalone line. Textual position is irrelevant; processing order is always replacements, then verification, then done. Repeated DONE lines are idempotent.",
+    "block_validity_vs_command_validity": "A syntactically valid VERIFY block containing a command that fails the command grammar still emits a verification request with valid=false; at execution time it is refused and consumes a verification slot. Block-grammar-invalid VERIFY blocks emit nothing and consume nothing.",
+    "noop_definition": "A turn is no_op iff it contains zero block-grammar-valid blocks: no valid FILE block, no VERIFY block, and no DONE.",
+    "known_limitation": "File content containing a line exactly equal to <<<END>>> modulo trailing whitespace cannot be transmitted; the block terminates at that line."
+  },
+
+  "fence_stripping": {
+    "rule": "Strip exactly one outer markdown fence layer, implemented as a stateful single pass interleaved with block parsing.",
+    "opener_regex": "^(`{3,})([A-Za-z0-9_+#.-]*)\\s*$",
+    "closer_rule": "A line consisting only of backticks with optional trailing whitespace whose backtick count is >= the opener's count. Language-tagged lines never close a fence.",
+    "one_layer_rule": "Fences are recognized only at fence depth 0. While inside a stripped fence, any further ```-prefixed line that is not a valid closer is preserved as ordinary content.",
+    "inside_protocol_blocks": "Fence delimiters are never recognized inside an open FILE or VERIFY block; such lines are verbatim block content.",
+    "unclosed_fence_policy": "An unclosed fence is stripped at its opener and implicitly closed at EOF; recorded as info, not a violation.",
+    "rationale": "Rejecting fenced-but-valid blocks would manufacture stalls out of formatting habit, inflating the stall-rate metric."
+  },
+
+  "path_grammar": {
+    "regex": "^[A-Za-z0-9._-][A-Za-z0-9._/-]*$",
+    "max_length": 200,
+    "ascii_only": true,
+    "relative_only": true,
+    "no_leading_dash": true,
+    "no_leading_slash": true,
+    "no_trailing_slash": true,
+    "no_double_slash": true,
+    "forbidden_segments": [".", ".."],
+    "platform": "POSIX only. Backslash is an invalid character, not a separator. Windows is out of scope.",
+    "runtime_note": "Syntactic validation only. realpath resolution plus prefix containment in resolved scratch/ remains an L0/L2 execution-time check."
+  },
+
+  "command_grammar": {
+    "separator": "Exactly one ASCII space between tokens. Any other whitespace or repeated spaces rejects the command.",
+    "templates": [
+      {
+        "id": "bun_test_scratch",
+        "shape": "bun test <P>",
+        "conditions": ["context_only_spec", "feedback_capable_spec"]
+      },
+      {
+        "id": "bun_file_scratch",
+        "shape": "bun <P>",
+        "conditions": ["context_only_spec", "feedback_capable_spec"],
+        "note": "bun <file>, never bun run <file>: bun run consults package.json scripts first."
+      },
+      {
+        "id": "spec_runner",
+        "shape": "bun run spec",
+        "conditions": ["feedback_capable_spec"]
+      },
+      {
+        "id": "spec_runner_cp",
+        "shape": "bun run spec -- --cp=<k>",
+        "conditions": ["feedback_capable_spec"],
+        "k_rule": "ASCII integer, no sign, no leading zeros except the literal value itself being in checkpoint_range."
+      }
+    ],
+    "scratch_path_rules": {
+      "required_prefix": "scratch/",
+      "allowed_extensions": [".ts"],
+      "inherits": "path_grammar"
+    },
+    "checkpoint_range": { "min": 1, "max": 24 },
+    "refusal_semantics": "A command failing this grammar at execution time is refused with a fixed refusal string and consumes one verification slot."
+  },
+
+  "audit": {
+    "diff_inclusion_manifest": ["src/", "scratch/", "specs/"],
+    "diff_exclusions": ["node_modules/", ".git/", "harness-logs/", "coverage/"],
+    "diff_canonicalization": "Paths sorted lexicographically byte-wise; no newline normalization; file mode changes recorded; binary files recorded as hash pairs.",
+    "protected_paths": ["specs/", "specs/steps/", "package.json", "bunfig.toml", "tsconfig.json", "bun.lock"],
+    "integrity_rule": "Protected-path hashes verified after every mutation path: replacement application and every verification execution. Mismatch classifies the run invalid_integrity. Classification/termination is L2 responsibility."
+  },
+
+  "environment": {
+    "lockfile_rule": "From the first commit in which package.json declares any dependency, a missing or stale bun.lock is an invalid environment boundary: the orchestrator refuses to start. Until then recorded as deps:none, lockfile:absent. Empirical note for Bun 1.3.14: Bun emits no lockfile for zero-dependency packages even with --save-text-lockfile, and bun install --frozen-lockfile succeeds without one.",
+    "bun_flags": ["--no-install"],
+    "install_command": "bun install --frozen-lockfile"
+  }
+}

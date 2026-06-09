@@ -1,6 +1,6 @@
 # e1-harness-calibration-step0-v0
 
-Status: draft calibration protocol. Local E1 L0 mechanics are implemented in `src/e1-harness.ts`; the L1 agent loop, L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
+Status: draft calibration protocol. Local E1 L0 mechanics and the L1 parser shakedown are implemented; the full L1 provider turn adapter, L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -13,7 +13,7 @@ This is Step 0 for any frontier-model branch using `e1-self-directed-verificatio
 Step 0 is not complete until all three layers exist:
 
 - L0 mechanics library: patch application, command validation, protected-path integrity, verification execution, output truncation/hashing, and local counters.
-- L1 agent loop adapter: parse model output blocks, assemble provider turns with a cached prefix, inject harness notices and verification output, debit the token ledger, and call providers.
+- L1 agent loop adapter: parse model output blocks, assemble provider turns with a cached prefix, inject harness notices and verification output, debit the token ledger, and call providers. The parser/shakedown portion exists; provider-turn assembly remains missing.
 - L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle.
 
 The L0/L1/L2 implementation must cover:
@@ -114,7 +114,7 @@ Lockfile/environment requirement:
 - if a Bun lockfile exists, sandbox setup runs `bun install --frozen-lockfile`;
 - runtime uses `--no-install`;
 - environment boundary records Bun version plus lockfile hash;
-- for the current zero-dependency package, Bun deletes an empty lockfile, so the boundary records `deps: none` plus `lockfile_absent_zero_dependency_package` until a real dependency makes `bun.lock` meaningful;
+- for the current zero-dependency package, Bun deletes an empty lockfile, so the boundary records `deps: none` plus `lockfile: absent` until a real dependency makes `bun.lock` meaningful;
 - from the first commit with any runtime or dev dependency in `package.json`, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
 Full-suite stability is a gate, not a footnote. Harness tests must not depend on real-clock sleeps; use fake timers or injected clocks for timeout behavior. Step 0 requires 10 consecutive green full-suite runs on both environments, with zero quarantined tests or a published exclusion list.
