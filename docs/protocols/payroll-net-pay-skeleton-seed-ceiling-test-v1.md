@@ -34,3 +34,32 @@ This variant keeps the same 18-checkpoint payroll rules, visible semantic spec, 
 After a freeze commit records this boundary, the first provider run should be a single `difficulty_probe` only. Do not run causal pilots unless the context arm is neither ceiling (`18/18`) nor floor.
 
 Provider/model details remain a separate sealed provider boundary. If the provider profile changes from the draft analysis plan, record that profile before the smoke/difficulty probe and do not pool with earlier payroll attempts.
+
+## A2 Interpretation Rule
+
+The skeleton seed is the baseline for reading the strong-model difficulty probe. Before any provider run, the baseline is:
+
+- the seed itself passes `C01` through `C06`;
+- the seed plateaus below the full task at `8/18`;
+- a strong context arm receives that same working base and should at least preserve the easy early rules if it is engaging the task rather than structurally breaking it.
+
+Ceiling defeated via hard-rule drift:
+
+- `context_only_spec` preserves the easy early rules, including at least `C01` through `C06`;
+- failures are concentrated in the coupled hard-rule region: `C07` through `C10` for YTD payroll taxes and phase-out interactions, and/or `C13` through `C18` for garnishments, recomputation, rounding, and idempotency;
+- `feedback_capable_spec` is materially higher under the same budget.
+
+This pattern may support proceeding to causal pilots because the context arm did not ceiling yet also did not fail from obvious structural breakage.
+
+Suspicious, not bankable as ceiling defeat:
+
+- `context_only_spec` fails at or below the skeleton baseline, especially by breaking `C01` through `C06`;
+- near-zero context performance is a red flag, not evidence of useful ceiling resistance;
+- inspect the captured `workspace-code-after.json` files before making any difficulty claim.
+
+If inspection shows structural failure, wrong exports, non-compiling code, missing base event handling, or loss of the provided C01-C06 behavior, classify the run as low-signal for ceiling resistance even if the headline score is low.
+
+Floor:
+
+- if both arms cannot clear the early rules, do not headline the run;
+- treat it as evidence that this task/profile/budget is too brittle or too hard for a clean A2 gate.
