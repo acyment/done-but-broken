@@ -12,6 +12,20 @@ export interface E1SealedConstants {
     checkpoint_start_context: string[];
     rejected_alternative: string;
   };
+  arm_difference_allowlist: {
+    assembled_conversation_scope: "checkpoint_start";
+    context_only_exact_lines: string[];
+    feedback_capable_exact_lines: string[];
+    feedback_capable_line_prefixes: string[];
+    context_only_forbidden_substrings: string[];
+  };
+  checkpoint_continuation: {
+    done: "continue_from_workspace_as_is";
+    agent_stalled: "continue_from_workspace_as_is";
+    budget_exhausted: "continue_from_workspace_as_is";
+    invalid_integrity: "terminate_run";
+    non_done_scoring_rule: string;
+  };
   turn_protocol: {
     max_turns_per_checkpoint: number;
     max_verification_executions_per_checkpoint: number;
@@ -88,6 +102,8 @@ const TOP_LEVEL_KEYS = [
   "deferred_before_provider_seal",
   "token_estimator",
   "conversation",
+  "arm_difference_allowlist",
+  "checkpoint_continuation",
   "turn_protocol",
   "stall_reporting",
   "block_grammar",
@@ -145,6 +161,31 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
 
   if (constants.conversation.prior_checkpoint_memory !== "workspace_only") {
     throw new E1ConstantsValidationError("conversation.prior_checkpoint_memory must be workspace_only");
+  }
+
+  if (constants.arm_difference_allowlist.assembled_conversation_scope !== "checkpoint_start") {
+    throw new E1ConstantsValidationError(
+      "arm_difference_allowlist.assembled_conversation_scope must be checkpoint_start"
+    );
+  }
+
+  if (!constants.arm_difference_allowlist.context_only_forbidden_substrings.includes("bun run spec")) {
+    throw new E1ConstantsValidationError(
+      "arm_difference_allowlist.context_only_forbidden_substrings must include bun run spec"
+    );
+  }
+
+  if (
+    constants.checkpoint_continuation.agent_stalled !== "continue_from_workspace_as_is" ||
+    constants.checkpoint_continuation.budget_exhausted !== "continue_from_workspace_as_is"
+  ) {
+    throw new E1ConstantsValidationError(
+      "non-integrity checkpoint terminations must continue from workspace as-is"
+    );
+  }
+
+  if (constants.checkpoint_continuation.invalid_integrity !== "terminate_run") {
+    throw new E1ConstantsValidationError("invalid_integrity must terminate the run");
   }
 
   validateRegex("block_grammar.file_open_regex", constants.block_grammar.file_open_regex);

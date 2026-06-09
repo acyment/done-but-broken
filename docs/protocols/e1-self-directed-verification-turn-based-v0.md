@@ -1,6 +1,6 @@
 # e1-self-directed-verification-turn-based-v0
 
-Status: draft protocol profile. Step 0 local L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, and a scripted no-provider checkpoint runner are implemented; the live provider conversation adapter and full L2 run orchestrator are not implemented. No provider run is authorized by this document.
+Status: draft protocol profile. Step 0 local L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, a scripted no-provider checkpoint runner, and a no-provider multi-checkpoint/arm shakedown runner are implemented; the live provider conversation adapter and full task-package/oracle L2 run orchestrator are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -14,19 +14,21 @@ This is the industry-relevant question. A production frontier coding agent can u
 
 ## Layer Decomposition
 
-"E1 harness" means three layers. L0 exists today, the L1 block parser exists, and no-provider L1/checkpoint-loop shakedown support exists; live provider conversation integration and full L2 orchestration do not.
+"E1 harness" means three layers. L0 exists today, the L1 block parser exists, and no-provider L1/L2 shakedown support exists; live provider conversation integration and full task-package/oracle L2 orchestration do not.
 
 - L0 mechanics library: full-file replacement parsing/application, command validation, protected-path checks, verification execution, truncation, hashes, and counters.
 - L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers. Parser, local turn consumption, and no-provider checkpoint conversation assembly are implemented in `src/e1-l1-parser.ts`, `src/e1-turn-adapter.ts`, and `src/e1-no-provider-runner.ts`; live provider conversation assembly is still missing.
-- L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications. A no-provider single-checkpoint runner exists for scripted shakedown; full L2 remains missing.
+- L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications. A no-provider multi-checkpoint/arm runner exists for scripted shakedown; full task-package seeding, hidden-oracle scoring, live-provider orchestration, and publication-grade L2 remain missing.
 
-CartCalc calibration and any Billing v2 run require live provider conversation integration plus full L2. L0 mechanics plus the no-provider runner are not an evidence-generating harness.
+CartCalc calibration and any Billing v2 run require live provider conversation integration plus full task-package/oracle L2. L0 mechanics plus the no-provider runner are not an evidence-generating harness.
 
 ## Conversation Scope
 
 Each checkpoint starts a fresh provider conversation. The checkpoint-start message carries the current repo snapshot, shared instructions, the checkpoint-specific visible spec, and condition-specific verification affordances. Prior checkpoint state reaches the model only through the workspace: application code, protected specs, and persisted `scratch/` files.
 
 Within a checkpoint, later turns append the model's earlier output plus harness notices and verification output. One continuous provider thread across checkpoints is rejected for this protocol version because it changes the cost model and weakens the intended workspace-maintenance pressure.
+
+The checkpoint-start conversation is part of the parity surface. The harness diffs assembled prompts for `context_only_spec` and `feedback_capable_spec` and permits only the sealed allowlist: the context-only self-verification line, the feedback-capable provided-feedback lines, and feedback asset path lines. The context arm prompt must not mention `bun run spec` or provided executable feedback.
 
 ## Turn Structure
 
@@ -39,6 +41,8 @@ On each turn the model output is scanned in fixed precedence order:
 3. one optional done declaration.
 
 The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, the sealed token budget is exhausted, three consecutive no-op turns occur, or protected-path integrity fails.
+
+After `done`, `agent_stalled`, or `budget_exhausted`, the next checkpoint starts from the current workspace as-is. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run.
 
 Unified diffs are not supported as a model-facing format. A replacement block contains one or more `<<<FILE path>>>` ... `<<<END>>>` sections. Rejections are deterministic: malformed delimiters, invalid paths, or attempts to write read-only paths. Rejection is logged and consumes the replacement opportunity for that turn.
 

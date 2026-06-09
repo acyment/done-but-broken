@@ -1,6 +1,6 @@
 # e1-harness-calibration-step0-v0
 
-Status: draft calibration protocol. Local E1 L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, and a no-provider scripted checkpoint runner are implemented; the live provider conversation adapter, full L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
+Status: draft calibration protocol. Local E1 L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, a no-provider scripted checkpoint runner, and a no-provider multi-checkpoint/arm shakedown runner are implemented; the live provider conversation adapter, full task-package/oracle L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -14,13 +14,14 @@ Step 0 is not complete until all three layers exist:
 
 - L0 mechanics library: patch application, command validation, protected-path integrity, verification execution, output truncation/hashing, and local counters.
 - L1 agent loop adapter: parse model output blocks, consume local turns through L0, assemble checkpoint conversations, inject harness notices and verification output, debit the token ledger, and call providers. Parser/shakedown, local turn consumption, and no-provider conversation assembly exist; live provider conversation assembly remains missing.
-- L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle. A no-provider single-checkpoint runner exists for scripted shakedown; full multi-checkpoint/arm orchestration remains missing.
+- L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle. A no-provider multi-checkpoint/arm shakedown runner exists for scripted agents; full task-package seeding, hidden-oracle scoring, live-provider orchestration, and publication-grade artifact emission remain missing.
 
 The L0/L1/L2 implementation must cover:
 
 - turn loop: full-file replacement block, verification request, done declaration;
 - fixed block precedence: replacements, then at most one verification request, then optional done;
 - no-op-turn handling: zero valid blocks consumes a turn, injects `no valid blocks parsed`, and three consecutive no-ops terminate `agent_stalled`;
+- checkpoint continuation: `agent_stalled` and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint; `invalid_integrity` terminates the entire run;
 - harness-enforced read-only `specs/` for both arms;
 - harness-enforced read-only `specs/steps/` for `feedback_capable_spec`;
 - read-only harness config: `package.json`, `bunfig.toml`, and `tsconfig.json`/Bun lockfiles if present;
@@ -34,6 +35,7 @@ The L0/L1/L2 implementation must cover:
 - deterministic model-facing replacement confirmations;
 - audit-only unified diffs between pre/post snapshots;
 - per-turn logging: command, exit code, wall time, full-output hash, shown output, and workspace snapshot.
+- assembled-conversation parity: both arms' checkpoint-start prompts are diffed, and only the sealed arm-difference allowlist is permitted.
 
 Every item above can contaminate future runs if it silently malfunctions. None requires Billing v2 to exist.
 

@@ -16,7 +16,7 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.2.1");
+    expect(constants.version).toBe("0.2.2");
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
     expect(constants.path_grammar.regex).toBe("^[A-Za-z0-9._-][A-Za-z0-9._/-]*$");
     expect(constants.path_grammar.relative_only).toBe(true);
@@ -29,6 +29,11 @@ describe("E1 frontier sealed constants", () => {
     expect(constants.turn_protocol.stall_classification).toBe("agent_stalled");
     expect(constants.conversation.thread_scope).toBe("fresh_per_checkpoint");
     expect(constants.conversation.prior_checkpoint_memory).toBe("workspace_only");
+    expect(constants.arm_difference_allowlist.assembled_conversation_scope).toBe("checkpoint_start");
+    expect(constants.arm_difference_allowlist.context_only_forbidden_substrings).toContain("bun run spec");
+    expect(constants.checkpoint_continuation.agent_stalled).toBe("continue_from_workspace_as_is");
+    expect(constants.checkpoint_continuation.budget_exhausted).toBe("continue_from_workspace_as_is");
+    expect(constants.checkpoint_continuation.invalid_integrity).toBe("terminate_run");
     expect(constants.audit.integrity_rule).toContain("replacement application");
     expect(constants.audit.integrity_rule).toContain("verification execution");
     expect(providerSealBlockers(constants)).toEqual(["token_estimator"]);

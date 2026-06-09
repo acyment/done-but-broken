@@ -1,6 +1,6 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
@@ -22,6 +22,32 @@
       "condition-specific executable feedback availability"
     ],
     "rejected_alternative": "One provider thread across checkpoints is rejected for E1 because it changes the phenomenon and cost model. Prior checkpoint state must survive through the workspace, specs, and scratch files rather than chat transcript memory."
+  },
+
+  "arm_difference_allowlist": {
+    "assembled_conversation_scope": "checkpoint_start",
+    "context_only_exact_lines": [
+      "Self-verification channel: use only the commands listed above."
+    ],
+    "feedback_capable_exact_lines": [
+      "Provided executable feedback is available to this condition.",
+      "Allowed provided feedback commands: bun run spec and bun run spec -- --cp=<checkpoint>."
+    ],
+    "feedback_capable_line_prefixes": [
+      "Feedback asset paths: "
+    ],
+    "context_only_forbidden_substrings": [
+      "bun run spec",
+      "provided executable feedback"
+    ]
+  },
+
+  "checkpoint_continuation": {
+    "done": "continue_from_workspace_as_is",
+    "agent_stalled": "continue_from_workspace_as_is",
+    "budget_exhausted": "continue_from_workspace_as_is",
+    "invalid_integrity": "terminate_run",
+    "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity terminates the entire run."
   },
 
   "turn_protocol": {

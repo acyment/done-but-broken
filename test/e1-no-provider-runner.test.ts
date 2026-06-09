@@ -6,7 +6,9 @@ import {
   ScriptedAgentProvider,
   assembleE1CheckpointConversation,
   replayE1NoProviderCheckpointBundle,
-  runE1NoProviderCheckpoint
+  runE1NoProviderCheckpoint,
+  runE1NoProviderRun,
+  validateE1ArmConversationDiff
 } from "../src/e1-no-provider-runner";
 import { loadE1Constants, type E1SealedConstants } from "../src/e1-l1-constants";
 import { captureWorkspaceCode } from "../src/snapshot";
@@ -68,6 +70,47 @@ describe("E1 no-provider runner", () => {
     expect(nextCheckpoint.messages.map((message) => message.content).join("\n")).not.toContain(
       "Checkpoint 2 rule"
     );
+  });
+
+  test("assembled arm prompt diff matches the sealed allowlist", () => {
+    const base = {
+      constants,
+      checkpointId: "1",
+      checkpoints: ["1"],
+      taskId: "stub",
+      visibleSpecText: "Visible rule A",
+      checkpointSpecText: "Checkpoint 1 rule",
+      workspaceSnapshotText: "src/index.ts\nscratch/probe.test.ts"
+    };
+    const context = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "context_only_spec"
+    });
+    const feedback = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "feedback_capable_spec",
+      feedbackAssetPaths: ["specs/steps/stub.steps.ts"]
+    });
+
+    expect(validateE1ArmConversationDiff({ constants, context, feedback })).toEqual({
+      ok: true,
+      context_only_extra_lines: [],
+      feedback_capable_extra_lines: [],
+      context_only_forbidden_matches: []
+    });
+
+    const leakedContext = {
+      ...context,
+      messages: [
+        ...context.messages,
+        { role: "user" as const, content: "You cannot use bun run spec here." }
+      ]
+    };
+    const leak = validateE1ArmConversationDiff({ constants, context: leakedContext, feedback });
+
+    expect(leak.ok).toBe(false);
+    expect(leak.context_only_extra_lines).toContain("You cannot use bun run spec here.");
+    expect(leak.context_only_forbidden_matches).toContain("bun run spec");
   });
 
   test("runs a clean scripted checkpoint and emits a replayable bundle", async () => {
@@ -278,6 +321,143 @@ describe("E1 no-provider runner", () => {
       "export const value = true;"
     );
     expect(bundle.turn_records[0].l0.verification_result?.exit_code).toBe(1);
+  });
+
+  test("multi-checkpoint no-provider run continues after stalls and preserves scratch across checkpoints", async () => {
+    const contextWorkspace = await setupWorkspace();
+    const feedbackWorkspace = await setupWorkspace();
+
+    const bundle = await runE1NoProviderRun({
+      constants,
+      checkpoints: ["1", "2"],
+      arms: [
+        {
+          conditionId: "context_only_spec",
+          workspacePath: contextWorkspace,
+          providerFactory: ({ checkpointId }) =>
+            new ScriptedAgentProvider({
+              providerId: `context-${checkpointId}`,
+              script:
+                checkpointId === "1"
+                  ? ["thinking", "still thinking", "stalled"]
+                  : [
+                      (context) => {
+                        expect(context.messages.map((message) => message.content).join("\n")).not.toContain(
+                          "thinking"
+                        );
+
+                        return [
+                          "<<<FILE scratch/context-cp2.ts>>>",
+                          "export const persisted = true;",
+                          "<<<END>>>",
+                          "<<<DONE>>>"
+                        ].join("\n");
+                      }
+                    ]
+            })
+        },
+        {
+          conditionId: "feedback_capable_spec",
+          workspacePath: feedbackWorkspace,
+          providerFactory: ({ checkpointId }) =>
+            new ScriptedAgentProvider({
+              providerId: `feedback-${checkpointId}`,
+              script:
+                checkpointId === "1"
+                  ? [
+                      [
+                        "<<<FILE scratch/persisted.ts>>>",
+                        "export const persisted = true;",
+                        "<<<END>>>",
+                        "<<<DONE>>>"
+                      ].join("\n")
+                    ]
+                  : [
+                      [
+                        "<<<VERIFY>>>",
+                        "bun scratch/persisted.ts",
+                        "<<<END>>>",
+                        "<<<DONE>>>"
+                      ].join("\n")
+                    ]
+            })
+        }
+      ],
+      promptFactory: ({ checkpointId, conditionId }) => ({
+        ...basePrompt(),
+        checkpointSpecText: `Checkpoint ${checkpointId}`,
+        feedbackAssetPaths:
+          conditionId === "feedback_capable_spec" ? ["specs/steps/stub.steps.ts"] : undefined
+      })
+    });
+
+    expect(bundle.run_summary.status).toBe("completed");
+    expect(bundle.arm_bundles.context_only_spec).toHaveLength(2);
+    expect(bundle.arm_bundles.feedback_capable_spec).toHaveLength(2);
+    expect(bundle.arm_bundles.context_only_spec[0].termination?.classification).toBe("agent_stalled");
+    expect(bundle.arm_bundles.context_only_spec[1].termination?.classification).toBe("done");
+    expect(bundle.arm_bundles.feedback_capable_spec[1].turn_records[0].l0.verification_result?.exit_code).toBe(0);
+    expect(bundle.run_summary.stall_counts_by_condition.context_only_spec).toBe(1);
+    expect(bundle.structural_comparison.checkpoint_counts_match).toBe(true);
+    expect(await readFile(join(feedbackWorkspace, "scratch", "persisted.ts"), "utf8")).toContain(
+      "persisted = true"
+    );
+  });
+
+  test("multi-checkpoint no-provider run stops the full run on invalid_integrity", async () => {
+    const contextWorkspace = await setupWorkspace();
+    const feedbackWorkspace = await setupWorkspace();
+
+    const bundle = await runE1NoProviderRun({
+      constants,
+      checkpoints: ["1", "2"],
+      arms: [
+        {
+          conditionId: "context_only_spec",
+          workspacePath: contextWorkspace,
+          providerFactory: () =>
+            new ScriptedAgentProvider({
+              providerId: "context-clean",
+              script: ["<<<DONE>>>"]
+            })
+        },
+        {
+          conditionId: "feedback_capable_spec",
+          workspacePath: feedbackWorkspace,
+          providerFactory: ({ checkpointId }) =>
+            new ScriptedAgentProvider({
+              providerId: `feedback-${checkpointId}`,
+              script:
+                checkpointId === "1"
+                  ? [
+                      [
+                        "<<<FILE scratch/mutate.ts>>>",
+                        "import { writeFileSync } from 'node:fs';",
+                        "writeFileSync('package.json', '{\"mutated\":true}\\n');",
+                        "<<<END>>>",
+                        "<<<VERIFY>>>",
+                        "bun scratch/mutate.ts",
+                        "<<<END>>>"
+                      ].join("\n")
+                    ]
+                  : ["<<<DONE>>>"]
+            })
+        }
+      ],
+      promptFactory: ({ checkpointId, conditionId }) => ({
+        ...basePrompt(),
+        checkpointSpecText: `Checkpoint ${checkpointId}`,
+        feedbackAssetPaths:
+          conditionId === "feedback_capable_spec" ? ["specs/steps/stub.steps.ts"] : undefined
+      })
+    });
+
+    expect(bundle.run_summary.status).toBe("invalid_integrity");
+    expect(bundle.run_summary.stopped_at).toEqual({
+      condition_id: "feedback_capable_spec",
+      checkpoint_id: "1"
+    });
+    expect(bundle.arm_bundles.feedback_capable_spec).toHaveLength(1);
   });
 });
 

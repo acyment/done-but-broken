@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.2.1`).
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.2.2`).
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -37,7 +37,7 @@ L0 exists today:
 - protected-path hashing;
 - verification-budget counters.
 
-L1 parser/shakedown, the no-provider local turn adapter shell, and the no-provider conversation/checkpoint runner exist; live provider conversation assembly is still missing:
+L1 parser/shakedown, the no-provider local turn adapter shell, no-provider conversation/checkpoint runner, and no-provider multi-checkpoint/arm shakedown runner exist; live provider conversation assembly is still missing:
 
 - parse model output into protocol blocks;
 - strip one outer markdown fence layer before parsing;
@@ -48,25 +48,31 @@ L1 parser/shakedown, the no-provider local turn adapter shell, and the no-provid
 - debit model-output and injected-output tokens with provider usage primary and estimator shadow support;
 - assemble fresh per-checkpoint no-provider conversations;
 - run scripted-agent checkpoint loops with bundle emission and replay checks;
+- run paired no-provider multi-checkpoint/arm shakedowns with checkpoint continuation rules;
 - assemble live provider turns with cached-prefix accounting;
 - call providers.
 
-Full L2 is still missing:
+Full evidence-generating L2 is still missing:
 
-- seed arm workspaces;
-- advance checkpoints;
+- seed arm workspaces from task packages;
+- advance checkpoints with hidden-oracle scoring;
 - preserve `scratch/`;
-- snapshot workspaces;
-- classify checkpoint termination;
-- emit replayable artifact bundles.
+- emit publication-grade replayable artifact bundles;
+- integrate live providers.
 
-CartCalc cannot be considered Step 0 complete until live provider conversation assembly and full L2 exist and one orchestrator command runs the full calibration bundle.
+CartCalc cannot be considered Step 0 complete until live provider conversation assembly and full task-package/oracle L2 exist and one orchestrator command runs the full calibration bundle.
 
 ## Conversation Thread Scope
 
 E1 uses a fresh provider conversation per checkpoint. The checkpoint-start message carries the current repo snapshot, README/instructions, the checkpoint-specific visible spec, and the condition-specific verification affordances. The model's only memory of earlier checkpoints is the workspace itself: code, protected specs, and its own persisted `scratch/` files.
 
 One continuous provider thread across checkpoints is rejected for this protocol version because it changes both the maintenance-pressure phenomenon and the cost model. Within a checkpoint, later turns append the model's prior output plus harness notices and verification output.
+
+The assembled checkpoint-start prompts for both arms are part of the parity surface. The only allowed differences are sealed in `arm_difference_allowlist`: the context-only self-verification line, the feedback-capable provided-feedback command lines, and feedback asset path lines. The context arm must not mention `bun run spec` or provided executable feedback.
+
+## Checkpoint Continuation
+
+Checkpoint termination does not automatically end the run. `done`, `agent_stalled`, and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint from that same workspace. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run because protected-path drift invalidates the evidence channel.
 
 ## Editing And Parser Policy
 
