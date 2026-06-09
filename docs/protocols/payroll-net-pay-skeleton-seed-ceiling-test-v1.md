@@ -35,6 +35,38 @@ After a freeze commit records this boundary, the first provider run should be a 
 
 Provider/model details remain a separate sealed provider boundary. If the provider profile changes from the draft analysis plan, record that profile before the smoke/difficulty probe and do not pool with earlier payroll attempts.
 
+## A2 Provider Profile
+
+The authorized A2 difficulty probe uses the Sonnet 4.6 OpenRouter loop profile below. It keeps the sealed task budget at `--max-model-turns 2 --max-feedback-runs 1` and uses the output/workspace pressure settings from the prior payroll retry profile to avoid the known 4k JSON truncation failure mode.
+
+Provider execution profile ID:
+
+`openrouter-loop-v1-modelanthropic-claude-sonnet-4.6-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output12000-workspace128000-feedback4000-temp0.2-retry1`
+
+Canonical command:
+
+```bash
+bun run pilot:run \
+  --task tasks/payroll-net-pay-lifecycle-skeleton-seed \
+  --runs-root runs \
+  --run-id payroll-net-pay-skeleton-seed-sonnet-4.6-a2-difficulty-output12000-001 \
+  --agent openrouter-loop \
+  --openrouter-model anthropic/claude-sonnet-4.6 \
+  --run-classification difficulty_probe \
+  --protocol-profile-id path-survival-primary-v1 \
+  --max-model-turns 2 \
+  --max-feedback-runs 1 \
+  --condition-concurrency 2 \
+  --request-timeout-ms 120000 \
+  --max-output-tokens 12000 \
+  --max-workspace-bytes 128000 \
+  --max-feedback-output-bytes 4000 \
+  --openrouter-response-format json_schema \
+  --openrouter-require-parameters true \
+  --provider-max-retries 1 \
+  --temperature 0.2
+```
+
 ## A2 Interpretation Rule
 
 The skeleton seed is the baseline for reading the strong-model difficulty probe. Before any provider run, the baseline is:
