@@ -1,0 +1,4 @@
+Socialish payroll tax stops at a YTD wage-base cap
+
+only current gross under the remaining wage base is taxed at 6 percent, while YTD socialishWages still includes all current gross. Worked example: prior socialishWages 49000.00 and current gross 2000.00. Expected values: paycheck.withholding.socialish 60.00, ytd.socialishWages 51000.00, ytd.socialishTax 60.00.
+Hidden oracle case: socialish-cap-private.

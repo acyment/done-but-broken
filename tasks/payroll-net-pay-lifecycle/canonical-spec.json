@@ -1,0 +1,499 @@
+{
+  "records": [
+    {
+      "spec_id": "SPEC-001",
+      "checkpoint_introduced": "C01",
+      "commitment_id": "gross-pay-per-period",
+      "title": "Gross pay starts each pay period",
+      "intent": "A fictional payroll run starts from explicit gross pay for the current pay period.",
+      "given": "A pay_period_started event declares periodIndex, gross, periodsPerYear, filingStatus, and allowances.",
+      "when": "getPaycheck and getYearToDate are called before deductions, benefits, bonuses, taxes, credits, or garnishments.",
+      "then": "gross and regularGross equal the event gross amount, bonusGross is zero, and YTD gross starts from current gross. Worked example: gross 2000.00, 26 periods, single filing, 0 allowances. Expected values: paycheck.gross 2000.00, paycheck.regularGross 2000.00, paycheck.bonusGross 0.00, ytd.gross 2000.00.",
+      "active_checkpoints": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "gross-pay-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/gross-pay-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-002",
+      "checkpoint_introduced": "C02",
+      "commitment_id": "pre-tax-deductions-reduce-taxable-base",
+      "title": "Pre-tax deductions reduce both taxable bases",
+      "intent": "Employee pre-tax deductions reduce federal-style and state-style taxable bases before withholding is computed.",
+      "given": "A pay period has one or more pre_tax_deduction_set events keyed by code.",
+      "when": "getPaycheck is called after the pre-tax deductions are set.",
+      "then": "preTaxTotal is the sum of pre-tax deductions, both taxable bases equal gross minus preTaxTotal, and the pre_tax line item reports the same total. Worked example: gross 2000.00 plus retirement pre-tax deduction 100.00. Expected values: paycheck.preTaxTotal 100.00, paycheck.taxableBaseFederal 1900.00, paycheck.taxableBaseState 1900.00, lineItems.pre_tax 100.00.",
+      "active_checkpoints": [
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "pre-tax-deductions-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/pre-tax-deductions-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-003",
+      "checkpoint_introduced": "C03",
+      "commitment_id": "federalish-bracketed-withholding",
+      "title": "Federalish withholding annualizes taxable pay and applies brackets",
+      "intent": "Federalish withholding annualizes regular taxable federal wages, taxes them through fictional brackets, and de-annualizes to the period.",
+      "given": "The employee is single and has no allowances; taxable federal wages are gross minus pre-tax deductions.",
+      "when": "getPaycheck is called.",
+      "then": "single brackets are 10 percent up to 12000 annual, 20 percent to 48000 annual, and 30 percent above, divided back by periodsPerYear. Worked example: gross 2000.00, pre-tax 100.00, 26 periods, single, 0 allowances. Expected values: paycheck.withholding.federalish 339.23.",
+      "active_checkpoints": [
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "federalish-brackets-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/federalish-brackets-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-004",
+      "checkpoint_introduced": "C04",
+      "commitment_id": "filing-status-selects-bracket-table",
+      "title": "Filing status selects the bracket table",
+      "intent": "The payroll engine supports single and joint federalish bracket tables. Filing status changes only the federalish bracket table.",
+      "given": "A pay_period_started event declares filingStatus as joint.",
+      "when": "getPaycheck is called for the same taxable base as the single example.",
+      "then": "joint brackets are 8 percent up to 24000 annual, 18 percent to 96000 annual, and 28 percent above, divided back by periodsPerYear. Worked example: gross 2000.00, pre-tax 100.00, 26 periods, joint, 0 allowances. Expected values: paycheck.withholding.federalish 249.69.",
+      "active_checkpoints": [
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "filing-status-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/filing-status-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-005",
+      "checkpoint_introduced": "C05",
+      "commitment_id": "allowances-reduce-federalish-base",
+      "title": "Allowances reduce the annual federalish base before bracketing",
+      "intent": "Each allowance reduces annualized regular taxable federal base by 4000.00 before brackets are applied, floored at zero.",
+      "given": "The pay period declares allowances on pay_period_started.",
+      "when": "getPaycheck is called.",
+      "then": "federalish uses max(0, taxableBaseFederal times periodsPerYear minus allowances times 4000.00), then de-annualizes bracket tax. Worked example: gross 2000.00, pre-tax 100.00, 26 periods, single, 2 allowances. Expected values: paycheck.withholding.federalish 272.31.",
+      "active_checkpoints": [
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "allowances-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/allowances-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-006",
+      "checkpoint_introduced": "C06",
+      "commitment_id": "stateish-flat-withholding-different-base",
+      "title": "Stateish withholding uses a flat rate on its own base",
+      "intent": "Stateish withholding is a fictional flat 5 percent of taxableBaseState. At this point taxableBaseState is gross minus ordinary pre-tax deductions.",
+      "given": "A pay period has gross and ordinary pre-tax deductions.",
+      "when": "getPaycheck is called.",
+      "then": "stateish equals taxableBaseState times 5 percent and is reported separately from federalish. Worked example: gross 2000.00 with pre-tax deduction 100.00. Expected values: paycheck.taxableBaseState 1900.00, paycheck.withholding.stateish 95.00.",
+      "active_checkpoints": [
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "stateish-flat-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/stateish-flat-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-007",
+      "checkpoint_introduced": "C07",
+      "commitment_id": "socialish-ytd-wage-base-cap",
+      "title": "Socialish payroll tax stops at a YTD wage-base cap",
+      "intent": "Socialish tax is 6 percent of current gross only until socialish wages reach the fictional 50000.00 annual wage base.",
+      "given": "A prior_ytd_set event supplies prior socialishWages and the current period has gross pay.",
+      "when": "getPaycheck and getYearToDate are called.",
+      "then": "only current gross under the remaining wage base is taxed at 6 percent, while YTD socialishWages still includes all current gross. Worked example: prior socialishWages 49000.00 and current gross 2000.00. Expected values: paycheck.withholding.socialish 60.00, ytd.socialishWages 51000.00, ytd.socialishTax 60.00.",
+      "active_checkpoints": [
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "socialish-cap-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/socialish-cap-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-008",
+      "checkpoint_introduced": "C08",
+      "commitment_id": "medicareish-ytd-surtax-threshold",
+      "title": "Medicareish tax adds a YTD surtax above threshold",
+      "intent": "Medicareish tax is 1.5 percent of all current gross, plus an extra 0.9 percent only on current-period wages that cross 30000.00 YTD.",
+      "given": "A prior_ytd_set event supplies prior medicareishWages and current gross crosses the threshold.",
+      "when": "getPaycheck and getYearToDate are called.",
+      "then": "the surtax is computed only on newly-crossed wages, not all prior YTD wages. Worked example: prior medicareishWages 29500.00 and current gross 1000.00. Expected values: paycheck.withholding.medicareish 19.50, ytd.medicareishWages 30500.00, ytd.medicareishTax 19.50.",
+      "active_checkpoints": [
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "medicareish-surtax-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/medicareish-surtax-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-009",
+      "checkpoint_introduced": "C09",
+      "commitment_id": "refundable-credit-phases-out",
+      "title": "Refundable credit phases out as annualized gross rises",
+      "intent": "A fictional refundable payroll credit starts at 40.00 per period and phases out by 5 percent of annualized gross above 40000.00.",
+      "given": "A pay period has current regular gross and no bonus.",
+      "when": "getPaycheck is called.",
+      "then": "creditTotal equals max(0, 40.00 minus max(0, annualizedGross minus 40000.00) times 5 percent divided by periodsPerYear). Worked example: current regular gross 2000.00 over 26 periods. Expected values: paycheck.creditTotal 16.92.",
+      "active_checkpoints": [
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "credit-phaseout-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/credit-phaseout-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-010",
+      "checkpoint_introduced": "C10",
+      "commitment_id": "post-tax-deductions-after-withholding",
+      "title": "Post-tax deductions reduce net after withholding and credits",
+      "intent": "Post-tax deductions are withheld from net pay after taxes and refundable credits; they do not reduce taxable bases.",
+      "given": "A post_tax_deduction_set event declares a current-period deduction amount.",
+      "when": "getPaycheck is called.",
+      "then": "postTaxTotal sums post-tax deductions, lineItems includes post_tax, and net is reduced after withholding and credits. Worked example: gross 1200.00 with post-tax deduction 75.00. Expected values: paycheck.postTaxTotal 75.00, lineItems.post_tax 75.00, paycheck.net 821.15.",
+      "active_checkpoints": [
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "post-tax-deductions-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/post-tax-deductions-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-011",
+      "checkpoint_introduced": "C11",
+      "commitment_id": "benefit-pre-tax-federal-post-tax-state",
+      "title": "Benefit elections are pre-tax federal but post-tax state",
+      "intent": "A benefit_elected amount reduces taxableBaseFederal and preTaxTotal, but does not reduce taxableBaseState.",
+      "given": "The employee has an ordinary pre-tax deduction and a benefit election.",
+      "when": "getPaycheck is called.",
+      "then": "preTaxTotal includes ordinary pre-tax deductions and benefits; taxableBaseFederal subtracts both, while taxableBaseState subtracts only ordinary pre-tax deductions. Worked example: gross 2000.00, ordinary pre-tax 100.00, benefit 50.00. Expected values: paycheck.preTaxTotal 150.00, paycheck.taxableBaseFederal 1850.00, paycheck.taxableBaseState 1900.00, paycheck.withholding.stateish 95.00, lineItems.benefit 50.00.",
+      "active_checkpoints": [
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "benefit-base-divergence-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/benefit-base-divergence-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-012",
+      "checkpoint_introduced": "C12",
+      "commitment_id": "bonus-supplemental-rate-counts-ytd",
+      "title": "Bonuses use supplemental withholding and count toward YTD wages",
+      "intent": "bonus_paid adds current bonus gross. Bonus dollars are withheld at 22 percent supplemental federalish rate and still count in YTD wages.",
+      "given": "A pay period includes regular gross and one bonus_paid event.",
+      "when": "getPaycheck and getYearToDate are called.",
+      "then": "bonusGross equals bonus amount, gross includes regular plus bonus, federalish includes 22 percent of bonusGross, and YTD wages include the bonus. Worked example: regular gross 1500.00 with bonus 500.00. Expected values: paycheck.bonusGross 500.00, paycheck.gross 2000.00, paycheck.withholding.federalish 363.85, ytd.gross 2000.00, ytd.socialishWages 2000.00.",
+      "active_checkpoints": [
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "bonus-supplemental-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/bonus-supplemental-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-013",
+      "checkpoint_introduced": "C13",
+      "commitment_id": "single-garnishment-disposable-earnings-cap",
+      "title": "Single garnishment is capped by disposable earnings",
+      "intent": "A garnishment order is applied after withholding and credits. It is limited by requested amount, per-order percent cap, and the shared combined cap.",
+      "given": "One garnishment_order_set event exists for the current period.",
+      "when": "getPaycheck is called.",
+      "then": "disposable earnings are gross minus pre-tax totals and withholding plus credits, before post-tax deductions. Worked example: gross 1200.00 with one order amount 400.00 and percentCap 15. Expected values: paycheck.garnishmentTotal 134.42, lineItems.garnishment 134.42, paycheck.net 761.73.",
+      "active_checkpoints": [
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "single-garnishment-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/single-garnishment-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-014",
+      "checkpoint_introduced": "C14",
+      "commitment_id": "priority-garnishments-combined-cap",
+      "title": "Priority garnishments share a combined cap",
+      "intent": "Multiple garnishments are processed by ascending priority. Each order has its own percent cap, and all orders together cannot exceed 25 percent of disposable earnings.",
+      "given": "Two garnishment_order_set events exist with different priorities.",
+      "when": "getPaycheck is called.",
+      "then": "the lower priority number is filled first up to its own cap, then later orders receive only the remaining combined cap. Worked example: gross 1200.00 with priority 1 amount 400.00 cap 20 and priority 2 amount 300.00 cap 20. Expected values: paycheck.garnishmentTotal 224.04.",
+      "active_checkpoints": [
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "priority-garnishments-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/priority-garnishments-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-015",
+      "checkpoint_introduced": "C15",
+      "commitment_id": "additional-flat-withholding",
+      "title": "Additional flat withholding reduces net but not garnishment base",
+      "intent": "Employee-elected additional withholding reduces net pay after ordinary withholding and credits, but disposable earnings for garnishment are defined before additional withholding.",
+      "given": "An additional_withholding_set event declares a current-period amount alongside a garnishment order.",
+      "when": "getPaycheck is called.",
+      "then": "withholding.additional equals the declared amount, net is reduced by that amount, and garnishmentTotal remains based on disposable earnings before additional withholding. Worked example: gross 1200.00, additional withholding 25.00, one 15 percent garnishment. Expected values: paycheck.withholding.additional 25.00, paycheck.garnishmentTotal 134.42, paycheck.net 736.73, lineItems.additional 25.00.",
+      "active_checkpoints": [
+        "C15",
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "additional-withholding-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/additional-withholding-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-016",
+      "checkpoint_introduced": "C16",
+      "commitment_id": "bonus-recomputes-credit-phaseout",
+      "title": "Bonus gross recomputes the credit phase-out",
+      "intent": "The refundable credit phase-out uses current regular gross plus current bonus gross. Adding a bonus can reduce a credit that regular gross alone would receive.",
+      "given": "A pay period has regular gross and a bonus_paid event.",
+      "when": "getPaycheck is called.",
+      "then": "annualizedGross for the credit equals regularGross plus bonusGross times periodsPerYear, so bonusGross is included in the phase-out. Worked example: regular gross 1500.00 with bonus 500.00. Expected values: paycheck.creditTotal 16.92.",
+      "active_checkpoints": [
+        "C16",
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "bonus-credit-phaseout-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/bonus-credit-phaseout-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-017",
+      "checkpoint_introduced": "C17",
+      "commitment_id": "single-stage-rounding-net-residual",
+      "title": "Components are rounded once and net is the residual",
+      "intent": "Exposed paycheck components are rounded half-up to cents at reporting stage. Net is computed from full-precision intermediate values and then rounded once.",
+      "given": "A period uses fractional gross, deductions, and rates that create fractions of a cent.",
+      "when": "getPaycheck and getYearToDate are called.",
+      "then": "reported component values have cent precision, and net is the one-time rounded residual after all full-precision components are applied. Worked example: gross 1234.56, pre-tax 123.45, benefit 67.89, post-tax 12.34, additional 7.89. Expected values: paycheck.withholding.federalish 131.72, paycheck.withholding.stateish 55.56, paycheck.withholding.socialish 74.07, paycheck.withholding.medicareish 18.52, paycheck.creditTotal 40.00, paycheck.net 783.12; paycheck.net rounded to 2 decimals.",
+      "active_checkpoints": [
+        "C17",
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "rounding-discipline-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/rounding-discipline-private.txt"
+      ]
+    },
+    {
+      "spec_id": "SPEC-018",
+      "checkpoint_introduced": "C18",
+      "commitment_id": "event-idempotency-and-bonus-void",
+      "title": "Duplicate events are idempotent and bonus voids undo bonus effects",
+      "intent": "Events carry ids for idempotency. Replaying an event with the same id is ignored. A bonus_voided event removes the matching bonus and recomputes all derived values.",
+      "given": "The same bonus_paid event id is applied twice and then a bonus_voided event references that bonusId.",
+      "when": "getPaycheck and getYearToDate are called.",
+      "then": "the duplicate event does not double the bonus, the void removes it, and federalish, credit, payroll taxes, net, and YTD values are recomputed without the bonus. Worked example: regular gross 1500.00, a 500.00 bonus replayed twice, then bonus_voided for that bonusId. Expected values: paycheck.bonusGross 0.00, paycheck.gross 1500.00, paycheck.withholding.federalish 253.85, paycheck.creditTotal 40.00, paycheck.withholding.socialish 90.00, paycheck.withholding.medicareish 22.50, paycheck.net 1098.65, ytd.gross 1500.00, ytd.socialishWages 1500.00.",
+      "active_checkpoints": [
+        "C18"
+      ],
+      "feedback_binding": {
+        "asset_id": "idempotency-bonus-void-visible-check"
+      },
+      "hidden_oracle_refs": [
+        "hidden-oracle/idempotency-bonus-void-private.txt"
+      ]
+    }
+  ]
+}

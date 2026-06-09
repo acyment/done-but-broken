@@ -1,0 +1,4 @@
+Single garnishment is capped by disposable earnings
+
+disposable earnings are gross minus pre-tax totals and withholding plus credits, before post-tax deductions. Worked example: gross 1200.00 with one order amount 400.00 and percentCap 15. Expected values: paycheck.garnishmentTotal 134.42, lineItems.garnishment 134.42, paycheck.net 761.73.
+Hidden oracle case: single-garnishment-private.

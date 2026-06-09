@@ -1,0 +1,33 @@
+{
+  "task_id": "payroll-net-pay-lifecycle",
+  "task_version": "payroll-net-pay-lifecycle-v1",
+  "checkpoints": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C15",
+    "C16",
+    "C17",
+    "C18"
+  ],
+  "template_workspace": "template-workspace",
+  "canonical_spec": "canonical-spec.json",
+  "feedback_assets": "feedback-assets/manifest.json",
+  "coverage_manifest": "coverage-manifest.json",
+  "fake_agent_validation_plan": "fake-agent-validation-plan.json",
+  "local_acceptance_criteria": "local-acceptance-criteria.json",
+  "analysis_plan": "analysis-plan.json",
+  "hidden_oracle_path": "hidden-oracle",
+  "public_api_contract": "applyEvent(state, event): State; getPaycheck(state): Paycheck; getYearToDate(state): YearToDate. Both conditions receive this concrete event API and the same worked examples; only feedback_capable_spec receives runnable feedback assets. Event types, each with a unique string id unless it is intentionally duplicated to test idempotency: pay_period_started {id, type:'pay_period_started', periodIndex, gross, periodsPerYear, filingStatus:'single'|'joint', allowances}; pre_tax_deduction_set {id, type:'pre_tax_deduction_set', code, amount}; post_tax_deduction_set {id, type:'post_tax_deduction_set', code, amount}; benefit_elected {id, type:'benefit_elected', code, amount}; bonus_paid {id, type:'bonus_paid', bonusId, amount}; bonus_voided {id, type:'bonus_voided', bonusId}; prior_ytd_set {id, type:'prior_ytd_set', gross, socialishWages, medicareishWages}; garnishment_order_set {id, type:'garnishment_order_set', orderId, priority, amount, percentCap}; additional_withholding_set {id, type:'additional_withholding_set', amount}. getPaycheck returns {gross, regularGross, bonusGross, preTaxTotal, taxableBaseFederal, taxableBaseState, withholding:{federalish, stateish, socialish, medicareish, additional}, creditTotal, postTaxTotal, garnishmentTotal, net, lineItems:[{code, amount}]}. getYearToDate returns {gross, socialishWages, medicareishWages, socialishTax, medicareishTax}."
+}

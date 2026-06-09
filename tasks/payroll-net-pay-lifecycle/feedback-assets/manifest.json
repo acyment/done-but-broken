@@ -1,0 +1,112 @@
+{
+  "assets": [
+    {
+      "asset_id": "gross-pay-visible-check",
+      "checkpoint_introduced": "C01",
+      "relative_path": "spec/gross-pay.spec.ts",
+      "source_path": "gross-pay.source.ts"
+    },
+    {
+      "asset_id": "pre-tax-deductions-visible-check",
+      "checkpoint_introduced": "C02",
+      "relative_path": "spec/pre-tax-deductions.spec.ts",
+      "source_path": "pre-tax-deductions.source.ts"
+    },
+    {
+      "asset_id": "federalish-brackets-visible-check",
+      "checkpoint_introduced": "C03",
+      "relative_path": "spec/federalish-brackets.spec.ts",
+      "source_path": "federalish-brackets.source.ts"
+    },
+    {
+      "asset_id": "filing-status-visible-check",
+      "checkpoint_introduced": "C04",
+      "relative_path": "spec/filing-status.spec.ts",
+      "source_path": "filing-status.source.ts"
+    },
+    {
+      "asset_id": "allowances-visible-check",
+      "checkpoint_introduced": "C05",
+      "relative_path": "spec/allowances.spec.ts",
+      "source_path": "allowances.source.ts"
+    },
+    {
+      "asset_id": "stateish-flat-visible-check",
+      "checkpoint_introduced": "C06",
+      "relative_path": "spec/stateish-flat.spec.ts",
+      "source_path": "stateish-flat.source.ts"
+    },
+    {
+      "asset_id": "socialish-cap-visible-check",
+      "checkpoint_introduced": "C07",
+      "relative_path": "spec/socialish-cap.spec.ts",
+      "source_path": "socialish-cap.source.ts"
+    },
+    {
+      "asset_id": "medicareish-surtax-visible-check",
+      "checkpoint_introduced": "C08",
+      "relative_path": "spec/medicareish-surtax.spec.ts",
+      "source_path": "medicareish-surtax.source.ts"
+    },
+    {
+      "asset_id": "credit-phaseout-visible-check",
+      "checkpoint_introduced": "C09",
+      "relative_path": "spec/credit-phaseout.spec.ts",
+      "source_path": "credit-phaseout.source.ts"
+    },
+    {
+      "asset_id": "post-tax-deductions-visible-check",
+      "checkpoint_introduced": "C10",
+      "relative_path": "spec/post-tax-deductions.spec.ts",
+      "source_path": "post-tax-deductions.source.ts"
+    },
+    {
+      "asset_id": "benefit-base-divergence-visible-check",
+      "checkpoint_introduced": "C11",
+      "relative_path": "spec/benefit-base-divergence.spec.ts",
+      "source_path": "benefit-base-divergence.source.ts"
+    },
+    {
+      "asset_id": "bonus-supplemental-visible-check",
+      "checkpoint_introduced": "C12",
+      "relative_path": "spec/bonus-supplemental.spec.ts",
+      "source_path": "bonus-supplemental.source.ts"
+    },
+    {
+      "asset_id": "single-garnishment-visible-check",
+      "checkpoint_introduced": "C13",
+      "relative_path": "spec/single-garnishment.spec.ts",
+      "source_path": "single-garnishment.source.ts"
+    },
+    {
+      "asset_id": "priority-garnishments-visible-check",
+      "checkpoint_introduced": "C14",
+      "relative_path": "spec/priority-garnishments.spec.ts",
+      "source_path": "priority-garnishments.source.ts"
+    },
+    {
+      "asset_id": "additional-withholding-visible-check",
+      "checkpoint_introduced": "C15",
+      "relative_path": "spec/additional-withholding.spec.ts",
+      "source_path": "additional-withholding.source.ts"
+    },
+    {
+      "asset_id": "bonus-credit-phaseout-visible-check",
+      "checkpoint_introduced": "C16",
+      "relative_path": "spec/bonus-credit-phaseout.spec.ts",
+      "source_path": "bonus-credit-phaseout.source.ts"
+    },
+    {
+      "asset_id": "rounding-discipline-visible-check",
+      "checkpoint_introduced": "C17",
+      "relative_path": "spec/rounding-discipline.spec.ts",
+      "source_path": "rounding-discipline.source.ts"
+    },
+    {
+      "asset_id": "idempotency-bonus-void-visible-check",
+      "checkpoint_introduced": "C18",
+      "relative_path": "spec/idempotency-bonus-void.spec.ts",
+      "source_path": "idempotency-bonus-void.source.ts"
+    }
+  ]
+}

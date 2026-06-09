@@ -1,0 +1,115 @@
+{
+  "schema_version": "fake-agent-validation-plan-v0",
+  "task_id": "payroll-net-pay-lifecycle",
+  "task_version": "payroll-net-pay-lifecycle-v1",
+  "scenarios": [
+    {
+      "scenario_id": "gross-pay-reference",
+      "checkpoint_id": "C01",
+      "purpose": "Exercise the local reference gross-pay behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "pre-tax-deductions-reference",
+      "checkpoint_id": "C02",
+      "purpose": "Exercise the local reference pre-tax deduction behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "federalish-brackets-reference",
+      "checkpoint_id": "C03",
+      "purpose": "Exercise the local reference federalish bracket behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "filing-status-reference",
+      "checkpoint_id": "C04",
+      "purpose": "Exercise the local reference filing-status behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "allowances-reference",
+      "checkpoint_id": "C05",
+      "purpose": "Exercise the local reference allowance behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "stateish-flat-reference",
+      "checkpoint_id": "C06",
+      "purpose": "Exercise the local reference stateish flat-withholding behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "socialish-cap-reference",
+      "checkpoint_id": "C07",
+      "purpose": "Exercise the local reference socialish wage-base cap behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "medicareish-surtax-reference",
+      "checkpoint_id": "C08",
+      "purpose": "Exercise the local reference medicareish surtax threshold behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "credit-phaseout-reference",
+      "checkpoint_id": "C09",
+      "purpose": "Exercise the local reference refundable credit phase-out behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "post-tax-deductions-reference",
+      "checkpoint_id": "C10",
+      "purpose": "Exercise the local reference post-tax deduction behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "benefit-base-divergence-reference",
+      "checkpoint_id": "C11",
+      "purpose": "Exercise the local reference benefit base-divergence behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "bonus-supplemental-reference",
+      "checkpoint_id": "C12",
+      "purpose": "Exercise the local reference bonus supplemental-withholding behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "single-garnishment-reference",
+      "checkpoint_id": "C13",
+      "purpose": "Exercise the local reference single-garnishment behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "priority-garnishments-reference",
+      "checkpoint_id": "C14",
+      "purpose": "Exercise the local reference priority-garnishment behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "additional-withholding-reference",
+      "checkpoint_id": "C15",
+      "purpose": "Exercise the local reference additional-withholding behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "bonus-credit-phaseout-reference",
+      "checkpoint_id": "C16",
+      "purpose": "Exercise the local reference bonus credit-phaseout recompute behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "rounding-discipline-reference",
+      "checkpoint_id": "C17",
+      "purpose": "Exercise the local reference rounding discipline behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    },
+    {
+      "scenario_id": "idempotency-bonus-void-reference",
+      "checkpoint_id": "C18",
+      "purpose": "Exercise the local reference idempotency and bonus-void behavior before provider calls.",
+      "expected_agent_mode": "scripted-reference"
+    }
+  ]
+}

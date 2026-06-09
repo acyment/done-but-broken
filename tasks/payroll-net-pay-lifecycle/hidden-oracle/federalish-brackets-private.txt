@@ -1,0 +1,4 @@
+Federalish withholding annualizes taxable pay and applies brackets
+
+single brackets are 10 percent up to 12000 annual, 20 percent to 48000 annual, and 30 percent above, divided back by periodsPerYear. Worked example: gross 2000.00, pre-tax 100.00, 26 periods, single, 0 allowances. Expected values: paycheck.withholding.federalish 339.23.
+Hidden oracle case: federalish-brackets-private.

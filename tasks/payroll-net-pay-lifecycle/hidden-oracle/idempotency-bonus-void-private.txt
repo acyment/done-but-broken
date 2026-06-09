@@ -1,0 +1,4 @@
+Duplicate events are idempotent and bonus voids undo bonus effects
+
+the duplicate event does not double the bonus, the void removes it, and federalish, credit, payroll taxes, net, and YTD values are recomputed without the bonus. Worked example: regular gross 1500.00, a 500.00 bonus replayed twice, then bonus_voided for that bonusId. Expected values: paycheck.bonusGross 0.00, paycheck.gross 1500.00, paycheck.withholding.federalish 253.85, paycheck.creditTotal 40.00, paycheck.withholding.socialish 90.00, paycheck.withholding.medicareish 22.50, paycheck.net 1098.65, ytd.gross 1500.00, ytd.socialishWages 1500.00.
+Hidden oracle case: idempotency-bonus-void-private.

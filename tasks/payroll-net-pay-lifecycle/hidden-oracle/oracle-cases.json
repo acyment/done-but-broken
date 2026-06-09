@@ -1,0 +1,963 @@
+{
+  "schema_version": "payroll-net-pay-oracle-cases-v1",
+  "money_tolerance": 0.005,
+  "commitments_by_checkpoint": {
+    "C01": [
+      "gross-pay-per-period"
+    ],
+    "C02": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base"
+    ],
+    "C03": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding"
+    ],
+    "C04": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table"
+    ],
+    "C05": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base"
+    ],
+    "C06": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base"
+    ],
+    "C07": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap"
+    ],
+    "C08": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold"
+    ],
+    "C09": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out"
+    ],
+    "C10": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding"
+    ],
+    "C11": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state"
+    ],
+    "C12": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd"
+    ],
+    "C13": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd",
+      "single-garnishment-disposable-earnings-cap"
+    ],
+    "C14": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd",
+      "single-garnishment-disposable-earnings-cap",
+      "priority-garnishments-combined-cap"
+    ],
+    "C15": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd",
+      "single-garnishment-disposable-earnings-cap",
+      "priority-garnishments-combined-cap",
+      "additional-flat-withholding"
+    ],
+    "C16": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd",
+      "single-garnishment-disposable-earnings-cap",
+      "priority-garnishments-combined-cap",
+      "additional-flat-withholding",
+      "bonus-recomputes-credit-phaseout"
+    ],
+    "C17": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd",
+      "single-garnishment-disposable-earnings-cap",
+      "priority-garnishments-combined-cap",
+      "additional-flat-withholding",
+      "bonus-recomputes-credit-phaseout",
+      "single-stage-rounding-net-residual"
+    ],
+    "C18": [
+      "gross-pay-per-period",
+      "pre-tax-deductions-reduce-taxable-base",
+      "federalish-bracketed-withholding",
+      "filing-status-selects-bracket-table",
+      "allowances-reduce-federalish-base",
+      "stateish-flat-withholding-different-base",
+      "socialish-ytd-wage-base-cap",
+      "medicareish-ytd-surtax-threshold",
+      "refundable-credit-phases-out",
+      "post-tax-deductions-after-withholding",
+      "benefit-pre-tax-federal-post-tax-state",
+      "bonus-supplemental-rate-counts-ytd",
+      "single-garnishment-disposable-earnings-cap",
+      "priority-garnishments-combined-cap",
+      "additional-flat-withholding",
+      "bonus-recomputes-credit-phaseout",
+      "single-stage-rounding-net-residual",
+      "event-idempotency-and-bonus-void"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "gross-pay-private",
+      "commitment_id": "gross-pay-per-period",
+      "events": [
+        {
+          "id": "c01-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "gross",
+          "expected": 2000
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "regularGross",
+          "expected": 2000
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "bonusGross",
+          "expected": 0
+        },
+        {
+          "kind": "ytd_number",
+          "path": "gross",
+          "expected": 2000
+        }
+      ]
+    },
+    {
+      "case_id": "pre-tax-deductions-private",
+      "commitment_id": "pre-tax-deductions-reduce-taxable-base",
+      "events": [
+        {
+          "id": "c02-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c02-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 100
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "preTaxTotal",
+          "expected": 100
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "taxableBaseFederal",
+          "expected": 1900
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "taxableBaseState",
+          "expected": 1900
+        },
+        {
+          "kind": "line_item",
+          "code": "pre_tax",
+          "expected": 100
+        }
+      ]
+    },
+    {
+      "case_id": "federalish-brackets-private",
+      "commitment_id": "federalish-bracketed-withholding",
+      "events": [
+        {
+          "id": "c03-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c03-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 100
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.federalish",
+          "expected": 339.23
+        }
+      ]
+    },
+    {
+      "case_id": "filing-status-private",
+      "commitment_id": "filing-status-selects-bracket-table",
+      "events": [
+        {
+          "id": "c04-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "joint",
+          "allowances": 0
+        },
+        {
+          "id": "c04-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 100
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.federalish",
+          "expected": 249.69
+        }
+      ]
+    },
+    {
+      "case_id": "allowances-private",
+      "commitment_id": "allowances-reduce-federalish-base",
+      "events": [
+        {
+          "id": "c05-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 2
+        },
+        {
+          "id": "c05-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 100
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.federalish",
+          "expected": 272.31
+        }
+      ]
+    },
+    {
+      "case_id": "stateish-flat-private",
+      "commitment_id": "stateish-flat-withholding-different-base",
+      "events": [
+        {
+          "id": "c06-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c06-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 100
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "taxableBaseState",
+          "expected": 1900
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.stateish",
+          "expected": 95
+        }
+      ]
+    },
+    {
+      "case_id": "socialish-cap-private",
+      "commitment_id": "socialish-ytd-wage-base-cap",
+      "events": [
+        {
+          "id": "c07-prior",
+          "type": "prior_ytd_set",
+          "gross": 49000,
+          "socialishWages": 49000,
+          "medicareishWages": 49000
+        },
+        {
+          "id": "c07-period",
+          "type": "pay_period_started",
+          "periodIndex": 25,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.socialish",
+          "expected": 60
+        },
+        {
+          "kind": "ytd_number",
+          "path": "socialishWages",
+          "expected": 51000
+        },
+        {
+          "kind": "ytd_number",
+          "path": "socialishTax",
+          "expected": 60
+        }
+      ]
+    },
+    {
+      "case_id": "medicareish-surtax-private",
+      "commitment_id": "medicareish-ytd-surtax-threshold",
+      "events": [
+        {
+          "id": "c08-prior",
+          "type": "prior_ytd_set",
+          "gross": 29500,
+          "socialishWages": 29500,
+          "medicareishWages": 29500
+        },
+        {
+          "id": "c08-period",
+          "type": "pay_period_started",
+          "periodIndex": 16,
+          "gross": 1000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.medicareish",
+          "expected": 19.5
+        },
+        {
+          "kind": "ytd_number",
+          "path": "medicareishWages",
+          "expected": 30500
+        },
+        {
+          "kind": "ytd_number",
+          "path": "medicareishTax",
+          "expected": 19.5
+        }
+      ]
+    },
+    {
+      "case_id": "credit-phaseout-private",
+      "commitment_id": "refundable-credit-phases-out",
+      "events": [
+        {
+          "id": "c09-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "creditTotal",
+          "expected": 16.92
+        }
+      ]
+    },
+    {
+      "case_id": "post-tax-deductions-private",
+      "commitment_id": "post-tax-deductions-after-withholding",
+      "events": [
+        {
+          "id": "c10-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1200,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c10-post-tax",
+          "type": "post_tax_deduction_set",
+          "code": "union",
+          "amount": 75
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "postTaxTotal",
+          "expected": 75
+        },
+        {
+          "kind": "line_item",
+          "code": "post_tax",
+          "expected": 75
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "net",
+          "expected": 821.15
+        }
+      ]
+    },
+    {
+      "case_id": "benefit-base-divergence-private",
+      "commitment_id": "benefit-pre-tax-federal-post-tax-state",
+      "events": [
+        {
+          "id": "c11-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 2000,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c11-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 100
+        },
+        {
+          "id": "c11-benefit",
+          "type": "benefit_elected",
+          "code": "health",
+          "amount": 50
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "preTaxTotal",
+          "expected": 150
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "taxableBaseFederal",
+          "expected": 1850
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "taxableBaseState",
+          "expected": 1900
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.stateish",
+          "expected": 95
+        },
+        {
+          "kind": "line_item",
+          "code": "benefit",
+          "expected": 50
+        }
+      ]
+    },
+    {
+      "case_id": "bonus-supplemental-private",
+      "commitment_id": "bonus-supplemental-rate-counts-ytd",
+      "events": [
+        {
+          "id": "c12-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1500,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c12-bonus",
+          "type": "bonus_paid",
+          "bonusId": "spot",
+          "amount": 500
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "bonusGross",
+          "expected": 500
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "gross",
+          "expected": 2000
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.federalish",
+          "expected": 363.85
+        },
+        {
+          "kind": "ytd_number",
+          "path": "gross",
+          "expected": 2000
+        },
+        {
+          "kind": "ytd_number",
+          "path": "socialishWages",
+          "expected": 2000
+        }
+      ]
+    },
+    {
+      "case_id": "single-garnishment-private",
+      "commitment_id": "single-garnishment-disposable-earnings-cap",
+      "events": [
+        {
+          "id": "c13-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1200,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c13-garnish",
+          "type": "garnishment_order_set",
+          "orderId": "child",
+          "priority": 1,
+          "amount": 400,
+          "percentCap": 15
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "garnishmentTotal",
+          "expected": 134.42
+        },
+        {
+          "kind": "line_item",
+          "code": "garnishment",
+          "expected": 134.42
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "net",
+          "expected": 761.73
+        }
+      ]
+    },
+    {
+      "case_id": "priority-garnishments-private",
+      "commitment_id": "priority-garnishments-combined-cap",
+      "events": [
+        {
+          "id": "c14-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1200,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c14-garnish-a",
+          "type": "garnishment_order_set",
+          "orderId": "child",
+          "priority": 1,
+          "amount": 400,
+          "percentCap": 20
+        },
+        {
+          "id": "c14-garnish-b",
+          "type": "garnishment_order_set",
+          "orderId": "debt",
+          "priority": 2,
+          "amount": 300,
+          "percentCap": 20
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "garnishmentTotal",
+          "expected": 224.04
+        }
+      ]
+    },
+    {
+      "case_id": "additional-withholding-private",
+      "commitment_id": "additional-flat-withholding",
+      "events": [
+        {
+          "id": "c15-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1200,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c15-additional",
+          "type": "additional_withholding_set",
+          "amount": 25
+        },
+        {
+          "id": "c15-garnish",
+          "type": "garnishment_order_set",
+          "orderId": "child",
+          "priority": 1,
+          "amount": 400,
+          "percentCap": 15
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.additional",
+          "expected": 25
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "garnishmentTotal",
+          "expected": 134.42
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "net",
+          "expected": 736.73
+        },
+        {
+          "kind": "line_item",
+          "code": "additional",
+          "expected": 25
+        }
+      ]
+    },
+    {
+      "case_id": "bonus-credit-phaseout-private",
+      "commitment_id": "bonus-recomputes-credit-phaseout",
+      "events": [
+        {
+          "id": "c16-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1500,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c16-bonus",
+          "type": "bonus_paid",
+          "bonusId": "spot",
+          "amount": 500
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "creditTotal",
+          "expected": 16.92
+        }
+      ]
+    },
+    {
+      "case_id": "rounding-discipline-private",
+      "commitment_id": "single-stage-rounding-net-residual",
+      "events": [
+        {
+          "id": "c17-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1234.56,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 1
+        },
+        {
+          "id": "c17-pre-tax",
+          "type": "pre_tax_deduction_set",
+          "code": "retirement",
+          "amount": 123.45
+        },
+        {
+          "id": "c17-benefit",
+          "type": "benefit_elected",
+          "code": "health",
+          "amount": 67.89
+        },
+        {
+          "id": "c17-post-tax",
+          "type": "post_tax_deduction_set",
+          "code": "union",
+          "amount": 12.34
+        },
+        {
+          "id": "c17-additional",
+          "type": "additional_withholding_set",
+          "amount": 7.89
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.federalish",
+          "expected": 131.72
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.stateish",
+          "expected": 55.56
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.socialish",
+          "expected": 74.07
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.medicareish",
+          "expected": 18.52
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "creditTotal",
+          "expected": 40
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "net",
+          "expected": 783.12
+        },
+        {
+          "kind": "is_rounded",
+          "source": "paycheck",
+          "path": "net",
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case_id": "idempotency-bonus-void-private",
+      "commitment_id": "event-idempotency-and-bonus-void",
+      "events": [
+        {
+          "id": "c18-period",
+          "type": "pay_period_started",
+          "periodIndex": 1,
+          "gross": 1500,
+          "periodsPerYear": 26,
+          "filingStatus": "single",
+          "allowances": 0
+        },
+        {
+          "id": "c18-bonus",
+          "type": "bonus_paid",
+          "bonusId": "spot",
+          "amount": 500
+        },
+        {
+          "id": "c18-bonus",
+          "type": "bonus_paid",
+          "bonusId": "spot",
+          "amount": 500
+        },
+        {
+          "id": "c18-void",
+          "type": "bonus_voided",
+          "bonusId": "spot"
+        }
+      ],
+      "assertions": [
+        {
+          "kind": "paycheck_number",
+          "path": "bonusGross",
+          "expected": 0
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "gross",
+          "expected": 1500
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.federalish",
+          "expected": 253.85
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "creditTotal",
+          "expected": 40
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.socialish",
+          "expected": 90
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "withholding.medicareish",
+          "expected": 22.5
+        },
+        {
+          "kind": "paycheck_number",
+          "path": "net",
+          "expected": 1098.65
+        },
+        {
+          "kind": "ytd_number",
+          "path": "gross",
+          "expected": 1500
+        },
+        {
+          "kind": "ytd_number",
+          "path": "socialishWages",
+          "expected": 1500
+        }
+      ]
+    }
+  ]
+}

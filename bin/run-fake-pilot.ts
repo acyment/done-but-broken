@@ -14,6 +14,7 @@ import {
   type OpenRouterResponseFormat
 } from "../src/model-loop-agent";
 import { createInventoryReservationsOracle } from "../src/inventory-reservations-oracle";
+import { createPayrollNetPayOracle } from "../src/payroll-net-pay-oracle";
 import { createPricingDiscountOracle } from "../src/pricing-discount-oracle";
 import { createRolePermissionsOracle } from "../src/role-permissions-oracle";
 import { createSampleCartOracle } from "../src/sample-cart-oracle";
@@ -598,6 +599,10 @@ function createHiddenOracle(taskId: string): HiddenOracleAdapter | undefined {
 
   if (taskId === "pricing-discount-lifecycle-content-controlled") {
     return createPricingDiscountOracle();
+  }
+
+  if (taskId === "payroll-net-pay-lifecycle") {
+    return createPayrollNetPayOracle();
   }
 
   return undefined;

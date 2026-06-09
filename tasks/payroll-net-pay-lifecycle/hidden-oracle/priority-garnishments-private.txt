@@ -1,0 +1,4 @@
+Priority garnishments share a combined cap
+
+the lower priority number is filled first up to its own cap, then later orders receive only the remaining combined cap. Worked example: gross 1200.00 with priority 1 amount 400.00 cap 20 and priority 2 amount 300.00 cap 20. Expected values: paycheck.garnishmentTotal 224.04.
+Hidden oracle case: priority-garnishments-private.
