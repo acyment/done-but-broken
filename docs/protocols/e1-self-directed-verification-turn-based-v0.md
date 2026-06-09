@@ -1,6 +1,6 @@
 # e1-self-directed-verification-turn-based-v0
 
-Status: draft protocol profile. Step 0 local harness mechanics are implemented in `src/e1-harness.ts`; no provider run is authorized by this document.
+Status: draft protocol profile. Step 0 local L0 mechanics are implemented in `src/e1-harness.ts`; the L1 agent loop and L2 run orchestrator are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -12,19 +12,36 @@ The treatment under this profile is:
 
 This is the industry-relevant question. A production frontier coding agent can usually run some checks. The experiment should therefore ask whether maintained executable BDD assets still help when the context arm can write and run its own probes under the same budget.
 
+## Layer Decomposition
+
+"E1 harness" means three layers. Only L0 exists today.
+
+- L0 mechanics library: full-file replacement parsing/application, command validation, protected-path checks, verification execution, truncation, hashes, and counters.
+- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers.
+- L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications.
+
+CartCalc calibration and any Billing v2 run require L1 and L2. L0 mechanics alone are not an evidence-generating harness.
+
 ## Turn Structure
 
 Each checkpoint allows up to `12` model turns.
 
-On each turn the model may return:
+On each turn the model output is scanned in fixed precedence order:
 
-- one optional full-file replacement block;
-- one optional verification request block;
-- one optional done declaration.
+1. full-file replacement sections;
+2. at most one verification request;
+3. one optional done declaration.
 
-The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, or the sealed token budget is exhausted.
+The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, the sealed token budget is exhausted, three consecutive no-op turns occur, or protected-path integrity fails.
 
-Unified diffs are not supported. A replacement block contains one or more `<<<FILE path>>>` ... `<<<END>>>` sections. Rejections are deterministic: malformed delimiters, invalid paths, or attempts to write read-only paths. Rejection is logged and consumes the replacement opportunity for that turn.
+Unified diffs are not supported as a model-facing format. A replacement block contains one or more `<<<FILE path>>>` ... `<<<END>>>` sections. Rejections are deterministic: malformed delimiters, invalid paths, or attempts to write read-only paths. Rejection is logged and consumes the replacement opportunity for that turn.
+
+Replacement side effects have two separate outputs:
+
+- model-facing confirmation only: one deterministic line per applied file, for example `applied: src/discounts.ts (87 -> 94 lines)`;
+- audit artifact: a harness-computed unified diff between pre/post snapshots, stored in the artifact bundle and never shown to the model.
+
+If a turn contains zero valid protocol blocks, it is a no-op turn. It consumes one model turn. The next model turn begins with exactly one harness notice line: `no valid blocks parsed`. Three consecutive no-op turns terminate the checkpoint as `agent_stalled`, distinct from `budget_exhausted`. `agent_stalled` is excluded from drift analysis and counted as failure for the checkpoint's new assertions.
 
 ## Verification Command Whitelist
 
@@ -54,7 +71,9 @@ Rules:
 - non-whitelisted commands return a refusal string and still consume the verification slot.
 - path parameters are resolved with realpath and must be contained inside resolved `scratch/`;
 - path parameters must use `.ts` or `.test.ts`;
-- shell metacharacters, globs, `~`, environment-variable syntax, flags, and whitespace inside path tokens are rejected;
+- path tokens use the sealed POSIX allowlist `^[A-Za-z0-9._/-]+$`, ASCII only, no leading `-`, no `..` segment before resolution;
+- shell metacharacters, globs, `~`, URL encoding, Unicode homoglyphs, control characters, environment-variable syntax, flags, and whitespace inside path tokens are rejected by the allowlist;
+- Windows path separators are out of scope; `\` is invalid input, not a separator;
 - Bun commands run with no auto-install behavior and a clean environment.
 
 `spec` is a `package.json` script owned by the harness. It exists only for `feedback_capable_spec`.
@@ -71,12 +90,12 @@ Rules:
 
 `specs/`:
 
-- mounted read-only for both arms;
+- harness-enforced read-only for both arms;
 - contains visible Gherkin/spec content.
 
 `specs/steps/`:
 
-- mounted read-only for `feedback_capable_spec`;
+- harness-enforced read-only for `feedback_capable_spec`;
 - contains provided step definitions and runner assets.
 
 Application code:
@@ -90,6 +109,15 @@ Harness config:
 
 Replacement attempts against read-only paths are rejected and logged. This prevents spec vandalism, feedback-suite tampering, `spec` script retargeting, and import-alias retargeting.
 
+Read-only enforcement is defend-and-verify, not a mount claim. At checkpoint start, L2 records hashes for every protected file under `specs/` plus `package.json`, `bunfig.toml`, `tsconfig.json`, `bun.lock`, and `bun.lockb` when present. L1/L2 re-verifies those hashes at every turn end. Any mismatch terminates the run as `invalid_integrity`; the current snapshot is archived but the run is not evidence.
+
+Environment boundary:
+
+- sandbox setup uses `bun install --frozen-lockfile` whenever a Bun lockfile exists;
+- runtime verification commands use `--no-install`;
+- Bun version and lockfile hash are compatibility fields;
+- if the package has zero dependencies and Bun deletes an empty lockfile, record `lockfile_absent_zero_dependency_package` as the compatibility value rather than adding a fake dependency.
+
 ## Budgets
 
 All constants are part of the compatibility boundary and must be sealed before evidence-generating runs:
@@ -102,6 +130,8 @@ All constants are part of the compatibility boundary and must be sealed before e
 - verification output tokens count against the per-checkpoint token budget.
 
 The `6` verification executions are shared across command types. For the feedback arm, `bun run spec` consumes the same quota as self-authored tests or probes. The feedback arm is not compensated with extra executions.
+
+The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
 
 ## Shared Verification Scaffolding
 
@@ -142,6 +172,8 @@ The full untruncated output must be archived with the publication bundle. A revi
 
 Model-authored files in `scratch/` are snapshotted per turn like application code.
 
+For every applied replacement, artifacts record the model-facing confirmation lines and the audit-only unified diff. The diff is never injected into the model conversation.
+
 ## Claim Meaning
 
 A positive result under this profile means:
@@ -152,15 +184,17 @@ The isolated mechanism is the cost of self-authoring and self-maintaining verifi
 
 ## Harness Gap
 
-The current provider model loop does not yet implement this profile end-to-end. Step 0 local mechanics exist in `src/e1-harness.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
+The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
 
 Before any E1 evidence-generating run, add test-first harness support for:
 
 - structured verification request parsing;
+- no-op-turn and `agent_stalled` semantics;
 - command whitelist enforcement;
 - `scratch/` persistence and capture;
-- read-only spec mounts or equivalent replacement rejection;
+- protected-path hash verification and `invalid_integrity` classification;
 - capped output injection on the next turn;
 - full-output hashing;
-- budget accounting for verification executions;
+- budget accounting for model turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost;
+- audit-only replacement diffs and model-facing confirmation lines;
 - compatibility-profile recording for all constants above.

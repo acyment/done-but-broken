@@ -6,8 +6,10 @@ import {
   E1VerificationBudget,
   applyFullFileReplacements,
   buildVerificationExecution,
+  hashProtectedPaths,
   truncateHeadTail,
-  runVerificationRequest
+  runVerificationRequest,
+  verifyProtectedPathHashes
 } from "../src/e1-harness";
 
 const tempRoots: string[] = [];
@@ -36,6 +38,10 @@ describe("E1 harness mechanics", () => {
 
     expect(result.applied).toBe(true);
     expect(result.replacements.map((entry) => entry.path)).toEqual(["src/a.ts", "src/b.ts"]);
+    expect(result.confirmations).toEqual([
+      "applied: src/a.ts (0 -> 1 lines)",
+      "applied: src/b.ts (0 -> 0 lines)"
+    ]);
     expect(await readFile(join(workspace, "src", "a.ts"), "utf8")).toBe("export const a = 1;");
     expect(await readFile(join(workspace, "src", "b.ts"), "utf8")).toBe("");
   });
@@ -102,6 +108,11 @@ describe("E1 harness mechanics", () => {
 
     const rejected = [
       "bun scratch/../src/x.ts",
+      "bun scratch%2F..%2Fsrc.ts",
+      "bun scrаtch/a.ts",
+      "bun scratch/a.ts\nrm",
+      "bun scratch\\..\\src\\x.ts",
+      "bun scratch/a\u0000.ts",
       `${join(workspace, "src", "x.ts")}`,
       "bun scratch/src-link/escape.ts",
       "bun scratch/*.ts",
@@ -134,6 +145,54 @@ describe("E1 harness mechanics", () => {
       checkpoints: ["1", "2", "3"]
     });
     expect(badCheckpoint.ok).toBe(false);
+  });
+
+  test("rejects replacement writes to every protected config file", async () => {
+    const workspace = await setupE1Workspace();
+    const configFiles = ["package.json", "bunfig.toml", "tsconfig.json", "bun.lock", "bun.lockb"];
+
+    for (const file of configFiles) {
+      await writeFile(join(workspace, file), "protected\n");
+
+      const result = await applyFullFileReplacements({
+        workspacePath: workspace,
+        replacementBlock: [`<<<FILE ${file}>>>`, "mutated", "<<<END>>>"].join("\n")
+      });
+
+      expect(result.applied, file).toBe(false);
+      expect(result.errors, file).toContain(`${file} is read-only`);
+      expect(await readFile(join(workspace, file), "utf8")).toBe("protected\n");
+    }
+  });
+
+  test("hashes protected files and detects integrity drift", async () => {
+    const workspace = await setupE1Workspace();
+    await writeFile(join(workspace, "specs", "cart.feature"), "Feature: cart\n");
+    await writeFile(join(workspace, "specs", "steps", "cart.steps.ts"), "export {};\n");
+
+    const baseline = await hashProtectedPaths(workspace);
+
+    expect(baseline["package.json"]).toHaveLength(64);
+    expect(baseline["bunfig.toml"]).toHaveLength(64);
+    expect(baseline["tsconfig.json"]).toBeNull();
+    expect(baseline["bun.lock"]).toBeNull();
+    expect(baseline["specs/cart.feature"]).toHaveLength(64);
+    expect(baseline["specs/steps/cart.steps.ts"]).toHaveLength(64);
+    expect(await verifyProtectedPathHashes({ workspacePath: workspace, baseline })).toEqual({ ok: true });
+
+    await writeFile(join(workspace, "specs", "cart.feature"), "Feature: changed\n");
+    const specDrift = await verifyProtectedPathHashes({ workspacePath: workspace, baseline });
+    expect(specDrift.ok).toBe(false);
+    expect(!specDrift.ok && specDrift.mismatches.map((entry) => entry.path)).toContain(
+      "specs/cart.feature"
+    );
+
+    await writeFile(join(workspace, "package.json"), "{\"changed\":true}\n");
+    const configDrift = await verifyProtectedPathHashes({ workspacePath: workspace, baseline });
+    expect(configDrift.ok).toBe(false);
+    expect(!configDrift.ok && configDrift.mismatches.map((entry) => entry.path)).toContain(
+      "package.json"
+    );
   });
 
   test("verification refusals consume slots and execution stops at the cap", async () => {

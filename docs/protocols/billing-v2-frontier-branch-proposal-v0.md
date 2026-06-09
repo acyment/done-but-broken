@@ -1,6 +1,6 @@
 # billing-v2-frontier-branch-proposal-v0
 
-Status: draft proposal only. No task package is implemented by this document. No provider run is authorized by this document.
+Status: draft proposal only. No task package is implemented by this document. No provider run is authorized by this document. Billing v2 design is blocked until `e1-harness-calibration-step0-v0` is complete.
 
 ## Purpose
 
@@ -191,7 +191,7 @@ This is an additive design:
 
 The rejected alternative is E0, where the context arm cannot execute anything. E0 is easier to implement with the current harness, but too weak for a frontier-model claim because it handicaps a production-grade coding agent control.
 
-Current harness note: the existing model loop does not yet implement E1. A credible frontier branch therefore requires a test-first harness extension before task pilots.
+Current harness note: the existing model loop does not yet implement E1. A credible frontier branch therefore requires a test-first L1 agent-loop adapter and L2 run orchestrator before task pilots. L0 mechanics in `src/e1-harness.ts` are necessary but not sufficient.
 
 Scratch accumulation is part of the estimand:
 
@@ -206,6 +206,7 @@ Observational metrics:
 
 Before any frontier provider run:
 
+- Step 0 completion: CartCalc has run end-to-end through L1+L2, the artifact bundle replays, and the Step 0 two-environment stability gate is satisfied.
 - Content parity: byte-diff both arms' visible prompt/workspace modulo runnable assets and explicit treatment-only instructions.
 - Interface parity: identical public API signatures, minimal orientation README, fixtures, event names, and serialized field names.
 - Worked-example parity: every runnable example value appears in the context arm's visible spec.
@@ -214,6 +215,7 @@ Before any frontier provider run:
 - E1 self-verification parity: both arms have the same generic command/self-verification budget.
 - Budget seal: max model turns, verification-execution limits, token caps, output caps, timeout, provider profile, and run classification are sealed.
 - Read-only spec integrity: replacement attempts against `specs/` and `specs/steps/` are rejected and logged.
+- Protected-path integrity: `specs/`, `specs/steps/`, package config, and lockfiles are hashed at checkpoint start and verified each turn; any mismatch is `invalid_integrity`, not evidence.
 - Scratch isolation: `scratch/` persists and is captured, but is excluded from the hidden oracle import path.
 - Verification scaffolding parity: shared README documents `@app/*`, fixtures, invocation strings, and scratch persistence; `scratch/example.test.ts` runs green in a fresh sandbox in both arms.
 - Result schema: hidden-oracle scores are the only claim-bearing scores; visible-suite pass rates are descriptive.
@@ -231,6 +233,8 @@ The task package is not provider-ready until these pass locally:
 7. Friction registry: every intended hard/legacy element maps to public spec text, visible-entailed assertions, and mutation coverage.
 8. E1 harness profile tests: verification whitelist, output truncation, full-output hashing, `scratch/` persistence, read-only spec rejection, and budget accounting match `e1-self-directed-verification-turn-based-v0`.
 9. Step 0 calibration: `e1-harness-calibration-step0-v0` passes its go gate before Billing v2 is built.
+
+The first Billing v2 artifact, once Step 0 opens the gate, should be a consolidated protocol document. It should merge this proposal, the E1 turn-based profile, the Step 0 calibration decisions, the friction registry format, checkpoint interaction graph policy, analysis plan skeleton, and publication artifact commitments into one hashable protocol boundary before any task code is written.
 
 ## Isolated Competence Check
 

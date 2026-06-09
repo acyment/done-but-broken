@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { lstat, mkdir, realpath, writeFile } from "node:fs/promises";
-import { dirname, extname, isAbsolute, normalize, resolve, sep } from "node:path";
+import { lstat, mkdir, readdir, readFile, realpath, writeFile } from "node:fs/promises";
+import { dirname, extname, isAbsolute, join, normalize, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 import type { ConditionId } from "./conditions";
 
@@ -17,8 +17,9 @@ const READ_ONLY_PATHS = new Set([
 
 const REPLACEMENT_HEADER = /^<<<FILE ([^>]+)>>>$/;
 const REPLACEMENT_END = "<<<END>>>";
-const SHELL_META_PATTERN = /[`$;&|<>*?()[\]{}!\\]/;
 const ENV_ASSIGNMENT_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*=/;
+const SAFE_POSIX_PATH_PATTERN = /^[A-Za-z0-9._/-]+$/;
+const PROTECTED_DIRECTORY_PATHS = ["specs"] as const;
 
 export type FullFileReplacement = {
   path: string;
@@ -28,7 +29,16 @@ export type FullFileReplacement = {
 export type ApplyReplacementResult = {
   applied: boolean;
   replacements: FullFileReplacement[];
+  confirmations: string[];
   errors: string[];
+};
+
+export type ProtectedPathHashes = Record<string, string | null>;
+
+export type ProtectedPathHashMismatch = {
+  path: string;
+  expected: string | null | undefined;
+  actual: string | null | undefined;
 };
 
 export type VerificationExecution =
@@ -83,12 +93,12 @@ export async function applyFullFileReplacements(input: {
   const parsed = parseFullFileReplacements(input.replacementBlock);
 
   if (parsed.errors.length) {
-    return { applied: false, replacements: [], errors: parsed.errors };
+    return { applied: false, replacements: [], confirmations: [], errors: parsed.errors };
   }
 
   const workspaceReal = await realpath(input.workspacePath);
   const validationErrors: string[] = [];
-  const targets: Array<FullFileReplacement & { absolutePath: string }> = [];
+  const targets: Array<FullFileReplacement & { absolutePath: string; beforeLines: number }> = [];
 
   for (const replacement of parsed.replacements) {
     const validation = await validateWritableWorkspacePath({
@@ -102,11 +112,20 @@ export async function applyFullFileReplacements(input: {
       continue;
     }
 
-    targets.push({ ...replacement, absolutePath: validation.absolutePath });
+    targets.push({
+      ...replacement,
+      absolutePath: validation.absolutePath,
+      beforeLines: await countExistingLines(validation.absolutePath)
+    });
   }
 
   if (validationErrors.length) {
-    return { applied: false, replacements: parsed.replacements, errors: validationErrors };
+    return {
+      applied: false,
+      replacements: parsed.replacements,
+      confirmations: [],
+      errors: validationErrors
+    };
   }
 
   for (const target of targets) {
@@ -114,7 +133,14 @@ export async function applyFullFileReplacements(input: {
     await writeFile(target.absolutePath, target.content);
   }
 
-  return { applied: true, replacements: parsed.replacements, errors: [] };
+  return {
+    applied: true,
+    replacements: parsed.replacements,
+    confirmations: targets.map(
+      (target) => `applied: ${target.path} (${target.beforeLines} -> ${countTextLines(target.content)} lines)`
+    ),
+    errors: []
+  };
 }
 
 export function parseFullFileReplacements(input: string): {
@@ -349,12 +375,46 @@ export function sha256Text(text: string): string {
   return createHash("sha256").update(text).digest("hex");
 }
 
+export async function hashProtectedPaths(workspacePath: string): Promise<ProtectedPathHashes> {
+  const workspaceReal = await realpath(workspacePath);
+  const hashes: ProtectedPathHashes = {};
+
+  for (const path of READ_ONLY_PATHS) {
+    hashes[path] = await hashFileIfPresent(resolve(workspaceReal, path));
+  }
+
+  for (const directory of PROTECTED_DIRECTORY_PATHS) {
+    await hashProtectedDirectory({ workspaceReal, relativePath: directory, hashes });
+  }
+
+  return Object.fromEntries(Object.entries(hashes).sort(([left], [right]) => left.localeCompare(right)));
+}
+
+export async function verifyProtectedPathHashes(input: {
+  workspacePath: string;
+  baseline: ProtectedPathHashes;
+}): Promise<{ ok: true } | { ok: false; mismatches: ProtectedPathHashMismatch[] }> {
+  const actual = await hashProtectedPaths(input.workspacePath);
+  const paths = new Set([...Object.keys(input.baseline), ...Object.keys(actual)]);
+  const mismatches: ProtectedPathHashMismatch[] = [];
+
+  for (const path of [...paths].sort()) {
+    if (input.baseline[path] !== actual[path]) {
+      mismatches.push({ path, expected: input.baseline[path], actual: actual[path] });
+    }
+  }
+
+  return mismatches.length ? { ok: false, mismatches } : { ok: true };
+}
+
 async function validateWritableWorkspacePath(input: {
   workspaceReal: string;
   workspacePath: string;
   relativePath: string;
 }): Promise<{ ok: true; absolutePath: string } | { ok: false; error: string }> {
-  if (!input.relativePath || input.relativePath.includes("\0") || input.relativePath.includes("\\")) {
+  const syntaxError = validatePosixPathSyntax(input.relativePath);
+
+  if (syntaxError) {
     return { ok: false, error: `${input.relativePath || "<empty>"} is not a valid replacement path` };
   }
 
@@ -398,12 +458,10 @@ async function validateScratchPath(input: {
   pathToken: string;
   requireFile: boolean;
 }): Promise<{ ok: true; absolutePath: string } | { ok: false; error: string }> {
-  if (
-    containsUnsafePathSyntax(input.pathToken) ||
-    input.pathToken.includes("=") ||
-    input.pathToken.startsWith("-")
-  ) {
-    return { ok: false, error: "Path contains disallowed syntax." };
+  const syntaxError = validatePosixPathSyntax(input.pathToken);
+
+  if (syntaxError) {
+    return { ok: false, error: syntaxError };
   }
 
   const scratchReal = await resolveScratchDir(input.workspacePath);
@@ -450,17 +508,23 @@ function readOnlyReasonFor(normalizedPath: string): string | undefined {
 }
 
 function containsUnsafeCommandSyntax(command: string): boolean {
-  return command
-    .split(" ")
-    .some((token) => ENV_ASSIGNMENT_PATTERN.test(token) || containsUnsafePathSyntax(token));
+  return command.split(" ").some((token) => ENV_ASSIGNMENT_PATTERN.test(token));
 }
 
-function containsUnsafePathSyntax(value: string): boolean {
-  return (
-    value.includes("~") ||
-    value.includes(" ") ||
-    SHELL_META_PATTERN.test(value)
-  );
+function validatePosixPathSyntax(value: string): string | undefined {
+  if (!value || !SAFE_POSIX_PATH_PATTERN.test(value)) {
+    return "Path contains disallowed syntax.";
+  }
+
+  if (value.startsWith("-")) {
+    return "Path must not start with a dash.";
+  }
+
+  if (value.split("/").includes("..")) {
+    return "Path must not contain .. segments.";
+  }
+
+  return undefined;
 }
 
 function isPathInside(root: string, candidate: string): boolean {
@@ -493,6 +557,78 @@ async function nearestExistingParentRealpath(path: string): Promise<string> {
       current = parent;
     }
   }
+}
+
+async function hashProtectedDirectory(input: {
+  workspaceReal: string;
+  relativePath: string;
+  hashes: ProtectedPathHashes;
+}): Promise<void> {
+  const absolutePath = resolve(input.workspaceReal, input.relativePath);
+
+  try {
+    const entries = await readdir(absolutePath, { withFileTypes: true });
+
+    if (entries.length === 0 && input.relativePath === "specs") {
+      input.hashes[input.relativePath] = "sha256:empty-directory";
+    }
+
+    for (const entry of entries) {
+      const childRelativePath = join(input.relativePath, entry.name);
+      const childAbsolutePath = resolve(input.workspaceReal, childRelativePath);
+
+      if (!isPathInside(input.workspaceReal, childAbsolutePath) && childAbsolutePath !== input.workspaceReal) {
+        input.hashes[childRelativePath] = "outside-workspace";
+        continue;
+      }
+
+      if (entry.isDirectory()) {
+        await hashProtectedDirectory({
+          workspaceReal: input.workspaceReal,
+          relativePath: childRelativePath,
+          hashes: input.hashes
+        });
+        continue;
+      }
+
+      if (entry.isFile()) {
+        input.hashes[childRelativePath] = await hashFile(childAbsolutePath);
+        continue;
+      }
+
+      input.hashes[childRelativePath] = `non-regular:${entry.name}`;
+    }
+  } catch {
+    input.hashes[input.relativePath] = null;
+  }
+}
+
+async function hashFileIfPresent(path: string): Promise<string | null> {
+  try {
+    return await hashFile(path);
+  } catch {
+    return null;
+  }
+}
+
+async function hashFile(path: string): Promise<string> {
+  return createHash("sha256").update(await readFile(path)).digest("hex");
+}
+
+async function countExistingLines(path: string): Promise<number> {
+  try {
+    return countTextLines(await readFile(path, "utf8"));
+  } catch {
+    return 0;
+  }
+}
+
+function countTextLines(text: string): number {
+  if (text.length === 0) {
+    return 0;
+  }
+
+  return text.split(/\r?\n/).length;
 }
 
 function cleanEnvironment(): NodeJS.ProcessEnv {

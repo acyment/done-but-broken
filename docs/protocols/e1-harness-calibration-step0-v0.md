@@ -1,6 +1,6 @@
 # e1-harness-calibration-step0-v0
 
-Status: draft calibration protocol. Local E1 harness mechanics are implemented in `src/e1-harness.ts`; CartCalc and provider calibration are not implemented. No provider run is authorized by this document.
+Status: draft calibration protocol. Local E1 L0 mechanics are implemented in `src/e1-harness.ts`; the L1 agent loop, L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -8,19 +8,31 @@ Before building Billing v2, validate the E1 turn mechanics on a tiny task. The p
 
 This is Step 0 for any frontier-model branch using `e1-self-directed-verification-turn-based-v0`.
 
-## Harness Skeleton Scope
+## Layered Harness Scope
 
-Implement only the protocol mechanics:
+Step 0 is not complete until all three layers exist:
+
+- L0 mechanics library: patch application, command validation, protected-path integrity, verification execution, output truncation/hashing, and local counters.
+- L1 agent loop adapter: parse model output blocks, assemble provider turns with a cached prefix, inject harness notices and verification output, debit the token ledger, and call providers.
+- L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle.
+
+The L0/L1/L2 implementation must cover:
 
 - turn loop: full-file replacement block, verification request, done declaration;
-- read-only `specs/` for both arms;
-- read-only `specs/steps/` for `feedback_capable_spec`;
+- fixed block precedence: replacements, then at most one verification request, then optional done;
+- no-op-turn handling: zero valid blocks consumes a turn, injects `no valid blocks parsed`, and three consecutive no-ops terminate `agent_stalled`;
+- harness-enforced read-only `specs/` for both arms;
+- harness-enforced read-only `specs/steps/` for `feedback_capable_spec`;
 - read-only harness config: `package.json`, `bunfig.toml`, and `tsconfig.json`/Bun lockfiles if present;
+- checkpoint-start hashes and turn-end verification for every protected path, terminating `invalid_integrity` on mismatch;
 - writable `scratch/` with cross-checkpoint persistence;
 - argv-templated command whitelist enforcement, never shell execution;
+- POSIX path allowlist `^[A-Za-z0-9._/-]+$`, ASCII only, no leading `-`, no `..` segment before realpath containment;
 - 60s verification timeouts;
 - deterministic head+tail truncation;
-- budget counters for turns, verification executions, and output tokens;
+- budget counters for turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost as a separate statistic;
+- deterministic model-facing replacement confirmations;
+- audit-only unified diffs between pre/post snapshots;
 - per-turn logging: command, exit code, wall time, full-output hash, shown output, and workspace snapshot.
 
 Every item above can contaminate future runs if it silently malfunctions. None requires Billing v2 to exist.
@@ -57,6 +69,7 @@ These are calibration runs only. They are not causal evidence.
 Record:
 
 - malformed-replacement rate;
+- block-grammar no-op rate;
 - turns used per checkpoint;
 - verification calls used per checkpoint;
 - fresh input tokens per turn;
@@ -84,12 +97,25 @@ Layer 1 is a no-model automated harness battery. It must pass before model-in-lo
 
 Required coverage:
 
-- Patching: well-formed replacement applied atomically; malformed delimiter rejected with turn semantics intact; replacement targeting `specs/`, `specs/steps/`, or `package.json` rejected and logged; multi-file replacement in one turn; empty-content edge case.
+- Patching: well-formed replacement applied atomically; malformed delimiter rejected with turn semantics intact; replacement targeting `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, `bun.lock`, or `bun.lockb` rejected and logged; multi-file replacement in one turn; empty-content edge case; deterministic confirmation lines.
 - Command gating: these commands are rejected and consume a verification slot: `scratch/../src/x.ts`, absolute path outside scratch, symlink inside scratch pointing to `src/`, `scratch/*.ts`, `scratch/a.ts; rm -rf /`, backticks, `&&`, `$(...)`, `FOO=1 bun ...`, flag smuggling such as `--eval`, `bun run spec` from the context arm, `bun test src/`, bare `bun test`, and non-integer `--cp` value.
+- Allowlist confirmations: `scratch%2F..%2Fsrc`, `scrаtch/a.ts` with Cyrillic `а`, `scratch/a.ts\nrm`, `scratch\..\src\x.ts`, and embedded `\x00` are rejected by the sealed POSIX path grammar before resolution.
 - Mounts and persistence: scratch file written at CP1 is readable at CP3; read-only enforcement survives checkpoint transitions; example test is green in fresh sandboxes in both arms.
-- Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates cleanly; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture; per-turn snapshots replay to bit-identical workspace state.
+- Integrity: protected-path hashes cover `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, and Bun lockfiles when present; any drift terminates `invalid_integrity`.
+- Parser and termination semantics: zero valid blocks consume turns, inject the one-line harness notice, and three consecutive no-op turns terminate `agent_stalled`.
+- Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates `budget_exhausted`; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture; per-turn snapshots replay to bit-identical workspace state.
+- Snapshot replay: after a full CartCalc run, replay artifact snapshots onto a fresh workspace and byte-compare final state.
 
-Layer 1 must be green on two clean environments before Billing v2 design starts.
+Layer 1 must be green on two clean environments before Billing v2 design starts: macOS local and an Ubuntu 24 container, with the same pinned Bun version.
+
+Lockfile/environment requirement:
+
+- if a Bun lockfile exists, sandbox setup runs `bun install --frozen-lockfile`;
+- runtime uses `--no-install`;
+- environment boundary records Bun version plus lockfile hash;
+- for the current zero-dependency package, Bun deletes an empty lockfile, so the boundary records `lockfile_absent_zero_dependency_package` until a real dependency makes `bun.lock` meaningful.
+
+Full-suite stability is a gate, not a footnote. Harness tests must not depend on real-clock sleeps; use fake timers or injected clocks for timeout behavior. Step 0 requires 10 consecutive green full-suite runs on both environments, with zero quarantined tests or a published exclusion list.
 
 ## Cost Model
 
@@ -145,8 +171,13 @@ If worst-case Stage B cannot be funded, do not start Stage A.
 
 Do not build Billing v2 until:
 
-- Layer 1 is green on two clean environments;
-- Layer 2 model-in-loop calibration completes a second pass with zero open harness defects;
+- L1 and L2 are implemented and a CartCalc run executes end-to-end from one orchestrator command, emitting the full artifact bundle;
+- the Layer 1 battery is green on macOS local and Ubuntu 24 with the same pinned Bun version;
+- the stability gate records 10 consecutive green full-suite runs on both environments;
+- CartCalc model-in-loop calibration completes a second consecutive defect-free pass;
 - `scratch/example.test.ts` runs green in a fresh sandbox in both arms;
 - read-only spec rejection is observed and logged;
+- measured `t`, `v`, `o`, no-op rate, truncation behavior, and wall-time profile are recorded;
 - projected full-matrix cost is within the operator's budget ceiling.
+
+Only after this gate opens should Billing v2 design start. The first Billing v2 artifact should be a consolidated protocol document carrying the full E1 decisions and compatibility boundary, with its hash used as the task-branch commitment anchor.
