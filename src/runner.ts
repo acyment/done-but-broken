@@ -35,7 +35,13 @@ import {
   type OracleCheckResult
 } from "./result-schema";
 import { writeResultSummary } from "./result-summary";
-import { hashFile, hashWorkspace, type WorkspaceSnapshot } from "./snapshot";
+import {
+  captureWorkspaceCode,
+  hashFile,
+  hashWorkspace,
+  type WorkspaceCodeSnapshot,
+  type WorkspaceSnapshot
+} from "./snapshot";
 import type { CheckpointId, TaskDefinition } from "./task-model";
 
 const DEFAULT_OPENROUTER_PROVIDER_ROUTE = "openrouter-chat-completions";
@@ -122,6 +128,7 @@ export type CheckpointRunResult = {
   workspace_path: string;
   snapshot_before: WorkspaceSnapshot;
   snapshot_after: WorkspaceSnapshot;
+  workspace_code_after?: WorkspaceCodeSnapshot;
   prompt_packet_hash: string;
   agent_result_hash: string;
   expected_feedback_asset_hashes: Record<string, string>;
@@ -419,6 +426,10 @@ function checkpointManifest(checkpoint: CheckpointRunResult) {
     snapshot_after_path: join(checkpoint.artifact_dir, "workspace-after.json"),
     snapshot_before_hash: checkpoint.snapshot_before.hash,
     snapshot_after_hash: checkpoint.snapshot_after.hash,
+    workspace_code_after_path: checkpoint.workspace_code_after
+      ? join(checkpoint.artifact_dir, "workspace-code-after.json")
+      : undefined,
+    workspace_code_after_hash: checkpoint.workspace_code_after?.hash,
     agent_status: checkpoint.agent_result.status,
     workspace_carried_forward_due_to_provider_failure:
       checkpoint.agent_result.workspace_carried_forward_due_to_provider_failure,
@@ -470,6 +481,7 @@ function runManifest(result: PilotRunResult, task: TaskDefinition) {
             hidden_oracle_result_hash: checkpoint.hidden_oracle_result_hash,
             snapshot_before_hash: checkpoint.snapshot_before.hash,
             snapshot_after_hash: checkpoint.snapshot_after.hash,
+            workspace_code_after_hash: checkpoint.workspace_code_after?.hash,
             agent_status: checkpoint.agent_result.status,
             workspace_carried_forward_due_to_provider_failure:
               checkpoint.agent_result.workspace_carried_forward_due_to_provider_failure,
@@ -572,6 +584,9 @@ async function runConditionPipeline(input: {
     const agent_result_hash = await hashFile(agentResultPath);
 
     const snapshot_after = await hashWorkspace(workspace_path);
+    const workspace_code_after = shouldCaptureWorkspaceCode(input.run_classification)
+      ? await captureWorkspaceCode(workspace_path)
+      : undefined;
     const hiddenOracleStartedAt = Date.now();
     const hiddenOracle = input.hidden_oracle
       ? await runHiddenOracle({
@@ -592,6 +607,7 @@ async function runConditionPipeline(input: {
       workspace_path,
       snapshot_before,
       snapshot_after,
+      workspace_code_after,
       prompt_packet_hash,
       agent_result_hash,
       expected_feedback_asset_hashes,
@@ -613,6 +629,9 @@ async function runConditionPipeline(input: {
 
     await writeJson(join(artifact_dir, "workspace-before.json"), snapshot_before);
     await writeJson(join(artifact_dir, "workspace-after.json"), snapshot_after);
+    if (workspace_code_after) {
+      await writeJson(join(artifact_dir, "workspace-code-after.json"), workspace_code_after);
+    }
     await writeJson(join(artifact_dir, "manifest.json"), checkpointManifest(checkpointResult));
 
     checkpoints.push(checkpointResult);
@@ -653,6 +672,10 @@ function normalizeConditionConcurrency(value: number): number {
 
 function elapsedMs(startedAt: number): number {
   return Math.max(0, Date.now() - startedAt);
+}
+
+function shouldCaptureWorkspaceCode(runClassification: RunClassification): boolean {
+  return runClassification === "difficulty_probe" || runClassification === "causal_pilot";
 }
 
 async function writeJson(path: string, value: unknown) {

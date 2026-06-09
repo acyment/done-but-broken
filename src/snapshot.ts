@@ -7,7 +7,18 @@ export type WorkspaceSnapshot = {
   files: Record<string, string>;
 };
 
+export type WorkspaceCodeSnapshot = {
+  hash: string;
+  files: Record<string, WorkspaceCodeFile>;
+};
+
+export type WorkspaceCodeFile = {
+  hash: string;
+  content: string;
+};
+
 const IGNORED_DIRECTORIES = new Set([".git", "node_modules"]);
+const CODE_CAPTURE_ROOTS = ["src/"];
 
 export async function hashWorkspace(workspace_path: string): Promise<WorkspaceSnapshot> {
   return hashDirectory(workspace_path);
@@ -31,6 +42,40 @@ export async function hashDirectory(directory: string): Promise<WorkspaceSnapsho
 
 export async function hashFile(path: string): Promise<string> {
   return hashBytes(await readFile(path));
+}
+
+export async function captureWorkspaceCode(workspace_path: string): Promise<WorkspaceCodeSnapshot> {
+  const filePaths = await collectFiles(workspace_path);
+  const files: Record<string, WorkspaceCodeFile> = {};
+
+  for (const filePath of filePaths.toSorted()) {
+    const relativePath = relative(workspace_path, filePath).split(sep).join("/");
+
+    if (!isCapturedCodePath(relativePath)) {
+      continue;
+    }
+
+    const content = await readFile(filePath, "utf8");
+    files[relativePath] = {
+      hash: hashText(content),
+      content
+    };
+  }
+
+  return {
+    hash: hashWorkspaceCodeFiles(files),
+    files
+  };
+}
+
+export function hashWorkspaceCodeFiles(files: Record<string, WorkspaceCodeFile>): string {
+  const stableFiles = Object.fromEntries(
+    Object.entries(files)
+      .toSorted(([left], [right]) => left.localeCompare(right))
+      .map(([path, file]) => [path, { hash: file.hash, content: file.content }])
+  );
+
+  return hashText(JSON.stringify(stableFiles));
 }
 
 export function hashText(value: string): string {
@@ -61,4 +106,8 @@ async function collectFiles(directory: string): Promise<string[]> {
   }
 
   return files;
+}
+
+function isCapturedCodePath(relativePath: string): boolean {
+  return CODE_CAPTURE_ROOTS.some((root) => relativePath.startsWith(root));
 }

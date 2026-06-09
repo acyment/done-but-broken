@@ -88,6 +88,36 @@ describe("pilot runner skeleton", () => {
     expect(manifest.timing.checkpoint_ms >= manifest.timing.agent_ms).toBe(true);
   });
 
+  test("difficulty probes persist auditable source code after each checkpoint", async () => {
+    const root = await setupTemplateWorkspace();
+    const task = createSampleTask(join(root, "template"));
+
+    const result = await runPilot({
+      task,
+      run_id: "run-difficulty-code-capture",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      run_classification: "difficulty_probe"
+    });
+
+    const checkpoint = result.condition_results.context_only_spec.checkpoints[0];
+    const manifest = JSON.parse(await readFile(join(checkpoint.artifact_dir, "manifest.json"), "utf8"));
+    const runManifest = JSON.parse(await readFile(result.run_manifest_path, "utf8"));
+    const codeCapture = JSON.parse(
+      await readFile(join(checkpoint.artifact_dir, "workspace-code-after.json"), "utf8")
+    );
+
+    expect(manifest.workspace_code_after_path).toBe(
+      join(checkpoint.artifact_dir, "workspace-code-after.json")
+    );
+    expect(manifest.workspace_code_after_hash).toBe(codeCapture.hash);
+    expect(checkpoint.workspace_code_after?.hash).toBe(codeCapture.hash);
+    expect(codeCapture.files["src/cart.ts"].content).toContain("export function cartTotal()");
+    expect(
+      runManifest.condition_results.context_only_spec.checkpoints[0].workspace_code_after_hash
+    ).toBe(codeCapture.hash);
+  });
+
   test("can run independent condition pipelines concurrently while preserving checkpoint order", async () => {
     const root = await setupTemplateWorkspace();
     const task = createSampleTask(join(root, "template"));

@@ -278,6 +278,55 @@ describe("run provenance and tamper detection", () => {
     expect(validation.errors).toContain("hidden_oracle_result_hash must be a sha256 hex hash when hidden_oracle_result_path is present");
   });
 
+  test("checkpoint manifest validation requires workspace code capture path and hash together", () => {
+    const validation = validateCheckpointManifest({
+      protocol_version: "two-arm-feedback-spec-v0",
+      renderer_version: "semantic-spec-renderer-v0",
+      condition_id: "context_only_spec",
+      checkpoint_id: "I01",
+      artifact_dir: "/tmp/run/context_only_spec/checkpoints/I01",
+      workspace_path: "/tmp/run/context_only_spec/workspace",
+      prompt_packet_hash: "a".repeat(64),
+      agent_result_hash: "b".repeat(64),
+      expected_feedback_asset_hashes: {},
+      snapshot_before_path: "/tmp/run/context_only_spec/checkpoints/I01/workspace-before.json",
+      snapshot_after_path: "/tmp/run/context_only_spec/checkpoints/I01/workspace-after.json",
+      snapshot_before_hash: "c".repeat(64),
+      snapshot_after_hash: "d".repeat(64),
+      workspace_code_after_hash: "e".repeat(64),
+      agent_status: "ok"
+    });
+
+    expect(validation.ok).toBe(false);
+    expect(validation.errors).toContain(
+      "workspace_code_after_path must be a non-empty string when workspace_code_after_hash is present"
+    );
+  });
+
+  test("checkpoint manifest validation requires workspace code capture path under artifact dir", () => {
+    const validation = validateCheckpointManifest({
+      protocol_version: "two-arm-feedback-spec-v0",
+      renderer_version: "semantic-spec-renderer-v0",
+      condition_id: "context_only_spec",
+      checkpoint_id: "I01",
+      artifact_dir: "/tmp/run/context_only_spec/checkpoints/I01",
+      workspace_path: "/tmp/run/context_only_spec/workspace",
+      prompt_packet_hash: "a".repeat(64),
+      agent_result_hash: "b".repeat(64),
+      expected_feedback_asset_hashes: {},
+      snapshot_before_path: "/tmp/run/context_only_spec/checkpoints/I01/workspace-before.json",
+      snapshot_after_path: "/tmp/run/context_only_spec/checkpoints/I01/workspace-after.json",
+      snapshot_before_hash: "c".repeat(64),
+      snapshot_after_hash: "d".repeat(64),
+      workspace_code_after_path: "/tmp/run/context_only_spec/workspace-code-after.json",
+      workspace_code_after_hash: "e".repeat(64),
+      agent_status: "ok"
+    });
+
+    expect(validation.ok).toBe(false);
+    expect(validation.errors).toContain("workspace_code_after_path must be under artifact_dir");
+  });
+
   test("checkpoint manifest validation requires declared snapshot paths under artifact dir", () => {
     const validation = validateCheckpointManifest({
       protocol_version: "two-arm-feedback-spec-v0",
@@ -988,6 +1037,39 @@ describe("run provenance and tamper detection", () => {
       verification.mismatches.some(
         (mismatch) =>
           `${mismatch.path}:${mismatch.expected}:${mismatch.actual}` === fixture.trim()
+      )
+    ).toBe(true);
+  });
+
+  test("checkpoint artifact verification reports workspace code capture tampering", async () => {
+    const root = await setupTemplateWorkspace();
+    const task = createSampleTask(join(root, "template"));
+
+    const result = await runPilot({
+      task,
+      run_id: "run-provenance-code-capture-tamper",
+      runs_root: join(root, "runs"),
+      agent: createFakeAgent(),
+      run_classification: "difficulty_probe"
+    });
+    const checkpoint = result.condition_results.context_only_spec.checkpoints[0];
+    const codeCapturePath = join(checkpoint.artifact_dir, "workspace-code-after.json");
+    const codeCapture = JSON.parse(await readFile(codeCapturePath, "utf8"));
+
+    codeCapture.files["src/cart.ts"].content = "export function cartTotal() { return 999; }\n";
+    await writeFile(codeCapturePath, `${JSON.stringify(codeCapture, null, 2)}\n`);
+
+    const verification = await verifyCheckpointArtifacts({
+      artifact_dir: checkpoint.artifact_dir,
+      workspace_path: checkpoint.workspace_path
+    });
+
+    expect(verification.ok).toBe(false);
+    expect(
+      verification.mismatches.some(
+        (mismatch) =>
+          mismatch.path === "workspace-code-after.json/files/src/cart.ts/hash" &&
+          mismatch.reason === "hash_mismatch"
       )
     ).toBe(true);
   });

@@ -10,7 +10,7 @@ import {
 import { renderSpecPacket, type RenderedSpecPacket } from "./renderer";
 import { RESULT_SCHEMA_VERSION, validateRunResultRecord } from "./result-schema";
 import { renderResultSummary } from "./result-summary";
-import { hashDirectory, hashFile, hashText } from "./snapshot";
+import { hashDirectory, hashFile, hashText, hashWorkspaceCodeFiles } from "./snapshot";
 import { defaultTaskVersion, type CheckpointId, type TaskDefinition } from "./task-model";
 
 export const PROTOCOL_VERSION = "two-arm-feedback-spec-v0";
@@ -188,6 +188,7 @@ export type ReplayStep = {
   hidden_oracle_result_hash?: string;
   snapshot_before_hash: string;
   snapshot_after_hash: string;
+  workspace_code_after_hash?: string;
 };
 
 export type ReplayPlan = {
@@ -864,6 +865,9 @@ function validateRunManifestCheckpoint(checkpoint: any, field: string): string[]
   requireHash(checkpoint.agent_result_hash, `${field}.agent_result_hash`, errors);
   requireHash(checkpoint.snapshot_before_hash, `${field}.snapshot_before_hash`, errors);
   requireHash(checkpoint.snapshot_after_hash, `${field}.snapshot_after_hash`, errors);
+  if (checkpoint.workspace_code_after_hash !== undefined) {
+    requireHash(checkpoint.workspace_code_after_hash, `${field}.workspace_code_after_hash`, errors);
+  }
   requireHashRecord(
     checkpoint.expected_feedback_asset_hashes,
     `${field}.expected_feedback_asset_hashes`,
@@ -930,6 +934,7 @@ export function validateCheckpointManifest(manifest: unknown): SchemaValidation 
   requireString(candidate.snapshot_after_path, "snapshot_after_path", errors);
   requirePathUnderArtifactDir(candidate.snapshot_before_path, "snapshot_before_path", candidate.artifact_dir, errors);
   requirePathUnderArtifactDir(candidate.snapshot_after_path, "snapshot_after_path", candidate.artifact_dir, errors);
+  validateWorkspaceCodeAfterDeclaration(candidate, errors);
 
   if (
     typeof candidate.snapshot_before_path === "string" &&
@@ -991,6 +996,33 @@ function validateHiddenOracleResultDeclaration(candidate: any, errors: string[])
   }
 }
 
+function validateWorkspaceCodeAfterDeclaration(candidate: any, errors: string[]) {
+  const hasPath = candidate.workspace_code_after_path !== undefined;
+  const hasHash = candidate.workspace_code_after_hash !== undefined;
+
+  if (hasPath) {
+    requireString(candidate.workspace_code_after_path, "workspace_code_after_path", errors);
+    requirePathUnderArtifactDir(
+      candidate.workspace_code_after_path,
+      "workspace_code_after_path",
+      candidate.artifact_dir,
+      errors
+    );
+  }
+
+  if (hasHash) {
+    requireHash(candidate.workspace_code_after_hash, "workspace_code_after_hash", errors);
+  }
+
+  if (hasHash && !hasPath) {
+    errors.push("workspace_code_after_path must be a non-empty string when workspace_code_after_hash is present");
+  }
+
+  if (hasPath && !hasHash) {
+    errors.push("workspace_code_after_hash must be a sha256 hex hash when workspace_code_after_path is present");
+  }
+}
+
 export async function verifyCheckpointArtifacts(input: {
   artifact_dir: string;
   workspace_path: string;
@@ -1049,6 +1081,14 @@ export async function verifyCheckpointArtifacts(input: {
     expected: manifest.snapshot_after_hash,
     mismatches
   });
+  if (manifest.workspace_code_after_hash) {
+    await compareWorkspaceCodeSnapshotHash({
+      path: "workspace-code-after.json/hash",
+      absolute_path: manifest.workspace_code_after_path,
+      expected: manifest.workspace_code_after_hash,
+      mismatches
+    });
+  }
 
   if (manifest.hidden_oracle_result_hash) {
     const hiddenOracleResultPath = manifest.hidden_oracle_result_path;
@@ -1336,6 +1376,81 @@ async function compareSnapshotRecordHash(input: {
   }
 }
 
+async function compareWorkspaceCodeSnapshotHash(input: {
+  path: string;
+  absolute_path: string;
+  expected: string;
+  mismatches: ArtifactMismatch[];
+}) {
+  try {
+    const snapshot = JSON.parse(await readFile(input.absolute_path, "utf8"));
+    const files = snapshot?.files;
+    const embeddedHash = typeof snapshot?.hash === "string" ? snapshot.hash : undefined;
+
+    if (!files || typeof files !== "object" || Array.isArray(files)) {
+      input.mismatches.push({
+        path: input.path,
+        expected: "workspace code snapshot with files",
+        actual: typeof files,
+        reason: "schema_error"
+      });
+      return;
+    }
+
+    for (const [path, file] of Object.entries(files)) {
+      if (!file || typeof file !== "object" || Array.isArray(file)) {
+        input.mismatches.push({
+          path: `workspace-code-after.json/files/${path}`,
+          expected: "object",
+          actual: Array.isArray(file) ? "array" : typeof file,
+          reason: "schema_error"
+        });
+        return;
+      }
+
+      const candidate = file as { hash?: unknown; content?: unknown };
+      if (typeof candidate.content !== "string") {
+        input.mismatches.push({
+          path: `workspace-code-after.json/files/${path}/content`,
+          expected: "string",
+          actual: typeof candidate.content,
+          reason: "schema_error"
+        });
+        return;
+      }
+
+      if (candidate.hash !== hashText(candidate.content)) {
+        input.mismatches.push({
+          path: `workspace-code-after.json/files/${path}/hash`,
+          expected: hashText(candidate.content),
+          actual: String(candidate.hash),
+          reason: "hash_mismatch"
+        });
+        return;
+      }
+    }
+
+    const recomputedHash = hashWorkspaceCodeFiles(
+      files as Record<string, { hash: string; content: string }>
+    );
+
+    if (embeddedHash !== input.expected || recomputedHash !== input.expected) {
+      input.mismatches.push({
+        path: input.path,
+        expected: input.expected,
+        actual: embeddedHash && embeddedHash !== input.expected ? embeddedHash : recomputedHash,
+        reason: "hash_mismatch"
+      });
+    }
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+      return;
+    }
+
+    throw error;
+  }
+}
+
 async function compareHiddenOracleCheckFields(input: {
   absolute_path: string;
   mismatches: ArtifactMismatch[];
@@ -1462,7 +1577,8 @@ export async function loadReplayPlan(runManifestPath: string): Promise<ReplayPla
         agent_result_hash: checkpoint.agent_result_hash,
         hidden_oracle_result_hash: checkpoint.hidden_oracle_result_hash,
         snapshot_before_hash: checkpoint.snapshot_before_hash,
-        snapshot_after_hash: checkpoint.snapshot_after_hash
+        snapshot_after_hash: checkpoint.snapshot_after_hash,
+        workspace_code_after_hash: checkpoint.workspace_code_after_hash
       });
     }
   }
@@ -1541,7 +1657,8 @@ function validateCheckpointManifestHashesMatchRunEntry(input: {
     "agent_result_hash",
     "hidden_oracle_result_hash",
     "snapshot_before_hash",
-    "snapshot_after_hash"
+    "snapshot_after_hash",
+    "workspace_code_after_hash"
   ] as const;
 
   for (const field of hashFields) {
@@ -1641,6 +1758,10 @@ export async function verifyRunArtifacts(runManifestPath: string): Promise<RunAr
         typeof checkpointManifest?.snapshot_after_path === "string"
           ? checkpointManifest.snapshot_after_path
           : join(checkpoint.artifact_dir, "workspace-after.json");
+      const workspaceCodeAfterPath =
+        typeof checkpointManifest?.workspace_code_after_path === "string"
+          ? checkpointManifest.workspace_code_after_path
+          : undefined;
 
       await comparePathExists({
         path: `${condition_id}/checkpoints/${checkpoint.checkpoint_id}`,
@@ -1672,6 +1793,13 @@ export async function verifyRunArtifacts(runManifestPath: string): Promise<RunAr
         absolute_path: snapshotAfterPath,
         mismatches
       });
+      if (checkpoint.workspace_code_after_hash) {
+        await comparePathExists({
+          path: `${condition_id}/checkpoints/${checkpoint.checkpoint_id}/workspace-code-after.json`,
+          absolute_path: workspaceCodeAfterPath ?? join(checkpoint.artifact_dir, "workspace-code-after.json"),
+          mismatches
+        });
+      }
 
       if (checkpoint.hidden_oracle_result_hash) {
         const hiddenOracleResultPath =
