@@ -69,20 +69,21 @@ Allowed summary:
 
 > After both arms received the same concrete event API and worked examples, the executable feedback loop still improved regression-free path survival under this task/model/budget. The effect shrank compared with v0, which shows that contract/example disclosure carried part of the original advantage.
 
-## Strong-Model Ceiling Smokes (diagnostic_invalid, not causal evidence)
+## Strong-Model Ceiling Checks (not causal evidence)
 
-Two independent strong-model smokes on the content-controlled task solved both arms 9/9, so the benefit above is bounded to cheap/weak models. These are clean `diagnostic_invalid` smokes (provider/ceiling evidence), not causal pilots, and are separate non-pooled boundaries.
+Strong-model checks solved both arms on the content-controlled pricing task and on the denser payroll skeleton-seed task. This supports the bounded interpretation that the positive Mistral pricing result is cheap/weak-model viability, not evidence that frontier models need executable feedback on well-specified single-file tasks.
 
-| Smoke | Model/provider | Context final | Feedback final | AUC delta |
-| --- | --- | ---: | ---: | ---: |
-| `pricing-discount-content-controlled-sonnet-4.6-control-v1-smoke-20260608-001` | OpenRouter `anthropic/claude-sonnet-4.6` | 9/9 | 9/9 | 0 |
-| `pricing-discount-content-controlled-alibaba-qwen3.7-max-smoke-20260609-001` | direct Alibaba/Qwen `qwen3.7-max` | 9/9 | 9/9 | 0 |
+| Run | Classification | Task version | Model/provider | Context final | Feedback final | AUC delta |
+| --- | --- | --- | --- | ---: | ---: | ---: |
+| `pricing-discount-content-controlled-sonnet-4.6-control-v1-smoke-20260608-001` | `diagnostic_invalid` | `pricing-discount-lifecycle-content-controlled-v1` | OpenRouter `anthropic/claude-sonnet-4.6` | 9/9 | 9/9 | 0 |
+| `pricing-discount-content-controlled-alibaba-qwen3.7-max-smoke-20260609-001` | `diagnostic_invalid` | `pricing-discount-lifecycle-content-controlled-v1` | direct Alibaba/Qwen `qwen3.7-max` | 9/9 | 9/9 | 0 |
+| `payroll-net-pay-skeleton-seed-sonnet-4.6-a2-difficulty-output12000-002` | `difficulty_probe` | `payroll-net-pay-lifecycle-skeleton-seed-v1` | OpenRouter `anthropic/claude-sonnet-4.6` | 18/18 | 18/18 | 0 |
 
-A `google/gemini-3.1-pro-preview` smoke was provider-flagged (malformed + timeout) and excluded.
+The pricing controls are clean `diagnostic_invalid` smokes (provider/ceiling evidence), not causal pilots. The payroll control is a clean `difficulty_probe`; because the context-only arm reached 18/18, causal pilots on that boundary are blocked. A `google/gemini-3.1-pro-preview` smoke was provider-flagged (malformed + timeout) and excluded. The first payroll A2 attempt failed due OpenRouter 402 credit exhaustion and is recorded as invalid provider context only.
 
 Allowed summary:
 
-> Two independent frontier models solved the content-controlled task in both arms, so the executable-spec benefit observed on Mistral-small is best read as cheap/weak-model viability, not a benefit for frontier models that already ceiling this task. These are diagnostic smokes, not causal evidence.
+> Frontier-grade models solved the tested well-specified single-file tasks in both arms: pricing content-controlled at 9/9 and payroll skeleton-seed at 18/18. The executable-spec benefit observed on Mistral-small is therefore best read as cheap/weak-model viability, not a demonstrated benefit for frontier models that already ceiling these tasks. These ceiling checks are not causal evidence.
 
 ## Clean Difficulty Probes With Public Cards
 
@@ -92,6 +93,7 @@ Difficulty probes are not causal evidence. They can describe provider cleanlines
 | --- | --- | --- | ---: | ---: | --- |
 | `docs/run-cards/subscription-entitlements-difficulty-probe-20260605-009.md` | `subscription-entitlements-lifecycle-v0` | Sonnet structured-output retry profile | 0 | 0 | Clean difficulty/provider evidence; both arms reached 9/9. |
 | `docs/run-cards/inventory-reservations-difficulty-probe-20260605-001.md` | `inventory-reservations-lifecycle-v0` | Mistral structured-output retry profile | 0 | -0.2222 | Clean difficulty/provider evidence; both arms reached 9/9, feedback-capable had temporary I05/I06 misses. |
+| `docs/run-cards/payroll-net-pay-skeleton-seed-sonnet-4.6-a2-difficulty-output12000-002-20260609.md` | `payroll-net-pay-lifecycle-skeleton-seed-v1` | Sonnet 4.6 output12000 profile | 0 | 0 | Clean ceiling/difficulty evidence; both arms reached 18/18, so causal pilots on this boundary are blocked. |
 
 ## Compatibility Boundaries
 
@@ -114,7 +116,7 @@ The repo can currently make Level 4 task/model/profile-specific causal pilot cla
 - positive executable/example-bearing spec contrast on pricing v0
 - positive content-controlled run-loop result on pricing content-controlled
 
-The repo is not allowed to make a Level 5 generalized claim because the evidence set is small, intentionally bounded, and single-model on the positive pricing results.
+It can also make Level 3 difficulty/ceiling claims that frontier-grade models ceiling the tested well-specified single-file pricing and payroll tasks under the listed boundaries. The repo is not allowed to make a Level 5 generalized claim because the evidence set is small, intentionally bounded, and single-model on the positive pricing results.
 
 ## Recommended Public Wording
 

@@ -6,15 +6,16 @@ For the compact cross-run table, see `docs/public-evidence-matrix.md`. For the p
 
 ## Current Claim
 
-Current evidence is not generalized validation that executable feedback works across tasks or models. It does support one bounded, replayable pricing-lifecycle story under `mistralai/mistral-small-2603` with a 2-turn / 1-feedback budget:
+Current evidence is not generalized validation that executable feedback works across tasks or models. It does support one bounded, replayable industry story: executable BDD-style feedback made a cheap/weak model materially more reliable on a sealed pricing-lifecycle task, while frontier-grade models ceilinged well-specified single-file tasks from the shared spec alone.
 
 - `pricing-discount-demo-v1` showed that executable, example-bearing BDD-style specs beat prose-only specs on a sealed pricing task: mean regression-free AUC delta `+0.4444`, positive in `3/3`, mean final-pass delta `+0.5926`.
 - Artifact review found that this v0 result bundled runnability with interface/worked-example disclosure. The prose-only arm did not receive concrete event API examples and often guessed the wrong interface.
 - `pricing-discount-content-controlled-demo-v1` removed that confound by giving both arms the same event API and worked examples. The executable run-loop still helped: mean AUC delta `+0.1852`, positive in `3/3`, mean final-pass delta `+0.2222`, no provider flags, complete feedback opportunity.
+- Strong-model ceiling checks now cover two well-specified tasks:
+  - pricing content-controlled: `anthropic/claude-sonnet-4.6` and `qwen3.7-max` solved both arms 9/9.
+  - payroll skeleton-seed: `anthropic/claude-sonnet-4.6` solved both arms 18/18 on an 18-checkpoint task with YTD caps, phase-outs, base divergences, garnishments, and recomputation rules.
 
-- Two strong-model smokes on the same content-controlled task (`anthropic/claude-sonnet-4.6`, `qwen3.7-max`) solved both arms 9/9, so frontier models already ceiling this task without executable feedback.
-
-Bounded public claim: under this sealed pricing task/budget, executable, runnable specs gave a cheap/weak agent (`mistral-small`) much more reliable implementation of an evolving spec — partly by clarifying the contract, partly via the run-loop itself — while frontier models implement it from the spec alone. The headline is **cheap/weak-model viability**, not a feedback benefit for already-ceilinging frontier models.
+Bounded public claim: under the sealed pricing task/budget, executable, runnable specs gave a cheap/weak agent (`mistral-small`) much more reliable implementation of an evolving spec — partly by clarifying the contract, partly via the run-loop itself — while frontier models implemented the pricing and payroll spec-shaped tasks from the shared spec alone. The headline is **cheap/weak-model viability**, not a feedback benefit for already-ceilinging frontier models.
 
 The earlier subscription and inventory pilots were clean but mostly flat/easy. They are important calibration context and should not be hidden, but they are not the headline.
 
@@ -27,6 +28,7 @@ The earlier subscription and inventory pilots were clean but mostly flat/easy. T
 | Inventory task package | `inventory-reservations-lifecycle-v0` is implemented, locally validated, and documented with task/run cards. Clean causal pilot is flat. | Level 1, Level 3, and task-specific Level 4 flat claim |
 | Pricing v0 executable-spec contrast | 3 clean Mistral causal pilots under `path-survival-primary-v1`: mean AUC delta `+0.4444`, mean final-pass delta `+0.5926`. Caveat: interface/worked examples were also disclosed through runnable specs. | Level 4 positive condition-contrast claim |
 | Pricing content-controlled run-loop | 3 clean Mistral causal pilots under `path-survival-primary-v1`: both arms received identical event API and worked examples; mean AUC delta `+0.1852`, mean final-pass delta `+0.2222`, positive AUC direction `3/3`. | Level 4 preliminary run-loop causal pilot claim |
+| Strong-model ceiling checks | Pricing content-controlled ceilinged under Sonnet 4.6 and Qwen 3.7 Max; payroll skeleton-seed ceilinged under Sonnet 4.6 at 18/18 in both arms. | Level 3 difficulty/diagnostic ceiling evidence |
 | Generalized benchmark claim | Not allowed. | No Level 5 claim |
 
 ## Clean Causal Runs
@@ -73,7 +75,7 @@ Interpretation: after both arms received the same event API and worked examples,
 
 ### Strong-model ceiling (the benefit is cheap/weak-model viability)
 
-Two independent strong-model smokes on the same content-controlled task both solved BOTH arms 9/9, so a capable model needs no executable feedback here — it implements the task from the shared spec and event API alone.
+Two independent strong-model smokes on the content-controlled pricing task both solved BOTH arms 9/9, so a capable model needs no executable feedback there — it implements the task from the shared spec and event API alone.
 
 | Smoke (diagnostic_invalid) | Model/provider | Context final | Feedback final | AUC delta |
 | --- | --- | ---: | ---: | ---: |
@@ -82,7 +84,15 @@ Two independent strong-model smokes on the same content-controlled task both sol
 
 These are clean `diagnostic_invalid` smokes (provider-reliability + ceiling evidence), not causal pilots — a convergent ceiling hint across two vendors, not Level-4 evidence. A `google/gemini-3.1-pro-preview` smoke was provider-flagged and excluded. Each control is a separate non-pooled boundary.
 
-So the bounded public claim is **cheap/weak-model viability**: executable, runnable specs let a cheaper agent achieve much more reliable implementation of an evolving spec, where a frontier model already ceilings the task. We do not claim a feedback benefit for frontier models.
+The harder payroll skeleton-seed A2 check reached the same conclusion on a different, denser single-file task:
+
+| Run (difficulty_probe) | Task version | Model/provider | Context final | Feedback final | AUC delta |
+| --- | --- | --- | ---: | ---: | ---: |
+| `payroll-net-pay-skeleton-seed-sonnet-4.6-a2-difficulty-output12000-002` | `payroll-net-pay-lifecycle-skeleton-seed-v1` | OpenRouter `anthropic/claude-sonnet-4.6` | 18/18 | 18/18 | 0 |
+
+This payroll run is clean Level 3 difficulty evidence, not causal evidence. It blocks causal pilots on that boundary because the context-only arm already ceilinged the task.
+
+So the bounded public claim is **cheap/weak-model viability**: executable, runnable specs let a cheaper agent achieve much more reliable implementation of an evolving spec, where frontier models already ceiling the well-specified single-file tasks tested here. We do not claim a feedback benefit for frontier models.
 
 ## Compatibility Boundary
 
@@ -119,6 +129,7 @@ Provider-flagged and invalid runs remain part of the narrative because they expl
 | `subscription-entitlements-difficulty-probe-20260605-007` | `difficulty_probe` | One malformed response and one timeout | Provider reliability diagnostic. |
 | `subscription-entitlements-difficulty-probe-20260605-008` | `difficulty_probe` | Retry-recovered malformed responses | Provider reliability diagnostic. |
 | `subscription-entitlements-causal-pilot-20260605-001` | `causal_pilot` | Incomplete feedback opportunity and artifact mismatches | Invalid causal attempt, superseded by `subscription-entitlements-causal-pilot-20260605-002`. |
+| `payroll-net-pay-skeleton-seed-sonnet-4.6-a2-difficulty-output12000` | `difficulty_probe` | OpenRouter 402 credit exhaustion | Invalid provider attempt, superseded by clean rerun `payroll-net-pay-skeleton-seed-sonnet-4.6-a2-difficulty-output12000-002`. |
 
 ## Public Wording
 
@@ -142,4 +153,4 @@ Avoid:
 
 ## Next Public Step
 
-Package the public narrative around the two pricing experiments plus the strong-model ceiling, and keep the claim bounded to cheap/weak-model viability. The strong-model ceiling has been probed (clean Sonnet and Qwen smokes, both arms 9/9; one Gemini provider-flagged) and is reflected above. The remaining substantive research branch is a harder sealed task where strong models do not ceiling, to test whether the run-loop helps frontier models too — that, not a bigger ceiling model, is the next provider spend worth making. Spending on GPT-5.5 / Opus 4.8 would buy recognition but not new information.
+Package the current experiment phase as complete around the bounded cheap/weak-model viability claim. The strong-model ceiling has now been probed on pricing (Sonnet and Qwen, both arms 9/9; one Gemini provider-flagged) and on a denser payroll skeleton-seed task (Sonnet, both arms 18/18). The remaining substantive research branch would be a separate scale-axis program — for example, multi-file existing-codebase work where invariants are scattered beyond a single self-contained spec — not simply adding more single-file rules or spending on a bigger ceiling model.
