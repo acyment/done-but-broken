@@ -12,7 +12,9 @@ Current evidence is not generalized validation that executable feedback works ac
 - Artifact review found that this v0 result bundled runnability with interface/worked-example disclosure. The prose-only arm did not receive concrete event API examples and often guessed the wrong interface.
 - `pricing-discount-content-controlled-demo-v1` removed that confound by giving both arms the same event API and worked examples. The executable run-loop still helped: mean AUC delta `+0.1852`, positive in `3/3`, mean final-pass delta `+0.2222`, no provider flags, complete feedback opportunity.
 
-Bounded public claim: under this sealed pricing task/model/budget, executable specs helped agents implement and preserve more behavior. Part of the original win was contract/example clarification; a smaller but clean run-loop effect remained after content parity.
+- Two strong-model smokes on the same content-controlled task (`anthropic/claude-sonnet-4.6`, `qwen3.7-max`) solved both arms 9/9, so frontier models already ceiling this task without executable feedback.
+
+Bounded public claim: under this sealed pricing task/budget, executable, runnable specs gave a cheap/weak agent (`mistral-small`) much more reliable implementation of an evolving spec — partly by clarifying the contract, partly via the run-loop itself — while frontier models implement it from the spec alone. The headline is **cheap/weak-model viability**, not a feedback benefit for already-ceilinging frontier models.
 
 The earlier subscription and inventory pilots were clean but mostly flat/easy. They are important calibration context and should not be hidden, but they are not the headline.
 
@@ -68,6 +70,19 @@ Boundary: `pricing-discount-lifecycle-content-controlled-v1`, `pricing-discount-
 Aggregate: mean AUC delta `+0.1852`, mean final-pass delta `+0.2222`, positive AUC direction `3/3`, regression-count deltas (feedback minus context) `0 / 0 / -1`.
 
 Interpretation: after both arms received the same event API and worked examples, the gap shrank but did not disappear. This is the cleanest current evidence that the executable run-loop itself helped under this task/model/budget.
+
+### Strong-model ceiling (the benefit is cheap/weak-model viability)
+
+Two independent strong-model smokes on the same content-controlled task both solved BOTH arms 9/9, so a capable model needs no executable feedback here — it implements the task from the shared spec and event API alone.
+
+| Smoke (diagnostic_invalid) | Model/provider | Context final | Feedback final | AUC delta |
+| --- | --- | ---: | ---: | ---: |
+| `pricing-discount-content-controlled-sonnet-4.6-control-v1-smoke-20260608-001` | OpenRouter `anthropic/claude-sonnet-4.6` | 9/9 | 9/9 | 0 |
+| `pricing-discount-content-controlled-alibaba-qwen3.7-max-smoke-20260609-001` | direct Alibaba/Qwen `qwen3.7-max` | 9/9 | 9/9 | 0 |
+
+These are clean `diagnostic_invalid` smokes (provider-reliability + ceiling evidence), not causal pilots — a convergent ceiling hint across two vendors, not Level-4 evidence. A `google/gemini-3.1-pro-preview` smoke was provider-flagged and excluded. Each control is a separate non-pooled boundary.
+
+So the bounded public claim is **cheap/weak-model viability**: executable, runnable specs let a cheaper agent achieve much more reliable implementation of an evolving spec, where a frontier model already ceilings the task. We do not claim a feedback benefit for frontier models.
 
 ## Compatibility Boundary
 
@@ -127,4 +142,4 @@ Avoid:
 
 ## Next Public Step
 
-Package the public narrative around the two pricing experiments and keep the claim bounded. Optional future strengtheners are a strong-model ceiling run and a second content-controlled task family, but neither is required for the current industry-facing statement.
+Package the public narrative around the two pricing experiments plus the strong-model ceiling, and keep the claim bounded to cheap/weak-model viability. The strong-model ceiling has been probed (clean Sonnet and Qwen smokes, both arms 9/9; one Gemini provider-flagged) and is reflected above. The remaining substantive research branch is a harder sealed task where strong models do not ceiling, to test whether the run-loop helps frontier models too — that, not a bigger ceiling model, is the next provider spend worth making. Spending on GPT-5.5 / Opus 4.8 would buy recognition but not new information.

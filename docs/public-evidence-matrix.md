@@ -69,6 +69,21 @@ Allowed summary:
 
 > After both arms received the same concrete event API and worked examples, the executable feedback loop still improved regression-free path survival under this task/model/budget. The effect shrank compared with v0, which shows that contract/example disclosure carried part of the original advantage.
 
+## Strong-Model Ceiling Smokes (diagnostic_invalid, not causal evidence)
+
+Two independent strong-model smokes on the content-controlled task solved both arms 9/9, so the benefit above is bounded to cheap/weak models. These are clean `diagnostic_invalid` smokes (provider/ceiling evidence), not causal pilots, and are separate non-pooled boundaries.
+
+| Smoke | Model/provider | Context final | Feedback final | AUC delta |
+| --- | --- | ---: | ---: | ---: |
+| `pricing-discount-content-controlled-sonnet-4.6-control-v1-smoke-20260608-001` | OpenRouter `anthropic/claude-sonnet-4.6` | 9/9 | 9/9 | 0 |
+| `pricing-discount-content-controlled-alibaba-qwen3.7-max-smoke-20260609-001` | direct Alibaba/Qwen `qwen3.7-max` | 9/9 | 9/9 | 0 |
+
+A `google/gemini-3.1-pro-preview` smoke was provider-flagged (malformed + timeout) and excluded.
+
+Allowed summary:
+
+> Two independent frontier models solved the content-controlled task in both arms, so the executable-spec benefit observed on Mistral-small is best read as cheap/weak-model viability, not a benefit for frontier models that already ceiling this task. These are diagnostic smokes, not causal evidence.
+
 ## Clean Difficulty Probes With Public Cards
 
 Difficulty probes are not causal evidence. They can describe provider cleanliness, task solvability under a model/budget, and checkpoint-survival behavior, but not treatment effects.

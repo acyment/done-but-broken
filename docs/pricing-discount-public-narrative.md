@@ -2,15 +2,15 @@
 
 ## Claim
 
-On a sealed pricing-lifecycle task under `mistralai/mistral-small-2603` with a 2-turn / 1-feedback budget, executable BDD-style specs helped an AI coding agent implement and preserve more behavior than prose-only specs.
+On a sealed pricing-lifecycle task with a 2-turn / 1-feedback budget, executable BDD-style specs let a cheap/weak coding agent (`mistralai/mistral-small-2603`) implement an evolving spec far more reliably than the same agent given prose-only specs — while strong, more expensive models already implement the task from the spec alone. The honest, bounded claim is **cheap-model viability**: executable specs help most exactly where capability is the bottleneck.
 
-The honest decomposition matters:
+The three-part decomposition matters:
 
-- In the first pricing matrix, executable, example-bearing checks strongly beat prose-only specs (`mean AUC delta +0.4444`, positive in `3/3`).
-- That first result bundled two benefits: concrete contract/examples and runnability. The prose-only arm did not see the event API examples embedded in the runnable tests.
-- In the content-controlled matrix, both arms received the same event API and worked examples. The executable feedback loop still helped, but less dramatically (`mean AUC delta +0.1852`, positive in `3/3`).
+1. **Executable, example-bearing specs beat prose-only specs (weak model).** In the first pricing matrix, executable checks strongly beat prose-only specs (`mean AUC delta +0.4444`, positive in `3/3`). But this bundled two benefits — concrete contract/examples and runnability — because the prose-only arm did not see the event API examples embedded in the runnable tests.
+2. **The feedback loop itself still helps after content parity (weak model).** In the content-controlled matrix, both arms received the same event API and worked examples; only one could run the checks. The executable feedback loop still helped, but less dramatically (`mean AUC delta +0.1852`, positive in `3/3`). So the v0 gap was partly contract clarification and partly the loop.
+3. **Strong models ceiling this task — the benefit is for weaker/cheaper agents.** Two independent strong-model smokes on the same content-controlled task — `anthropic/claude-sonnet-4.6` and `qwen3.7-max` — solved **both** arms 9/9. A capable model needs no executable feedback here; it implements the task from the shared spec and event API alone. The feedback loop earns its keep where the model is the bottleneck, not on already-ceilinging frontier models.
 
-So the bounded statement is: executable specs helped partly by clarifying the contract, and partly through the feedback loop itself. This is preliminary, single-task-family, single-model evidence. It is not a generalized benchmark claim.
+So the bounded statement is: executable specs let cheaper/weaker agents achieve more reliable implementation of an evolving spec; they do not prove a benefit for frontier models, which already ceiling this task. This is preliminary, single-task-family evidence. It is not a generalized benchmark claim. The strong-model results are clean `diagnostic_invalid` smokes (a convergent ceiling hint across two vendors), not causal pilots.
 
 ## Why The Design Is Credible
 
