@@ -45,6 +45,8 @@ The task is only valid for a frontier claim if failures are drift, not ambiguity
 
 Target reference size: about 25-35 files and 5,000-8,000 LOC.
 
+Because E1 uses full-file replacement only, no Billing v2 source file should exceed about 450 LOC. A file too large to rewrite cheaply is unfair friction under the sealed harness format and must be split before the task is sealed.
+
 Suggested modules:
 
 - `domain/subscription`
@@ -191,6 +193,15 @@ The rejected alternative is E0, where the context arm cannot execute anything. E
 
 Current harness note: the existing model loop does not yet implement E1. A credible frontier branch therefore requires a test-first harness extension before task pilots.
 
+Scratch accumulation is part of the estimand:
+
+> The context arm accumulating a self-authored regression suite in `scratch/` across checkpoints is not contamination; it is the self-directed-verification practice E1 measures, including its authorship and maintenance cost.
+
+Observational metrics:
+
+- scratch suite size and assertion count per checkpoint;
+- per-checkpoint primary-endpoint delta trajectory, to detect whether any treatment effect decays as the context arm's homegrown suite matures.
+
 ## Required Fairness Gates
 
 Before any frontier provider run:
@@ -202,7 +213,7 @@ Before any frontier provider run:
 - Feedback gating: only `feedback_capable_spec` receives provided executable BDD assets, step definitions, asset paths, and provided spec command.
 - E1 self-verification parity: both arms have the same generic command/self-verification budget.
 - Budget seal: max model turns, verification-execution limits, token caps, output caps, timeout, provider profile, and run classification are sealed.
-- Read-only spec integrity: patch attempts against `specs/` and `specs/steps/` are rejected and logged.
+- Read-only spec integrity: replacement attempts against `specs/` and `specs/steps/` are rejected and logged.
 - Scratch isolation: `scratch/` persists and is captured, but is excluded from the hidden oracle import path.
 - Verification scaffolding parity: shared README documents `@app/*`, fixtures, invocation strings, and scratch persistence; `scratch/example.test.ts` runs green in a fresh sandbox in both arms.
 - Result schema: hidden-oracle scores are the only claim-bearing scores; visible-suite pass rates are descriptive.
@@ -292,6 +303,12 @@ Per model, use a two-look group-sequential rule over clean paired seeds:
 
 No third stage and no optional stopping outside these two looks.
 
+Stage A launch precondition:
+
+- the operator has a reserve covering worst-case Stage B for both models.
+
+Cost pressure after Stage A starts cannot alter the matrix. Trims are permitted only after Step 0 calibration and before the Billing v2 seal.
+
 Do not pool across models, task versions, control-execution policy, provider profiles, or prior pricing/payroll results.
 
 ## Predeclared Interpretation
@@ -315,13 +332,21 @@ Allowed outcomes:
 | Gate passes but null or negative | Publish null: frontier self-directed verification was enough under this task/model/budget. |
 | Structural failures or isolated competence failure | No claim; task invalid for frontier drift; redesign before more provider spend. |
 
+The "parity at higher self-verification cost" rung is claimable only if:
+
+- TOST equivalence holds: the 90 percent confidence interval of the paired primary-endpoint delta lies entirely within `+/-0.05`;
+- context-arm regressions present at done-declaration are not worse than feedback-arm regressions present at done-declaration;
+- mean per-checkpoint verification cost is at least 25 percent higher for context than feedback with a 95 percent paired-bootstrap confidence interval excluding zero, or context uses at least 2 more verification executions per checkpoint on average.
+
+Verification cost is scratch-authoring tokens plus verification-execution output tokens consumed.
+
 ## Next No-Provider Work
 
 Recommended order:
 
 1. Add test-first harness support for `e1-self-directed-verification-turn-based-v0`.
 2. Build CartCalc and run `e1-harness-calibration-step0-v0`.
-3. Use calibration to resolve patch format, cost ceiling, turn cap, and any trim decisions.
+3. Use calibration to resolve replacement-format cost, cost ceiling, turn cap, and any trim decisions.
 4. Design the billing v2 module layout, CP01-CP24 checkpoint list, minimal orientation README, public API contract, friction registry, and private interaction graph.
 5. Write parity, feedback-gating, read-only spec, scratch-isolation, verification-budget, friction-registry, and entailment tests before writing the full task.
 6. Build the reference implementation, visible specs, runnable BDD assets, hidden oracle generator, sealed extension, and mutation suite.

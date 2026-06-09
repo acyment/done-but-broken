@@ -1,6 +1,6 @@
 # e1-self-directed-verification-turn-based-v0
 
-Status: draft protocol profile. No harness implementation is implied by this document. No provider run is authorized by this document.
+Status: draft protocol profile. Step 0 local harness mechanics are implemented in `src/e1-harness.ts`; no provider run is authorized by this document.
 
 ## Purpose
 
@@ -18,13 +18,13 @@ Each checkpoint allows up to `12` model turns.
 
 On each turn the model may return:
 
-- one optional patch block;
+- one optional full-file replacement block;
 - one optional verification request block;
 - one optional done declaration.
 
-The harness applies the patch, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, or the sealed token budget is exhausted.
+The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, or the sealed token budget is exhausted.
 
-Malformed patches are rejected with a short error. Rejection is logged and consumes the patch opportunity for that turn.
+Unified diffs are not supported. A replacement block contains one or more `<<<FILE path>>>` ... `<<<END>>>` sections. Rejections are deterministic: malformed delimiters, invalid paths, or attempts to write read-only paths. Rejection is logged and consumes the replacement opportunity for that turn.
 
 ## Verification Command Whitelist
 
@@ -33,7 +33,7 @@ Allowed command patterns are sealed per task language. For this repo's default J
 | Command pattern | `context_only_spec` | `feedback_capable_spec` |
 | --- | --- | --- |
 | `bun test scratch/` | allowed | allowed |
-| `bun run scratch/<script>.ts` | allowed | allowed |
+| `bun scratch/<script>.ts` | allowed | allowed |
 | `bun run spec` or `bun run spec -- --cp=<checkpoint>` | not available | allowed |
 
 If a future task deliberately introduces Python, use `uv`-owned equivalents only:
@@ -48,9 +48,14 @@ Rules:
 - no network;
 - no package installation;
 - no arbitrary shell;
+- commands are parsed into fixed argv templates, never passed through a shell;
 - one verification request per turn;
 - execution timeout `60s`;
 - non-whitelisted commands return a refusal string and still consume the verification slot.
+- path parameters are resolved with realpath and must be contained inside resolved `scratch/`;
+- path parameters must use `.ts` or `.test.ts`;
+- shell metacharacters, globs, `~`, environment-variable syntax, flags, and whitespace inside path tokens are rejected;
+- Bun commands run with no auto-install behavior and a clean environment.
 
 `spec` is a `package.json` script owned by the harness. It exists only for `feedback_capable_spec`.
 
@@ -78,7 +83,12 @@ Application code:
 
 - writable in both arms.
 
-Patch attempts against read-only paths are rejected and logged. This prevents both spec vandalism and feedback-suite tampering.
+Harness config:
+
+- `package.json` and `bunfig.toml` are read-only;
+- `tsconfig.json`, `bun.lock`, and `bun.lockb` are read-only if present.
+
+Replacement attempts against read-only paths are rejected and logged. This prevents spec vandalism, feedback-suite tampering, `spec` script retargeting, and import-alias retargeting.
 
 ## Budgets
 
@@ -142,14 +152,14 @@ The isolated mechanism is the cost of self-authoring and self-maintaining verifi
 
 ## Harness Gap
 
-The current harness does not yet implement this profile. The existing model loop only runs the provided feedback command for `feedback_capable_spec`; it does not support symmetric model-requested verification commands for both arms.
+The current provider model loop does not yet implement this profile end-to-end. Step 0 local mechanics exist in `src/e1-harness.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
 
 Before any E1 evidence-generating run, add test-first harness support for:
 
 - structured verification request parsing;
 - command whitelist enforcement;
 - `scratch/` persistence and capture;
-- read-only spec mounts or equivalent patch rejection;
+- read-only spec mounts or equivalent replacement rejection;
 - capped output injection on the next turn;
 - full-output hashing;
 - budget accounting for verification executions;
