@@ -129,12 +129,19 @@ export type CheckpointRunResult = {
   hidden_oracle_result_hash?: string;
   agent_result: AgentRunResult;
   feedback_opportunity_integrity?: CheckpointFeedbackOpportunityIntegrity;
+  timing?: CheckpointRunTiming;
 };
 
 export type ConditionRunResult = {
   condition_id: ConditionId;
   workspace_path: string;
   checkpoints: CheckpointRunResult[];
+};
+
+export type CheckpointRunTiming = {
+  checkpoint_ms: number;
+  agent_ms: number;
+  hidden_oracle_ms?: number;
 };
 
 export type PilotRunResult = {
@@ -189,90 +196,23 @@ export async function runPilot(input: RunPilotInput): Promise<PilotRunResult> {
     protocol_profile_id: protocolProfileId
   });
 
-  for (const condition_id of CONDITION_IDS) {
-    const conditionRoot = join(runRoot, condition_id);
-    const workspace_path = join(conditionRoot, "workspace");
-    const checkpoints: CheckpointRunResult[] = [];
-
-    await rm(workspace_path, { recursive: true, force: true });
-
-    for (const [index, checkpoint_id] of input.task.checkpoints.entries()) {
-      if (index === 0) {
-        await cp(input.task.template_workspace, workspace_path, { recursive: true });
-      }
-
-      const artifact_dir = join(conditionRoot, "checkpoints", checkpoint_id);
-      await mkdir(artifact_dir, { recursive: true });
-
-      const snapshot_before = await hashWorkspace(workspace_path);
-      const packet = renderSpecPacket({
+  const conditionConcurrency = normalizeConditionConcurrency(budget.condition_concurrency ?? 1);
+  const completedConditions = await runConditions({
+    condition_ids: [...CONDITION_IDS],
+    concurrency: conditionConcurrency,
+    runCondition: async (condition_id) =>
+      runConditionPipeline({
         task: input.task,
-        condition_id,
-        checkpoint_id
-      });
+        agent: input.agent,
+        hidden_oracle: input.hidden_oracle,
+        run_classification: runClassification,
+        runRoot,
+        condition_id
+      })
+  });
 
-      const promptPacketPath = join(artifact_dir, "prompt-packet.json");
-      await writeJson(promptPacketPath, packet);
-      const prompt_packet_hash = await hashFile(promptPacketPath);
-      const expected_feedback_asset_hashes = expectedFeedbackAssetHashes(packet);
-      await writeFeedbackAssets({ workspace_path, packet });
-
-      const agent_result = await input.agent.run({
-        condition_id,
-        checkpoint_id,
-        workspace_path,
-        artifact_dir,
-        packet
-      });
-      const agentResultPath = join(artifact_dir, "agent-result.json");
-      await writeJson(agentResultPath, agent_result);
-      const agent_result_hash = await hashFile(agentResultPath);
-
-      const snapshot_after = await hashWorkspace(workspace_path);
-      const hiddenOracle = input.hidden_oracle
-        ? await runHiddenOracle({
-            hidden_oracle: input.hidden_oracle,
-            task: input.task,
-            condition_id,
-            checkpoint_id,
-            workspace_path,
-            artifact_dir
-          })
-        : undefined;
-
-      const checkpointResult: CheckpointRunResult = {
-        checkpoint_id,
-        condition_id,
-        artifact_dir,
-        workspace_path,
-        snapshot_before,
-        snapshot_after,
-        prompt_packet_hash,
-        agent_result_hash,
-        expected_feedback_asset_hashes,
-        hidden_oracle_result: hiddenOracle?.result,
-        hidden_oracle_result_hash: hiddenOracle?.hash,
-        agent_result,
-        feedback_opportunity_integrity: checkpointFeedbackOpportunityIntegrity({
-          run_classification: runClassification,
-          condition_id,
-          expected_feedback_asset_hashes,
-          agent_result
-        })
-      };
-
-      await writeJson(join(artifact_dir, "workspace-before.json"), snapshot_before);
-      await writeJson(join(artifact_dir, "workspace-after.json"), snapshot_after);
-      await writeJson(join(artifact_dir, "manifest.json"), checkpointManifest(checkpointResult));
-
-      checkpoints.push(checkpointResult);
-    }
-
-    condition_results[condition_id] = {
-      condition_id,
-      workspace_path,
-      checkpoints
-    };
+  for (const condition of completedConditions) {
+    condition_results[condition.condition_id] = condition;
   }
 
   const validityFlags = mergeValidityFlags(input.validity_flags ?? [], condition_results);
@@ -482,7 +422,8 @@ function checkpointManifest(checkpoint: CheckpointRunResult) {
     agent_status: checkpoint.agent_result.status,
     workspace_carried_forward_due_to_provider_failure:
       checkpoint.agent_result.workspace_carried_forward_due_to_provider_failure,
-    feedback_opportunity_integrity: checkpoint.feedback_opportunity_integrity
+    feedback_opportunity_integrity: checkpoint.feedback_opportunity_integrity,
+    timing: checkpoint.timing
   };
 }
 
@@ -532,7 +473,8 @@ function runManifest(result: PilotRunResult, task: TaskDefinition) {
             agent_status: checkpoint.agent_result.status,
             workspace_carried_forward_due_to_provider_failure:
               checkpoint.agent_result.workspace_carried_forward_due_to_provider_failure,
-            feedback_opportunity_integrity: checkpoint.feedback_opportunity_integrity
+            feedback_opportunity_integrity: checkpoint.feedback_opportunity_integrity,
+            timing: checkpoint.timing
           }))
         }
       ])
@@ -577,6 +519,140 @@ function collectHiddenOracleEvaluations(result: PilotRunResult): CheckpointEvalu
         checks: checkpoint.hidden_oracle_result!.checks
       }))
   );
+}
+
+async function runConditionPipeline(input: {
+  task: TaskDefinition;
+  agent: AgentAdapter;
+  hidden_oracle?: HiddenOracleAdapter;
+  run_classification: RunClassification;
+  runRoot: string;
+  condition_id: ConditionId;
+}): Promise<ConditionRunResult> {
+  const conditionRoot = join(input.runRoot, input.condition_id);
+  const workspace_path = join(conditionRoot, "workspace");
+  const checkpoints: CheckpointRunResult[] = [];
+
+  await rm(workspace_path, { recursive: true, force: true });
+
+  for (const [index, checkpoint_id] of input.task.checkpoints.entries()) {
+    const checkpointStartedAt = Date.now();
+
+    if (index === 0) {
+      await cp(input.task.template_workspace, workspace_path, { recursive: true });
+    }
+
+    const artifact_dir = join(conditionRoot, "checkpoints", checkpoint_id);
+    await mkdir(artifact_dir, { recursive: true });
+
+    const snapshot_before = await hashWorkspace(workspace_path);
+    const packet = renderSpecPacket({
+      task: input.task,
+      condition_id: input.condition_id,
+      checkpoint_id
+    });
+
+    const promptPacketPath = join(artifact_dir, "prompt-packet.json");
+    await writeJson(promptPacketPath, packet);
+    const prompt_packet_hash = await hashFile(promptPacketPath);
+    const expected_feedback_asset_hashes = expectedFeedbackAssetHashes(packet);
+    await writeFeedbackAssets({ workspace_path, packet });
+
+    const agentStartedAt = Date.now();
+    const agent_result = await input.agent.run({
+      condition_id: input.condition_id,
+      checkpoint_id,
+      workspace_path,
+      artifact_dir,
+      packet
+    });
+    const agentMs = elapsedMs(agentStartedAt);
+    const agentResultPath = join(artifact_dir, "agent-result.json");
+    await writeJson(agentResultPath, agent_result);
+    const agent_result_hash = await hashFile(agentResultPath);
+
+    const snapshot_after = await hashWorkspace(workspace_path);
+    const hiddenOracleStartedAt = Date.now();
+    const hiddenOracle = input.hidden_oracle
+      ? await runHiddenOracle({
+          hidden_oracle: input.hidden_oracle,
+          task: input.task,
+          condition_id: input.condition_id,
+          checkpoint_id,
+          workspace_path,
+          artifact_dir
+        })
+      : undefined;
+    const hiddenOracleMs = input.hidden_oracle ? elapsedMs(hiddenOracleStartedAt) : undefined;
+
+    const checkpointResult: CheckpointRunResult = {
+      checkpoint_id,
+      condition_id: input.condition_id,
+      artifact_dir,
+      workspace_path,
+      snapshot_before,
+      snapshot_after,
+      prompt_packet_hash,
+      agent_result_hash,
+      expected_feedback_asset_hashes,
+      hidden_oracle_result: hiddenOracle?.result,
+      hidden_oracle_result_hash: hiddenOracle?.hash,
+      agent_result,
+      feedback_opportunity_integrity: checkpointFeedbackOpportunityIntegrity({
+        run_classification: input.run_classification,
+        condition_id: input.condition_id,
+        expected_feedback_asset_hashes,
+        agent_result
+      }),
+      timing: {
+        checkpoint_ms: elapsedMs(checkpointStartedAt),
+        agent_ms: agentMs,
+        hidden_oracle_ms: hiddenOracleMs
+      }
+    };
+
+    await writeJson(join(artifact_dir, "workspace-before.json"), snapshot_before);
+    await writeJson(join(artifact_dir, "workspace-after.json"), snapshot_after);
+    await writeJson(join(artifact_dir, "manifest.json"), checkpointManifest(checkpointResult));
+
+    checkpoints.push(checkpointResult);
+  }
+
+  return {
+    condition_id: input.condition_id,
+    workspace_path,
+    checkpoints
+  };
+}
+
+async function runConditions(input: {
+  condition_ids: ConditionId[];
+  concurrency: number;
+  runCondition: (condition_id: ConditionId) => Promise<ConditionRunResult>;
+}): Promise<ConditionRunResult[]> {
+  if (input.concurrency >= input.condition_ids.length) {
+    return Promise.all(input.condition_ids.map((condition_id) => input.runCondition(condition_id)));
+  }
+
+  const results: ConditionRunResult[] = [];
+
+  for (const condition_id of input.condition_ids) {
+    results.push(await input.runCondition(condition_id));
+  }
+
+  return results;
+}
+
+function normalizeConditionConcurrency(value: number): number {
+  if (!Number.isInteger(value) || value < 1) {
+    throw new Error("budget.condition_concurrency must be a positive integer.");
+  }
+
+  return Math.min(value, CONDITION_IDS.length);
+}
+
+function elapsedMs(startedAt: number): number {
+  return Math.max(0, Date.now() - startedAt);
 }
 
 async function writeJson(path: string, value: unknown) {

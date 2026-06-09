@@ -1,0 +1,41 @@
+# Example LiteLLM proxy config for local provider triage.
+# Copy and edit outside the sealed run boundary. Freeze the exact alias,
+# provider endpoint, model ID, and LiteLLM config hash before evidence runs.
+
+model_list:
+  - model_name: anthropic-sonnet
+    litellm_params:
+      model: anthropic/claude-sonnet-4.6
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: openai-coding
+    litellm_params:
+      model: openai/<openai-model-id>
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: vertex-gemini
+    litellm_params:
+      model: vertex_ai/<gemini-model-id>
+      # Requires VERTEXAI_PROJECT and VERTEXAI_LOCATION in the proxy environment.
+
+  - model_name: qwen-dashscope
+    litellm_params:
+      model: dashscope/<qwen-model-id>
+      api_key: os.environ/DASHSCOPE_API_KEY
+      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+
+  - model_name: deepseek-direct
+    litellm_params:
+      model: openai/deepseek-v4-pro
+      api_key: os.environ/DEEPSEEK_API_KEY
+      api_base: https://api.deepseek.com
+
+  - model_name: minimax-direct
+    litellm_params:
+      model: openai/MiniMax-M3
+      api_key: os.environ/MINIMAX_API_KEY
+      api_base: https://api.minimax.io/v1
+
+litellm_settings:
+  master_key: os.environ/LITELLM_API_KEY
+  set_verbose: false

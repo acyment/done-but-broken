@@ -83,6 +83,58 @@ describe("pilot runner skeleton", () => {
     expect(manifest.workspace_path).toBe(result.condition_results.feedback_capable_spec.workspace_path);
     expect(before.hash).toBe(checkpoint.snapshot_before.hash);
     expect(after.hash).toBe(checkpoint.snapshot_after.hash);
+    expect(Number.isInteger(manifest.timing?.checkpoint_ms)).toBe(true);
+    expect(Number.isInteger(manifest.timing?.agent_ms)).toBe(true);
+    expect(manifest.timing.checkpoint_ms >= manifest.timing.agent_ms).toBe(true);
+  });
+
+  test("can run independent condition pipelines concurrently while preserving checkpoint order", async () => {
+    const root = await setupTemplateWorkspace();
+    const task = createSampleTask(join(root, "template"));
+    const events: Array<{
+      condition_id: string;
+      checkpoint_id: string;
+      phase: "start" | "finish";
+      time: number;
+    }> = [];
+
+    await runPilot({
+      task,
+      run_id: "run-parallel-conditions",
+      runs_root: join(root, "runs"),
+      budget: {
+        condition_concurrency: 2
+      },
+      agent: {
+        async run(input) {
+          events.push({
+            condition_id: input.condition_id,
+            checkpoint_id: input.checkpoint_id,
+            phase: "start",
+            time: Date.now()
+          });
+          await delay(40);
+          events.push({
+            condition_id: input.condition_id,
+            checkpoint_id: input.checkpoint_id,
+            phase: "finish",
+            time: Date.now()
+          });
+
+          return {
+            status: "ok"
+          };
+        }
+      }
+    });
+
+    const contextI01Start = eventTime(events, "context_only_spec", "I01", "start");
+    const contextI01Finish = eventTime(events, "context_only_spec", "I01", "finish");
+    const feedbackI01Start = eventTime(events, "feedback_capable_spec", "I01", "start");
+    const contextI02Start = eventTime(events, "context_only_spec", "I02", "start");
+
+    expect(feedbackI01Start).toBeLessThan(contextI01Finish);
+    expect(contextI02Start).toBeGreaterThanOrEqual(contextI01Finish);
   });
 });
 
@@ -102,4 +154,26 @@ async function mkTempRoot() {
   tempRoots.push(root);
   await mkdir(root, { recursive: true });
   return root;
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function eventTime(
+  events: Array<{ condition_id: string; checkpoint_id: string; phase: "start" | "finish"; time: number }>,
+  conditionId: string,
+  checkpointId: string,
+  phase: "start" | "finish"
+) {
+  const event = events.find(
+    (candidate) =>
+      candidate.condition_id === conditionId &&
+      candidate.checkpoint_id === checkpointId &&
+      candidate.phase === phase
+  );
+
+  expect(event).toBeDefined();
+
+  return event!.time;
 }

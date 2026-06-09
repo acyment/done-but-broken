@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   DEFAULT_MODEL_LOOP_POLICY,
   createModelLoopAgent,
+  createOpenAiCompatibleFeedbackLoopAgent,
   createOpenRouterFeedbackLoopAgent,
   type FeedbackCommandRunner,
   type ModelLoopCall
@@ -380,6 +381,97 @@ describe("model loop agent", () => {
       type: "object",
       required: ["path", "content"],
       additionalProperties: false
+    });
+  });
+
+  test("OpenAI-compatible loop supports LiteLLM-style chat completions without OpenRouter routing params", async () => {
+    const workspace = await setupWorkspace();
+    const requests: Array<{ url: string; headers: Record<string, string>; body: any }> = [];
+    const agent = createOpenAiCompatibleFeedbackLoopAgent({
+      provider: "litellm",
+      apiKey: "sk-litellm-test",
+      model: "anthropic/claude-sonnet-4.6",
+      endpoint: "http://localhost:4000/v1/chat/completions",
+      max_model_turns: 1,
+      responseFormat: "json_schema",
+      fetch: async (url, init) => {
+        requests.push({
+          url,
+          headers: init.headers,
+          body: JSON.parse(String(init.body))
+        });
+
+        return new Response(
+          JSON.stringify({
+            choices: [
+              {
+                message: {
+                  content: JSON.stringify({
+                    status: "ok",
+                    notes: "schema output",
+                    files: [],
+                    transcript: []
+                  })
+                }
+              }
+            ]
+          }),
+          { status: 200 }
+        );
+      }
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(result.status).toBe("ok");
+    expect(result.adapter_id).toBe("openai-compatible-loop:litellm:anthropic/claude-sonnet-4.6");
+    expect(requests).toHaveLength(1);
+    expect(requests[0].url).toBe("http://localhost:4000/v1/chat/completions");
+    expect(requests[0].headers.Authorization).toBe("Bearer sk-litellm-test");
+    expect(requests[0].body.model).toBe("anthropic/claude-sonnet-4.6");
+    expect(requests[0].body.max_tokens).toBe(16_000);
+    expect(requests[0].body.provider).toBeUndefined();
+    expect(requests[0].body.response_format).toMatchObject({
+      type: "json_schema",
+      json_schema: {
+        name: "model_loop_response",
+        strict: true
+      }
+    });
+  });
+
+  test("OpenAI-compatible loop records provider-specific failure details", async () => {
+    const workspace = await setupWorkspace();
+    const agent = createOpenAiCompatibleFeedbackLoopAgent({
+      provider: "deepseek",
+      apiKey: "sk-deepseek-test",
+      model: "deepseek-v4-pro",
+      endpoint: "https://api.deepseek.com/chat/completions",
+      requestTimeoutMs: 1,
+      fetch: async (_url, init) =>
+        new Promise<Response>((_resolve, reject) => {
+          init.signal?.addEventListener("abort", () => reject(new Error("aborted")));
+        })
+    });
+
+    const result = await agent.run(agentInput({
+      workspace_path: workspace,
+      condition_id: "context_only_spec"
+    }));
+
+    expect(result.status).toBe("failed");
+    expect(result.validity_flags).toEqual(["provider_timeout"]);
+    expect(result.validity_details?.[0]).toMatchObject({
+      flag: "provider_timeout",
+      scope: "checkpoint",
+      condition_id: "context_only_spec",
+      checkpoint_id: "I01",
+      provider: "deepseek",
+      provider_failure_phase: "pre_model_action_timeout",
+      workspace_carried_forward_due_to_provider_failure: true
     });
   });
 

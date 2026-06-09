@@ -8,7 +8,9 @@ import {
 } from "../src/openrouter-agent";
 import {
   OPENROUTER_MODEL_LOOP_RESPONSE_SCHEMA_VERSION,
+  createOpenAiCompatibleFeedbackLoopAgent,
   createOpenRouterFeedbackLoopAgent,
+  type OpenAiCompatibleResponseFormat,
   type OpenRouterResponseFormat
 } from "../src/model-loop-agent";
 import { createInventoryReservationsOracle } from "../src/inventory-reservations-oracle";
@@ -29,13 +31,22 @@ import {
   type RunClassification
 } from "../src/provenance";
 import {
+  DEFAULT_MODEL_LOOP_PRESET_ID,
+  MODEL_LOOP_PRESET_IDS,
+  MODEL_LOOP_PRESETS,
+  parseModelLoopPresetId,
+  resolveModelLoopSettings,
+  sanitizeProfileRoute,
+  type ModelLoopPresetId
+} from "../src/model-provider-presets";
+import {
   defaultProtocolProfileId,
   isProtocolProfileId,
   PROTOCOL_PROFILE_IDS,
   type ProtocolProfileId
 } from "../src/protocol-profile";
 
-type AgentKind = "fake" | "openrouter" | "openrouter-loop";
+type AgentKind = "fake" | "openrouter" | "openrouter-loop" | "openai-compatible-loop";
 
 type CliOptions = {
   help?: false;
@@ -46,8 +57,15 @@ type CliOptions = {
   fake_agent_mode: FakeAgentMode;
   openrouter_model: string;
   openrouter_endpoint?: string;
+  model_loop_preset: ModelLoopPresetId;
+  model_loop_provider: string;
+  model_loop_model: string;
+  model_loop_endpoint: string;
+  model_loop_api_key_env: string;
+  model_loop_response_format: OpenAiCompatibleResponseFormat;
   max_model_turns: number;
   max_feedback_runs: number;
+  condition_concurrency: number;
   run_classification: RunClassification;
   protocol_profile_id: ProtocolProfileId;
   request_timeout_ms: number;
@@ -64,6 +82,9 @@ type CliOptions = {
 
 const DEFAULT_OPENROUTER_PROVIDER_ROUTE = "openrouter-chat-completions";
 const DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION = "openrouter-response-parser-v1";
+const DEFAULT_OPENAI_COMPATIBLE_RESPONSE_PARSER_VERSION = "openai-compatible-response-parser-v1";
+const OPENAI_COMPATIBLE_CHAT_REQUEST_PARAMETER_VERSION = "openai-compatible-chat-request-max-tokens-v1";
+const DEFAULT_CONDITION_CONCURRENCY = 2;
 
 async function main() {
   const options = parseArgs(Bun.argv.slice(2));
@@ -120,7 +141,7 @@ function parseArgs(args: string[]): CliOptions {
     } else if (flag === "--run-id") {
       options.run_id = value;
     } else if (flag === "--agent") {
-      if (value !== "fake" && value !== "openrouter" && value !== "openrouter-loop") {
+      if (value !== "fake" && value !== "openrouter" && value !== "openrouter-loop" && value !== "openai-compatible-loop") {
         throw new Error(`Unknown agent: ${value}`);
       }
 
@@ -135,6 +156,22 @@ function parseArgs(args: string[]): CliOptions {
       options.openrouter_model = value;
     } else if (flag === "--openrouter-endpoint") {
       options.openrouter_endpoint = value;
+    } else if (flag === "--model-loop-preset") {
+      options.model_loop_preset = parseModelLoopPresetId(value);
+    } else if (flag === "--model-loop-provider") {
+      options.model_loop_provider = value;
+    } else if (flag === "--model-loop-model") {
+      options.model_loop_model = value;
+    } else if (flag === "--model-loop-endpoint") {
+      options.model_loop_endpoint = value;
+    } else if (flag === "--model-loop-api-key-env") {
+      options.model_loop_api_key_env = value;
+    } else if (flag === "--model-loop-response-format") {
+      if (value !== "none" && value !== "json_schema") {
+        throw new Error("--model-loop-response-format must be none or json_schema");
+      }
+
+      options.model_loop_response_format = value;
     } else if (flag === "--run-classification") {
       if (!RUN_CLASSIFICATIONS.includes(value as RunClassification)) {
         throw new Error(
@@ -153,6 +190,8 @@ function parseArgs(args: string[]): CliOptions {
       options.max_model_turns = parsePositiveInteger(value, flag);
     } else if (flag === "--max-feedback-runs") {
       options.max_feedback_runs = parseNonNegativeInteger(value, flag);
+    } else if (flag === "--condition-concurrency") {
+      options.condition_concurrency = parsePositiveInteger(value, flag);
     } else if (flag === "--request-timeout-ms") {
       options.request_timeout_ms = parsePositiveInteger(value, flag);
     } else if (flag === "--max-output-tokens") {
@@ -183,17 +222,43 @@ function parseArgs(args: string[]): CliOptions {
   }
 
   const openrouterResponseFormat = options.openrouter_response_format ?? "none";
+  const agent = options.agent ?? "fake";
+  const modelLoopPreset = resolveModelLoopPresetOption(options.model_loop_preset);
+  const modelLoopSettings = resolveModelLoopSettings({
+    preset_id: modelLoopPreset,
+    env: Bun.env,
+    overrides: {
+      provider: options.model_loop_provider,
+      model: options.model_loop_model,
+      endpoint: options.model_loop_endpoint,
+      api_key_env: options.model_loop_api_key_env
+    }
+  });
+  const modelLoopModel = modelLoopSettings.model;
+
+  if (agent === "openai-compatible-loop" && !modelLoopModel) {
+    throw new Error(
+      "--model-loop-model, MODEL_LOOP_MODEL, or a preset default model is required for --agent openai-compatible-loop."
+    );
+  }
 
   return {
     task: options.task,
     runs_root: options.runs_root,
     run_id: options.run_id,
-    agent: options.agent ?? "fake",
+    agent,
     fake_agent_mode: options.fake_agent_mode ?? "normal",
     openrouter_model: options.openrouter_model ?? Bun.env.OPENROUTER_MODEL ?? DEFAULT_OPENROUTER_MODEL,
     openrouter_endpoint: options.openrouter_endpoint,
+    model_loop_preset: modelLoopPreset,
+    model_loop_provider: modelLoopSettings.provider,
+    model_loop_model: modelLoopModel,
+    model_loop_endpoint: modelLoopSettings.endpoint,
+    model_loop_api_key_env: modelLoopSettings.api_key_env,
+    model_loop_response_format: options.model_loop_response_format ?? "none",
     max_model_turns: options.max_model_turns ?? 3,
     max_feedback_runs: options.max_feedback_runs ?? 2,
+    condition_concurrency: options.condition_concurrency ?? DEFAULT_CONDITION_CONCURRENCY,
     run_classification: options.run_classification ?? "calibration",
     protocol_profile_id: options.protocol_profile_id ?? defaultProtocolProfileId(),
     request_timeout_ms: options.request_timeout_ms ?? 60_000,
@@ -233,12 +298,40 @@ function createAgent(options: Exclude<CliOptions, { help: true }>) {
     });
   }
 
+  if (options.agent === "openai-compatible-loop") {
+    const apiKey = Bun.env[options.model_loop_api_key_env] ?? "";
+
+    if (!apiKey.trim()) {
+      throw new Error(`${options.model_loop_api_key_env} is required for --agent openai-compatible-loop.`);
+    }
+
+    return createOpenAiCompatibleFeedbackLoopAgent({
+      provider: options.model_loop_provider,
+      apiKey,
+      model: options.model_loop_model,
+      endpoint: options.model_loop_endpoint,
+      max_model_turns: options.max_model_turns,
+      max_feedback_runs: options.max_feedback_runs,
+      requestTimeoutMs: options.request_timeout_ms,
+      maxTokens: options.max_output_tokens,
+      maxWorkspaceBytes: options.max_workspace_bytes,
+      maxFeedbackOutputBytes: options.max_feedback_output_bytes,
+      responseFormat: options.model_loop_response_format,
+      maxProviderRetries: options.provider_max_retries,
+      temperature: options.temperature
+    });
+  }
+
   if (options.provider_max_retries > 0) {
-    throw new Error("--provider-max-retries currently requires --agent openrouter-loop.");
+    throw new Error("--provider-max-retries currently requires --agent openrouter-loop or openai-compatible-loop.");
   }
 
   if (options.openrouter_response_format !== "none" || options.openrouter_require_parameters) {
     throw new Error("--openrouter-response-format and --openrouter-require-parameters require --agent openrouter-loop.");
+  }
+
+  if (options.model_loop_response_format !== "none") {
+    throw new Error("--model-loop-response-format requires --agent openai-compatible-loop.");
   }
 
   return createOpenRouterAgent({
@@ -254,14 +347,22 @@ function createAgent(options: Exclude<CliOptions, { help: true }>) {
 }
 
 function createRunBudget(options: Exclude<CliOptions, { help: true }>) {
-  if (options.agent !== "openrouter-loop") {
-    return {};
+  const budget = {} as {
+    max_model_turns?: number;
+    max_feedback_runs?: number;
+    condition_concurrency?: number;
+  };
+
+  if (isModelLoopAgent(options.agent)) {
+    budget.max_model_turns = options.max_model_turns;
+    budget.max_feedback_runs = options.max_feedback_runs;
   }
 
-  return {
-    max_model_turns: options.max_model_turns,
-    max_feedback_runs: options.max_feedback_runs
-  };
+  if (options.condition_concurrency !== 1) {
+    budget.condition_concurrency = options.condition_concurrency;
+  }
+
+  return budget;
 }
 
 function createModelProvider(options: Exclude<CliOptions, { help: true }>) {
@@ -278,6 +379,14 @@ function createModelProvider(options: Exclude<CliOptions, { help: true }>) {
       provider: "openrouter",
       model: options.openrouter_model,
       adapter_id: "openrouter-loop"
+    };
+  }
+
+  if (options.agent === "openai-compatible-loop") {
+    return {
+      provider: options.model_loop_provider,
+      model: options.model_loop_model,
+      adapter_id: "openai-compatible-loop"
     };
   }
 
@@ -304,27 +413,40 @@ function createProviderExecutionProfile(
     };
   }
 
-  const adapter = options.agent === "openrouter-loop" ? "openrouter-loop" : "openrouter-single-shot";
+  const isOpenAiCompatibleLoop = options.agent === "openai-compatible-loop";
+  const isOpenRouterLoop = options.agent === "openrouter-loop";
+  const adapter = isOpenAiCompatibleLoop
+    ? "openai-compatible-loop"
+    : isOpenRouterLoop
+      ? "openrouter-loop"
+      : "openrouter-single-shot";
   const route = providerRoute(options);
-  const endpoint = options.openrouter_endpoint ?? DEFAULT_OPENROUTER_ENDPOINT;
-  const maxRetries = options.agent === "openrouter-loop" ? options.provider_max_retries : 0;
+  const endpoint = isOpenAiCompatibleLoop
+    ? options.model_loop_endpoint
+    : options.openrouter_endpoint ?? DEFAULT_OPENROUTER_ENDPOINT;
+  const modelId = isOpenAiCompatibleLoop ? options.model_loop_model : options.openrouter_model;
+  const maxRetries = isModelLoopAgent(options.agent) ? options.provider_max_retries : 0;
   const retryPolicyVersion = maxRetries > 0 ? OPENROUTER_RETRY_POLICY_VERSION : undefined;
-  const modelLoopPolicyVersion =
-    options.agent === "openrouter-loop" ? MODEL_LOOP_POLICY_VERSION : undefined;
+  const modelLoopPolicyVersion = isModelLoopAgent(options.agent) ? MODEL_LOOP_POLICY_VERSION : undefined;
   const responseFormatVersion =
-    options.agent === "openrouter-loop" && options.openrouter_response_format === "json_schema"
+    (isOpenRouterLoop && options.openrouter_response_format === "json_schema") ||
+    (isOpenAiCompatibleLoop && options.model_loop_response_format === "json_schema")
       ? OPENROUTER_MODEL_LOOP_RESPONSE_SCHEMA_VERSION
       : undefined;
   const providerRequireParameters =
-    options.agent === "openrouter-loop" && (responseFormatVersion || options.openrouter_require_parameters)
+    isOpenRouterLoop && (responseFormatVersion || options.openrouter_require_parameters)
       ? options.openrouter_require_parameters
       : undefined;
   const profileIdInput = {
     adapter_id: adapter,
-    model_id: options.openrouter_model,
+    model_id: modelId,
     provider_route: route,
-    response_parser_version: DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
-    request_parameter_version: OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
+    response_parser_version: isOpenAiCompatibleLoop
+      ? DEFAULT_OPENAI_COMPATIBLE_RESPONSE_PARSER_VERSION
+      : DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
+    request_parameter_version: isOpenAiCompatibleLoop
+      ? OPENAI_COMPATIBLE_CHAT_REQUEST_PARAMETER_VERSION
+      : OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
     response_format_version: responseFormatVersion,
     provider_require_parameters: providerRequireParameters,
     retry_policy_version: retryPolicyVersion,
@@ -332,19 +454,24 @@ function createProviderExecutionProfile(
     per_call_timeout_ms: options.request_timeout_ms,
     max_output_tokens: options.max_output_tokens,
     max_workspace_bytes: options.max_workspace_bytes,
-    max_feedback_output_bytes:
-      options.agent === "openrouter-loop" ? options.max_feedback_output_bytes : undefined,
+    max_feedback_output_bytes: isModelLoopAgent(options.agent)
+      ? options.max_feedback_output_bytes
+      : undefined,
     temperature: options.temperature,
     max_retries: maxRetries
   };
 
   return {
     provider_profile_id: buildProviderProfileId(profileIdInput),
-    model_id: options.openrouter_model,
+    model_id: modelId,
     provider_route: route,
     provider_endpoint: endpoint,
-    response_parser_version: DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
-    request_parameter_version: OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
+    response_parser_version: isOpenAiCompatibleLoop
+      ? DEFAULT_OPENAI_COMPATIBLE_RESPONSE_PARSER_VERSION
+      : DEFAULT_OPENROUTER_RESPONSE_PARSER_VERSION,
+    request_parameter_version: isOpenAiCompatibleLoop
+      ? OPENAI_COMPATIBLE_CHAT_REQUEST_PARAMETER_VERSION
+      : OPENROUTER_CHAT_REQUEST_PARAMETER_VERSION,
     response_format_version: responseFormatVersion,
     provider_require_parameters: providerRequireParameters,
     retry_policy_version: retryPolicyVersion,
@@ -359,15 +486,26 @@ function createProviderExecutionProfile(
     },
     max_output_tokens: options.max_output_tokens,
     max_workspace_bytes: options.max_workspace_bytes,
-    max_feedback_output_bytes:
-      options.agent === "openrouter-loop" ? options.max_feedback_output_bytes : undefined,
+    max_feedback_output_bytes: isModelLoopAgent(options.agent)
+      ? options.max_feedback_output_bytes
+      : undefined,
     temperature: options.temperature,
     prompt_renderer_version: RENDERER_VERSION,
-    feedback_summary_version: options.agent === "openrouter-loop" ? "public-feedback-summary-v0" : "none"
+    feedback_summary_version: isModelLoopAgent(options.agent) ? "public-feedback-summary-v0" : "none"
   };
 }
 
 function providerRoute(options: Exclude<CliOptions, { help: true }>): string {
+  if (options.agent === "openai-compatible-loop") {
+    const preset = MODEL_LOOP_PRESETS[options.model_loop_preset];
+
+    if (options.model_loop_provider === preset.provider && options.model_loop_endpoint === preset.endpoint) {
+      return preset.provider_route;
+    }
+
+    return `${sanitizeProfileRoute(options.model_loop_provider)}-chat-completions-${sanitizeProfileRoute(options.model_loop_endpoint)}`;
+  }
+
   const endpoint = options.openrouter_endpoint ?? DEFAULT_OPENROUTER_ENDPOINT;
 
   if (endpoint === DEFAULT_OPENROUTER_ENDPOINT) {
@@ -377,14 +515,8 @@ function providerRoute(options: Exclude<CliOptions, { help: true }>): string {
   return `custom-${sanitizeProfileRoute(endpoint)}`;
 }
 
-function sanitizeProfileRoute(value: string): string {
-  const sanitized = value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9.]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  return sanitized.length > 0 ? sanitized : "unknown";
+function isModelLoopAgent(agent: AgentKind): boolean {
+  return agent === "openrouter-loop" || agent === "openai-compatible-loop";
 }
 
 function parsePositiveInteger(value: string, flag: string): number {
@@ -395,6 +527,20 @@ function parsePositiveInteger(value: string, flag: string): number {
   }
 
   return parsed;
+}
+
+function resolveModelLoopPresetOption(option?: ModelLoopPresetId): ModelLoopPresetId {
+  const envPreset = Bun.env.MODEL_LOOP_PRESET;
+
+  if (option) {
+    return option;
+  }
+
+  if (!envPreset) {
+    return DEFAULT_MODEL_LOOP_PRESET_ID;
+  }
+
+  return parseModelLoopPresetId(envPreset);
 }
 
 function parseNonNegativeNumber(value: string, flag: string): number {
@@ -459,26 +605,35 @@ function createHiddenOracle(taskId: string): HiddenOracleAdapter | undefined {
 
 function usage(): string {
   return [
-    "Usage: bun run pilot:run --task <path> --runs-root <path> --run-id <id> [--agent fake|openrouter|openrouter-loop]",
+    "Usage: bun run pilot:run --task <path> --runs-root <path> --run-id <id> [--agent fake|openrouter|openrouter-loop|openai-compatible-loop]",
     "Usage: bun run pilot:fake --task <path> --runs-root <path> --run-id <id> [--fake-agent-mode <mode>]",
     "",
     "Options:",
     "  --task <path>              Task package directory.",
     "  --runs-root <path>         Directory where run artifacts are written.",
     "  --run-id <id>              Stable run identifier under the runs root.",
-    "  --agent <kind>             fake | openrouter | openrouter-loop. Defaults to fake.",
+    "  --agent <kind>             fake | openrouter | openrouter-loop | openai-compatible-loop. Defaults to fake.",
     "  --fake-agent-mode <mode>   normal | context-i03-item-name-drift.",
     `  --openrouter-model <id>    Defaults to OPENROUTER_MODEL or ${DEFAULT_OPENROUTER_MODEL}.`,
     "  --openrouter-endpoint <url>",
     "                             Defaults to https://openrouter.ai/api/v1/chat/completions.",
+    `  --model-loop-preset <id>   ${MODEL_LOOP_PRESET_IDS.join(" | ")}. Defaults to MODEL_LOOP_PRESET or ${DEFAULT_MODEL_LOOP_PRESET_ID}.`,
+    "  --model-loop-provider <id> Provider label for openai-compatible-loop. Defaults to preset, or MODEL_LOOP_PROVIDER.",
+    "  --model-loop-model <id>    Model ID for openai-compatible-loop. Defaults to MODEL_LOOP_MODEL or preset model.",
+    "  --model-loop-endpoint <url>",
+    "                             Chat Completions URL for openai-compatible-loop. Defaults to MODEL_LOOP_ENDPOINT or preset endpoint.",
+    "  --model-loop-api-key-env <name>",
+    "                             Env var holding the API key for openai-compatible-loop. Defaults to MODEL_LOOP_API_KEY_ENV or preset key env.",
     "  --run-classification <id>  calibration | difficulty_probe | causal_pilot | diagnostic_invalid.",
     "                             Defaults to calibration.",
     "  --protocol-profile-id <id> final-checkpoint-primary-v1 | path-survival-primary-v1.",
     "                             Defaults to final-checkpoint-primary-v1.",
     "  --max-model-turns <n>      Defaults to 3 for loop adapters.",
     "  --max-feedback-runs <n>    Defaults to 2 for loop adapters.",
+    "  --condition-concurrency <n>",
+    `                             Condition pipelines to run concurrently. Defaults to ${DEFAULT_CONDITION_CONCURRENCY}; use 1 for sequential arms.`,
     "  --request-timeout-ms <n>   Provider request timeout. Defaults to 60000.",
-    "  --max-output-tokens <n>    OpenRouter max completion tokens. Defaults to 16000.",
+    "  --max-output-tokens <n>    Provider max completion tokens. Defaults to 16000.",
     "  --max-workspace-bytes <n>  Workspace context byte cap. Defaults to 256000.",
     "  --max-feedback-output-bytes <n>",
     "                             Feedback summary byte cap. Defaults to 12000.",
@@ -486,9 +641,11 @@ function usage(): string {
     "                             none | json_schema. Defaults to none.",
     "  --openrouter-require-parameters <bool>",
     "                             Provider require_parameters. Defaults to true with json_schema.",
+    "  --model-loop-response-format <id>",
+    "                             none | json_schema for openai-compatible-loop. Defaults to none.",
     "  --provider-max-retries <n>",
-    "                             Provider retries for openrouter-loop. Defaults to 0.",
-    "  --temperature <n>          OpenRouter sampling temperature. Defaults to 0.2.",
+    "                             Provider retries for loop adapters. Defaults to 0.",
+    "  --temperature <n>          Provider sampling temperature. Defaults to 0.2.",
     "  --help                     Print this help text."
   ].join("\n");
 }

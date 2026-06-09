@@ -36,10 +36,20 @@ describe("fake pilot CLI", () => {
     expect(process.stdout.toString()).toContain("--max-feedback-output-bytes");
     expect(process.stdout.toString()).toContain("--openrouter-response-format");
     expect(process.stdout.toString()).toContain("--openrouter-require-parameters");
+    expect(process.stdout.toString()).toContain("openai-compatible-loop");
+    expect(process.stdout.toString()).toContain("--model-loop-preset");
+    expect(process.stdout.toString()).toContain("litellm | deepseek | alibaba-qwen");
+    expect(process.stdout.toString()).toContain("--model-loop-provider");
+    expect(process.stdout.toString()).toContain("--model-loop-model");
+    expect(process.stdout.toString()).toContain("--model-loop-endpoint");
+    expect(process.stdout.toString()).toContain("--model-loop-api-key-env");
+    expect(process.stdout.toString()).toContain("--model-loop-response-format");
     expect(process.stdout.toString()).toContain("--provider-max-retries");
     expect(process.stdout.toString()).toContain("--temperature");
     expect(process.stdout.toString()).toContain("--max-model-turns");
     expect(process.stdout.toString()).toContain("--max-feedback-runs");
+    expect(process.stdout.toString()).toContain("--condition-concurrency");
+    expect(process.stdout.toString()).toContain("Defaults to 2");
   });
 
   test("inspect-run CLI prints help without requiring a manifest", () => {
@@ -305,6 +315,40 @@ describe("fake pilot CLI", () => {
     expect(runManifest.run_classification).toBe("difficulty_probe");
   });
 
+  test("records condition concurrency from the CLI as a run budget boundary", async () => {
+    const root = await mkTempRoot();
+    const runId = "cli-condition-concurrency-001";
+
+    const process = runFakePilot({
+      root,
+      runId,
+      extraArgs: ["--condition-concurrency", "2"]
+    });
+
+    expect(process.exitCode).toBe(0);
+
+    const runManifest = JSON.parse(await readFile(join(root, "runs", runId, "run.json"), "utf8"));
+
+    expect(runManifest.budget.condition_concurrency).toBe(2);
+    expect(runManifest.compatibility.budget_hash).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  test("defaults CLI runs to parallel condition pipelines", async () => {
+    const root = await mkTempRoot();
+    const runId = "cli-default-condition-concurrency-001";
+
+    const process = runFakePilot({
+      root,
+      runId
+    });
+
+    expect(process.exitCode).toBe(0);
+
+    const runManifest = JSON.parse(await readFile(join(root, "runs", runId, "run.json"), "utf8"));
+
+    expect(runManifest.budget.condition_concurrency).toBe(2);
+  });
+
   test("records an explicit protocol profile from the CLI without running providers", async () => {
     const root = await mkTempRoot();
     const runId = "cli-path-survival-profile-001";
@@ -386,6 +430,108 @@ describe("fake pilot CLI", () => {
 
     expect(process.exitCode).toBe(1);
     expect(process.stderr.toString()).toContain("OPENROUTER_API_KEY");
+  });
+
+  test("rejects OpenAI-compatible loop runs without the configured API key env var", async () => {
+    const root = await mkTempRoot();
+    const runId = "cli-openai-compatible-loop-missing-key-001";
+    const process = Bun.spawnSync({
+      cmd: [
+        "bun",
+        "run",
+        "bin/run-fake-pilot.ts",
+        "--task",
+        join(repoRoot, "tasks", "role-permissions-calibration"),
+        "--runs-root",
+        join(root, "runs"),
+        "--run-id",
+        runId,
+        "--agent",
+        "openai-compatible-loop",
+        "--model-loop-provider",
+        "litellm",
+        "--model-loop-model",
+        "anthropic/claude-sonnet-4.6",
+        "--model-loop-endpoint",
+        "http://localhost:4000/v1/chat/completions",
+        "--model-loop-api-key-env",
+        "LITELLM_API_KEY"
+      ],
+      cwd: repoRoot,
+      stdout: "pipe",
+      stderr: "pipe",
+      env: {
+        ...Bun.env,
+        LITELLM_API_KEY: ""
+      }
+    });
+
+    expect(process.exitCode).toBe(1);
+    expect(process.stderr.toString()).toContain("LITELLM_API_KEY");
+  });
+
+  test("direct DeepSeek preset uses the DeepSeek API key env var before any provider call", async () => {
+    const root = await mkTempRoot();
+    const runId = "cli-deepseek-direct-missing-key-001";
+    const process = Bun.spawnSync({
+      cmd: [
+        "bun",
+        "run",
+        "bin/run-fake-pilot.ts",
+        "--task",
+        join(repoRoot, "tasks", "role-permissions-calibration"),
+        "--runs-root",
+        join(root, "runs"),
+        "--run-id",
+        runId,
+        "--agent",
+        "openai-compatible-loop",
+        "--model-loop-preset",
+        "deepseek"
+      ],
+      cwd: repoRoot,
+      stdout: "pipe",
+      stderr: "pipe",
+      env: {
+        ...Bun.env,
+        DEEPSEEK_API_KEY: ""
+      }
+    });
+
+    expect(process.exitCode).toBe(1);
+    expect(process.stderr.toString()).toContain("DEEPSEEK_API_KEY");
+  });
+
+  test("direct Alibaba Qwen preset uses the DashScope API key env var before any provider call", async () => {
+    const root = await mkTempRoot();
+    const runId = "cli-alibaba-qwen-direct-missing-key-001";
+    const process = Bun.spawnSync({
+      cmd: [
+        "bun",
+        "run",
+        "bin/run-fake-pilot.ts",
+        "--task",
+        join(repoRoot, "tasks", "role-permissions-calibration"),
+        "--runs-root",
+        join(root, "runs"),
+        "--run-id",
+        runId,
+        "--agent",
+        "openai-compatible-loop",
+        "--model-loop-preset",
+        "alibaba-qwen"
+      ],
+      cwd: repoRoot,
+      stdout: "pipe",
+      stderr: "pipe",
+      env: {
+        ...Bun.env,
+        DASHSCOPE_API_KEY: ""
+      }
+    });
+
+    expect(process.exitCode).toBe(1);
+    expect(process.stderr.toString()).toContain("DASHSCOPE_API_KEY");
   });
 });
 

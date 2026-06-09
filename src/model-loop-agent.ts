@@ -7,7 +7,6 @@ import {
   DEFAULT_OPENROUTER_ENDPOINT,
   DEFAULT_OPENROUTER_MODEL,
   classifyOpenRouterError,
-  fetchOpenRouterResponse,
   type FetchLike
 } from "./openrouter-agent";
 import type { RunValidityDetail, RunValidityFlag } from "./provenance";
@@ -34,6 +33,7 @@ export const DEFAULT_MODEL_LOOP_POLICY = {
 export const OPENROUTER_MODEL_LOOP_RESPONSE_SCHEMA_VERSION = "model-loop-response-json-schema-v1";
 
 export type OpenRouterResponseFormat = "none" | "json_schema";
+export type OpenAiCompatibleResponseFormat = OpenRouterResponseFormat;
 
 export type ModelLoopCall = {
   turn_index: number;
@@ -99,6 +99,26 @@ export type OpenRouterFeedbackLoopAgentOptions = {
   maxFeedbackOutputBytes?: number;
   responseFormat?: OpenRouterResponseFormat;
   requireParameters?: boolean;
+  maxProviderRetries?: number;
+  requestTimeoutMs?: number;
+  fetch?: FetchLike;
+};
+
+export type OpenAiCompatibleFeedbackLoopAgentOptions = {
+  provider: string;
+  apiKey: string;
+  model: string;
+  endpoint: string;
+  appTitle?: string;
+  siteUrl?: string;
+  maxTokens?: number;
+  temperature?: number;
+  max_model_turns?: number;
+  max_feedback_runs?: number;
+  maxWorkspaceBytes?: number;
+  maxFeedbackOutputBytes?: number;
+  responseFormat?: OpenAiCompatibleResponseFormat;
+  providerParameters?: Record<string, unknown>;
   maxProviderRetries?: number;
   requestTimeoutMs?: number;
   fetch?: FetchLike;
@@ -307,7 +327,8 @@ function modelResponseWasReceived(validityFlag: ReturnType<typeof classifyOpenRo
 
   return (
     detail.includes("Model loop JSON") ||
-    detail.includes("OpenRouter response") ||
+    detail.includes("provider response") ||
+    detail.includes("response") ||
     detail.includes("message content")
   );
 }
@@ -382,8 +403,10 @@ export function createOpenRouterFeedbackLoopAgent(
     maxWorkspaceBytes: options.maxWorkspaceBytes,
     maxFeedbackOutputBytes: options.maxFeedbackOutputBytes,
     model: async (call) =>
-      requestOpenRouterModelLoopResponse({
+      requestChatCompletionsModelLoopResponse({
         call,
+        provider: "openrouter",
+        providerDisplayName: "OpenRouter",
         fetchImpl,
         endpoint,
         requestTimeoutMs,
@@ -394,14 +417,77 @@ export function createOpenRouterFeedbackLoopAgent(
         maxTokens,
         temperature,
         responseFormat,
-        requireParameters,
+        providerParameters: requireParameters ? { require_parameters: true } : undefined,
         maxProviderRetries
       })
   });
 }
 
-async function requestOpenRouterModelLoopResponse(input: {
+export function createOpenAiCompatibleFeedbackLoopAgent(
+  options: OpenAiCompatibleFeedbackLoopAgentOptions
+): AgentAdapter {
+  const provider = sanitizeProviderLabel(options.provider);
+  const apiKey = options.apiKey.trim();
+  const model = options.model.trim();
+  const endpoint = options.endpoint.trim();
+  const maxTokens = options.maxTokens ?? 16_000;
+  const temperature = options.temperature ?? 0.2;
+  const requestTimeoutMs = options.requestTimeoutMs ?? DEFAULT_OPENROUTER_REQUEST_TIMEOUT_MS;
+  const responseFormat = options.responseFormat ?? "none";
+  const maxProviderRetries = options.maxProviderRetries ?? 0;
+  const fetchImpl = options.fetch ?? globalThis.fetch;
+
+  if (!apiKey) {
+    throw new Error(`${provider.toUpperCase()} API key is required for the OpenAI-compatible feedback-loop agent adapter.`);
+  }
+
+  if (!model) {
+    throw new Error("model is required for the OpenAI-compatible feedback-loop agent adapter.");
+  }
+
+  if (!endpoint) {
+    throw new Error("endpoint is required for the OpenAI-compatible feedback-loop agent adapter.");
+  }
+
+  if (!fetchImpl) {
+    throw new Error("No fetch implementation is available for the OpenAI-compatible feedback-loop agent adapter.");
+  }
+
+  if (!Number.isInteger(maxProviderRetries) || maxProviderRetries < 0) {
+    throw new Error("maxProviderRetries must be a non-negative integer.");
+  }
+
+  return createModelLoopAgent({
+    adapter_id: `openai-compatible-loop:${provider}:${model}`,
+    max_model_turns: options.max_model_turns,
+    max_feedback_runs: options.max_feedback_runs,
+    maxWorkspaceBytes: options.maxWorkspaceBytes,
+    maxFeedbackOutputBytes: options.maxFeedbackOutputBytes,
+    model: async (call) =>
+      requestChatCompletionsModelLoopResponse({
+        call,
+        provider,
+        providerDisplayName: provider,
+        fetchImpl,
+        endpoint,
+        requestTimeoutMs,
+        apiKey,
+        appTitle: options.appTitle,
+        siteUrl: options.siteUrl,
+        model,
+        maxTokens,
+        temperature,
+        responseFormat,
+        providerParameters: options.providerParameters,
+        maxProviderRetries
+      })
+  });
+}
+
+async function requestChatCompletionsModelLoopResponse(input: {
   call: ModelLoopCall;
+  provider: string;
+  providerDisplayName: string;
   fetchImpl: FetchLike;
   endpoint: string;
   requestTimeoutMs: number;
@@ -411,8 +497,8 @@ async function requestOpenRouterModelLoopResponse(input: {
   model: string;
   maxTokens: number;
   temperature: number;
-  responseFormat: OpenRouterResponseFormat;
-  requireParameters: boolean;
+  responseFormat: OpenAiCompatibleResponseFormat;
+  providerParameters?: Record<string, unknown>;
   maxProviderRetries: number;
 }): Promise<ModelLoopResponse> {
   const failedAttemptDetails: RunValidityDetail[] = [];
@@ -445,13 +531,14 @@ async function requestOpenRouterModelLoopResponse(input: {
         ...(input.responseFormat === "json_schema"
           ? { response_format: modelLoopResponseFormatJsonSchema() }
           : {}),
-        ...(input.requireParameters ? { provider: { require_parameters: true } } : {})
+        ...(input.providerParameters ? { provider: input.providerParameters } : {})
       };
 
-      const { response, responseText } = await fetchOpenRouterResponse({
+      const { response, responseText } = await fetchProviderResponse({
         fetchImpl: input.fetchImpl,
         endpoint: input.endpoint,
         timeoutMs: input.requestTimeoutMs,
+        providerDisplayName: input.providerDisplayName,
         init: {
           method: "POST",
           headers: requestHeaders({
@@ -465,11 +552,11 @@ async function requestOpenRouterModelLoopResponse(input: {
 
       if (!response.ok) {
         throw new Error(
-          `OpenRouter loop request failed: ${response.status} ${response.statusText}: ${responseText}`.trim()
+          `${input.providerDisplayName} loop request failed: ${response.status} ${response.statusText}: ${responseText}`.trim()
         );
       }
 
-      const modelResponse = parseModelResult(extractMessageContent(parseJson(responseText, "OpenRouter response")));
+      const modelResponse = parseModelResult(extractMessageContent(parseJson(responseText, "provider response")));
       const recoveredDetails = recoveredRetryDetails(failedAttemptDetails);
 
       return {
@@ -488,7 +575,8 @@ async function requestOpenRouterModelLoopResponse(input: {
         validityFlag,
         retryable: isRetryableProviderFailure(validityFlag),
         retryCount,
-        elapsedMs: Math.max(0, Date.now() - attemptStartedAt)
+        elapsedMs: Math.max(0, Date.now() - attemptStartedAt),
+        provider: input.provider
       });
 
       failedAttemptDetails.push(failureDetail);
@@ -499,11 +587,12 @@ async function requestOpenRouterModelLoopResponse(input: {
     }
   }
 
-  throw new Error("OpenRouter retry loop exited unexpectedly.");
+  throw new Error(`${input.providerDisplayName} retry loop exited unexpectedly.`);
 }
 
 function providerFailureDetail(input: {
   call: ModelLoopCall;
+  provider: string;
   detail: string;
   validityFlag: RunValidityFlag;
   retryable: boolean;
@@ -515,7 +604,7 @@ function providerFailureDetail(input: {
     scope: "checkpoint",
     condition_id: input.call.condition_id,
     checkpoint_id: input.call.checkpoint_id,
-    provider: "openrouter",
+    provider: input.provider,
     message: input.detail,
     retryable: input.retryable,
     provider_failure_phase:
@@ -534,6 +623,60 @@ function providerFailureDetail(input: {
     retry_count: input.retryCount,
     elapsed_ms: input.elapsedMs
   };
+}
+
+async function fetchProviderResponse(input: {
+  fetchImpl: FetchLike;
+  endpoint: string;
+  init: Parameters<FetchLike>[1];
+  timeoutMs: number;
+  providerDisplayName: string;
+}): Promise<{
+  response: Awaited<ReturnType<FetchLike>>;
+  responseText: string;
+}> {
+  const controller = new AbortController();
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      (async () => {
+        const response = await input.fetchImpl(input.endpoint, {
+          ...input.init,
+          signal: controller.signal
+        });
+        const responseText = await response.text();
+
+        return { response, responseText };
+      })(),
+      new Promise<never>((_resolve, reject) => {
+        timeout = setTimeout(() => {
+          controller.abort();
+          reject(new Error(`${input.providerDisplayName} request timed out after ${input.timeoutMs}ms`));
+        }, input.timeoutMs);
+      })
+    ]);
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(`${input.providerDisplayName} request timed out after ${input.timeoutMs}ms`);
+    }
+
+    throw error;
+  } finally {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+  }
+}
+
+function sanitizeProviderLabel(value: string): string {
+  const sanitized = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_.-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return sanitized.length > 0 ? sanitized : "openai-compatible";
 }
 
 function recoveredRetryDetails(details: RunValidityDetail[]): RunValidityDetail[] {

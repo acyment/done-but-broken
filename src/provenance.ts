@@ -74,6 +74,7 @@ export type RunValidityDetail = {
 export type RunBudget = {
   max_model_turns?: number;
   max_feedback_runs?: number;
+  condition_concurrency?: number;
 };
 
 export type ModelProviderSettings = {
@@ -708,6 +709,13 @@ function validateRunBudget(value: unknown, errors: string[]) {
   ) {
     errors.push("budget.max_feedback_runs must be a non-negative integer when provided");
   }
+
+  if (
+    budget.condition_concurrency !== undefined &&
+    (!Number.isInteger(budget.condition_concurrency) || budget.condition_concurrency < 1)
+  ) {
+    errors.push("budget.condition_concurrency must be a positive integer when provided");
+  }
 }
 
 function validateCausalPilotBudget(candidate: any, errors: string[]) {
@@ -886,6 +894,7 @@ function validateRunManifestCheckpoint(checkpoint: any, field: string): string[]
     `${field}.feedback_opportunity_integrity`,
     errors
   );
+  validateOptionalCheckpointTiming(checkpoint.timing, `${field}.timing`, errors);
 
   return errors;
 }
@@ -950,6 +959,7 @@ export function validateCheckpointManifest(manifest: unknown): SchemaValidation 
     "feedback_opportunity_integrity",
     errors
   );
+  validateOptionalCheckpointTiming(candidate.timing, "timing", errors);
 
   return { ok: errors.length === 0, errors };
 }
@@ -1566,6 +1576,10 @@ function validateCheckpointManifestHashesMatchRunEntry(input: {
   ) {
     input.errors.push(`Checkpoint manifest feedback_opportunity_integrity mismatch for ${scope}`);
   }
+
+  if (JSON.stringify(input.checkpointManifest.timing) !== JSON.stringify(input.runCheckpoint.timing)) {
+    input.errors.push(`Checkpoint manifest timing mismatch for ${scope}`);
+  }
 }
 
 export async function verifyRunArtifacts(runManifestPath: string): Promise<RunArtifactVerification> {
@@ -1852,6 +1866,27 @@ function validateOptionalFeedbackOpportunityIntegrity(
       errors.push(`${field}.${key} must be a boolean`);
     }
   }
+}
+
+function validateOptionalCheckpointTiming(value: unknown, field: string, errors: string[]) {
+  if (value === undefined) {
+    return;
+  }
+
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    errors.push(`${field} must be an object when provided`);
+    return;
+  }
+
+  const timing = value as {
+    checkpoint_ms?: unknown;
+    agent_ms?: unknown;
+    hidden_oracle_ms?: unknown;
+  };
+
+  validateNonNegativeInteger(timing.checkpoint_ms, `${field}.checkpoint_ms`, errors);
+  validateNonNegativeInteger(timing.agent_ms, `${field}.agent_ms`, errors);
+  validateOptionalNonNegativeInteger(timing.hidden_oracle_ms, `${field}.hidden_oracle_ms`, errors);
 }
 
 async function compareAgentResultTurnProtocol(input: {
