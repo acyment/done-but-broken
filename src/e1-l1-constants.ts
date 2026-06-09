@@ -6,6 +6,12 @@ export interface E1SealedConstants {
   condition_ids: ["context_only_spec", "feedback_capable_spec"];
   deferred_before_provider_seal: string[];
   token_estimator: { status: string; rule: string; divergence_review_threshold: number };
+  conversation: {
+    thread_scope: "fresh_per_checkpoint";
+    prior_checkpoint_memory: "workspace_only";
+    checkpoint_start_context: string[];
+    rejected_alternative: string;
+  };
   turn_protocol: {
     max_turns_per_checkpoint: number;
     max_verification_executions_per_checkpoint: number;
@@ -81,6 +87,7 @@ const TOP_LEVEL_KEYS = [
   "condition_ids",
   "deferred_before_provider_seal",
   "token_estimator",
+  "conversation",
   "turn_protocol",
   "stall_reporting",
   "block_grammar",
@@ -130,6 +137,14 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
     JSON.stringify(["context_only_spec", "feedback_capable_spec"])
   ) {
     throw new E1ConstantsValidationError("condition_ids must match the active two-arm protocol");
+  }
+
+  if (constants.conversation.thread_scope !== "fresh_per_checkpoint") {
+    throw new E1ConstantsValidationError("conversation.thread_scope must be fresh_per_checkpoint");
+  }
+
+  if (constants.conversation.prior_checkpoint_memory !== "workspace_only") {
+    throw new E1ConstantsValidationError("conversation.prior_checkpoint_memory must be workspace_only");
   }
 
   validateRegex("block_grammar.file_open_regex", constants.block_grammar.file_open_regex);

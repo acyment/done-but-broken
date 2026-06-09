@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json`.
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.2.1`).
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -37,7 +37,7 @@ L0 exists today:
 - protected-path hashing;
 - verification-budget counters.
 
-L1 parser/shakedown and the no-provider local turn adapter shell exist; provider conversation assembly is still missing:
+L1 parser/shakedown, the no-provider local turn adapter shell, and the no-provider conversation/checkpoint runner exist; live provider conversation assembly is still missing:
 
 - parse model output into protocol blocks;
 - strip one outer markdown fence layer before parsing;
@@ -46,10 +46,12 @@ L1 parser/shakedown and the no-provider local turn adapter shell exist; provider
 - consume verification slots;
 - emit next-turn harness notices and verification-output injections;
 - debit model-output and injected-output tokens with provider usage primary and estimator shadow support;
-- assemble provider turns with cached-prefix accounting;
+- assemble fresh per-checkpoint no-provider conversations;
+- run scripted-agent checkpoint loops with bundle emission and replay checks;
+- assemble live provider turns with cached-prefix accounting;
 - call providers.
 
-L2 is missing:
+Full L2 is still missing:
 
 - seed arm workspaces;
 - advance checkpoints;
@@ -58,7 +60,13 @@ L2 is missing:
 - classify checkpoint termination;
 - emit replayable artifact bundles.
 
-CartCalc cannot be considered Step 0 complete until provider conversation assembly and L2 exist and one orchestrator command runs the full calibration bundle.
+CartCalc cannot be considered Step 0 complete until live provider conversation assembly and full L2 exist and one orchestrator command runs the full calibration bundle.
+
+## Conversation Thread Scope
+
+E1 uses a fresh provider conversation per checkpoint. The checkpoint-start message carries the current repo snapshot, README/instructions, the checkpoint-specific visible spec, and the condition-specific verification affordances. The model's only memory of earlier checkpoints is the workspace itself: code, protected specs, and its own persisted `scratch/` files.
+
+One continuous provider thread across checkpoints is rejected for this protocol version because it changes both the maintenance-pressure phenomenon and the cost model. Within a checkpoint, later turns append the model's prior output plus harness notices and verification output.
 
 ## Editing And Parser Policy
 

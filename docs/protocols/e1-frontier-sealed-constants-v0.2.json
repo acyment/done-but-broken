@@ -1,6 +1,6 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
@@ -10,6 +10,18 @@
     "status": "TBD",
     "rule": "Provider-reported usage is the ledger of record. This estimator runs in shadow mode on every turn. It MUST be selected and sealed before any provider calibration run; the orchestrator must refuse to start provider runs while status is TBD.",
     "divergence_review_threshold": 0.15
+  },
+
+  "conversation": {
+    "thread_scope": "fresh_per_checkpoint",
+    "prior_checkpoint_memory": "workspace_only",
+    "checkpoint_start_context": [
+      "current repo snapshot",
+      "README/instructions",
+      "checkpoint-specific visible spec",
+      "condition-specific executable feedback availability"
+    ],
+    "rejected_alternative": "One provider thread across checkpoints is rejected for E1 because it changes the phenomenon and cost model. Prior checkpoint state must survive through the workspace, specs, and scratch files rather than chat transcript memory."
   },
 
   "turn_protocol": {

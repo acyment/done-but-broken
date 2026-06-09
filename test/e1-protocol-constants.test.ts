@@ -16,7 +16,7 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.2.0");
+    expect(constants.version).toBe("0.2.1");
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
     expect(constants.path_grammar.regex).toBe("^[A-Za-z0-9._-][A-Za-z0-9._/-]*$");
     expect(constants.path_grammar.relative_only).toBe(true);
@@ -27,6 +27,8 @@ describe("E1 frontier sealed constants", () => {
     expect(new RegExp(constants.path_grammar.regex).test("scratch\\probe.ts")).toBe(false);
     expect(constants.turn_protocol.consecutive_noop_stall_threshold).toBe(3);
     expect(constants.turn_protocol.stall_classification).toBe("agent_stalled");
+    expect(constants.conversation.thread_scope).toBe("fresh_per_checkpoint");
+    expect(constants.conversation.prior_checkpoint_memory).toBe("workspace_only");
     expect(constants.audit.integrity_rule).toContain("replacement application");
     expect(constants.audit.integrity_rule).toContain("verification execution");
     expect(providerSealBlockers(constants)).toEqual(["token_estimator"]);
