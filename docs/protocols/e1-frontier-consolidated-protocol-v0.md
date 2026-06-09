@@ -37,15 +37,16 @@ L0 exists today:
 - protected-path hashing;
 - verification-budget counters.
 
-L1 parser/shakedown exists; the full provider turn adapter is still missing:
+L1 parser/shakedown and the no-provider local turn adapter shell exist; provider conversation assembly is still missing:
 
 - parse model output into protocol blocks;
 - strip one outer markdown fence layer before parsing;
 - classify verification commands against the sealed grammar;
 - feed parsed replacements and verification requests into L0 mechanics;
+- consume verification slots;
+- emit next-turn harness notices and verification-output injections;
+- debit model-output and injected-output tokens with provider usage primary and estimator shadow support;
 - assemble provider turns with cached-prefix accounting;
-- inject verification output and no-op notices;
-- debit model output and injected-output tokens;
 - call providers.
 
 L2 is missing:
@@ -57,7 +58,7 @@ L2 is missing:
 - classify checkpoint termination;
 - emit replayable artifact bundles.
 
-CartCalc cannot be considered Step 0 complete until the full L1 provider turn adapter and L2 exist and one orchestrator command runs the full calibration bundle.
+CartCalc cannot be considered Step 0 complete until provider conversation assembly and L2 exist and one orchestrator command runs the full calibration bundle.
 
 ## Editing And Parser Policy
 

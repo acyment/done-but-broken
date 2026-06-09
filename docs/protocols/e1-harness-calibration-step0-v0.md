@@ -1,6 +1,6 @@
 # e1-harness-calibration-step0-v0
 
-Status: draft calibration protocol. Local E1 L0 mechanics and the L1 parser shakedown are implemented; the full L1 provider turn adapter, L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
+Status: draft calibration protocol. Local E1 L0 mechanics, L1 parser shakedown, and a no-provider L1 turn adapter shell are implemented; the provider conversation adapter, L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -13,7 +13,7 @@ This is Step 0 for any frontier-model branch using `e1-self-directed-verificatio
 Step 0 is not complete until all three layers exist:
 
 - L0 mechanics library: patch application, command validation, protected-path integrity, verification execution, output truncation/hashing, and local counters.
-- L1 agent loop adapter: parse model output blocks, assemble provider turns with a cached prefix, inject harness notices and verification output, debit the token ledger, and call providers. The parser/shakedown portion exists; provider-turn assembly remains missing.
+- L1 agent loop adapter: parse model output blocks, consume local turns through L0, assemble provider turns with a cached prefix, inject harness notices and verification output, debit the token ledger, and call providers. Parser/shakedown and local turn consumption exist; provider conversation assembly remains missing.
 - L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle.
 
 The L0/L1/L2 implementation must cover:

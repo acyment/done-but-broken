@@ -1,6 +1,6 @@
 # e1-self-directed-verification-turn-based-v0
 
-Status: draft protocol profile. Step 0 local L0 mechanics and the L1 parser shakedown are implemented; the full L1 provider turn adapter and L2 run orchestrator are not implemented. No provider run is authorized by this document.
+Status: draft protocol profile. Step 0 local L0 mechanics, L1 parser shakedown, and a no-provider L1 turn adapter shell are implemented; the provider conversation adapter and L2 run orchestrator are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -14,13 +14,13 @@ This is the industry-relevant question. A production frontier coding agent can u
 
 ## Layer Decomposition
 
-"E1 harness" means three layers. L0 exists today, and the L1 block parser exists; the full L1 provider turn adapter and L2 orchestrator do not.
+"E1 harness" means three layers. L0 exists today, the L1 block parser exists, and a no-provider L1 turn adapter shell exists; provider conversation integration and L2 orchestration do not.
 
 - L0 mechanics library: full-file replacement parsing/application, command validation, protected-path checks, verification execution, truncation, hashes, and counters.
-- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers. The parser portion is implemented in `src/e1-l1-parser.ts`; provider-turn assembly is still missing.
+- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers. Parser and local turn consumption are implemented in `src/e1-l1-parser.ts` and `src/e1-turn-adapter.ts`; provider conversation assembly is still missing.
 - L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications.
 
-CartCalc calibration and any Billing v2 run require the full L1 adapter and L2. L0 mechanics plus the parser alone are not an evidence-generating harness.
+CartCalc calibration and any Billing v2 run require provider conversation integration plus L2. L0 mechanics plus the local turn adapter are not an evidence-generating harness.
 
 ## Turn Structure
 
@@ -189,7 +189,7 @@ The isolated mechanism is the cost of self-authoring and self-maintaining verifi
 
 ## Harness Gap
 
-The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, and the constants-driven L1 block parser exists in `src/e1-l1-parser.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
+The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, the constants-driven L1 block parser exists in `src/e1-l1-parser.ts`, and local turn consumption exists in `src/e1-turn-adapter.ts`, but the provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
 
 Before any E1 evidence-generating run, add test-first harness support for:
 
