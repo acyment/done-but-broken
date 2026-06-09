@@ -14,6 +14,8 @@ The target claim, if the branch succeeds, would be:
 
 That claim is not supported by the current evidence and must not be made without new clean causal pilots.
 
+Directional prior: under E1, the modal valid outcome may be null because frontier models get substantial self-verification and recovery room. The value of this branch is fair measurement under a strong control, not a guaranteed positive result.
+
 ## Domain Decision
 
 Recommended domain: multi-file subscription/billing platform v2.
@@ -63,6 +65,15 @@ The template workspace should look like a real small codebase, not a blank kata.
 
 Realistic friction is allowed, but contradictions and artificial traps are not. Acceptable friction includes legacy helpers that must keep working, mild naming inconsistency between modules, and one v1 compatibility path that cannot be deleted. The task design must record a friction budget before implementation so reviewers can verify that difficulty comes from realistic codebase maintenance, not hidden ambiguity.
 
+Add a sealed friction registry before any run. Each row records:
+
+- friction element;
+- visible spec sentence or README line acknowledging it;
+- visible-entailed assertions covering it;
+- mutation test proving the oracle detects its violation.
+
+Friction with no registry row does not ship.
+
 ## Checkpoint Sketch
 
 Twenty-four checkpoints are sealed up front. CP01-CP18 form the primary probe. CP19-CP24 are a sealed escalation package activated only if the first difficulty probe ceilings.
@@ -108,7 +119,7 @@ Both `context_only_spec` and `feedback_capable_spec` receive byte-identical visi
 Prompt delivery is incremental:
 
 - each checkpoint prompt injects only that checkpoint's new Gherkin and worked examples;
-- prior spec files persist in `/specs` and remain discoverable in the workspace;
+- prior spec files persist in `specs/` and remain discoverable in the workspace;
 - prior commitments are not restated every turn as a cumulative checklist;
 - invariants are stated once when introduced, and preserving them is the task.
 
@@ -142,6 +153,10 @@ Replayability uses commit-then-reveal:
 - at publication, release the oracle, harness, transcripts, untruncated execution logs, per-checkpoint code snapshots, and seed list;
 - once released, that oracle version is burned for future fresh runs.
 
+The public release is Evidence Package v1, not a living benchmark. Post-publication runs against v1 are demonstrations, not fresh evidence. Any new claim requires a new sealed evidence package.
+
+The hidden oracle should be built from a parameterized case generator where practical: value constants, rate tables, dates, and offsets are inputs. The generator ships in the evidence package so a future v2 study can regenerate fresh cases without changing the visible rule structure.
+
 Visible-to-hidden generalization gap is predeclared:
 
 - for each checkpoint snapshot, `V_k` is assertion-weighted pass rate over visible-entailed assertions;
@@ -168,8 +183,8 @@ Treatment:
 This is an additive design:
 
 - both arms can write and run model-authored tests or probe scripts through the same structured verification channel;
-- only `feedback_capable_spec` receives provided BDD assets, provided step definitions, and the provided `make spec` command;
-- `make spec` consumes the same verification-execution quota as self-authored tests;
+- only `feedback_capable_spec` receives provided BDD assets, provided step definitions, and the provided `bun run spec` command;
+- `bun run spec` consumes the same verification-execution quota as self-authored tests;
 - verification output tokens count against the arm's sealed budget.
 
 The rejected alternative is E0, where the context arm cannot execute anything. E0 is easier to implement with the current harness, but too weak for a frontier-model claim because it handicaps a production-grade coding agent control.
@@ -187,8 +202,9 @@ Before any frontier provider run:
 - Feedback gating: only `feedback_capable_spec` receives provided executable BDD assets, step definitions, asset paths, and provided spec command.
 - E1 self-verification parity: both arms have the same generic command/self-verification budget.
 - Budget seal: max model turns, verification-execution limits, token caps, output caps, timeout, provider profile, and run classification are sealed.
-- Read-only spec integrity: patch attempts against `/specs` and `/specs/steps` are rejected and logged.
-- Scratch isolation: `/scratch` persists and is captured, but is excluded from the hidden oracle import path.
+- Read-only spec integrity: patch attempts against `specs/` and `specs/steps/` are rejected and logged.
+- Scratch isolation: `scratch/` persists and is captured, but is excluded from the hidden oracle import path.
+- Verification scaffolding parity: shared README documents `@app/*`, fixtures, invocation strings, and scratch persistence; `scratch/example.test.ts` runs green in a fresh sandbox in both arms.
 - Result schema: hidden-oracle scores are the only claim-bearing scores; visible-suite pass rates are descriptive.
 
 ## Local Discrimination Gates
@@ -201,7 +217,9 @@ The task package is not provider-ready until these pass locally:
 4. Prompt/render parity: both arms receive identical visible spec content, public API contract, worked examples, and minimal orientation README.
 5. Feedback gating: context arm receives no provided BDD assets, command, or asset paths.
 6. Entailment audit: provided BDD assets contain no hidden-only assertion content.
-7. E1 harness profile tests: verification whitelist, output truncation, full-output hashing, `/scratch` persistence, read-only spec rejection, and budget accounting match `e1-self-directed-verification-turn-based-v0`.
+7. Friction registry: every intended hard/legacy element maps to public spec text, visible-entailed assertions, and mutation coverage.
+8. E1 harness profile tests: verification whitelist, output truncation, full-output hashing, `scratch/` persistence, read-only spec rejection, and budget accounting match `e1-self-directed-verification-turn-based-v0`.
+9. Step 0 calibration: `e1-harness-calibration-step0-v0` passes its go gate before Billing v2 is built.
 
 ## Isolated Competence Check
 
@@ -218,7 +236,10 @@ Definition for checkpoint `k`:
 
 Gate:
 
-- run two seeds per checkpoint;
+- run only for the activated checkpoint set, CP01-CP18 or CP01-CP24 if sealed escalation fires;
+- run only for models entering Stage 2;
+- run one seed per checkpoint, with a second seed only on failure;
+- flag `capability_limited` only at 0/2;
 - run only after the task, oracle, specs, and mutation suite are frozen;
 - never feed isolated-competence results back into task design;
 - record results as a diagnostic table per model.
@@ -231,8 +252,10 @@ This check is provider-consuming and must be separately authorized before execut
 
 Stage 0: no-provider build and validation.
 
-- implement task package;
 - implement `e1-self-directed-verification-turn-based-v0` harness support;
+- run `e1-harness-calibration-step0-v0` through a second clean calibration pass;
+- set or confirm the operator cost ceiling from measured `t`, `v`, `f`, and `o`;
+- only then implement the Billing v2 task package;
 - pass local fairness and discrimination gates;
 - freeze CP01-CP24, oracle, visible specs, runnable assets, E1 policy, provider profile, interaction graph, mutation suite, and interpretation rules;
 - publish pre-run commitments for the sealed artifacts.
@@ -260,7 +283,7 @@ Stage 2: causal pilots, only if Stage 1 passes.
 - conditions: `context_only_spec`, `feedback_capable_spec`;
 - run classification: `causal_pilot`;
 - primary endpoint: paired hidden-oracle regression-free AUC delta;
-- secondary endpoints: regression-event count, recovery rate, visible-to-hidden generalization gap.
+- secondary endpoints: regression-event count, recovery latency, regressions present at done-declaration, visible-to-hidden generalization gap, verification calls consumed per checkpoint per arm, and tokens spent authoring or maintaining scratch tests.
 
 Per model, use a two-look group-sequential rule over clean paired seeds:
 
@@ -288,6 +311,7 @@ Allowed outcomes:
 | --- | --- |
 | Context ceilings | Boundary result only: up to this complexity, frontier model had no measurable headroom; current value remains cheap/weak-model viability. |
 | Gate passes and feedback delta meets threshold | Bounded frontier-model causal pilot claim for that task/model/E1 profile. |
+| Clean null plus large self-verification cost delta | Parity at higher self-verification cost: frontier context arm matched reliability but spent materially more tokens/verification budget authoring and maintaining its own tests. |
 | Gate passes but null or negative | Publish null: frontier self-directed verification was enough under this task/model/budget. |
 | Structural failures or isolated competence failure | No claim; task invalid for frontier drift; redesign before more provider spend. |
 
@@ -296,9 +320,11 @@ Allowed outcomes:
 Recommended order:
 
 1. Add test-first harness support for `e1-self-directed-verification-turn-based-v0`.
-2. Design the billing v2 module layout, CP01-CP24 checkpoint list, minimal orientation README, public API contract, friction budget, and private interaction graph.
-3. Write parity, feedback-gating, read-only spec, scratch-isolation, verification-budget, and entailment tests before writing the full task.
-4. Build the reference implementation, visible specs, runnable BDD assets, hidden oracle, sealed extension, and mutation suite.
-5. Run local mutation/discrimination checks and publish pre-run hash commitments.
-6. Ask for explicit authorization for isolated competence diagnostics.
-7. Only after those diagnostics, ask separately for explicit authorization for the Stage 1 frontier difficulty probe.
+2. Build CartCalc and run `e1-harness-calibration-step0-v0`.
+3. Use calibration to resolve patch format, cost ceiling, turn cap, and any trim decisions.
+4. Design the billing v2 module layout, CP01-CP24 checkpoint list, minimal orientation README, public API contract, friction registry, and private interaction graph.
+5. Write parity, feedback-gating, read-only spec, scratch-isolation, verification-budget, friction-registry, and entailment tests before writing the full task.
+6. Build the reference implementation, visible specs, runnable BDD assets, hidden oracle generator, sealed extension, and mutation suite.
+7. Run local mutation/discrimination checks and publish pre-run hash commitments.
+8. Ask for explicit authorization for isolated competence diagnostics.
+9. Only after those diagnostics, ask separately for explicit authorization for the Stage 1 frontier difficulty probe.

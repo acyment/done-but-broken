@@ -32,16 +32,16 @@ Allowed command patterns are sealed per task language. For this repo's default J
 
 | Command pattern | `context_only_spec` | `feedback_capable_spec` |
 | --- | --- | --- |
-| `bun test /scratch/...` | allowed | allowed |
-| `bun /scratch/<script>.ts` | allowed | allowed |
-| `make spec` or `make spec CP=<checkpoint>` | not available | allowed |
+| `bun test scratch/` | allowed | allowed |
+| `bun run scratch/<script>.ts` | allowed | allowed |
+| `bun run spec` or `bun run spec -- --cp=<checkpoint>` | not available | allowed |
 
 If a future task deliberately introduces Python, use `uv`-owned equivalents only:
 
 | Command pattern | `context_only_spec` | `feedback_capable_spec` |
 | --- | --- | --- |
-| `uv run pytest /scratch/...` | allowed | allowed |
-| `uv run python /scratch/<script>.py` | allowed | allowed |
+| `uv run pytest scratch/` | allowed | allowed |
+| `uv run python scratch/<script>.py` | allowed | allowed |
 
 Rules:
 
@@ -52,11 +52,11 @@ Rules:
 - execution timeout `60s`;
 - non-whitelisted commands return a refusal string and still consume the verification slot.
 
-`make spec` is the provided BDD runner. It exists only for `feedback_capable_spec`.
+`spec` is a `package.json` script owned by the harness. It exists only for `feedback_capable_spec`.
 
 ## Workspace Rules
 
-`/scratch`:
+`scratch/`:
 
 - writable by both arms;
 - intended for model-authored tests and probes;
@@ -64,12 +64,12 @@ Rules:
 - captured in code snapshots for auditability;
 - excluded from the hidden oracle import path.
 
-`/specs`:
+`specs/`:
 
 - mounted read-only for both arms;
 - contains visible Gherkin/spec content.
 
-`/specs/steps`:
+`specs/steps/`:
 
 - mounted read-only for `feedback_capable_spec`;
 - contains provided step definitions and runner assets.
@@ -91,7 +91,18 @@ All constants are part of the compatibility boundary and must be sealed before e
 - truncation rule: first `2500` tokens plus last `1500` tokens, with an explicit truncation marker;
 - verification output tokens count against the per-checkpoint token budget.
 
-The `6` verification executions are shared across command types. For the feedback arm, `make spec` consumes the same quota as self-authored tests or probes. The feedback arm is not compensated with extra executions.
+The `6` verification executions are shared across command types. For the feedback arm, `bun run spec` consumes the same quota as self-authored tests or probes. The feedback arm is not compensated with extra executions.
+
+## Shared Verification Scaffolding
+
+Both arms receive identical harness-mechanics documentation in the shared README:
+
+- the `@app/*` import alias;
+- where shared fixtures live;
+- exact invocation strings for allowed self-authored tests and probes;
+- the fact that `scratch/` persists across checkpoints.
+
+Both arms also start with a trivial passing example at `scratch/example.test.ts` that imports one app module through `@app/*`. This file is harness scaffolding, not task-specific feedback. Step 0 calibration must prove it runs green in a fresh sandbox in both arms.
 
 ## Feedback Semantics
 
@@ -119,7 +130,7 @@ For every verification request, artifacts record:
 
 The full untruncated output must be archived with the publication bundle. A reviewer should be able to reconstruct the exact information channel for each arm.
 
-Model-authored files in `/scratch` are snapshotted per turn like application code.
+Model-authored files in `scratch/` are snapshotted per turn like application code.
 
 ## Claim Meaning
 
@@ -137,7 +148,7 @@ Before any E1 evidence-generating run, add test-first harness support for:
 
 - structured verification request parsing;
 - command whitelist enforcement;
-- `/scratch` persistence and capture;
+- `scratch/` persistence and capture;
 - read-only spec mounts or equivalent patch rejection;
 - capped output injection on the next turn;
 - full-output hashing;
