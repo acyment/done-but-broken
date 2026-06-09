@@ -18,7 +18,7 @@ const READ_ONLY_PATHS = new Set([
 const REPLACEMENT_HEADER = /^<<<FILE ([^>]+)>>>$/;
 const REPLACEMENT_END = "<<<END>>>";
 const ENV_ASSIGNMENT_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*=/;
-const SAFE_POSIX_PATH_PATTERN = /^[A-Za-z0-9._/-]+$/;
+const SAFE_RELATIVE_POSIX_PATH_PATTERN = /^[A-Za-z0-9._-][A-Za-z0-9._/-]*$/;
 const PROTECTED_DIRECTORY_PATHS = ["specs"] as const;
 
 export type FullFileReplacement = {
@@ -62,6 +62,7 @@ export type VerificationRunResult = {
   full_output_hash: string;
   truncated: boolean;
   refusal_reason?: string;
+  protected_path_integrity?: { ok: true } | { ok: false; mismatches: ProtectedPathHashMismatch[] };
 };
 
 export class E1VerificationBudget {
@@ -277,6 +278,7 @@ export async function runVerificationRequest(input: {
   checkpoints: string[];
   timeoutMs?: number;
   outputLimit?: number;
+  protectedPathBaseline?: ProtectedPathHashes;
 }): Promise<VerificationRunResult> {
   const execution = await buildVerificationExecution(input);
 
@@ -308,6 +310,12 @@ export async function runVerificationRequest(input: {
     });
     const fullOutput = joinOutput(result.stdout, result.stderr);
     const truncated = truncateHeadTail({ text: fullOutput, limit: input.outputLimit ?? 4000 });
+    const protectedPathIntegrity = input.protectedPathBaseline
+      ? await verifyProtectedPathHashes({
+          workspacePath: input.workspacePath,
+          baseline: input.protectedPathBaseline
+        })
+      : undefined;
 
     return {
       accepted: true,
@@ -317,7 +325,8 @@ export async function runVerificationRequest(input: {
       stderr: result.stderr,
       shown_output: truncated.shown,
       full_output_hash: truncated.full_output_hash,
-      truncated: truncated.truncated
+      truncated: truncated.truncated,
+      ...(protectedPathIntegrity ? { protected_path_integrity: protectedPathIntegrity } : {})
     };
   } catch (error) {
     const failure = error as {
@@ -331,6 +340,12 @@ export async function runVerificationRequest(input: {
     const stderr = failure.stderr ?? failure.message ?? "";
     const fullOutput = joinOutput(stdout, stderr);
     const truncated = truncateHeadTail({ text: fullOutput, limit: input.outputLimit ?? 4000 });
+    const protectedPathIntegrity = input.protectedPathBaseline
+      ? await verifyProtectedPathHashes({
+          workspacePath: input.workspacePath,
+          baseline: input.protectedPathBaseline
+        })
+      : undefined;
 
     return {
       accepted: true,
@@ -340,7 +355,8 @@ export async function runVerificationRequest(input: {
       stderr,
       shown_output: truncated.shown,
       full_output_hash: truncated.full_output_hash,
-      truncated: truncated.truncated
+      truncated: truncated.truncated,
+      ...(protectedPathIntegrity ? { protected_path_integrity: protectedPathIntegrity } : {})
     };
   }
 }
@@ -512,7 +528,7 @@ function containsUnsafeCommandSyntax(command: string): boolean {
 }
 
 function validatePosixPathSyntax(value: string): string | undefined {
-  if (!value || !SAFE_POSIX_PATH_PATTERN.test(value)) {
+  if (!value || !SAFE_RELATIVE_POSIX_PATH_PATTERN.test(value)) {
     return "Path contains disallowed syntax.";
   }
 

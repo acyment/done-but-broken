@@ -43,6 +43,8 @@ Replacement side effects have two separate outputs:
 
 If a turn contains zero valid protocol blocks, it is a no-op turn. It consumes one model turn. The next model turn begins with exactly one harness notice line: `no valid blocks parsed`. Three consecutive no-op turns terminate the checkpoint as `agent_stalled`, distinct from `budget_exhausted`. `agent_stalled` is excluded from drift analysis and counted as failure for the checkpoint's new assertions.
 
+Stall/no-op reporting is mandatory in the evidence package. Report a per-(model x arm) table. If arm stall rates differ by more than 2x and the higher arm exceeds 5 percent of checkpoints, attach a protocol-usability caveat to that model row. If the feedback arm stalls more, review transcripts for verification-output injection confusing the next-turn parser before interpreting the result as model ability.
+
 ## Verification Command Whitelist
 
 Allowed command patterns are sealed per task language. For this repo's default JavaScript/TypeScript task shape:
@@ -71,7 +73,7 @@ Rules:
 - non-whitelisted commands return a refusal string and still consume the verification slot.
 - path parameters are resolved with realpath and must be contained inside resolved `scratch/`;
 - path parameters must use `.ts` or `.test.ts`;
-- path tokens use the sealed POSIX allowlist `^[A-Za-z0-9._/-]+$`, ASCII only, no leading `-`, no `..` segment before resolution;
+- path tokens use the sealed relative POSIX allowlist `^[A-Za-z0-9._-][A-Za-z0-9._/-]*$`, ASCII only, no leading `/`, no leading `-`, no `..` segment before resolution;
 - shell metacharacters, globs, `~`, URL encoding, Unicode homoglyphs, control characters, environment-variable syntax, flags, and whitespace inside path tokens are rejected by the allowlist;
 - Windows path separators are out of scope; `\` is invalid input, not a separator;
 - Bun commands run with no auto-install behavior and a clean environment.
@@ -109,14 +111,15 @@ Harness config:
 
 Replacement attempts against read-only paths are rejected and logged. This prevents spec vandalism, feedback-suite tampering, `spec` script retargeting, and import-alias retargeting.
 
-Read-only enforcement is defend-and-verify, not a mount claim. At checkpoint start, L2 records hashes for every protected file under `specs/` plus `package.json`, `bunfig.toml`, `tsconfig.json`, `bun.lock`, and `bun.lockb` when present. L1/L2 re-verifies those hashes at every turn end. Any mismatch terminates the run as `invalid_integrity`; the current snapshot is archived but the run is not evidence.
+Read-only enforcement is defend-and-verify, not a mount claim. At checkpoint start, L2 records hashes for every protected file under `specs/` plus `package.json`, `bunfig.toml`, `tsconfig.json`, `bun.lock`, and `bun.lockb` when present. L1/L2 re-verifies those hashes after replacement application and after every verification execution. Any mismatch terminates the run as `invalid_integrity`; the current snapshot is archived but the run is not evidence. The sandbox process should chmod protected paths read-only as defense in depth, but the claim-bearing guarantee is the post-mutation hash check.
 
 Environment boundary:
 
 - sandbox setup uses `bun install --frozen-lockfile` whenever a Bun lockfile exists;
 - runtime verification commands use `--no-install`;
 - Bun version and lockfile hash are compatibility fields;
-- if the package has zero dependencies and Bun deletes an empty lockfile, record `lockfile_absent_zero_dependency_package` as the compatibility value rather than adding a fake dependency.
+- while the package has zero dependencies and Bun deletes an empty lockfile, record `deps: none` plus `lockfile_absent_zero_dependency_package` as the compatibility value rather than adding a fake dependency;
+- from the first commit where `package.json` declares any runtime or dev dependency, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
 ## Budgets
 
@@ -131,7 +134,7 @@ All constants are part of the compatibility boundary and must be sealed before e
 
 The `6` verification executions are shared across command types. For the feedback arm, `bun run spec` consumes the same quota as self-authored tests or probes. The feedback arm is not compensated with extra executions.
 
-The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
+The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Provider-reported usage is the ledger of record whenever the API returns it. A sealed local estimator runs in shadow mode on every turn, with tokenizer name/version recorded in compatibility metadata; it is the fallback only when provider usage is missing. Sustained provider-vs-estimator drift greater than 15 percent across a checkpoint flags the run for review. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. Token budgets are provider-tokenizer-denominated and are compared arm-vs-arm within a model, not as absolute cross-provider budgets. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
 
 ## Shared Verification Scaffolding
 
@@ -174,13 +177,15 @@ Model-authored files in `scratch/` are snapshotted per turn like application cod
 
 For every applied replacement, artifacts record the model-facing confirmation lines and the audit-only unified diff. The diff is never injected into the model conversation.
 
+The audit diff is computed over a sealed inclusion manifest: `src/`, `scratch/`, and `specs/`. `specs/` should normally produce an empty diff and exists in scope only so integrity violations are visible. Excluded paths include `node_modules/`, `.git/`, harness logs, coverage output, Bun cache, and generated run artifacts. Paths are sorted lexicographically by bytes; line-ending normalization is off; file mode changes are recorded; binary files are represented as hash pairs rather than textual hunks. Snapshot files are the ground truth; diffs are derived audit views.
+
 ## Claim Meaning
 
 A positive result under this profile means:
 
-> Given identical visible specs, identical budgets, and an identical ability to write and run their own tests, providing maintained executable BDD assets reduced regression drift.
+> Given identical visible specs, identical budgets, and an identical ability to write and run their own tests, providing maintained executable BDD assets reduced regression drift under a turn-based, full-file-replacement editing protocol with budgeted verification executions.
 
-The isolated mechanism is the cost of self-authoring and self-maintaining verification under budget. The context arm can reproduce the feedback arm's checks in principle, but it must spend turns, executions, and tokens to do so.
+The isolated mechanism is the cost of self-authoring and self-maintaining verification under budget. The context arm can reproduce the feedback arm's checks in principle, but it must spend turns, executions, and tokens to do so. The full-file replacement constraint is symmetric across arms, but external validity to IDE-grade partial-edit tools, interactive shells, or string-replace editing is out of scope unless a later protocol version adds those capabilities.
 
 ## Harness Gap
 

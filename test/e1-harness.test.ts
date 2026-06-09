@@ -113,6 +113,7 @@ describe("E1 harness mechanics", () => {
       "bun scratch/a.ts\nrm",
       "bun scratch\\..\\src\\x.ts",
       "bun scratch/a\u0000.ts",
+      `bun ${join(workspace, "scratch", "a.ts")}`,
       `${join(workspace, "src", "x.ts")}`,
       "bun scratch/src-link/escape.ts",
       "bun scratch/*.ts",
@@ -193,6 +194,31 @@ describe("E1 harness mechanics", () => {
     expect(!configDrift.ok && configDrift.mismatches.map((entry) => entry.path)).toContain(
       "package.json"
     );
+  });
+
+  test("verification execution reports protected-path drift caused by scratch scripts", async () => {
+    const workspace = await setupE1Workspace();
+    await writeFile(
+      join(workspace, "scratch", "mutate.ts"),
+      "import { writeFileSync } from 'node:fs';\nwriteFileSync('package.json', '{\"mutated\":true}\\n');\n"
+    );
+    const baseline = await hashProtectedPaths(workspace);
+
+    const result = await runVerificationRequest({
+      workspacePath: workspace,
+      conditionId: "context_only_spec",
+      command: "bun scratch/mutate.ts",
+      checkpoints: ["1", "2", "3"],
+      protectedPathBaseline: baseline
+    });
+
+    expect(result.accepted).toBe(true);
+    expect(result.exit_code).toBe(0);
+    expect(result.protected_path_integrity?.ok).toBe(false);
+    expect(
+      result.protected_path_integrity?.ok === false &&
+        result.protected_path_integrity.mismatches.map((entry) => entry.path)
+    ).toContain("package.json");
   });
 
   test("verification refusals consume slots and execution stops at the cap", async () => {

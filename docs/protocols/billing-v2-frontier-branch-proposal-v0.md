@@ -10,7 +10,7 @@ This proposal defines the next research branch only if the project needs a front
 
 The target claim, if the branch succeeds, would be:
 
-> On a long-horizon multi-file task with scattered invariants, provided executable BDD-style specs reduced regression drift for a frontier model versus self-directed verification, under a sealed task/model/budget boundary.
+> On a long-horizon multi-file task with scattered invariants, provided executable BDD-style specs reduced regression drift for a frontier model versus self-directed verification, under a sealed task/model/budget boundary and a turn-based, full-file-replacement editing protocol with budgeted verification executions.
 
 That claim is not supported by the current evidence and must not be made without new clean causal pilots.
 
@@ -201,12 +201,14 @@ Observational metrics:
 
 - scratch suite size and assertion count per checkpoint;
 - per-checkpoint primary-endpoint delta trajectory, to detect whether any treatment effect decays as the context arm's homegrown suite matures.
+- no-op and `agent_stalled` rate by model and arm, with the protocol-usability caveat attached when stall rates differ by more than 2x and the higher arm exceeds 5 percent of checkpoints.
 
 ## Required Fairness Gates
 
 Before any frontier provider run:
 
 - Step 0 completion: CartCalc has run end-to-end through L1+L2, the artifact bundle replays, and the Step 0 two-environment stability gate is satisfied.
+- L1 shakedown: scripted fake agents match the sealed parser grammar, one-outer-fence stripping is implemented, and a cheap real model no-op-rate check passes before frontier spend.
 - Content parity: byte-diff both arms' visible prompt/workspace modulo runnable assets and explicit treatment-only instructions.
 - Interface parity: identical public API signatures, minimal orientation README, fixtures, event names, and serialized field names.
 - Worked-example parity: every runnable example value appears in the context arm's visible spec.
@@ -214,6 +216,7 @@ Before any frontier provider run:
 - Feedback gating: only `feedback_capable_spec` receives provided executable BDD assets, step definitions, asset paths, and provided spec command.
 - E1 self-verification parity: both arms have the same generic command/self-verification budget.
 - Budget seal: max model turns, verification-execution limits, token caps, output caps, timeout, provider profile, and run classification are sealed.
+- Token ledger: provider-reported usage is primary where present, the sealed estimator runs in shadow mode, and sustained provider/estimator drift greater than 15 percent over a checkpoint flags the run for review.
 - Read-only spec integrity: replacement attempts against `specs/` and `specs/steps/` are rejected and logged.
 - Protected-path integrity: `specs/`, `specs/steps/`, package config, and lockfiles are hashed at checkpoint start and verified each turn; any mismatch is `invalid_integrity`, not evidence.
 - Scratch isolation: `scratch/` persists and is captured, but is excluded from the hidden oracle import path.

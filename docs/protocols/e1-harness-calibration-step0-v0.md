@@ -27,7 +27,7 @@ The L0/L1/L2 implementation must cover:
 - checkpoint-start hashes and turn-end verification for every protected path, terminating `invalid_integrity` on mismatch;
 - writable `scratch/` with cross-checkpoint persistence;
 - argv-templated command whitelist enforcement, never shell execution;
-- POSIX path allowlist `^[A-Za-z0-9._/-]+$`, ASCII only, no leading `-`, no `..` segment before realpath containment;
+- relative POSIX path allowlist `^[A-Za-z0-9._-][A-Za-z0-9._/-]*$`, ASCII only, no leading `/`, no leading `-`, no `..` segment before realpath containment;
 - 60s verification timeouts;
 - deterministic head+tail truncation;
 - budget counters for turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost as a separate statistic;
@@ -70,6 +70,7 @@ Record:
 
 - malformed-replacement rate;
 - block-grammar no-op rate;
+- `agent_stalled` rate per model and arm;
 - turns used per checkpoint;
 - verification calls used per checkpoint;
 - fresh input tokens per turn;
@@ -99,9 +100,9 @@ Required coverage:
 
 - Patching: well-formed replacement applied atomically; malformed delimiter rejected with turn semantics intact; replacement targeting `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, `bun.lock`, or `bun.lockb` rejected and logged; multi-file replacement in one turn; empty-content edge case; deterministic confirmation lines.
 - Command gating: these commands are rejected and consume a verification slot: `scratch/../src/x.ts`, absolute path outside scratch, symlink inside scratch pointing to `src/`, `scratch/*.ts`, `scratch/a.ts; rm -rf /`, backticks, `&&`, `$(...)`, `FOO=1 bun ...`, flag smuggling such as `--eval`, `bun run spec` from the context arm, `bun test src/`, bare `bun test`, and non-integer `--cp` value.
-- Allowlist confirmations: `scratch%2F..%2Fsrc`, `scrаtch/a.ts` with Cyrillic `а`, `scratch/a.ts\nrm`, `scratch\..\src\x.ts`, and embedded `\x00` are rejected by the sealed POSIX path grammar before resolution.
+- Allowlist confirmations: absolute paths both inside and outside `scratch/`, `scratch%2F..%2Fsrc`, `scrаtch/a.ts` with Cyrillic `а`, `scratch/a.ts\nrm`, `scratch\..\src\x.ts`, and embedded `\x00` are rejected by the sealed relative POSIX path grammar before resolution.
 - Mounts and persistence: scratch file written at CP1 is readable at CP3; read-only enforcement survives checkpoint transitions; example test is green in fresh sandboxes in both arms.
-- Integrity: protected-path hashes cover `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, and Bun lockfiles when present; any drift terminates `invalid_integrity`.
+- Integrity: protected-path hashes cover `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, and Bun lockfiles when present; replacement-time or verification-time drift terminates `invalid_integrity`.
 - Parser and termination semantics: zero valid blocks consume turns, inject the one-line harness notice, and three consecutive no-op turns terminate `agent_stalled`.
 - Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates `budget_exhausted`; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture; per-turn snapshots replay to bit-identical workspace state.
 - Snapshot replay: after a full CartCalc run, replay artifact snapshots onto a fresh workspace and byte-compare final state.
@@ -113,9 +114,26 @@ Lockfile/environment requirement:
 - if a Bun lockfile exists, sandbox setup runs `bun install --frozen-lockfile`;
 - runtime uses `--no-install`;
 - environment boundary records Bun version plus lockfile hash;
-- for the current zero-dependency package, Bun deletes an empty lockfile, so the boundary records `lockfile_absent_zero_dependency_package` until a real dependency makes `bun.lock` meaningful.
+- for the current zero-dependency package, Bun deletes an empty lockfile, so the boundary records `deps: none` plus `lockfile_absent_zero_dependency_package` until a real dependency makes `bun.lock` meaningful;
+- from the first commit with any runtime or dev dependency in `package.json`, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
 Full-suite stability is a gate, not a footnote. Harness tests must not depend on real-clock sleeps; use fake timers or injected clocks for timeout behavior. Step 0 requires 10 consecutive green full-suite runs on both environments, with zero quarantined tests or a published exclusion list.
+
+## L1 Shakedown
+
+Insert a no-provider L1-shakedown phase after the L1 adapter exists and before L2/CartCalc calibration.
+
+Scripted fake agents must cover:
+
+- pure prose with no protocol blocks;
+- malformed delimiters: unclosed, nested, duplicated, and interleaved with code fences;
+- valid blocks wrapped in a single outer markdown fence;
+- valid blocks in wrong precedence order;
+- chatty output with valid blocks buried in explanations.
+
+The sealed parser policy is to strip one outer markdown fence layer, then parse. This avoids manufacturing stalls from common model formatting habits. Parser behavior on every scripted agent must match the sealed grammar exactly before provider spend.
+
+After scripted shakedown, run one cheap real model calibration to measure live no-op rate. If no-op rate exceeds 10 percent, prompt-template iteration is allowed before the Step 0 seal and frozen after it.
 
 ## Cost Model
 
@@ -172,6 +190,7 @@ If worst-case Stage B cannot be funded, do not start Stage A.
 Do not build Billing v2 until:
 
 - L1 and L2 are implemented and a CartCalc run executes end-to-end from one orchestrator command, emitting the full artifact bundle;
+- L1-shakedown passes scripted fake agents and one cheap real model no-op-rate check;
 - the Layer 1 battery is green on macOS local and Ubuntu 24 with the same pinned Bun version;
 - the stability gate records 10 consecutive green full-suite runs on both environments;
 - CartCalc model-in-loop calibration completes a second consecutive defect-free pass;
