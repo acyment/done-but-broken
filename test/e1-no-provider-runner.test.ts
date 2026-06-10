@@ -11,6 +11,7 @@ import {
   validateE1ArmConversationDiff
 } from "../src/e1-no-provider-runner";
 import { loadE1Constants, type E1SealedConstants } from "../src/e1-l1-constants";
+import { E1ProviderExhaustedError } from "../src/e1-provider-runtime";
 import { captureWorkspaceCode } from "../src/snapshot";
 
 const CONSTANTS_PATH = join(
@@ -209,6 +210,60 @@ describe("E1 no-provider runner", () => {
     expect(bundle.termination).toEqual({
       classification: "budget_exhausted",
       reason: "token budget exhausted"
+    });
+    await expect(readFile(join(workspace, "src", "should-not-exist.ts"), "utf8")).rejects.toThrow();
+  });
+
+  test("provider retry exhaustion terminates as provider_error without consuming a model turn", async () => {
+    const workspace = await setupWorkspace();
+
+    const bundle = await runE1NoProviderCheckpoint({
+      constants,
+      workspacePath: workspace,
+      conditionId: "context_only_spec",
+      checkpointId: "1",
+      checkpoints: ["1"],
+      provider: {
+        provider_id: "scripted-provider-fails",
+        async nextTurn() {
+          throw new E1ProviderExhaustedError({
+            message: "provider retries exhausted after 3 attempts: gateway unavailable",
+            attempts: [
+              {
+                attempt: 1,
+                outcome: "retryable_failure",
+                failure_kind: "api_error",
+                message: "gateway unavailable",
+                provider_status: 503,
+                backoff_ms: 250
+              },
+              {
+                attempt: 2,
+                outcome: "retryable_failure",
+                failure_kind: "timeout",
+                message: "request timed out",
+                backoff_ms: 1000
+              },
+              {
+                attempt: 3,
+                outcome: "retryable_failure",
+                failure_kind: "rate_limit",
+                message: "rate limited",
+                provider_status: 429
+              }
+            ]
+          });
+        }
+      },
+      prompt: basePrompt()
+    });
+
+    expect(bundle.termination?.classification).toBe("provider_error");
+    expect(bundle.turn_records).toHaveLength(0);
+    expect(bundle.provider_error).toMatchObject({
+      turn_index: 1,
+      classification: "provider_error",
+      attempts: [{ attempt: 1 }, { attempt: 2 }, { attempt: 3 }]
     });
     await expect(readFile(join(workspace, "src", "should-not-exist.ts"), "utf8")).rejects.toThrow();
   });
@@ -458,6 +513,59 @@ describe("E1 no-provider runner", () => {
       checkpoint_id: "1"
     });
     expect(bundle.arm_bundles.feedback_capable_spec).toHaveLength(1);
+  });
+
+  test("multi-checkpoint no-provider run stops the full run on provider_error", async () => {
+    const contextWorkspace = await setupWorkspace();
+    const feedbackWorkspace = await setupWorkspace();
+
+    const bundle = await runE1NoProviderRun({
+      constants,
+      checkpoints: ["1", "2"],
+      arms: [
+        {
+          conditionId: "context_only_spec",
+          workspacePath: contextWorkspace,
+          providerFactory: () =>
+            new ScriptedAgentProvider({
+              providerId: "context-clean",
+              script: ["<<<DONE>>>"]
+            })
+        },
+        {
+          conditionId: "feedback_capable_spec",
+          workspacePath: feedbackWorkspace,
+          providerFactory: () => ({
+            provider_id: "feedback-provider-error",
+            async nextTurn() {
+              throw new E1ProviderExhaustedError({
+                message: "provider retries exhausted after 3 attempts: timeout",
+                attempts: [
+                  { attempt: 1, outcome: "retryable_failure", failure_kind: "timeout", message: "timeout" },
+                  { attempt: 2, outcome: "retryable_failure", failure_kind: "timeout", message: "timeout" },
+                  { attempt: 3, outcome: "retryable_failure", failure_kind: "timeout", message: "timeout" }
+                ]
+              });
+            }
+          })
+        }
+      ],
+      promptFactory: ({ checkpointId, conditionId }) => ({
+        ...basePrompt(),
+        checkpointSpecText: `Checkpoint ${checkpointId}`,
+        feedbackAssetPaths:
+          conditionId === "feedback_capable_spec" ? ["specs/steps/stub.steps.ts"] : undefined
+      })
+    });
+
+    expect(bundle.run_summary.status).toBe("provider_error");
+    expect(bundle.run_summary.stopped_at).toEqual({
+      condition_id: "feedback_capable_spec",
+      checkpoint_id: "1"
+    });
+    expect(bundle.run_summary.provider_error_counts_by_condition.feedback_capable_spec).toBe(1);
+    expect(bundle.arm_bundles.feedback_capable_spec[0].turn_records).toHaveLength(0);
+    expect(bundle.arm_bundles.context_only_spec).toHaveLength(1);
   });
 });
 

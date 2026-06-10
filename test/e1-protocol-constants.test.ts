@@ -16,8 +16,35 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.3.1");
+    expect(constants.version).toBe("0.3.2");
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
+    expect(constants.deferred_before_provider_seal).toEqual([]);
+    expect(constants.provider_runtime.failure_policy).toMatchObject({
+      retryable_failure_kinds: [
+        "api_error",
+        "timeout",
+        "rate_limit",
+        "malformed_response",
+        "network_error"
+      ],
+      max_attempts: 3,
+      backoff_ms: [250, 1000, 4000],
+      retries_cost_turns: false,
+      retries_cost_tokens: false,
+      exhausted_classification: "provider_error",
+      exhausted_run_policy: "terminate_and_rerun_fresh_identity"
+    });
+    expect(constants.provider_runtime.sampling_defaults).toMatchObject({
+      temperature: 0.2,
+      top_p: 1,
+      max_output_tokens_per_turn: 4000
+    });
+    expect(constants.provider_runtime.seed_semantics.meaning).toBe("pairing_label_not_sampling_seed");
+    expect(constants.provider_runtime.cache_breakpoints).toMatchObject({
+      breakpoints: ["system_template_boundary", "checkpoint_start_repo_injection"],
+      cached_usage_ledger_field: "cached_prefix_tokens",
+      debit_policy: "record_not_debit"
+    });
     expect(constants.token_estimator.status).toBe("sealed");
     expect(constants.token_estimator.estimator_id).toBe("js-tiktoken-o200k_base-v1");
     expect(constants.token_estimator.package).toBe("js-tiktoken");
@@ -43,6 +70,7 @@ describe("E1 frontier sealed constants", () => {
     expect(constants.checkpoint_continuation.agent_stalled).toBe("continue_from_workspace_as_is");
     expect(constants.checkpoint_continuation.budget_exhausted).toBe("continue_from_workspace_as_is");
     expect(constants.checkpoint_continuation.invalid_integrity).toBe("terminate_run");
+    expect(constants.checkpoint_continuation.provider_error).toBe("terminate_run");
     expect(constants.oracle_scoring.cadence).toBe("every_turn_snapshot");
     expect(constants.metrics.regression_free_auc.formula_id).toBe(
       "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1"
@@ -90,5 +118,19 @@ describe("E1 frontier sealed constants", () => {
     const wrongEncoding = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
     wrongEncoding.token_estimator.encoding = "cl100k_base";
     expect(() => validateE1Constants(wrongEncoding)).toThrow("js-tiktoken o200k_base");
+  });
+
+  test("rejects provider runtime seal drift", async () => {
+    const wrongRetry = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    wrongRetry.provider_runtime.failure_policy.max_attempts = 2;
+    expect(() => validateE1Constants(wrongRetry)).toThrow("provider failure policy is not sealed");
+
+    const wrongSeed = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    wrongSeed.provider_runtime.seed_semantics.meaning = "provider_rng_seed";
+    expect(() => validateE1Constants(wrongSeed)).toThrow("pairing_label_not_sampling_seed");
+
+    const wrongCache = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    wrongCache.provider_runtime.cache_breakpoints.breakpoints = ["system_template_boundary"];
+    expect(() => validateE1Constants(wrongCache)).toThrow("cache breakpoint policy is not sealed");
   });
 });

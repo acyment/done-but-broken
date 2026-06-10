@@ -17,7 +17,7 @@ This is the industry-relevant question. A production frontier coding agent can u
 "E1 harness" means three layers. L0 exists today, the L1 block parser exists, and no-provider L1/L2 shakedown support exists; live provider conversation integration and evidence-grade L2 orchestration do not.
 
 - L0 mechanics library: full-file replacement parsing/application, command validation, protected-path checks, verification execution, truncation, hashes, and counters.
-- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers. Parser, local turn consumption, and no-provider checkpoint conversation assembly are implemented in `src/e1-l1-parser.ts`, `src/e1-turn-adapter.ts`, and `src/e1-no-provider-runner.ts`; live provider conversation assembly is still missing.
+- L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, separates provider failures from agent behavior, and talks to providers. Parser, local turn consumption, no-provider checkpoint conversation assembly, and provider-error runtime semantics are implemented in `src/e1-l1-parser.ts`, `src/e1-turn-adapter.ts`, `src/e1-no-provider-runner.ts`, and `src/e1-provider-runtime.ts`; live provider conversation assembly is still missing.
 - L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications. A dev-grade no-provider task/oracle package runner exists for scripted shakedown, including hidden-oracle scoring on every turn snapshot; live-provider orchestration and publication-grade L2 remain missing.
 
 CartCalc calibration and any Billing v2 run require live provider conversation integration plus evidence-grade L2. L0 mechanics plus the no-provider runner are not an evidence-generating harness.
@@ -40,9 +40,9 @@ On each turn the model output is scanned in fixed precedence order:
 2. at most one verification request;
 3. one optional done declaration.
 
-The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, the sealed token budget is exhausted, three consecutive no-op turns occur, or protected-path integrity fails.
+The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, the sealed token budget is exhausted, three consecutive no-op turns occur, protected-path integrity fails, or provider retries are exhausted.
 
-After `done`, `agent_stalled`, or `budget_exhausted`, the next checkpoint starts from the current workspace as-is. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run.
+After `done`, `agent_stalled`, or `budget_exhausted`, the next checkpoint starts from the current workspace as-is. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run. `provider_error` also terminates the run, but is transport failure rather than agent behavior; it is excluded from analysis and rerun only under a fresh run identity.
 
 Unified diffs are not supported as a model-facing format. A replacement block contains one or more `<<<FILE path>>>` ... `<<<END>>>` sections. Rejections are deterministic: malformed delimiters, invalid paths, or attempts to write read-only paths. Rejection is logged and consumes the replacement opportunity for that turn.
 
@@ -143,6 +143,8 @@ Task and oracle packages must declare the same fixed `virtual_now`. Reachable re
 
 Bundle grade is explicit: `dev` for draft constants or missing protocol-document hash; `evidence` only when constants are sealed and the protocol-document hash is recorded. Run identity includes the prompt-template hash so shared prompt drift between calibration and later runs is an explicit compatibility change.
 
+Seed is a pairing label unless the provider exposes an actual RNG seed. The label binds task package, oracle package, constants version, prompt-template hash, checkpoint sequence, and budgets. Paired analysis pairs on that label. Replay reproduces recorded turn consequences exactly; it does not claim to regenerate provider samples for APIs without seed support.
+
 ## Budgets
 
 All constants are part of the compatibility boundary and must be sealed before evidence-generating runs:
@@ -156,7 +158,9 @@ All constants are part of the compatibility boundary and must be sealed before e
 
 The `6` verification executions are shared across command types. For the feedback arm, `bun run spec` consumes the same quota as self-authored tests or probes. The feedback arm is not compensated with extra executions.
 
-The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Provider-reported usage is the ledger of record whenever the API returns it. The sealed local estimator is `js-tiktoken-o200k_base-v1` (`js-tiktoken@1.0.21`, `o200k_base`). It is the operational tokenizer for verification-output truncation because truncation happens before provider usage can be known, and it also runs in shadow mode on every turn. It is the fallback only when provider usage is missing. Sustained provider-vs-estimator drift greater than 15 percent across a checkpoint flags the run for review. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. Token budgets are provider-tokenizer-denominated and are compared arm-vs-arm within a model, not as absolute cross-provider budgets. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
+The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Provider-reported usage is the ledger of record whenever the API returns it. The sealed local estimator is `js-tiktoken-o200k_base-v1` (`js-tiktoken@1.0.21`, `o200k_base`). It is the operational tokenizer for verification-output truncation because truncation happens before provider usage can be known, and it also runs in shadow mode on every turn. It is the fallback only when provider usage is missing. Sustained provider-vs-estimator drift greater than 15 percent across a checkpoint flags the run for review. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. Cache breakpoints are sealed at the system/template boundary and checkpoint-start repo injection, with provider cache-read tokens recorded in `cached_prefix_tokens`, not inferred. Token budgets are provider-tokenizer-denominated and are compared arm-vs-arm within a model, not as absolute cross-provider budgets. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
+
+Transport-level API errors, timeouts, rate limits, malformed provider responses, and network errors use the sealed retry policy: 3 attempts with 250ms, 1000ms, and 4000ms backoff slots. Retries cost no model turns and no tokens but are logged in provider-attempt metadata. Exhausted retries terminate the run as `provider_error`.
 
 ## Shared Verification Scaffolding
 
@@ -193,6 +197,8 @@ For every verification request, artifacts record:
 - hash of the full untruncated output;
 - truncated output shown to the model.
 
+For every provider call, artifacts record provider-attempt metadata when retries occur or fail. Exhausted provider retries produce a `provider_error` record with no model turn consumed.
+
 The full untruncated output must be archived with the publication bundle. A reviewer should be able to reconstruct the exact information channel for each arm.
 
 Model-authored files in `scratch/` are snapshotted per turn like application code.
@@ -223,5 +229,6 @@ Before any E1 evidence-generating run, add test-first harness support for:
 - capped output injection on the next turn;
 - full-output hashing;
 - budget accounting for model turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost;
+- provider-error retry logging and `provider_error` run termination;
 - audit-only replacement diffs and model-facing confirmation lines;
 - compatibility-profile recording for all constants above.

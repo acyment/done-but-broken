@@ -1,10 +1,54 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
-  "deferred_before_provider_seal": ["token_estimator"],
+  "deferred_before_provider_seal": [],
+
+  "provider_runtime": {
+    "failure_policy": {
+      "retryable_failure_kinds": [
+        "api_error",
+        "timeout",
+        "rate_limit",
+        "malformed_response",
+        "network_error"
+      ],
+      "max_attempts": 3,
+      "backoff_ms": [250, 1000, 4000],
+      "retries_cost_turns": false,
+      "retries_cost_tokens": false,
+      "exhausted_classification": "provider_error",
+      "exhausted_run_policy": "terminate_and_rerun_fresh_identity",
+      "log_rule": "Every provider attempt is recorded in the bundle. Retry attempts are transport metadata only: they do not consume model turns and do not debit token budgets. Exhausted retries terminate the run as provider_error, excluded from analysis and rerun only under a fresh run identity."
+    },
+    "sampling_defaults": {
+      "temperature": 0.2,
+      "top_p": 1,
+      "max_output_tokens_per_turn": 4000,
+      "per_model_profile_rule": "Every live provider profile must record model id, provider route, temperature, top_p, max_output_tokens_per_turn, timeout, retry policy, cache-breakpoint policy, and seed-support status before any provider call."
+    },
+    "seed_semantics": {
+      "meaning": "pairing_label_not_sampling_seed",
+      "pairing_label_binds": [
+        "task_package_hash",
+        "oracle_package_hash",
+        "constants_version",
+        "prompt_template_hash",
+        "checkpoint_sequence",
+        "budgets"
+      ],
+      "provider_rng_seed_policy": "If a provider exposes an RNG seed, record it in the provider profile. If it does not, seed remains a pairing label only; paired analysis pairs on that label and acknowledges unseeded provider sampling.",
+      "replay_rule": "Replay reproduces the consequences of recorded turns exactly. It does not claim to reproduce provider sampling unless a provider-specific RNG seed was recorded and honored."
+    },
+    "cache_breakpoints": {
+      "breakpoints": ["system_template_boundary", "checkpoint_start_repo_injection"],
+      "cached_usage_ledger_field": "cached_prefix_tokens",
+      "debit_policy": "record_not_debit",
+      "smoke_assertion_rule": "Provider-reported cache-read tokens must be recorded in cached_prefix_tokens, not fresh debited tokens; missing provider cache fields are recorded as absent, not inferred."
+    }
+  },
 
   "token_estimator": {
     "status": "sealed",
@@ -53,7 +97,8 @@
     "agent_stalled": "continue_from_workspace_as_is",
     "budget_exhausted": "continue_from_workspace_as_is",
     "invalid_integrity": "terminate_run",
-    "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity terminates the entire run."
+    "provider_error": "terminate_run",
+    "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity and provider_error terminate the entire run; provider_error is transport failure, excluded from analysis, and rerun only under a fresh run identity."
   },
 
   "package_separation": {

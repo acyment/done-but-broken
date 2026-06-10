@@ -11,6 +11,7 @@ import {
   type E1TokenUsage,
   type E1TurnAdapterResult
 } from "./e1-turn-adapter";
+import { normalizeE1ProviderException, type E1ProviderAttemptRecord } from "./e1-provider-runtime";
 import { captureWorkspaceCode, hashText, hashWorkspace, type WorkspaceCodeSnapshot } from "./snapshot";
 
 export type E1ConversationMessage = {
@@ -49,6 +50,7 @@ export type E1CheckpointProviderFactoryInput = {
 export type E1AgentProviderResponse = {
   text: string;
   usage?: E1TokenUsage;
+  provider_attempts?: E1ProviderAttemptRecord[];
 };
 
 export interface E1AgentProvider {
@@ -86,10 +88,18 @@ export class ScriptedAgentProvider implements E1AgentProvider {
 export type E1NoProviderTurnRecord = E1TurnAdapterResult & {
   raw_model_output: string;
   provider_usage?: E1TokenUsage;
+  provider_attempts?: E1ProviderAttemptRecord[];
   conversation_before_turn: E1ConversationMessage[];
   workspace_before_hash: string;
   workspace_after_hash: string;
   workspace_after_code: WorkspaceCodeSnapshot;
+};
+
+export type E1CheckpointProviderErrorRecord = {
+  turn_index: number;
+  classification: "provider_error";
+  reason: string;
+  attempts: E1ProviderAttemptRecord[];
 };
 
 export type E1NoProviderCheckpointBundle = {
@@ -112,6 +122,7 @@ export type E1NoProviderCheckpointBundle = {
   };
   initial_conversation: E1ConversationMessage[];
   turn_records: E1NoProviderTurnRecord[];
+  provider_error?: E1CheckpointProviderErrorRecord;
   termination: E1Termination | null;
   final_workspace_hash: string;
   final_workspace_code_hash: string;
@@ -137,10 +148,11 @@ export type E1NoProviderRunBundle = {
   checkpoints: string[];
   arm_bundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>;
   run_summary: {
-    status: "completed" | "invalid_integrity";
+    status: "completed" | "invalid_integrity" | "provider_error";
     stopped_at?: { condition_id: ConditionId; checkpoint_id: string };
     stall_counts_by_condition: Record<ConditionId, number>;
     budget_exhausted_counts_by_condition: Record<ConditionId, number>;
+    provider_error_counts_by_condition: Record<ConditionId, number>;
     verification_slots_used_by_condition: Record<ConditionId, number>;
   };
   structural_comparison: {
@@ -309,18 +321,34 @@ export async function runE1NoProviderCheckpoint(input: {
   });
   const initialConversation = conversation.messages;
   const turnRecords: E1NoProviderTurnRecord[] = [];
+  let providerError: E1CheckpointProviderErrorRecord | undefined;
   let termination: E1Termination | null = null;
 
   while (!termination && state.turnsUsed < state.maxModelTurns) {
     const turnIndex = state.turnsUsed + 1;
     const workspaceBefore = await hashWorkspace(input.workspacePath);
-    const response = await input.provider.nextTurn({
-      conditionId: input.conditionId,
-      checkpointId: input.checkpointId,
-      turnIndex,
-      workspacePath: input.workspacePath,
-      messages: conversation.messages
-    });
+    let response: E1AgentProviderResponse;
+
+    try {
+      response = await input.provider.nextTurn({
+        conditionId: input.conditionId,
+        checkpointId: input.checkpointId,
+        turnIndex,
+        workspacePath: input.workspacePath,
+        messages: conversation.messages
+      });
+    } catch (error) {
+      const normalized = normalizeE1ProviderException(error);
+      providerError = {
+        turn_index: turnIndex,
+        classification: "provider_error",
+        reason: normalized.reason,
+        attempts: normalized.attempts
+      };
+      termination = { classification: "provider_error", reason: normalized.reason };
+      break;
+    }
+
     const adapterResult = await adapter.runTurn({
       conditionId: input.conditionId,
       checkpointId: input.checkpointId,
@@ -336,6 +364,7 @@ export async function runE1NoProviderCheckpoint(input: {
       ...adapterResult,
       raw_model_output: response.text,
       ...(response.usage ? { provider_usage: response.usage } : {}),
+      ...(response.provider_attempts ? { provider_attempts: response.provider_attempts } : {}),
       conversation_before_turn: conversation.messages,
       workspace_before_hash: workspaceBefore.hash,
       workspace_after_hash: workspaceAfter.hash,
@@ -374,6 +403,7 @@ export async function runE1NoProviderCheckpoint(input: {
     },
     initial_conversation: initialConversation,
     turn_records: turnRecords,
+    ...(providerError ? { provider_error: providerError } : {}),
     termination,
     final_workspace_hash: finalWorkspace.hash,
     final_workspace_code_hash: finalWorkspaceCode.hash
@@ -444,8 +474,10 @@ export async function runE1NoProviderRun(input: {
   const armBundles = emptyArmBundleRecord();
   const stallCounts = emptyConditionNumberRecord();
   const budgetExhaustedCounts = emptyConditionNumberRecord();
+  const providerErrorCounts = emptyConditionNumberRecord();
   const verificationSlots = emptyConditionNumberRecord();
   let stoppedAt: { condition_id: ConditionId; checkpoint_id: string } | undefined;
+  let runStatus: E1NoProviderRunBundle["run_summary"]["status"] = "completed";
 
   for (let checkpointIndex = 0; checkpointIndex < input.checkpoints.length; checkpointIndex += 1) {
     const checkpointId = input.checkpoints[checkpointIndex];
@@ -488,7 +520,15 @@ export async function runE1NoProviderRun(input: {
         budgetExhaustedCounts[arm.conditionId] += 1;
       }
 
+      if (checkpointBundle.termination?.classification === "provider_error") {
+        providerErrorCounts[arm.conditionId] += 1;
+        runStatus = "provider_error";
+        stoppedAt = { condition_id: arm.conditionId, checkpoint_id: checkpointId };
+        break;
+      }
+
       if (checkpointBundle.termination?.classification === "invalid_integrity") {
+        runStatus = "invalid_integrity";
         stoppedAt = { condition_id: arm.conditionId, checkpoint_id: checkpointId };
         break;
       }
@@ -506,10 +546,11 @@ export async function runE1NoProviderRun(input: {
     checkpoints: input.checkpoints,
     arm_bundles: armBundles,
     run_summary: {
-      status: stoppedAt ? "invalid_integrity" : "completed",
+      status: runStatus,
       ...(stoppedAt ? { stopped_at: stoppedAt } : {}),
       stall_counts_by_condition: stallCounts,
       budget_exhausted_counts_by_condition: budgetExhaustedCounts,
+      provider_error_counts_by_condition: providerErrorCounts,
       verification_slots_used_by_condition: verificationSlots
     },
     structural_comparison: {

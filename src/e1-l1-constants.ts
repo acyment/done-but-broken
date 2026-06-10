@@ -5,6 +5,38 @@ export interface E1SealedConstants {
   status: string;
   condition_ids: ["context_only_spec", "feedback_capable_spec"];
   deferred_before_provider_seal: string[];
+  provider_runtime: {
+    failure_policy: {
+      retryable_failure_kinds: Array<
+        "api_error" | "timeout" | "rate_limit" | "malformed_response" | "network_error"
+      >;
+      max_attempts: 3;
+      backoff_ms: [250, 1000, 4000];
+      retries_cost_turns: false;
+      retries_cost_tokens: false;
+      exhausted_classification: "provider_error";
+      exhausted_run_policy: "terminate_and_rerun_fresh_identity";
+      log_rule: string;
+    };
+    sampling_defaults: {
+      temperature: 0.2;
+      top_p: 1;
+      max_output_tokens_per_turn: 4000;
+      per_model_profile_rule: string;
+    };
+    seed_semantics: {
+      meaning: "pairing_label_not_sampling_seed";
+      pairing_label_binds: string[];
+      provider_rng_seed_policy: string;
+      replay_rule: string;
+    };
+    cache_breakpoints: {
+      breakpoints: ["system_template_boundary", "checkpoint_start_repo_injection"];
+      cached_usage_ledger_field: "cached_prefix_tokens";
+      debit_policy: "record_not_debit";
+      smoke_assertion_rule: string;
+    };
+  };
   token_estimator: {
     status: "sealed" | "TBD";
     estimator_id: "js-tiktoken-o200k_base-v1";
@@ -34,6 +66,7 @@ export interface E1SealedConstants {
     agent_stalled: "continue_from_workspace_as_is";
     budget_exhausted: "continue_from_workspace_as_is";
     invalid_integrity: "terminate_run";
+    provider_error: "terminate_run";
     non_done_scoring_rule: string;
   };
   package_separation: {
@@ -138,6 +171,7 @@ const TOP_LEVEL_KEYS = [
   "status",
   "condition_ids",
   "deferred_before_provider_seal",
+  "provider_runtime",
   "token_estimator",
   "conversation",
   "arm_difference_allowlist",
@@ -198,6 +232,12 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
     throw new E1ConstantsValidationError("condition_ids must match the active two-arm protocol");
   }
 
+  if (constants.deferred_before_provider_seal.length !== 0) {
+    throw new E1ConstantsValidationError("deferred_before_provider_seal must be empty before provider runs");
+  }
+
+  validateProviderRuntime(constants);
+
   if (constants.token_estimator.status !== "sealed") {
     throw new E1ConstantsValidationError("token_estimator.status must be sealed before provider runs");
   }
@@ -251,6 +291,10 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
 
   if (constants.checkpoint_continuation.invalid_integrity !== "terminate_run") {
     throw new E1ConstantsValidationError("invalid_integrity must terminate the run");
+  }
+
+  if (constants.checkpoint_continuation.provider_error !== "terminate_run") {
+    throw new E1ConstantsValidationError("provider_error must terminate the run");
   }
 
   if (constants.package_separation.oracle_package_visibility !== "external_never_mounted") {
@@ -355,6 +399,69 @@ export function providerSealBlockers(constants: E1SealedConstants): string[] {
   }
 
   return blockers;
+}
+
+function validateProviderRuntime(constants: E1SealedConstants): void {
+  const failurePolicy = constants.provider_runtime.failure_policy;
+
+  if (
+    JSON.stringify(failurePolicy.retryable_failure_kinds) !==
+    JSON.stringify(["api_error", "timeout", "rate_limit", "malformed_response", "network_error"])
+  ) {
+    throw new E1ConstantsValidationError("provider retryable failure kinds are not sealed");
+  }
+
+  if (
+    failurePolicy.max_attempts !== 3 ||
+    JSON.stringify(failurePolicy.backoff_ms) !== JSON.stringify([250, 1000, 4000]) ||
+    failurePolicy.retries_cost_turns !== false ||
+    failurePolicy.retries_cost_tokens !== false ||
+    failurePolicy.exhausted_classification !== "provider_error" ||
+    failurePolicy.exhausted_run_policy !== "terminate_and_rerun_fresh_identity"
+  ) {
+    throw new E1ConstantsValidationError("provider failure policy is not sealed");
+  }
+
+  const sampling = constants.provider_runtime.sampling_defaults;
+
+  if (
+    sampling.temperature !== 0.2 ||
+    sampling.top_p !== 1 ||
+    sampling.max_output_tokens_per_turn !== 4000
+  ) {
+    throw new E1ConstantsValidationError("provider sampling defaults are not sealed");
+  }
+
+  if (constants.provider_runtime.seed_semantics.meaning !== "pairing_label_not_sampling_seed") {
+    throw new E1ConstantsValidationError("seed semantics must be pairing_label_not_sampling_seed");
+  }
+
+  const expectedSeedBindings = [
+    "task_package_hash",
+    "oracle_package_hash",
+    "constants_version",
+    "prompt_template_hash",
+    "checkpoint_sequence",
+    "budgets"
+  ];
+
+  if (
+    JSON.stringify(constants.provider_runtime.seed_semantics.pairing_label_binds) !==
+    JSON.stringify(expectedSeedBindings)
+  ) {
+    throw new E1ConstantsValidationError("seed pairing label bindings are not sealed");
+  }
+
+  const cache = constants.provider_runtime.cache_breakpoints;
+
+  if (
+    JSON.stringify(cache.breakpoints) !==
+    JSON.stringify(["system_template_boundary", "checkpoint_start_repo_injection"]) ||
+    cache.cached_usage_ledger_field !== "cached_prefix_tokens" ||
+    cache.debit_policy !== "record_not_debit"
+  ) {
+    throw new E1ConstantsValidationError("cache breakpoint policy is not sealed");
+  }
 }
 
 function validateRegex(name: string, pattern: string): void {

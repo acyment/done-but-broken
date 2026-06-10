@@ -16,7 +16,8 @@ export type E1Termination =
   | { classification: "done"; reason: string }
   | { classification: "agent_stalled"; reason: string }
   | { classification: "budget_exhausted"; reason: string }
-  | { classification: "invalid_integrity"; reason: string };
+  | { classification: "invalid_integrity"; reason: string }
+  | { classification: "provider_error"; reason: string };
 
 export type E1TokenUsageSide = {
   output_tokens?: number;

@@ -13,7 +13,7 @@ This is Step 0 for any frontier-model branch using `e1-self-directed-verificatio
 Step 0 is not complete until all three layers exist:
 
 - L0 mechanics library: patch application, command validation, protected-path integrity, verification execution, output truncation/hashing, and local counters.
-- L1 agent loop adapter: parse model output blocks, consume local turns through L0, assemble checkpoint conversations, inject harness notices and verification output, debit the token ledger, and call providers. Parser/shakedown, local turn consumption, and no-provider conversation assembly exist; live provider conversation assembly remains missing.
+- L1 agent loop adapter: parse model output blocks, consume local turns through L0, assemble checkpoint conversations, inject harness notices and verification output, debit the token ledger, classify provider failures separately from agent behavior, and call providers. Parser/shakedown, local turn consumption, no-provider conversation assembly, and provider-error runtime semantics exist; live provider conversation assembly remains missing.
 - L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle. A dev-grade no-provider task/oracle package runner exists for scripted agents with hidden-oracle scoring on every turn snapshot; live-provider orchestration and publication-grade artifact emission remain missing.
 
 The L0/L1/L2 implementation must cover:
@@ -21,7 +21,7 @@ The L0/L1/L2 implementation must cover:
 - turn loop: full-file replacement block, verification request, done declaration;
 - fixed block precedence: replacements, then at most one verification request, then optional done;
 - no-op-turn handling: zero valid blocks consumes a turn, injects `no valid blocks parsed`, and three consecutive no-ops terminate `agent_stalled`;
-- checkpoint continuation: `agent_stalled` and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint; `invalid_integrity` terminates the entire run;
+- checkpoint continuation: `agent_stalled` and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint; `invalid_integrity` and `provider_error` terminate the entire run;
 - harness-enforced read-only `specs/` for both arms;
 - harness-enforced read-only `specs/steps/` for `feedback_capable_spec`;
 - read-only harness config: `package.json`, `bunfig.toml`, and `tsconfig.json`/Bun lockfiles if present;
@@ -32,6 +32,7 @@ The L0/L1/L2 implementation must cover:
 - 60s verification timeouts;
 - deterministic head+tail truncation;
 - budget counters for turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost as a separate statistic;
+- bounded provider retries logged as provider-attempt metadata, with exhausted retries classified as `provider_error` and excluded from analysis;
 - deterministic model-facing replacement confirmations;
 - audit-only unified diffs between pre/post snapshots;
 - per-turn logging: command, exit code, wall time, full-output hash, shown output, workspace snapshot, and hidden-oracle score.
@@ -73,6 +74,7 @@ Record:
 - malformed-replacement rate;
 - block-grammar no-op rate;
 - `agent_stalled` rate per model and arm;
+- `provider_error` count and attempt traces;
 - turns used per checkpoint;
 - verification calls used per checkpoint;
 - fresh input tokens per turn;
@@ -106,7 +108,7 @@ Required coverage:
 - Mounts and persistence: scratch file written at CP1 is readable at CP3; read-only enforcement survives checkpoint transitions; example test is green in fresh sandboxes in both arms.
 - Integrity: protected-path hashes cover `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, and Bun lockfiles when present; replacement-time or verification-time drift terminates `invalid_integrity`.
 - Parser and termination semantics: zero valid blocks consume turns, inject the one-line harness notice, and three consecutive no-op turns terminate `agent_stalled`.
-- Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates `budget_exhausted`; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture; per-turn snapshots replay to bit-identical workspace state.
+- Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates `budget_exhausted`; provider retry exhaustion terminates `provider_error` without consuming a model turn or token budget; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture, including multi-byte content that would otherwise decode to replacement characters; per-turn snapshots replay to bit-identical workspace state.
 - Snapshot replay: after a full CartCalc run, replay artifact snapshots onto a fresh workspace and byte-compare final state.
 
 Layer 1 must be green on two clean environments before Billing v2 design starts: macOS local and an Ubuntu 24 container, with the same pinned Bun version.

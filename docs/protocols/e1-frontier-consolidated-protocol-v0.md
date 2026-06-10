@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.1`).
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.2`).
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -51,7 +51,7 @@ L1 parser/shakedown, the no-provider local turn adapter shell, no-provider conve
 - run paired no-provider multi-checkpoint/arm shakedowns with checkpoint continuation rules;
 - seed workspaces from separate task packages and score turn snapshots against separate hidden oracle packages in dev-grade no-provider runs;
 - assemble live provider turns with cached-prefix accounting;
-- call providers.
+- call providers with bounded transport retries and `provider_error` termination semantics.
 
 Full evidence-generating L2 is still missing:
 
@@ -70,7 +70,7 @@ The assembled checkpoint-start prompts for both arms are part of the parity surf
 
 ## Checkpoint Continuation
 
-Checkpoint termination does not automatically end the run. `done`, `agent_stalled`, and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint from that same workspace. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run because protected-path drift invalidates the evidence channel.
+Checkpoint termination does not automatically end the run. `done`, `agent_stalled`, and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint from that same workspace. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run because protected-path drift invalidates the evidence channel. `provider_error` also terminates the run, but for the opposite reason: transport failure is not agent behavior, is excluded from analysis, and may only be rerun under a fresh run identity.
 
 ## Package And Oracle Boundary
 
@@ -83,6 +83,8 @@ The sealed E1 AUC formula is `checkpoint_mean_cumulative_hidden_assertion_pass_r
 Every task and oracle package declares a fixed `virtual_now`. Reachable `Date.now`, `new Date()`, and `performance.now` references in package-controlled files are package-validation failures.
 
 Bundles are self-labeled. A bundle emitted from `draft-pre-seal` constants or without a protocol-document hash is `dev`; evidence-grade emission requires sealed constants and a recorded protocol-document hash. Run identity includes the task package hash, oracle package hash, constants version, prompt-template hash, model, and seed.
+
+For E1, seed is a pairing label unless the provider explicitly exposes and honors an RNG seed. The label binds the task package, oracle package, constants version, prompt-template hash, checkpoint sequence, and budgets. Paired analysis pairs on that label. Replay reproduces the consequences of recorded turns exactly; it does not claim to reproduce provider sampling for APIs without seed support.
 
 ## Editing And Parser Policy
 
@@ -130,11 +132,19 @@ Replacement output has two separate channels:
 
 Diff scope, exclusions, sort order, line-ending policy, and binary policy are sealed in the constants JSON. Snapshots are the ground truth; diffs are derived audit views.
 
+## Provider Runtime
+
+Transport-level failures are separate from model behavior. API errors, timeouts, rate limits, malformed provider responses, and network errors are retried with the sealed policy: 3 attempts and deterministic backoff slots of 250ms, 1000ms, and 4000ms. Retry attempts cost no model turns and no tokens; they are logged as provider-attempt metadata. Exhausted retries classify the run as `provider_error`, exclude it from analysis, and require a fresh run identity for any rerun.
+
+Sampling defaults are sealed per provider profile before a live call: temperature `0.2`, top_p `1`, max output tokens per turn `4000`, plus the exact model id, route, timeout, retry policy, cache-breakpoint policy, and seed-support status. If a later model requires different parameters, that is a new non-pooled provider profile boundary.
+
+Cache breakpoints are sealed at the system/template boundary and the checkpoint-start repo injection. Provider-reported cache-read tokens are recorded in `cached_prefix_tokens`, not in fresh debited tokens. Missing provider cache fields are recorded as absent rather than inferred.
+
 ## Token Ledger
 
 Provider-reported usage is the ledger of record when present. The sealed local estimator is `js-tiktoken-o200k_base-v1` (`js-tiktoken@1.0.21`, `o200k_base`). It runs in shadow mode every turn and is recorded next to provider usage. It is the fallback only when provider usage is absent.
 
-Verification-output truncation happens before output is shown to the model, so provider-reported usage is too late for that boundary. Truncation is therefore computed with the sealed estimator, deterministically and identically for all providers: first 2500 estimated tokens plus last 1500 estimated tokens, with an explicit marker.
+Verification-output truncation happens before output is shown to the model, so provider-reported usage is too late for that boundary. Truncation is therefore computed with the sealed estimator, deterministically and identically for all providers: first 2500 estimated tokens plus last 1500 estimated tokens, with an explicit marker. If token slicing would decode to a replacement character at the visible boundary, the slice trims inward deterministically until the shown head/tail is clean.
 
 Sustained provider-vs-estimator drift greater than 15 percent over a checkpoint flags the run for review. Budgets are provider-tokenizer-denominated, so cross-provider absolute token budgets are not interpreted directly. The clean comparison is arm-vs-arm within a model.
 

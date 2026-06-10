@@ -38,4 +38,20 @@ describe("E1 sealed token estimator", () => {
     expect(truncated.shown.endsWith(decodeE1Tokens(tokens.slice(-5)))).toBe(true);
     expect(truncated.full_output_hash).toHaveLength(64);
   });
+
+  test("truncation trims inward rather than showing replacement characters at token boundaries", () => {
+    const truncated = truncateE1OutputByTokens({
+      text: "x🇦🇷y",
+      limit: 4,
+      head: 2,
+      tail: 2
+    });
+
+    expect(truncated.truncated).toBe(true);
+    expect(truncated.shown).toContain("[... truncated 4 tokens using js-tiktoken-o200k_base-v1 ...]");
+    expect(truncated.shown).not.toContain("\uFFFD");
+    expect(Buffer.from(truncated.shown, "utf8").toString("utf8")).toBe(truncated.shown);
+    expect(truncated.shown.startsWith("x\n")).toBe(true);
+    expect(truncated.shown.endsWith("\ny")).toBe(true);
+  });
 });

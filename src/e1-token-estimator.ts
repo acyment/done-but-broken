@@ -54,10 +54,10 @@ export function truncateE1OutputByTokens(input: {
     });
   }
 
-  const shownHead = decodeE1Tokens(tokens.slice(0, input.head));
-  const shownTail = decodeE1Tokens(tokens.slice(-input.tail));
-  const omittedTokens = Math.max(0, tokens.length - input.head - input.tail);
-  const shown = `${shownHead}\n[... truncated ${omittedTokens} tokens using ${E1_TOKEN_ESTIMATOR_ID} ...]\n${shownTail}`;
+  const shownHead = decodeBoundarySafeTokenSlice(tokens.slice(0, input.head), "head");
+  const shownTail = decodeBoundarySafeTokenSlice(tokens.slice(-input.tail), "tail");
+  const omittedTokens = Math.max(0, tokens.length - shownHead.token_count - shownTail.token_count);
+  const shown = `${shownHead.text}\n[... truncated ${omittedTokens} tokens using ${E1_TOKEN_ESTIMATOR_ID} ...]\n${shownTail.text}`;
 
   return buildResult({
     shown,
@@ -89,4 +89,25 @@ function buildResult(input: {
       encoding: E1_TOKENIZER_ENCODING
     }
   };
+}
+
+function decodeBoundarySafeTokenSlice(tokens: number[], side: "head" | "tail"): {
+  text: string;
+  token_count: number;
+} {
+  let candidate = tokens.slice();
+
+  while (candidate.length > 0) {
+    const text = decodeE1Tokens(candidate);
+    const hasSplitCharacter =
+      side === "head" ? text.endsWith("\uFFFD") : text.startsWith("\uFFFD");
+
+    if (!hasSplitCharacter) {
+      return { text, token_count: candidate.length };
+    }
+
+    candidate = side === "head" ? candidate.slice(0, -1) : candidate.slice(1);
+  }
+
+  return { text: "", token_count: 0 };
 }
