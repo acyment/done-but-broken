@@ -158,6 +158,55 @@ describe("E1 task/oracle package runner", () => {
     expect((await stat(join(runsRoot, "cartcalc-scripted-dev", "workspaces", "context_only_spec", "scratch"))).isDirectory()).toBe(true);
     expect((await stat(join(runsRoot, "cartcalc-scripted-dev", "workspaces", "feedback_capable_spec", "scratch"))).isDirectory()).toBe(true);
   });
+
+  test("checkpoint prompts inject the real carried-forward workspace, not a stub", async () => {
+    const runsRoot = await setupTempDir();
+    const taskPackage = await loadE1TaskPackage(TASK_PACKAGE_PATH);
+    const oraclePackage = await loadE1OraclePackage(ORACLE_PACKAGE_PATH);
+    const marker = "carriedForwardFromCheckpointOne";
+    const markerFile = [
+      "<<<FILE src/marker.ts>>>",
+      `export const ${marker} = true;`,
+      "<<<END>>>"
+    ].join("\n");
+
+    const bundle = await runE1TaskPackageNoProvider({
+      constants,
+      taskPackage,
+      oraclePackage,
+      runsRoot,
+      runId: "cartcalc-snapshot-carry",
+      arms: {
+        context_only_spec: ({ checkpointId }) =>
+          new ScriptedAgentProvider({
+            providerId: `context-${checkpointId}`,
+            script:
+              checkpointId === "1"
+                ? [[cartCalcImplementation({ cap: false }), markerFile, "<<<DONE>>>"].join("\n")]
+                : [[cartCalcImplementation({ cap: checkpointId === "3" }), "<<<DONE>>>"].join("\n")]
+          }),
+        feedback_capable_spec: ({ checkpointId }) =>
+          new ScriptedAgentProvider({
+            providerId: `feedback-${checkpointId}`,
+            script: [[cartCalcImplementation({ cap: checkpointId === "3" }), "<<<DONE>>>"].join("\n")]
+          })
+      }
+    });
+
+    const contextBundles = bundle.no_provider_run.arm_bundles.context_only_spec;
+    const checkpointOnePrompt = contextBundles[0].initial_conversation.map((m) => m.content).join("\n");
+    const checkpointTwoPrompt = contextBundles[1].initial_conversation.map((m) => m.content).join("\n");
+
+    expect(checkpointOnePrompt).toContain("=== workspace snapshot begin");
+    expect(checkpointOnePrompt).not.toContain(marker);
+    expect(checkpointOnePrompt).not.toContain("src/, specs/, scratch/");
+    expect(checkpointTwoPrompt).toContain("=== workspace file: src/marker.ts ===");
+    expect(checkpointTwoPrompt).toContain(`export const ${marker} = true;`);
+    expect(contextBundles[0].run_manifest.checkpoint_start_workspace_snapshot_hash).toHaveLength(64);
+    expect(contextBundles[1].run_manifest.checkpoint_start_workspace_snapshot_hash).not.toBe(
+      contextBundles[0].run_manifest.checkpoint_start_workspace_snapshot_hash
+    );
+  });
 });
 
 function cartCalcImplementation(input: { cap: boolean; discount?: boolean }): string {

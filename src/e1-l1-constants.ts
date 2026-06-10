@@ -64,7 +64,21 @@ export interface E1SealedConstants {
     thread_scope: "fresh_per_checkpoint";
     prior_checkpoint_memory: "workspace_only";
     checkpoint_start_context: string[];
+    message_structure: {
+      messages: ["system_template", "checkpoint_start_repo_injection", "checkpoint_variant_content"];
+      rule: string;
+    };
     rejected_alternative: string;
+  };
+  workspace_snapshot: {
+    renderer_id: "e1-workspace-snapshot-v1";
+    included_roots: string[];
+    excluded_directories: string[];
+    ordering: "lexicographic_bytewise_relative_paths";
+    format: string;
+    snapshot_rule: string;
+    parity_rule: string;
+    known_limitation: string;
   };
   arm_difference_allowlist: {
     assembled_conversation_scope: "checkpoint_start";
@@ -187,6 +201,7 @@ const TOP_LEVEL_KEYS = [
   "provider_runtime",
   "token_estimator",
   "conversation",
+  "workspace_snapshot",
   "arm_difference_allowlist",
   "checkpoint_continuation",
   "package_separation",
@@ -279,6 +294,27 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
 
   if (constants.conversation.prior_checkpoint_memory !== "workspace_only") {
     throw new E1ConstantsValidationError("conversation.prior_checkpoint_memory must be workspace_only");
+  }
+
+  if (
+    JSON.stringify(constants.conversation.message_structure?.messages) !==
+    JSON.stringify(["system_template", "checkpoint_start_repo_injection", "checkpoint_variant_content"])
+  ) {
+    throw new E1ConstantsValidationError(
+      "conversation.message_structure must seal the three-message cache-breakpoint layout"
+    );
+  }
+
+  if (constants.workspace_snapshot.renderer_id !== "e1-workspace-snapshot-v1") {
+    throw new E1ConstantsValidationError("workspace_snapshot.renderer_id must be e1-workspace-snapshot-v1");
+  }
+
+  if (
+    JSON.stringify(constants.workspace_snapshot.included_roots) !==
+      JSON.stringify(["scratch/", "specs/", "src/"]) ||
+    constants.workspace_snapshot.ordering !== "lexicographic_bytewise_relative_paths"
+  ) {
+    throw new E1ConstantsValidationError("workspace_snapshot roots/ordering are not sealed");
   }
 
   if (constants.arm_difference_allowlist.assembled_conversation_scope !== "checkpoint_start") {

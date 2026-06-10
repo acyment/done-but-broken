@@ -9,11 +9,18 @@ import {
   runE1NoProviderCheckpoint,
   runE1NoProviderRun,
   validateE1ArmConversationDiff,
+  validateE1RuntimeArmParity,
   type E1AgentProvider,
   type E1NoProviderCheckpointBundle,
   type E1CheckpointProviderFactoryInput,
   type E1NoProviderRunBundle
 } from "./e1-no-provider-runner";
+import type { E1CheckpointPromptInput } from "./e1-no-provider-runner";
+import {
+  collectE1SnapshotFiles,
+  renderE1WorkspaceSnapshot,
+  renderE1WorkspaceSnapshotFromFiles
+} from "./e1-workspace-snapshot";
 import type { OracleCheckResult } from "./result-schema";
 import { hashDirectory, hashText, type WorkspaceCodeSnapshot } from "./snapshot";
 
@@ -318,7 +325,7 @@ export async function runE1TaskPackageNoProvider(input: {
     conditionId: "feedback_capable_spec",
     workspacePath: feedbackWorkspace
   });
-  validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
+  await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
 
   const noProviderRun = await runE1NoProviderRun({
     constants: input.constants,
@@ -338,7 +345,8 @@ export async function runE1TaskPackageNoProvider(input: {
     promptFactory: ({ conditionId, checkpointId }) => buildPrompt({
       taskPackage: input.taskPackage,
       conditionId,
-      checkpointId
+      checkpointId,
+      workspacePath: conditionId === "context_only_spec" ? contextWorkspace : feedbackWorkspace
     }),
     artifactDir: join(runRoot, "e1-no-provider-run")
   });
@@ -410,7 +418,7 @@ export async function runE1TaskPackageProvider(input: {
   let runStatus: E1TaskPackageProviderRunBundle["run_summary"]["status"] = "completed";
 
   await mkdir(runRoot, { recursive: true });
-  validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
+  await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
 
   for (const conditionId of input.conditions) {
     await mountTaskWorkspace({
@@ -422,6 +430,25 @@ export async function runE1TaskPackageProvider(input: {
 
   for (let checkpointIndex = 0; checkpointIndex < checkpoints.length; checkpointIndex += 1) {
     const checkpointId = checkpoints[checkpointIndex];
+    const promptsByCondition = {} as Record<ConditionId, E1CheckpointPromptInput>;
+
+    for (const conditionId of input.conditions) {
+      promptsByCondition[conditionId] = await buildPrompt({
+        taskPackage: input.taskPackage,
+        conditionId,
+        checkpointId,
+        workspacePath: join(workspaceRoot, conditionId)
+      });
+    }
+
+    if (input.conditions.length === 2) {
+      validateE1RuntimeArmParity({
+        constants: input.constants,
+        checkpointId,
+        checkpoints,
+        promptsByCondition
+      });
+    }
 
     for (const conditionId of input.conditions) {
       const checkpointBundle = await runE1NoProviderCheckpoint({
@@ -431,7 +458,7 @@ export async function runE1TaskPackageProvider(input: {
         checkpointId,
         checkpoints,
         provider: input.providerFactory({ conditionId, checkpointId, checkpointIndex }),
-        prompt: buildPrompt({ taskPackage: input.taskPackage, conditionId, checkpointId }),
+        prompt: promptsByCondition[conditionId],
         artifactDir: join(runRoot, "e1-provider-run", conditionId, `checkpoint-${checkpointId}`),
         maxModelTurns: input.maxModelTurns,
         maxVerificationExecutions: input.maxVerificationExecutions,
@@ -575,23 +602,40 @@ async function mountTaskWorkspace(input: {
   }
 }
 
-function validateAllCheckpointPromptDiffs(constants: E1SealedConstants, taskPackage: E1TaskPackage): void {
+async function validateAllCheckpointPromptDiffs(
+  constants: E1SealedConstants,
+  taskPackage: E1TaskPackage
+): Promise<void> {
+  // Static fresh-mount parity: synthesize each arm's checkpoint-start snapshot from the
+  // template workspace (plus mounted feedback assets for the feedback arm) so every
+  // checkpoint's template content is validated before any agent turn exists.
+  const templateFiles = await collectE1SnapshotFiles(taskPackage.template_workspace_path);
+  const feedbackAssetPaths = taskPackage.feedback_assets.map((asset) => asset.relative_path);
+  const feedbackFiles = {
+    ...templateFiles,
+    ...Object.fromEntries(taskPackage.feedback_assets.map((asset) => [asset.relative_path, asset.content]))
+  };
+  const contextSnapshot = renderE1WorkspaceSnapshotFromFiles(templateFiles);
+  const feedbackSnapshot = renderE1WorkspaceSnapshotFromFiles(feedbackFiles);
+
   for (const checkpointId of taskPackage.checkpoints) {
     const context = assembleE1CheckpointConversation({
       constants,
       conditionId: "context_only_spec",
       checkpointId,
       checkpoints: taskPackage.checkpoints,
-      ...buildPrompt({ taskPackage, conditionId: "context_only_spec", checkpointId })
+      ...buildStaticPrompt({ taskPackage, conditionId: "context_only_spec", checkpointId }),
+      workspaceSnapshotText: contextSnapshot.text
     });
     const feedback = assembleE1CheckpointConversation({
       constants,
       conditionId: "feedback_capable_spec",
       checkpointId,
       checkpoints: taskPackage.checkpoints,
-      ...buildPrompt({ taskPackage, conditionId: "feedback_capable_spec", checkpointId })
+      ...buildStaticPrompt({ taskPackage, conditionId: "feedback_capable_spec", checkpointId }),
+      workspaceSnapshotText: feedbackSnapshot.text
     });
-    const diff = validateE1ArmConversationDiff({ constants, context, feedback });
+    const diff = validateE1ArmConversationDiff({ constants, context, feedback, feedbackAssetPaths });
 
     if (!diff.ok) {
       throw new Error(`E1 prompt parity failed for ${checkpointId}: ${JSON.stringify(diff)}`);
@@ -599,16 +643,31 @@ function validateAllCheckpointPromptDiffs(constants: E1SealedConstants, taskPack
   }
 }
 
-function buildPrompt(input: {
+async function buildPrompt(input: {
   taskPackage: E1TaskPackage;
   conditionId: ConditionId;
   checkpointId: string;
-}) {
+  workspacePath: string;
+}): Promise<E1CheckpointPromptInput> {
+  const snapshot = await renderE1WorkspaceSnapshot(input.workspacePath);
+
+  return {
+    ...buildStaticPrompt(input),
+    workspaceSnapshotText: snapshot.text,
+    workspaceSnapshotHash: snapshot.hash
+  };
+}
+
+function buildStaticPrompt(input: {
+  taskPackage: E1TaskPackage;
+  conditionId: ConditionId;
+  checkpointId: string;
+}): E1CheckpointPromptInput {
   return {
     taskId: input.taskPackage.task_id,
     visibleSpecText: cumulativeVisibleSpec(input.taskPackage, input.checkpointId),
     checkpointSpecText: input.taskPackage.visible_specs[input.checkpointId],
-    workspaceSnapshotText: "src/, specs/, scratch/",
+    workspaceSnapshotText: "(rendered at checkpoint start)",
     readmeText: input.taskPackage.readme_text,
     feedbackAssetPaths:
       input.conditionId === "feedback_capable_spec"

@@ -12,6 +12,7 @@ import {
 } from "../src/e1-no-provider-runner";
 import { loadE1Constants, type E1SealedConstants } from "../src/e1-l1-constants";
 import { E1ProviderExhaustedError } from "../src/e1-provider-runtime";
+import { renderE1WorkspaceSnapshotFromFiles } from "../src/e1-workspace-snapshot";
 import { captureWorkspaceCode } from "../src/snapshot";
 
 const CONSTANTS_PATH = join(
@@ -121,6 +122,133 @@ describe("E1 no-provider runner", () => {
     expect(leak.ok).toBe(false);
     expect(leak.context_only_extra_lines).toContain("You cannot use bun run spec here.");
     expect(leak.context_only_forbidden_matches).toContain("bun run spec");
+  });
+
+  test("assembles the sealed three-message cache-breakpoint structure", () => {
+    const conversation = assembleE1CheckpointConversation({
+      constants,
+      conditionId: "context_only_spec",
+      checkpointId: "1",
+      checkpoints: ["1"],
+      taskId: "stub",
+      visibleSpecText: "Visible rule A",
+      checkpointSpecText: "Checkpoint 1 rule",
+      workspaceSnapshotText: "snapshot-content"
+    });
+
+    expect(conversation.messages).toHaveLength(3);
+    expect(conversation.messages[0].role).toBe("system");
+    expect(conversation.messages[0].content).toContain("E1 turn-based coding agent");
+    expect(conversation.messages[1].role).toBe("user");
+    expect(conversation.messages[1].content).toContain("Workspace Snapshot:");
+    expect(conversation.messages[1].content).toContain("snapshot-content");
+    expect(conversation.messages[1].content).not.toContain("Checkpoint Spec:");
+    expect(conversation.messages[2].role).toBe("user");
+    expect(conversation.messages[2].content).toContain("Checkpoint Spec:");
+    expect(conversation.messages[2].content).toContain("Self-verification channel");
+    expect(conversation.messages[2].content).not.toContain("Workspace Snapshot:");
+  });
+
+  test("fresh-mount snapshot parity permits only declared feedback-asset sections in the feedback arm", () => {
+    const assetPath = "specs/steps/stub.steps.ts";
+    const contextSnapshot = renderE1WorkspaceSnapshotFromFiles({
+      "src/index.ts": "export const seed = 1;\n"
+    });
+    const feedbackSnapshot = renderE1WorkspaceSnapshotFromFiles({
+      "src/index.ts": "export const seed = 1;\n",
+      [assetPath]: "// executable step\n"
+    });
+    const base = {
+      constants,
+      checkpointId: "1",
+      checkpoints: ["1"],
+      taskId: "stub",
+      visibleSpecText: "Visible rule A",
+      checkpointSpecText: "Checkpoint 1 rule"
+    };
+    const context = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "context_only_spec",
+      workspaceSnapshotText: contextSnapshot.text
+    });
+    const feedback = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "feedback_capable_spec",
+      workspaceSnapshotText: feedbackSnapshot.text,
+      feedbackAssetPaths: [assetPath]
+    });
+
+    expect(validateE1ArmConversationDiff({ constants, context, feedback }).ok).toBe(false);
+    expect(
+      validateE1ArmConversationDiff({ constants, context, feedback, feedbackAssetPaths: [assetPath] }).ok
+    ).toBe(true);
+
+    const smuggledSnapshot = renderE1WorkspaceSnapshotFromFiles({
+      "src/index.ts": "export const seed = 1;\n",
+      [assetPath]: "// executable step\n",
+      "src/extra-hint.ts": "// undeclared feedback-arm extra\n"
+    });
+    const smuggled = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "feedback_capable_spec",
+      workspaceSnapshotText: smuggledSnapshot.text,
+      feedbackAssetPaths: [assetPath]
+    });
+
+    expect(
+      validateE1ArmConversationDiff({
+        constants,
+        context,
+        feedback: smuggled,
+        feedbackAssetPaths: [assetPath]
+      }).ok
+    ).toBe(false);
+  });
+
+  test("runtime parity strips divergent snapshot regions but still rejects template drift", () => {
+    const base = {
+      constants,
+      checkpointId: "2",
+      checkpoints: ["1", "2"],
+      taskId: "stub",
+      visibleSpecText: "Visible rule A",
+      checkpointSpecText: "Checkpoint 2 rule"
+    };
+    const context = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "context_only_spec",
+      workspaceSnapshotText: renderE1WorkspaceSnapshotFromFiles({
+        "src/index.ts": "export const contextVariant = 1;\n"
+      }).text
+    });
+    const feedback = assembleE1CheckpointConversation({
+      ...base,
+      conditionId: "feedback_capable_spec",
+      workspaceSnapshotText: renderE1WorkspaceSnapshotFromFiles({
+        "src/index.ts": "export const feedbackVariant = 2;\n",
+        "scratch/own-test.ts": "// agent-authored\n"
+      }).text,
+      feedbackAssetPaths: ["specs/steps/stub.steps.ts"]
+    });
+
+    expect(validateE1ArmConversationDiff({ constants, context, feedback }).ok).toBe(false);
+    expect(
+      validateE1ArmConversationDiff({ constants, context, feedback, stripWorkspaceSnapshots: true }).ok
+    ).toBe(true);
+
+    const drifted = {
+      ...context,
+      messages: [...context.messages, { role: "user" as const, content: "Extra template line." }]
+    };
+
+    expect(
+      validateE1ArmConversationDiff({
+        constants,
+        context: drifted,
+        feedback,
+        stripWorkspaceSnapshots: true
+      }).ok
+    ).toBe(false);
   });
 
   test("runs a clean scripted checkpoint and emits a replayable bundle", async () => {

@@ -16,7 +16,14 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.3.3");
+    expect(constants.version).toBe("0.3.4");
+    expect(constants.workspace_snapshot.renderer_id).toBe("e1-workspace-snapshot-v1");
+    expect(constants.workspace_snapshot.included_roots).toEqual(["scratch/", "specs/", "src/"]);
+    expect(constants.conversation.message_structure.messages).toEqual([
+      "system_template",
+      "checkpoint_start_repo_injection",
+      "checkpoint_variant_content"
+    ]);
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
     expect(constants.deferred_before_provider_seal).toEqual([]);
     expect(constants.provider_runtime.failure_policy).toMatchObject({

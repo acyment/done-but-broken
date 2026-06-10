@@ -23,6 +23,10 @@ import {
   type E1SpendCapSnapshot
 } from "./e1-provider-runtime";
 import { assertE1NoSecretsInJson, type E1RedactionSecret } from "./e1-redaction";
+import {
+  stripE1SnapshotFileSections,
+  stripE1WorkspaceSnapshotRegions
+} from "./e1-workspace-snapshot";
 import { captureWorkspaceCode, hashText, hashWorkspace, type WorkspaceCodeSnapshot } from "./snapshot";
 
 export type E1ConversationMessage = {
@@ -40,6 +44,7 @@ export type E1CheckpointPromptInput = {
   visibleSpecText: string;
   checkpointSpecText: string;
   workspaceSnapshotText: string;
+  workspaceSnapshotHash?: string;
   readmeText?: string;
   feedbackAssetPaths?: string[];
 };
@@ -142,6 +147,7 @@ export type E1NoProviderCheckpointBundle = {
     task_id: string;
     provider_kind: E1AgentProviderMetadata["provider_kind"];
     provider_profile?: E1AgentProviderMetadata;
+    checkpoint_start_workspace_snapshot_hash?: string;
     budget: {
       max_model_turns: number;
       max_verification_executions: number;
@@ -216,6 +222,8 @@ export function assembleE1CheckpointConversation(input: {
         ]
       : ["Self-verification channel: use only the commands listed above."];
 
+  // Message layout follows the two sealed cache breakpoints: the system template ends at
+  // system_template_boundary, and the second message ends at checkpoint_start_repo_injection.
   return {
     thread_scope: input.constants.conversation.thread_scope,
     messages: [
@@ -240,13 +248,18 @@ export function assembleE1CheckpointConversation(input: {
           `Prior checkpoint memory: ${input.constants.conversation.prior_checkpoint_memory}.`,
           "This is a fresh conversation for this checkpoint; prior checkpoint chat transcript is intentionally absent.",
           `Task: ${input.taskId}`,
-          `Checkpoint: ${input.checkpointId} of ${input.checkpoints.join(", ")}`,
           "",
           "README / Instructions:",
           input.readmeText ?? "(none)",
           "",
           "Workspace Snapshot:",
-          input.workspaceSnapshotText,
+          input.workspaceSnapshotText
+        ].join("\n")
+      },
+      {
+        role: "user",
+        content: [
+          `Checkpoint: ${input.checkpointId} of ${input.checkpoints.join(", ")}`,
           "",
           "Visible Semantic Spec:",
           input.visibleSpecText,
@@ -266,9 +279,21 @@ export function validateE1ArmConversationDiff(input: {
   constants: E1SealedConstants;
   context: E1ConversationState;
   feedback: E1ConversationState;
+  feedbackAssetPaths?: string[];
+  stripWorkspaceSnapshots?: boolean;
 }): E1ArmConversationDiffValidationResult {
-  const contextLines = conversationLines(input.context);
-  const feedbackLines = conversationLines(input.feedback);
+  const context = input.stripWorkspaceSnapshots
+    ? mapConversationContent(input.context, stripE1WorkspaceSnapshotRegions)
+    : input.context;
+  const feedback = input.stripWorkspaceSnapshots
+    ? mapConversationContent(input.feedback, stripE1WorkspaceSnapshotRegions)
+    : input.feedbackAssetPaths?.length
+      ? mapConversationContent(input.feedback, (content) =>
+          stripE1SnapshotFileSections(content, input.feedbackAssetPaths!)
+        )
+      : input.feedback;
+  const contextLines = conversationLines(context);
+  const feedbackLines = conversationLines(feedback);
   const contextOnlyLines = linesOnlyInLeft(contextLines, feedbackLines);
   const feedbackOnlyLines = linesOnlyInLeft(feedbackLines, contextLines);
   const allowlist = input.constants.arm_difference_allowlist;
@@ -446,6 +471,9 @@ export async function runE1NoProviderCheckpoint(input: {
       task_id: input.prompt.taskId,
       provider_kind: providerMetadata.provider_kind,
       ...(providerMetadata.provider_kind !== "scripted" ? { provider_profile: providerMetadata } : {}),
+      ...(input.prompt.workspaceSnapshotHash
+        ? { checkpoint_start_workspace_snapshot_hash: input.prompt.workspaceSnapshotHash }
+        : {}),
       budget: {
         max_model_turns: maxModelTurns,
         max_verification_executions: maxVerificationExecutions,
@@ -518,7 +546,7 @@ export async function runE1NoProviderRun(input: {
     conditionId: ConditionId;
     checkpointId: string;
     checkpointIndex: number;
-  }) => E1CheckpointPromptInput;
+  }) => E1CheckpointPromptInput | Promise<E1CheckpointPromptInput>;
   artifactDir?: string;
   maxModelTurns?: number;
   maxVerificationExecutions?: number;
@@ -539,6 +567,22 @@ export async function runE1NoProviderRun(input: {
 
   for (let checkpointIndex = 0; checkpointIndex < input.checkpoints.length; checkpointIndex += 1) {
     const checkpointId = input.checkpoints[checkpointIndex];
+    const promptsByCondition = {} as Record<ConditionId, E1CheckpointPromptInput>;
+
+    for (const arm of arms) {
+      promptsByCondition[arm.conditionId] = await input.promptFactory({
+        conditionId: arm.conditionId,
+        checkpointId,
+        checkpointIndex
+      });
+    }
+
+    validateE1RuntimeArmParity({
+      constants: input.constants,
+      checkpointId,
+      checkpoints: input.checkpoints,
+      promptsByCondition
+    });
 
     for (const arm of arms) {
       const checkpointBundle = await runE1NoProviderCheckpoint({
@@ -552,11 +596,7 @@ export async function runE1NoProviderRun(input: {
           checkpointId,
           checkpointIndex
         }),
-        prompt: input.promptFactory({
-          conditionId: arm.conditionId,
-          checkpointId,
-          checkpointIndex
-        }),
+        prompt: promptsByCondition[arm.conditionId],
         artifactDir: input.artifactDir
           ? join(input.artifactDir, arm.conditionId, `checkpoint-${checkpointId}`)
           : undefined,
@@ -638,6 +678,50 @@ export async function runE1NoProviderRun(input: {
 
 function conversationLines(conversation: E1ConversationState): string[] {
   return conversation.messages.flatMap((message) => message.content.split("\n")).filter((line) => line !== "");
+}
+
+export function validateE1RuntimeArmParity(input: {
+  constants: E1SealedConstants;
+  checkpointId: string;
+  checkpoints: string[];
+  promptsByCondition: Record<ConditionId, E1CheckpointPromptInput>;
+}): void {
+  // Snapshot content legitimately diverges between arms once agents have edited their own
+  // workspaces, so runtime parity strips snapshot regions and validates the template remainder.
+  const diff = validateE1ArmConversationDiff({
+    constants: input.constants,
+    context: assembleE1CheckpointConversation({
+      constants: input.constants,
+      conditionId: "context_only_spec",
+      checkpointId: input.checkpointId,
+      checkpoints: input.checkpoints,
+      ...input.promptsByCondition.context_only_spec
+    }),
+    feedback: assembleE1CheckpointConversation({
+      constants: input.constants,
+      conditionId: "feedback_capable_spec",
+      checkpointId: input.checkpointId,
+      checkpoints: input.checkpoints,
+      ...input.promptsByCondition.feedback_capable_spec
+    }),
+    stripWorkspaceSnapshots: true
+  });
+
+  if (!diff.ok) {
+    throw new Error(
+      `E1 runtime arm parity failed at checkpoint ${input.checkpointId}: ${JSON.stringify(diff)}`
+    );
+  }
+}
+
+function mapConversationContent(
+  conversation: E1ConversationState,
+  transform: (content: string) => string
+): E1ConversationState {
+  return {
+    thread_scope: conversation.thread_scope,
+    messages: conversation.messages.map((message) => ({ ...message, content: transform(message.content) }))
+  };
 }
 
 function linesOnlyInLeft(left: string[], right: string[]): string[] {

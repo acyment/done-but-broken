@@ -1,6 +1,6 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
@@ -83,7 +83,22 @@
       "checkpoint-specific visible spec",
       "condition-specific executable feedback availability"
     ],
+    "message_structure": {
+      "messages": ["system_template", "checkpoint_start_repo_injection", "checkpoint_variant_content"],
+      "rule": "The assembled checkpoint-start conversation is exactly three messages: the system template (cache breakpoint system_template_boundary at its end), one user message with the thread-scope preamble, task id, README, and the rendered workspace snapshot (cache breakpoint checkpoint_start_repo_injection at its end), and one user message with the checkpoint id, cumulative visible spec, checkpoint spec, and condition-specific verification/feedback lines."
+    },
     "rejected_alternative": "One provider thread across checkpoints is rejected for E1 because it changes the phenomenon and cost model. Prior checkpoint state must survive through the workspace, specs, and scratch files rather than chat transcript memory."
+  },
+
+  "workspace_snapshot": {
+    "renderer_id": "e1-workspace-snapshot-v1",
+    "included_roots": ["scratch/", "specs/", "src/"],
+    "excluded_directories": ["node_modules", ".git", "harness-logs", "coverage"],
+    "ordering": "lexicographic_bytewise_relative_paths",
+    "format": "Begin/end sentinels wrap a sorted file list followed by one delimited full-content section per file.",
+    "snapshot_rule": "The checkpoint-start repo injection renders the agent-visible workspace as a file list plus full file contents for every file under included_roots at checkpoint start. The oracle package is never mounted, so oracle content cannot appear. The rendered snapshot hash is recorded on the checkpoint manifest as checkpoint_start_workspace_snapshot_hash.",
+    "parity_rule": "Strict arm-conversation allowlist parity applies to the full conversation including the snapshot whenever both arms' snapshots are synthesized from fresh mounts, where the only permitted snapshot differences are the file sections and file-list lines of declared feedback assets in the feedback arm. At runtime, per-arm snapshot content divergence is agent outcome, not contamination: runtime parity validation strips the snapshot regions from both arms before the allowlist diff and relies on recorded per-arm snapshot hashes for audit.",
+    "known_limitation": "Workspace file content containing a line exactly equal to a snapshot sentinel or file-section marker can truncate region stripping. This can only produce spurious parity failures, never hide forbidden context-arm content, because all harness-provided non-snapshot lines remain subject to the strict allowlist diff."
   },
 
   "arm_difference_allowlist": {
