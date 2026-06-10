@@ -59,13 +59,13 @@ export type E1OraclePackage = {
   task_id: string;
   task_version: string;
   virtual_now: string;
-  oracle_kind: "cartcalc-json-v0";
+  oracle_kind: "cartcalc-json-v0" | "module-call-json-v1";
   package_path: string;
   package_hash: string;
   cases: E1OracleCase[];
 };
 
-export type E1OracleCase = {
+export type E1CartCalcOracleCase = {
   check_id: string;
   commitment_id: string;
   checkpoint_introduced: string;
@@ -73,6 +73,22 @@ export type E1OracleCase = {
   input: unknown;
   expected: number;
 };
+
+// Generic oracle case: import entry_module from the captured snapshot, call the named export
+// with JSON args, deep-compare the JSON result. held_out cases feed the visible-to-hidden
+// generalization-gap metric and score identically.
+export type E1ModuleCallOracleCase = {
+  check_id: string;
+  commitment_id: string;
+  checkpoint_introduced: string;
+  entry_module: string;
+  export: string;
+  args: unknown[];
+  expected: unknown;
+  held_out?: boolean;
+};
+
+export type E1OracleCase = E1CartCalcOracleCase | E1ModuleCallOracleCase;
 
 export type E1OracleTurnScore = {
   turn_index: number;
@@ -223,7 +239,7 @@ type OraclePackageJson = {
   task_id: string;
   task_version: string;
   virtual_now: string;
-  oracle_kind: "cartcalc-json-v0";
+  oracle_kind: "cartcalc-json-v0" | "module-call-json-v1";
   cases: string;
 };
 
@@ -286,6 +302,10 @@ export async function loadE1OraclePackage(packagePath: string): Promise<E1Oracle
   }
 
   assertIsoInstant(oracleJson.virtual_now, "oracle package virtual_now");
+
+  if (oracleJson.oracle_kind !== "cartcalc-json-v0" && oracleJson.oracle_kind !== "module-call-json-v1") {
+    throw new Error(`Unknown E1 oracle kind ${String(oracleJson.oracle_kind)}`);
+  }
 
   return {
     schema_version: oracleJson.schema_version,
@@ -895,10 +915,17 @@ async function scoreWorkspaceCodeSnapshot(input: {
     await writeFile(target, file.content);
   }
 
-  const checks = await runCartCalcCases({
-    modulePath: join(input.tmpRoot, "src", "cartcalc.ts"),
-    cases: cumulativeCases(input.taskPackage, input.oraclePackage, input.checkpointId)
-  });
+  const cases = cumulativeCases(input.taskPackage, input.oraclePackage, input.checkpointId);
+  const checks =
+    input.oraclePackage.oracle_kind === "module-call-json-v1"
+      ? await runE1ModuleCallCases({
+          snapshotRoot: input.tmpRoot,
+          cases: cases as E1ModuleCallOracleCase[]
+        })
+      : await runCartCalcCases({
+          modulePath: join(input.tmpRoot, "src", "cartcalc.ts"),
+          cases: cases as E1CartCalcOracleCase[]
+        });
   const passed = checks.filter((check) => check.passed).length;
 
   return {
@@ -914,7 +941,7 @@ async function scoreWorkspaceCodeSnapshot(input: {
 
 async function runCartCalcCases(input: {
   modulePath: string;
-  cases: E1OracleCase[];
+  cases: E1CartCalcOracleCase[];
 }): Promise<OracleCheckResult[]> {
   let module: Record<string, (...args: never[]) => unknown>;
 
@@ -950,7 +977,7 @@ async function runCartCalcCases(input: {
   });
 }
 
-function evaluateCartCalcCase(module: Record<string, (...args: never[]) => unknown>, testCase: E1OracleCase): number {
+function evaluateCartCalcCase(module: Record<string, (...args: never[]) => unknown>, testCase: E1CartCalcOracleCase): number {
   const fn = module[testCase.call];
 
   if (typeof fn !== "function") {
@@ -966,6 +993,107 @@ function evaluateCartCalcCase(module: Record<string, (...args: never[]) => unkno
   }
 
   return fn(testCase.input as never) as number;
+}
+
+export async function runE1ModuleCallCases(input: {
+  snapshotRoot: string;
+  cases: E1ModuleCallOracleCase[];
+}): Promise<OracleCheckResult[]> {
+  const moduleCache = new Map<string, Record<string, unknown> | { import_error: string }>();
+  const results: OracleCheckResult[] = [];
+
+  for (const testCase of input.cases) {
+    const modulePath = resolveInside(input.snapshotRoot, testCase.entry_module);
+    let module = moduleCache.get(modulePath);
+
+    if (!module) {
+      try {
+        module = (await import(pathToFileURL(modulePath).href)) as Record<string, unknown>;
+      } catch (error) {
+        module = { import_error: String(error) };
+      }
+
+      moduleCache.set(modulePath, module);
+    }
+
+    if ("import_error" in module && typeof module.import_error === "string") {
+      results.push({
+        check_id: testCase.check_id,
+        commitment_id: testCase.commitment_id,
+        passed: false,
+        details: `module import failed: ${module.import_error}`
+      });
+      continue;
+    }
+
+    const fn = (module as Record<string, unknown>)[testCase.export];
+
+    if (typeof fn !== "function") {
+      results.push({
+        check_id: testCase.check_id,
+        commitment_id: testCase.commitment_id,
+        passed: false,
+        details: `missing exported function ${testCase.export}`
+      });
+      continue;
+    }
+
+    try {
+      const actual = (fn as (...args: unknown[]) => unknown)(...structuredClone(testCase.args));
+      const passed = jsonDeepEqual(actual, testCase.expected);
+
+      results.push({
+        check_id: testCase.check_id,
+        commitment_id: testCase.commitment_id,
+        passed,
+        details: passed
+          ? "ok"
+          : `expected ${JSON.stringify(testCase.expected)}, got ${JSON.stringify(actual)}`
+      });
+    } catch (error) {
+      results.push({
+        check_id: testCase.check_id,
+        commitment_id: testCase.commitment_id,
+        passed: false,
+        details: String(error)
+      });
+    }
+  }
+
+  return results;
+}
+
+export function jsonDeepEqual(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) {
+    return true;
+  }
+
+  if (Array.isArray(left) && Array.isArray(right)) {
+    return left.length === right.length && left.every((item, index) => jsonDeepEqual(item, right[index]));
+  }
+
+  if (
+    typeof left === "object" &&
+    typeof right === "object" &&
+    left !== null &&
+    right !== null &&
+    !Array.isArray(left) &&
+    !Array.isArray(right)
+  ) {
+    const leftKeys = Object.keys(left).sort();
+    const rightKeys = Object.keys(right).sort();
+
+    return (
+      leftKeys.length === rightKeys.length &&
+      leftKeys.every(
+        (key, index) =>
+          key === rightKeys[index] &&
+          jsonDeepEqual((left as Record<string, unknown>)[key], (right as Record<string, unknown>)[key])
+      )
+    );
+  }
+
+  return false;
 }
 
 function cumulativeCases(
