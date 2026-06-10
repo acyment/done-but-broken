@@ -108,6 +108,12 @@ export class ScriptedAgentProvider implements E1AgentProvider {
   }
 }
 
+export type E1TurnWallTime = {
+  provider_call_ms: number;
+  harness_apply_ms: number;
+  total_ms: number;
+};
+
 export type E1NoProviderTurnRecord = E1TurnAdapterResult & {
   raw_model_output: string;
   provider_usage?: E1TokenUsage;
@@ -118,6 +124,7 @@ export type E1NoProviderTurnRecord = E1TurnAdapterResult & {
   workspace_before_hash: string;
   workspace_after_hash: string;
   workspace_after_code: WorkspaceCodeSnapshot;
+  wall_time_ms: E1TurnWallTime;
 };
 
 export type E1CheckpointProviderErrorRecord = {
@@ -392,6 +399,7 @@ export async function runE1NoProviderCheckpoint(input: {
     const turnIndex = state.turnsUsed + 1;
     const workspaceBefore = await hashWorkspace(input.workspacePath);
     let response: E1AgentProviderResponse;
+    const providerCallStart = performance.now();
 
     try {
       response = await input.provider.nextTurn({
@@ -424,6 +432,8 @@ export async function runE1NoProviderCheckpoint(input: {
       break;
     }
 
+    const providerCallMs = performance.now() - providerCallStart;
+    const harnessApplyStart = performance.now();
     const adapterResult = await adapter.runTurn({
       conditionId: input.conditionId,
       checkpointId: input.checkpointId,
@@ -432,6 +442,7 @@ export async function runE1NoProviderCheckpoint(input: {
       state,
       tokenUsage: response.usage
     });
+    const harnessApplyMs = performance.now() - harnessApplyStart;
     const workspaceAfter = await hashWorkspace(input.workspacePath);
     const workspaceAfterCode = await captureWorkspaceCode(input.workspacePath);
 
@@ -445,7 +456,12 @@ export async function runE1NoProviderCheckpoint(input: {
       conversation_before_turn: conversation.messages,
       workspace_before_hash: workspaceBefore.hash,
       workspace_after_hash: workspaceAfter.hash,
-      workspace_after_code: workspaceAfterCode
+      workspace_after_code: workspaceAfterCode,
+      wall_time_ms: {
+        provider_call_ms: roundMs(providerCallMs),
+        harness_apply_ms: roundMs(harnessApplyMs),
+        total_ms: roundMs(providerCallMs + harnessApplyMs)
+      }
     });
 
     termination = adapterResult.termination;
@@ -780,6 +796,10 @@ function emptyConditionNumberRecord(): Record<ConditionId, number> {
     context_only_spec: 0,
     feedback_capable_spec: 0
   };
+}
+
+function roundMs(value: number): number {
+  return Math.round(value * 1000) / 1000;
 }
 
 function lastVerificationSlotCount(bundle: E1NoProviderCheckpointBundle): number {
