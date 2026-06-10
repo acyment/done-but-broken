@@ -6,6 +6,8 @@ import {
   replayE1NoProviderCheckpointBundle,
   type E1NoProviderCheckpointBundle
 } from "./e1-no-provider-runner";
+import type { E1OpenSpecProfile } from "./e1-openspec-constants";
+import { runE1OpenSpecArchiveStep, type E1OpenSpecArchiveStepRecord } from "./e1-openspec-harness";
 import {
   buildMetrics,
   buildSelectedMetrics,
@@ -47,12 +49,21 @@ export async function inspectE1Bundle(input: {
   taskPackagePath: string;
   oraclePackagePath: string;
   tmpRoot: string;
+  openspecProfile?: E1OpenSpecProfile;
 }): Promise<E1InspectionReport> {
   const mismatches: E1InspectionMismatch[] = [];
   const loaded = loadBundle(JSON.parse(await readFile(input.bundlePath, "utf8")));
   const bundle = loaded.bundle;
   const taskPackage = await loadE1TaskPackage(input.taskPackagePath);
   const oraclePackage = await loadE1OraclePackage(input.oraclePackagePath);
+
+  if (taskPackage.workflow === "openspec" && !input.openspecProfile) {
+    throw new Error("Task package declares workflow=openspec; openspecProfile is required for inspection");
+  }
+
+  if (taskPackage.workflow !== "openspec" && input.openspecProfile) {
+    throw new Error("openspecProfile provided for a task package that does not declare workflow=openspec");
+  }
 
   if (bundle.run_identity.constants_version !== input.constants.version) {
     mismatches.push({
@@ -102,12 +113,14 @@ export async function inspectE1Bundle(input: {
       const workspacePath = join(input.tmpRoot, "replay-workspaces", conditionId);
       await rm(workspacePath, { recursive: true, force: true });
       await mountTaskWorkspace({ taskPackage, conditionId, workspacePath });
+      const recordedArchives = [...(openspecArchiveRecords(loaded)[conditionId] ?? [])];
 
       for (const checkpointBundle of checkpointBundles) {
         const replayed = await replayE1NoProviderCheckpointBundle({
           constants: input.constants,
           workspacePath,
-          bundle: checkpointBundle
+          bundle: checkpointBundle,
+          workflowGuards: input.openspecProfile?.workflowGuards
         });
 
         replaySteps += checkpointBundle.turn_records.length;
@@ -132,6 +145,36 @@ export async function inspectE1Bundle(input: {
             detail: `${conditionId} checkpoint=${checkpointBundle.run_manifest.checkpoint_id} expected=${checkpointBundle.final_workspace_code_hash} actual=${replayed.final_workspace_code_hash}`
           });
         }
+
+        // The recorded run performed the harness archive step after this checkpoint; replay
+        // must re-run it so the carried-forward workspace (and its hashes) stay reproducible.
+        const checkpointId = checkpointBundle.run_manifest.checkpoint_id;
+        const declaredChange = taskPackage.workflow_changes?.[checkpointId];
+
+        if (declaredChange && recordedArchives[0]?.change_name === declaredChange) {
+          const recorded = recordedArchives.shift()!;
+          const replayedArchive = await runE1OpenSpecArchiveStep({
+            repoRoot: process.cwd(),
+            workspacePath,
+            changeName: declaredChange
+          });
+
+          mismatches.push(
+            ...compareArchiveRecords({
+              conditionId,
+              checkpointId,
+              recorded,
+              replayed: replayedArchive
+            })
+          );
+        }
+      }
+
+      if (recordedArchives.length > 0) {
+        mismatches.push({
+          kind: "replay_openspec_archive",
+          detail: `${conditionId} has ${recordedArchives.length} recorded archive step(s) replay did not reach`
+        });
       }
     }
 
@@ -214,12 +257,18 @@ function verifyContentHashManifest(loaded: LoadedBundle): E1InspectionMismatch[]
           provider_run_hash: hashText(JSON.stringify(loaded.bundle.provider_run)),
           oracle_scoring_hash: hashText(JSON.stringify(loaded.bundle.oracle_scoring)),
           metrics_hash: hashText(JSON.stringify(loaded.bundle.metrics)),
-          provider_usage_totals_hash: hashText(JSON.stringify(loaded.bundle.provider_usage_totals))
+          provider_usage_totals_hash: hashText(JSON.stringify(loaded.bundle.provider_usage_totals)),
+          ...(loaded.bundle.openspec_workflow
+            ? { openspec_workflow_hash: hashText(JSON.stringify(loaded.bundle.openspec_workflow)) }
+            : {})
         }
       : {
           no_provider_run_hash: hashText(JSON.stringify(loaded.bundle.no_provider_run)),
           oracle_scoring_hash: hashText(JSON.stringify(loaded.bundle.oracle_scoring)),
-          metrics_hash: hashText(JSON.stringify(loaded.bundle.metrics))
+          metrics_hash: hashText(JSON.stringify(loaded.bundle.metrics)),
+          ...(loaded.bundle.openspec_workflow
+            ? { openspec_workflow_hash: hashText(JSON.stringify(loaded.bundle.openspec_workflow)) }
+            : {})
         };
 
   for (const [key, expected] of Object.entries(expectedEntries)) {
@@ -283,6 +332,52 @@ async function verifyOracleScoringAndMetrics(input: {
     mismatches.push({
       kind: "metrics",
       detail: `recomputed=${JSON.stringify(recomputedMetrics)} recorded=${JSON.stringify(input.loaded.bundle.metrics)}`
+    });
+  }
+
+  return mismatches;
+}
+
+function openspecArchiveRecords(
+  loaded: LoadedBundle
+): Partial<Record<ConditionId, E1OpenSpecArchiveStepRecord[]>> {
+  return loaded.bundle.openspec_workflow?.archive_records ?? {};
+}
+
+function compareArchiveRecords(input: {
+  conditionId: ConditionId;
+  checkpointId: string;
+  recorded: E1OpenSpecArchiveStepRecord;
+  replayed: E1OpenSpecArchiveStepRecord;
+}): E1InspectionMismatch[] {
+  const mismatches: E1InspectionMismatch[] = [];
+  const where = `${input.conditionId} checkpoint=${input.checkpointId} change=${input.recorded.change_name}`;
+
+  if (input.replayed.archive_ok !== input.recorded.archive_ok) {
+    mismatches.push({
+      kind: "replay_openspec_archive",
+      detail: `${where}: archive_ok recorded=${input.recorded.archive_ok} replayed=${input.replayed.archive_ok}`
+    });
+  }
+
+  if (input.replayed.pre_spec_of_record_hash !== input.recorded.pre_spec_of_record_hash) {
+    mismatches.push({
+      kind: "replay_openspec_archive",
+      detail: `${where}: pre_spec_of_record_hash recorded=${input.recorded.pre_spec_of_record_hash} replayed=${input.replayed.pre_spec_of_record_hash}`
+    });
+  }
+
+  if (input.replayed.post_spec_of_record_hash !== input.recorded.post_spec_of_record_hash) {
+    mismatches.push({
+      kind: "replay_openspec_archive",
+      detail: `${where}: post_spec_of_record_hash recorded=${input.recorded.post_spec_of_record_hash} replayed=${input.replayed.post_spec_of_record_hash}`
+    });
+  }
+
+  if (JSON.stringify(input.replayed.survival_ledger) !== JSON.stringify(input.recorded.survival_ledger)) {
+    mismatches.push({
+      kind: "replay_openspec_archive",
+      detail: `${where}: survival ledger diverged from the recorded record`
     });
   }
 

@@ -8,6 +8,7 @@ import {
   type E1ProviderTransport,
   type E1ProviderTransportRequest
 } from "../src/e1-live-provider";
+import { loadE1OpenSpecProfile, type E1OpenSpecProfile } from "../src/e1-openspec-constants";
 import {
   E1_RUN_CLASSIFICATIONS,
   loadE1OraclePackage,
@@ -39,7 +40,7 @@ type CliOptions = {
 };
 
 const repoRoot = resolve(import.meta.dir, "..");
-const constantsPath = join(repoRoot, "docs", "protocols", "e1-frontier-sealed-constants-v0.2.json");
+const constantsPath = join(repoRoot, "docs", "protocols", "e1-frontier-sealed-constants-v1.0.json");
 
 try {
   const options = parseArgs(Bun.argv.slice(2));
@@ -57,8 +58,11 @@ try {
 }
 
 async function run(options: CliOptions): Promise<string> {
-  const { taskPackagePath, oraclePackagePath } = resolveTask(options.task);
-  const constants = await loadE1Constants(constantsPath);
+  const { taskPackagePath, oraclePackagePath, openspecProfilePath } = resolveTask(options.task);
+  const openspecProfile: E1OpenSpecProfile | undefined = openspecProfilePath
+    ? await loadE1OpenSpecProfile(openspecProfilePath)
+    : undefined;
+  const constants = openspecProfile ? openspecProfile.constants : await loadE1Constants(constantsPath);
   const taskPackage = await loadE1TaskPackage(taskPackagePath);
   const oraclePackage = await loadE1OraclePackage(oraclePackagePath);
   const conditions = armConditions(options.arm);
@@ -82,6 +86,7 @@ async function run(options: CliOptions): Promise<string> {
     conditions,
     checkpoints: options.checkpoints,
     runClassification: options.classification,
+    openspecProfile,
     providerFactory: ({ conditionId }) => {
       const existing = providers.get(conditionId);
 
@@ -223,15 +228,27 @@ function detectCheckpoint(request: E1ProviderTransportRequest): number {
   return match ? Number(match[1]) : 1;
 }
 
-function resolveTask(task: string): { taskPackagePath: string; oraclePackagePath: string } {
-  if (task !== "cartcalc") {
-    throw new Error("--task must be cartcalc for the E1 runner");
+function resolveTask(task: string): {
+  taskPackagePath: string;
+  oraclePackagePath: string;
+  openspecProfilePath?: string;
+} {
+  if (task === "cartcalc") {
+    return {
+      taskPackagePath: join(repoRoot, "tasks", "e1-cartcalc", "task-package"),
+      oraclePackagePath: join(repoRoot, "tasks", "e1-cartcalc", "oracle-package")
+    };
   }
 
-  return {
-    taskPackagePath: join(repoRoot, "tasks", "e1-cartcalc", "task-package"),
-    oraclePackagePath: join(repoRoot, "tasks", "e1-cartcalc", "oracle-package")
-  };
+  if (task === "cartcalc-openspec") {
+    return {
+      taskPackagePath: join(repoRoot, "tasks", "e1-cartcalc-openspec", "task-package"),
+      oraclePackagePath: join(repoRoot, "tasks", "e1-cartcalc-openspec", "oracle-package"),
+      openspecProfilePath: join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json")
+    };
+  }
+
+  throw new Error("--task must be cartcalc or cartcalc-openspec for the E1 runner");
 }
 
 function armConditions(arm: CliOptions["arm"]): ConditionId[] {
@@ -324,7 +341,7 @@ function printHelp(): void {
       "Usage: bun run e1 -- --task=cartcalc --arm=context --live --cap=1.00",
       "",
       "Options:",
-      "  --task=cartcalc",
+      "  --task=cartcalc | cartcalc-openspec",
       "  --arm=context | feedback | both",
       "  --live                      Enables the live-mode spend gate.",
       "  --transport=canned | live   Defaults to canned.",

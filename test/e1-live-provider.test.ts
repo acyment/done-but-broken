@@ -17,7 +17,7 @@ const CONSTANTS_PATH = join(
   "..",
   "docs",
   "protocols",
-  "e1-frontier-sealed-constants-v0.2.json"
+  "e1-frontier-sealed-constants-v1.0.json"
 );
 const API_KEY = "sk-test-redaction-secret-123456";
 const tempRoots: string[] = [];

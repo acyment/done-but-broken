@@ -37,7 +37,8 @@ describe("E1 OpenSpec workflow profile (e1-openspec-workflow-v0)", () => {
   test("profile loads and composes the sealed base constants with workflow guards", () => {
     expect(profile.profile.protocol_profile_id).toBe("e1-openspec-workflow-v0");
     expect(profile.profile.workflow_profile.openspec_version).toBe("1.4.1");
-    expect(profile.constants.version).toBe("0.3.4");
+    expect(profile.constants.version).toBe("1.0.0");
+    expect(profile.constants.status).toBe("sealed");
     expect(profile.workflowGuards.extra_read_only_prefixes).toContain("openspec/specs/");
     expect(profile.snapshotIncludedRoots).toContain("openspec/");
     expect(profile.snapshotExcludedPathPrefixes).toContain("openspec/changes/archive/");

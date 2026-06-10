@@ -18,7 +18,7 @@ const CONSTANTS_PATH = join(
   "..",
   "docs",
   "protocols",
-  "e1-frontier-sealed-constants-v0.2.json"
+  "e1-frontier-sealed-constants-v1.0.json"
 );
 const TASK_PACKAGE_PATH = join(import.meta.dir, "..", "tasks", "e1-cartcalc", "task-package");
 const ORACLE_PACKAGE_PATH = join(import.meta.dir, "..", "tasks", "e1-cartcalc", "oracle-package");

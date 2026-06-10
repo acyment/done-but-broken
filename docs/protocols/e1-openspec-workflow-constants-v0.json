@@ -1,10 +1,10 @@
 {
   "schema": "e1-openspec-workflow-constants",
-  "version": "0.1.0",
-  "status": "draft-pre-seal",
+  "version": "1.0.0",
+  "status": "sealed",
   "protocol_profile_id": "e1-openspec-workflow-v0",
-  "base_constants_file": "e1-frontier-sealed-constants-v0.2.json",
-  "base_constants_version": "0.3.4",
+  "base_constants_file": "e1-frontier-sealed-constants-v1.0.json",
+  "base_constants_version": "1.0.0",
   "scoping_rule": "The OpenSpec workflow is a shared task-environment property, never a condition or arm. Both arms work inside the same OpenSpec-initialized workspace; the causal variable remains executable-feedback availability. Runs under this profile form their own compatibility boundary and are never pooled with base-profile runs.",
   "workflow_profile": {
     "workflow": "openspec",
@@ -46,8 +46,9 @@
     }
   },
   "seal_preconditions": [
-    "CartCalc-scale OpenSpec fixture passes scripted no-provider shakedown including a requirement-drop scenario",
-    "e1:inspect replay support covers the archive step between checkpoints",
-    "characterization tests green against the pinned CLI version"
+    "MET 2026-06-10: CartCalc-scale OpenSpec fixture passed scripted no-provider shakedown including a requirement-drop scenario (test/e1-openspec-package-runner.test.ts)",
+    "MET 2026-06-10: e1:inspect replay covers the archive step between checkpoints with byte-identical pre/post spec-of-record hashes and ledgers (test/e1-openspec-inspect.test.ts; live bundle replay-valid)",
+    "MET 2026-06-10: characterization tests green against the pinned CLI (test/openspec-archive-characterization.test.ts)",
+    "MET 2026-06-10: operator-authorized live calibration e1-cartcalc-openspec-deepseek-flash-direct-both-all-20260610-001 clean (4/4 archives ok, replay-valid, oracle 1.0 both arms)"
   ]
 }

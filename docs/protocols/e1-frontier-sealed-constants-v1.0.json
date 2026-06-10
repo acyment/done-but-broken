@@ -1,0 +1,319 @@
+{
+  "schema": "e1-sealed-constants",
+  "version": "1.0.0",
+  "supersedes": "e1-frontier-sealed-constants-v0.2.json",
+  "status": "sealed",
+  "condition_ids": [
+    "context_only_spec",
+    "feedback_capable_spec"
+  ],
+  "deferred_before_provider_seal": [],
+  "provider_runtime": {
+    "failure_policy": {
+      "retryable_failure_kinds": [
+        "api_error",
+        "timeout",
+        "rate_limit",
+        "malformed_response",
+        "network_error"
+      ],
+      "max_attempts": 3,
+      "backoff_ms": [
+        250,
+        1000,
+        4000
+      ],
+      "retries_cost_turns": false,
+      "retries_cost_tokens": false,
+      "exhausted_classification": "provider_error",
+      "exhausted_run_policy": "terminate_and_rerun_fresh_identity",
+      "log_rule": "Every provider attempt is recorded in the bundle. Retry attempts are transport metadata only: they do not consume model turns and do not debit token budgets. Exhausted retries terminate the run as provider_error, excluded from analysis and rerun only under a fresh run identity."
+    },
+    "sampling_defaults": {
+      "temperature": 0.2,
+      "top_p": 1,
+      "max_output_tokens_per_turn": 4000,
+      "per_model_profile_rule": "Every live provider profile must record model id, provider route, temperature, top_p, max_output_tokens_per_turn, timeout, retry policy, cache-breakpoint policy, and seed-support status before any provider call."
+    },
+    "seed_semantics": {
+      "meaning": "pairing_label_not_sampling_seed",
+      "pairing_label_binds": [
+        "task_package_hash",
+        "oracle_package_hash",
+        "constants_version",
+        "prompt_template_hash",
+        "checkpoint_sequence",
+        "budgets"
+      ],
+      "provider_rng_seed_policy": "If a provider exposes an RNG seed, record it in the provider profile. If it does not, seed remains a pairing label only; paired analysis pairs on that label and acknowledges unseeded provider sampling.",
+      "replay_rule": "Replay reproduces the consequences of recorded turns exactly. It does not claim to reproduce provider sampling unless a provider-specific RNG seed was recorded and honored."
+    },
+    "cache_breakpoints": {
+      "breakpoints": [
+        "system_template_boundary",
+        "checkpoint_start_repo_injection"
+      ],
+      "cached_usage_ledger_field": "cached_prefix_tokens",
+      "debit_policy": "record_not_debit",
+      "smoke_assertion_rule": "Provider-reported cache-read tokens must be recorded in cached_prefix_tokens, not fresh debited tokens; missing provider cache fields are recorded as absent, not inferred."
+    },
+    "live_mode_gate": {
+      "explicit_flag_required": true,
+      "spend_cap_required": true,
+      "spend_cap_classification": "spend_cap_reached",
+      "spend_cap_policy": "terminate_and_exclude_from_analysis",
+      "manifest_rule": "Any live provider transport call requires live_mode=true and a positive per-invocation spend cap stamped into the provider profile. If the estimated maximum call cost would exceed the remaining cap, the runner terminates before transport invocation as spend_cap_reached."
+    },
+    "redaction": {
+      "fail_closed_bundle_check": true,
+      "secret_value_policy": "never_record_raw",
+      "recording_fixture_policy": "Provider exchange recordings store redacted request/response fixtures plus raw hashes. Bundle emission fails if any configured secret value appears in serialized artifacts."
+    }
+  },
+  "token_estimator": {
+    "status": "sealed",
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "package": "js-tiktoken",
+    "package_version": "1.0.21",
+    "encoding": "o200k_base",
+    "truncation_boundary_rule": "Verification-output truncation boundaries are computed with this sealed tokenizer before output is shown to the model. The same tokenizer is used deterministically for all providers; provider-specific token fidelity is not part of the truncation boundary.",
+    "operational_uses": [
+      "verification_output_truncation",
+      "shadow_token_ledger"
+    ],
+    "rule": "Provider-reported usage remains the ledger of record when available. The sealed estimator is the operational tokenizer for verification-output truncation and runs in shadow mode on every turn for provider-vs-estimator divergence review.",
+    "divergence_review_threshold": 0.15
+  },
+  "conversation": {
+    "thread_scope": "fresh_per_checkpoint",
+    "prior_checkpoint_memory": "workspace_only",
+    "checkpoint_start_context": [
+      "current repo snapshot",
+      "README/instructions",
+      "checkpoint-specific visible spec",
+      "condition-specific executable feedback availability"
+    ],
+    "message_structure": {
+      "messages": [
+        "system_template",
+        "checkpoint_start_repo_injection",
+        "checkpoint_variant_content"
+      ],
+      "rule": "The assembled checkpoint-start conversation is exactly three messages: the system template (cache breakpoint system_template_boundary at its end), one user message with the thread-scope preamble, task id, README, and the rendered workspace snapshot (cache breakpoint checkpoint_start_repo_injection at its end), and one user message with the checkpoint id, cumulative visible spec, checkpoint spec, and condition-specific verification/feedback lines."
+    },
+    "rejected_alternative": "One provider thread across checkpoints is rejected for E1 because it changes the phenomenon and cost model. Prior checkpoint state must survive through the workspace, specs, and scratch files rather than chat transcript memory."
+  },
+  "workspace_snapshot": {
+    "renderer_id": "e1-workspace-snapshot-v1",
+    "included_roots": [
+      "scratch/",
+      "specs/",
+      "src/"
+    ],
+    "excluded_directories": [
+      "node_modules",
+      ".git",
+      "harness-logs",
+      "coverage"
+    ],
+    "ordering": "lexicographic_bytewise_relative_paths",
+    "format": "Begin/end sentinels wrap a sorted file list followed by one delimited full-content section per file.",
+    "snapshot_rule": "The checkpoint-start repo injection renders the agent-visible workspace as a file list plus full file contents for every file under included_roots at checkpoint start. The oracle package is never mounted, so oracle content cannot appear. The rendered snapshot hash is recorded on the checkpoint manifest as checkpoint_start_workspace_snapshot_hash.",
+    "parity_rule": "Strict arm-conversation allowlist parity applies to the full conversation including the snapshot whenever both arms' snapshots are synthesized from fresh mounts, where the only permitted snapshot differences are the file sections and file-list lines of declared feedback assets in the feedback arm. At runtime, per-arm snapshot content divergence is agent outcome, not contamination: runtime parity validation strips the snapshot regions from both arms before the allowlist diff and relies on recorded per-arm snapshot hashes for audit.",
+    "known_limitation": "Workspace file content containing a line exactly equal to a snapshot sentinel or file-section marker can truncate region stripping. This can only produce spurious parity failures, never hide forbidden context-arm content, because all harness-provided non-snapshot lines remain subject to the strict allowlist diff."
+  },
+  "arm_difference_allowlist": {
+    "assembled_conversation_scope": "checkpoint_start",
+    "context_only_exact_lines": [
+      "Self-verification channel: use only the commands listed above."
+    ],
+    "feedback_capable_exact_lines": [
+      "Provided executable feedback is available to this condition.",
+      "Allowed provided feedback commands: bun run spec and bun run spec -- --cp=<checkpoint>."
+    ],
+    "feedback_capable_line_prefixes": [
+      "Feedback asset paths: "
+    ],
+    "context_only_forbidden_substrings": [
+      "bun run spec",
+      "provided executable feedback"
+    ]
+  },
+  "checkpoint_continuation": {
+    "done": "continue_from_workspace_as_is",
+    "agent_stalled": "continue_from_workspace_as_is",
+    "budget_exhausted": "continue_from_workspace_as_is",
+    "invalid_integrity": "terminate_run",
+    "provider_error": "terminate_run",
+    "spend_cap_reached": "terminate_run",
+    "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity, provider_error, and spend_cap_reached terminate the entire run; provider_error is transport failure, and spend_cap_reached is operator-budget stop. Both are excluded from analysis and rerun only under a fresh run identity."
+  },
+  "package_separation": {
+    "task_package_visibility": "mounted_into_agent_workspaces",
+    "oracle_package_visibility": "external_never_mounted",
+    "hash_rule": "Task package and oracle package are separate artifacts with separate hashes. The task package is mounted into agent workspaces. The oracle package is loaded only by the external scorer and is never copied into an agent workspace."
+  },
+  "oracle_scoring": {
+    "cadence": "every_turn_snapshot",
+    "primary_endpoint_subset": "checkpoint_end_snapshots",
+    "secondary_endpoint_subset": "all_turn_snapshots"
+  },
+  "metrics": {
+    "regression_free_auc": {
+      "formula_id": "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1",
+      "formula": "For each checkpoint-end snapshot k, p_k is the fraction of all cumulative hidden-oracle assertions introduced at any j <= k that pass. The run score is mean(p_k) over k = 1..K. Checkpoints are equally weighted. agent_stalled and budget_exhausted snapshots score as-is with the checkpoint's new assertions failed.",
+      "checkpoint_weighting": "equal",
+      "assertion_denominator": "cumulative_hidden_assertions_introduced_through_checkpoint"
+    }
+  },
+  "virtual_clock": {
+    "required": true,
+    "package_field": "virtual_now",
+    "real_clock_references_rejected": [
+      "Date.now",
+      "new Date()",
+      "performance.now"
+    ]
+  },
+  "bundle_grading": {
+    "dev_when_constants_status": "draft-pre-seal",
+    "evidence_requires_constants_status": "sealed",
+    "evidence_requires_protocol_document_hash": true
+  },
+  "turn_protocol": {
+    "max_turns_per_checkpoint": 12,
+    "max_verification_executions_per_checkpoint": 6,
+    "consecutive_noop_stall_threshold": 3,
+    "stall_classification": "agent_stalled",
+    "verification_output_token_cap": 4000,
+    "truncation_head_tokens": 2500,
+    "truncation_tail_tokens": 1500
+  },
+  "stall_reporting": {
+    "asymmetry_ratio_flag": 2.0,
+    "min_stall_rate_flag": 0.05,
+    "rule": "If arm stall rates differ by more than asymmetry_ratio_flag AND the higher arm exceeds min_stall_rate_flag of checkpoints, the model's primary endpoint carries a protocol-usability caveat."
+  },
+  "block_grammar": {
+    "encoding": "Delimiters are recognized only at the start of a line. Leading whitespace disqualifies a delimiter line. Trailing whitespace on delimiter lines is tolerated and stripped before matching. Block content is verbatim, joined with \\n, never trimmed.",
+    "file_open_regex": "^<<<FILE ([^>]+)>>>$",
+    "verify_open_literal": "<<<VERIFY>>>",
+    "end_literal": "<<<END>>>",
+    "done_literal": "<<<DONE>>>",
+    "verify_content_rule": "Exactly one non-empty line. Zero lines, blank-only lines, or multiple non-blank lines invalidate the block.",
+    "multiple_verify_policy": "first_wins",
+    "multiple_verify_violation": "multiple_verify_blocks",
+    "duplicate_file_path_policy": "last_wins",
+    "duplicate_file_path_violation": "duplicate_file_path",
+    "unclosed_block_policy": "An opener with no matching <<<END>>> consumes all remaining lines to EOF; the block is discarded and a violation is recorded.",
+    "orphan_end_policy": "An <<<END>>> with no open block is a violation and is otherwise ignored.",
+    "done_semantics": "Standalone line. Textual position is irrelevant; processing order is always replacements, then verification, then done. Repeated DONE lines are idempotent.",
+    "block_validity_vs_command_validity": "A syntactically valid VERIFY block containing a command that fails the command grammar still emits a verification request with valid=false; at execution time it is refused and consumes a verification slot. Block-grammar-invalid VERIFY blocks emit nothing and consume nothing.",
+    "noop_definition": "A turn is no_op iff it contains zero block-grammar-valid blocks: no valid FILE block, no VERIFY block, and no DONE.",
+    "known_limitation": "File content containing a line exactly equal to <<<END>>> modulo trailing whitespace cannot be transmitted; the block terminates at that line."
+  },
+  "fence_stripping": {
+    "rule": "Strip exactly one outer markdown fence layer, implemented as a stateful single pass interleaved with block parsing.",
+    "opener_regex": "^(`{3,})([A-Za-z0-9_+#.-]*)\\s*$",
+    "closer_rule": "A line consisting only of backticks with optional trailing whitespace whose backtick count is >= the opener's count. Language-tagged lines never close a fence.",
+    "one_layer_rule": "Fences are recognized only at fence depth 0. While inside a stripped fence, any further ```-prefixed line that is not a valid closer is preserved as ordinary content.",
+    "inside_protocol_blocks": "Fence delimiters are never recognized inside an open FILE or VERIFY block; such lines are verbatim block content.",
+    "unclosed_fence_policy": "An unclosed fence is stripped at its opener and implicitly closed at EOF; recorded as info, not a violation.",
+    "rationale": "Rejecting fenced-but-valid blocks would manufacture stalls out of formatting habit, inflating the stall-rate metric."
+  },
+  "path_grammar": {
+    "regex": "^[A-Za-z0-9._-][A-Za-z0-9._/-]*$",
+    "max_length": 200,
+    "ascii_only": true,
+    "relative_only": true,
+    "no_leading_dash": true,
+    "no_leading_slash": true,
+    "no_trailing_slash": true,
+    "no_double_slash": true,
+    "forbidden_segments": [
+      ".",
+      ".."
+    ],
+    "platform": "POSIX only. Backslash is an invalid character, not a separator. Windows is out of scope.",
+    "runtime_note": "Syntactic validation only. realpath resolution plus prefix containment in resolved scratch/ remains an L0/L2 execution-time check."
+  },
+  "command_grammar": {
+    "separator": "Exactly one ASCII space between tokens. Any other whitespace or repeated spaces rejects the command.",
+    "templates": [
+      {
+        "id": "bun_test_scratch",
+        "shape": "bun test <P>",
+        "conditions": [
+          "context_only_spec",
+          "feedback_capable_spec"
+        ]
+      },
+      {
+        "id": "bun_file_scratch",
+        "shape": "bun <P>",
+        "conditions": [
+          "context_only_spec",
+          "feedback_capable_spec"
+        ],
+        "note": "bun <file>, never bun run <file>: bun run consults package.json scripts first."
+      },
+      {
+        "id": "spec_runner",
+        "shape": "bun run spec",
+        "conditions": [
+          "feedback_capable_spec"
+        ]
+      },
+      {
+        "id": "spec_runner_cp",
+        "shape": "bun run spec -- --cp=<k>",
+        "conditions": [
+          "feedback_capable_spec"
+        ],
+        "k_rule": "ASCII integer, no sign, no leading zeros except the literal value itself being in checkpoint_range."
+      }
+    ],
+    "scratch_path_rules": {
+      "required_prefix": "scratch/",
+      "allowed_extensions": [
+        ".ts"
+      ],
+      "inherits": "path_grammar"
+    },
+    "checkpoint_range": {
+      "min": 1,
+      "max": 24
+    },
+    "refusal_semantics": "A command failing this grammar at execution time is refused with a fixed refusal string and consumes one verification slot."
+  },
+  "audit": {
+    "diff_inclusion_manifest": [
+      "src/",
+      "scratch/",
+      "specs/"
+    ],
+    "diff_exclusions": [
+      "node_modules/",
+      ".git/",
+      "harness-logs/",
+      "coverage/"
+    ],
+    "diff_canonicalization": "Paths sorted lexicographically byte-wise; no newline normalization; file mode changes recorded; binary files recorded as hash pairs.",
+    "protected_paths": [
+      "specs/",
+      "specs/steps/",
+      "package.json",
+      "bunfig.toml",
+      "tsconfig.json",
+      "bun.lock"
+    ],
+    "integrity_rule": "Protected-path hashes verified after every mutation path: replacement application and every verification execution. Mismatch classifies the run invalid_integrity. Classification/termination is L2 responsibility."
+  },
+  "environment": {
+    "lockfile_rule": "From the first commit in which package.json declares any dependency, a missing or stale bun.lock is an invalid environment boundary: the orchestrator refuses to start. Until then recorded as deps:none, lockfile:absent. Empirical note for Bun 1.3.14: Bun emits no lockfile for zero-dependency packages even with --save-text-lockfile, and bun install --frozen-lockfile succeeds without one.",
+    "bun_flags": [
+      "--no-install"
+    ],
+    "install_command": "bun install --frozen-lockfile"
+  }
+}

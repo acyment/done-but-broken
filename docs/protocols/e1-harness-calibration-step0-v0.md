@@ -210,3 +210,40 @@ Do not build Billing v2 until:
 - projected full-matrix cost is within the operator's budget ceiling.
 
 Only after this gate opens should Billing v2 design start. The first Billing v2 artifact should be a consolidated protocol document carrying the full E1 decisions and compatibility boundary, with its hash used as the task-branch commitment anchor.
+
+## Step 0 Closure Record (2026-06-10, post-snapshot-fix boundary)
+
+The pre-snapshot-fix calibration bundles (2026-06-10, prompt-template hash `e562f073…`) are a dead compatibility boundary: the workspace-snapshot stub fix and the three-message cache-breakpoint layout changed the prompt-template hash to `1327a200…`. The gate was re-run and closed under the new boundary.
+
+Operator-authorized calibration runs (model `deepseek-v4-flash`, route `deepseek-direct-chat-completions`, classification `calibration`, all replay-valid under `bun run e1:inspect` with 0 mismatches):
+
+- `e1-cartcalc-deepseek-flash-direct-both-all-seed-a-20260610-003` — both arms, 3 checkpoints, oracle 1.0/1.0, $0.003221.
+- `e1-cartcalc-deepseek-flash-direct-both-all-seed-b-20260610-003` — both arms, 3 checkpoints, oracle 1.0/1.0, $0.002993.
+- `e1-cartcalc-deepseek-pro-direct-context-all-20260610-003` — frontier context arm, 3 checkpoints, oracle 1.0, $0.007864.
+
+Measured constants (via `bun run e1:stats`):
+
+| Variable | Cheap (flash, 2 seeds, both arms) | Frontier context (pro) |
+| --- | ---: | ---: |
+| `t` turns/checkpoint | 1.83 | 1.67 |
+| `v` verification requests/checkpoint | 1.25 | 0.67 |
+| `f` fresh input tokens/turn | 939 | 1344 |
+| cached input tokens/turn | 1711 | 717 |
+| `o` output tokens/turn | 522 | 1133 |
+| no-op turn rate | 0 (gate: <10%) | 0 |
+| stall rate | 0 | 0 |
+| truncation hit rate | 0 | 0 |
+| wall time/turn (provider + harness) | ~5.7s | ~12.0s |
+
+Live observations closing the remaining behavioral items: self-authored scratch tests ran green in fresh sandboxes (`bun test scratch/test.ts`, `bun scratch/test-cp2.ts`, exit 0); the feedback arm exercised the real loop (`bun run spec` exit 1 → code fix → exit 0 within one checkpoint); command gating refused out-of-grammar attempts live (`bun test specs/run-spec.ts --cp=1`, `bun run scratch/…`) with the model recovering on the next request. FILE-write rejection of protected spec paths is exercised by the scripted batteries on every suite run.
+
+Cost model with measured constants (cost per checkpoint episode = `t` × per-turn token cost):
+
+| Lane | $/checkpoint episode | Probe (72–96 ep.) | Stage A (360 ep.) | Worst case (800 ep.) |
+| --- | ---: | ---: | ---: | ---: |
+| flash | ~$0.00052 | ~$0.05 | ~$0.19 | ~$0.41 |
+| pro | ~$0.0026 | ~$0.25 | ~$0.94 | ~$2.10 |
+
+Caveats: CartCalc is trivial — the Billing v2 task will have multi-file snapshots (larger `f`) and harder checkpoints (larger `t`, toward the 7–8 planning bound). At `t=8` and 5× fresh-input size, worst case stays under ~$10 (flash) / ~$45 (pro); a Sonnet-class frontier lane at ~10–40× pro token prices is the budget driver and must be projected at evidence-matrix seal time.
+
+**Go gate: all items pass.** Constants sealed as `docs/protocols/e1-frontier-sealed-constants-v1.0.json` (`version=1.0.0`, `status=sealed`); the v0.2 file remains as the frozen draft history. Future evidence-grade bundles require this sealed constants file plus a protocol-document hash at invocation.

@@ -2,15 +2,16 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { loadE1Constants } from "../src/e1-l1-constants";
+import { loadE1OpenSpecProfile } from "../src/e1-openspec-constants";
 import { inspectE1Bundle, renderE1InspectionLines } from "../src/e1-inspect";
 
 const repoRoot = resolve(import.meta.dir, "..");
-const constantsPath = join(repoRoot, "docs", "protocols", "e1-frontier-sealed-constants-v0.2.json");
+const constantsPath = join(repoRoot, "docs", "protocols", "e1-frontier-sealed-constants-v1.0.json");
 
 function printHelp(): void {
   console.log(
     [
-      "Usage: bun run e1:inspect -- --bundle <path> [--task cartcalc | --task-package <path> --oracle-package <path>]",
+      "Usage: bun run e1:inspect -- --bundle <path> [--task cartcalc|cartcalc-openspec | --task-package <path> --oracle-package <path>]",
       "",
       "Replays an E1 bundle's recorded turns onto fresh template mounts, byte-compares",
       "per-turn and final workspace hashes, recomputes oracle scoring, metrics, and the",
@@ -63,11 +64,18 @@ if (!bundlePath) {
 
 let taskPackagePath = flags.get("task-package");
 let oraclePackagePath = flags.get("oracle-package");
+let openspecProfilePath = flags.get("openspec-profile");
 const task = flags.get("task");
 
 if (task === "cartcalc") {
   taskPackagePath = join(repoRoot, "tasks", "e1-cartcalc", "task-package");
   oraclePackagePath = join(repoRoot, "tasks", "e1-cartcalc", "oracle-package");
+}
+
+if (task === "cartcalc-openspec") {
+  taskPackagePath = join(repoRoot, "tasks", "e1-cartcalc-openspec", "task-package");
+  oraclePackagePath = join(repoRoot, "tasks", "e1-cartcalc-openspec", "oracle-package");
+  openspecProfilePath ??= join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json");
 }
 
 if (!taskPackagePath || !oraclePackagePath) {
@@ -83,7 +91,8 @@ try {
     bundlePath,
     taskPackagePath,
     oraclePackagePath,
-    tmpRoot
+    tmpRoot,
+    openspecProfile: openspecProfilePath ? await loadE1OpenSpecProfile(openspecProfilePath) : undefined
   });
 
   for (const line of renderE1InspectionLines(report)) {

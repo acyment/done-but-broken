@@ -8,7 +8,7 @@ const CONSTANTS_PATH = join(
   "..",
   "docs",
   "protocols",
-  "e1-frontier-sealed-constants-v0.2.json"
+  "e1-frontier-sealed-constants-v1.0.json"
 );
 
 describe("E1 frontier sealed constants", () => {
@@ -16,7 +16,8 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.3.4");
+    expect(constants.version).toBe("1.0.0");
+    expect(constants.status).toBe("sealed");
     expect(constants.workspace_snapshot.renderer_id).toBe("e1-workspace-snapshot-v1");
     expect(constants.workspace_snapshot.included_roots).toEqual(["scratch/", "specs/", "src/"]);
     expect(constants.conversation.message_structure.messages).toEqual([
