@@ -38,6 +38,14 @@ export type ApplyReplacementResult = {
 
 export type ProtectedPathHashes = Record<string, string | null>;
 
+// Workflow profiles (e.g. e1-openspec-workflow-v0) may extend the sealed base guards: extra
+// read-only prefixes refuse agent FILE replacements, and extra protected directories join the
+// integrity-hash baseline so out-of-band mutation terminates invalid_integrity.
+export type E1WorkflowGuards = {
+  extra_read_only_prefixes: string[];
+  extra_protected_directories: string[];
+};
+
 export type ProtectedPathHashMismatch = {
   path: string;
   expected: string | null | undefined;
@@ -115,6 +123,7 @@ export async function applyFullFileReplacements(input: {
 export async function applyFullFileReplacementEntries(input: {
   workspacePath: string;
   replacements: FullFileReplacement[];
+  workflowGuards?: E1WorkflowGuards;
 }): Promise<ApplyReplacementResult> {
   if (!input.replacements.length) {
     return { applied: false, replacements: [], confirmations: [], errors: [] };
@@ -128,7 +137,8 @@ export async function applyFullFileReplacementEntries(input: {
     const validation = await validateWritableWorkspacePath({
       workspaceReal,
       workspacePath: input.workspacePath,
-      relativePath: replacement.path
+      relativePath: replacement.path,
+      extraReadOnlyPrefixes: input.workflowGuards?.extra_read_only_prefixes
     });
 
     if (!validation.ok) {
@@ -175,17 +185,20 @@ export async function applyParsedTurnToL0(input: {
   timeoutMs?: number;
   outputLimit?: number;
   protectedPathBaseline?: ProtectedPathHashes;
+  workflowGuards?: E1WorkflowGuards;
 }): Promise<E1ParsedTurnL0Result> {
   const replacementResult = input.parsedTurn.replacements.length
     ? await applyFullFileReplacementEntries({
         workspacePath: input.workspacePath,
-        replacements: input.parsedTurn.replacements
+        replacements: input.parsedTurn.replacements,
+        workflowGuards: input.workflowGuards
       })
     : null;
   const postReplacementIntegrity = input.protectedPathBaseline
     ? await verifyProtectedPathHashes({
         workspacePath: input.workspacePath,
-        baseline: input.protectedPathBaseline
+        baseline: input.protectedPathBaseline,
+        workflowGuards: input.workflowGuards
       })
     : undefined;
 
@@ -205,7 +218,8 @@ export async function applyParsedTurnToL0(input: {
         checkpoints: input.checkpoints,
         timeoutMs: input.timeoutMs,
         outputLimit: input.outputLimit,
-        protectedPathBaseline: input.protectedPathBaseline
+        protectedPathBaseline: input.protectedPathBaseline,
+        workflowGuards: input.workflowGuards
       })
     : null;
 
@@ -364,6 +378,7 @@ export async function runVerificationRequest(input: {
   timeoutMs?: number;
   outputLimit?: number;
   protectedPathBaseline?: ProtectedPathHashes;
+  workflowGuards?: E1WorkflowGuards;
 }): Promise<VerificationRunResult> {
   const execution = await buildVerificationExecution(input);
 
@@ -398,7 +413,8 @@ export async function runVerificationRequest(input: {
     const protectedPathIntegrity = input.protectedPathBaseline
       ? await verifyProtectedPathHashes({
           workspacePath: input.workspacePath,
-          baseline: input.protectedPathBaseline
+          baseline: input.protectedPathBaseline,
+          workflowGuards: input.workflowGuards
         })
       : undefined;
 
@@ -428,7 +444,8 @@ export async function runVerificationRequest(input: {
     const protectedPathIntegrity = input.protectedPathBaseline
       ? await verifyProtectedPathHashes({
           workspacePath: input.workspacePath,
-          baseline: input.protectedPathBaseline
+          baseline: input.protectedPathBaseline,
+          workflowGuards: input.workflowGuards
         })
       : undefined;
 
@@ -463,7 +480,10 @@ export function sha256Text(text: string): string {
   return createHash("sha256").update(text).digest("hex");
 }
 
-export async function hashProtectedPaths(workspacePath: string): Promise<ProtectedPathHashes> {
+export async function hashProtectedPaths(
+  workspacePath: string,
+  workflowGuards?: E1WorkflowGuards
+): Promise<ProtectedPathHashes> {
   const workspaceReal = await realpath(workspacePath);
   const hashes: ProtectedPathHashes = {};
 
@@ -471,7 +491,12 @@ export async function hashProtectedPaths(workspacePath: string): Promise<Protect
     hashes[path] = await hashFileIfPresent(resolve(workspaceReal, path));
   }
 
-  for (const directory of PROTECTED_DIRECTORY_PATHS) {
+  const protectedDirectories = [
+    ...PROTECTED_DIRECTORY_PATHS,
+    ...(workflowGuards?.extra_protected_directories ?? []).map((dir) => dir.replace(/\/$/, ""))
+  ];
+
+  for (const directory of protectedDirectories) {
     await hashProtectedDirectory({ workspaceReal, relativePath: directory, hashes });
   }
 
@@ -481,8 +506,9 @@ export async function hashProtectedPaths(workspacePath: string): Promise<Protect
 export async function verifyProtectedPathHashes(input: {
   workspacePath: string;
   baseline: ProtectedPathHashes;
+  workflowGuards?: E1WorkflowGuards;
 }): Promise<{ ok: true } | { ok: false; mismatches: ProtectedPathHashMismatch[] }> {
-  const actual = await hashProtectedPaths(input.workspacePath);
+  const actual = await hashProtectedPaths(input.workspacePath, input.workflowGuards);
   const paths = new Set([...Object.keys(input.baseline), ...Object.keys(actual)]);
   const mismatches: ProtectedPathHashMismatch[] = [];
 
@@ -499,6 +525,7 @@ async function validateWritableWorkspacePath(input: {
   workspaceReal: string;
   workspacePath: string;
   relativePath: string;
+  extraReadOnlyPrefixes?: string[];
 }): Promise<{ ok: true; absolutePath: string } | { ok: false; error: string }> {
   const syntaxError = validatePosixPathSyntax(input.relativePath);
 
@@ -516,7 +543,7 @@ async function validateWritableWorkspacePath(input: {
     return { ok: false, error: `${input.relativePath} escapes the workspace` };
   }
 
-  const readOnlyReason = readOnlyReasonFor(normalized);
+  const readOnlyReason = readOnlyReasonFor(normalized, input.extraReadOnlyPrefixes);
 
   if (readOnlyReason) {
     return { ok: false, error: readOnlyReason };
@@ -583,13 +610,21 @@ async function resolveScratchDir(workspacePath: string): Promise<string> {
   return realpath(resolve(workspacePath, "scratch"));
 }
 
-function readOnlyReasonFor(normalizedPath: string): string | undefined {
+function readOnlyReasonFor(normalizedPath: string, extraReadOnlyPrefixes?: string[]): string | undefined {
   if (READ_ONLY_PATHS.has(normalizedPath)) {
     return `${normalizedPath} is read-only`;
   }
 
   if (normalizedPath === "specs" || normalizedPath.startsWith(`specs${sep}`)) {
     return `${normalizedPath} is read-only`;
+  }
+
+  for (const prefix of extraReadOnlyPrefixes ?? []) {
+    const normalizedPrefix = prefix.replace(/\/$/, "").split("/").join(sep);
+
+    if (normalizedPath === normalizedPrefix || normalizedPath.startsWith(`${normalizedPrefix}${sep}`)) {
+      return `${normalizedPath} is read-only`;
+    }
   }
 
   return undefined;

@@ -1,0 +1,53 @@
+{
+  "schema": "e1-openspec-workflow-constants",
+  "version": "0.1.0",
+  "status": "draft-pre-seal",
+  "protocol_profile_id": "e1-openspec-workflow-v0",
+  "base_constants_file": "e1-frontier-sealed-constants-v0.2.json",
+  "base_constants_version": "0.3.4",
+  "scoping_rule": "The OpenSpec workflow is a shared task-environment property, never a condition or arm. Both arms work inside the same OpenSpec-initialized workspace; the causal variable remains executable-feedback availability. Runs under this profile form their own compatibility boundary and are never pooled with base-profile runs.",
+  "workflow_profile": {
+    "workflow": "openspec",
+    "openspec_package": "@fission-ai/openspec",
+    "openspec_version": "1.4.1",
+    "telemetry_policy": "Every CLI invocation sets OPENSPEC_TELEMETRY=0, DO_NOT_TRACK=1, NO_COLOR=1, FORCE_COLOR=0, CI=1 with non-TTY stdio. The opt-out mechanism is pinned by characterization tests; drift requires re-sealing this profile.",
+    "archive_step": {
+      "command": "openspec archive <change> --yes",
+      "runner": "harness_at_checkpoint_end_per_arm",
+      "identical_in_both_arms": true,
+      "failure_detection": "Output text ('Aborted. No files were changed.') and the still-present change directory determine failure; the pinned CLI exits 0 on abort, so exit codes are never trusted alone.",
+      "archive_rename": "The dated archive directory (YYYY-MM-DD-<change>) is renamed to the plain change name immediately after a successful archive so workspace state stays replay-deterministic across days.",
+      "failed_archive_policy": "A failed archive step leaves the spec-of-record unchanged, is recorded on the run bundle, and the run continues; archive failure is agent outcome (a malformed or missing delta), not harness failure.",
+      "regression_surface_rule": "Archive applies MODIFIED-replace semantics: a MODIFIED requirement block wholesale replaces the existing block, so omitted previously-established scenarios are silently dropped from the spec-of-record. This workflow-native prose-regression surface is present identically in both arms."
+    },
+    "additional_read_only_prefixes": [
+      "openspec/specs/",
+      "openspec/project.md"
+    ],
+    "additional_protected_directories": [
+      "openspec/specs/"
+    ],
+    "spec_of_record_mutation_rule": "Agent FILE replacements into openspec/specs/ are refused as read-only; the harness-run archive step is the only mutator of the spec-of-record. Agent-authored change deltas under openspec/changes/ are the workflow's spec-maintenance surface.",
+    "additional_snapshot_roots": [
+      "openspec/"
+    ],
+    "snapshot_exclusions": [
+      "openspec/changes/archive/"
+    ],
+    "scenario_canonicalizer_id": "e1-openspec-scenario-canonicalizer-v1",
+    "scenario_parity_rule": "At the first checkpoint's start (fresh mounts), both arms' spec-of-record scenario sets must be canonically identical (canonicalizer strips Gherkin keywords, markdown emphasis, bullets, case, and whitespace); a fresh-mount divergence fails the run. From the first agent-maintained checkpoint onward, cross-arm spec-of-record divergence is measured outcome recorded per checkpoint (and in the survival ledger), not a parity violation.",
+    "survival_ledger": {
+      "metric_role": "secondary_descriptive",
+      "rule": "Each archive step records scenarios dropped, added, and changed in the spec-of-record. The ledger is descriptive context for prose-regression analysis; the protocol primary metric remains the sealed hidden-oracle checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1."
+    },
+    "task_package_fields": {
+      "workflow": "openspec",
+      "workflow_changes": "Optional map of checkpoint id to the change name the harness archives at that checkpoint's end; checkpoints without an entry run no archive step."
+    }
+  },
+  "seal_preconditions": [
+    "CartCalc-scale OpenSpec fixture passes scripted no-provider shakedown including a requirement-drop scenario",
+    "e1:inspect replay support covers the archive step between checkpoints",
+    "characterization tests green against the pinned CLI version"
+  ]
+}

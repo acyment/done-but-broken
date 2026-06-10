@@ -16,10 +16,17 @@ import {
   type E1NoProviderRunBundle
 } from "./e1-no-provider-runner";
 import type { E1CheckpointPromptInput } from "./e1-no-provider-runner";
+import type { E1OpenSpecProfile } from "./e1-openspec-constants";
+import {
+  runE1OpenSpecArchiveStep,
+  validateE1OpenSpecScenarioParity,
+  type E1OpenSpecArchiveStepRecord
+} from "./e1-openspec-harness";
 import {
   collectE1SnapshotFiles,
   renderE1WorkspaceSnapshot,
-  renderE1WorkspaceSnapshotFromFiles
+  renderE1WorkspaceSnapshotFromFiles,
+  type E1SnapshotOptions
 } from "./e1-workspace-snapshot";
 import type { OracleCheckResult } from "./result-schema";
 import { hashDirectory, hashText, type WorkspaceCodeSnapshot } from "./snapshot";
@@ -36,6 +43,8 @@ export type E1TaskPackage = {
   readme_text: string;
   visible_specs: Record<string, string>;
   feedback_assets: E1TaskFeedbackAsset[];
+  workflow?: "openspec";
+  workflow_changes?: Record<string, string>;
 };
 
 export type E1TaskFeedbackAsset = {
@@ -83,6 +92,7 @@ export type E1TaskPackageNoProviderBundle = {
     seed: "scripted";
   };
   no_provider_run: E1NoProviderRunBundle;
+  openspec_workflow?: E1OpenSpecWorkflowRecord;
   oracle_scoring: {
     cadence: "every_turn_snapshot";
     per_turn: Record<ConditionId, Record<string, E1OracleTurnScore[]>>;
@@ -146,6 +156,14 @@ export const E1_RUN_CLASSIFICATIONS = [
 
 export type E1RunClassification = (typeof E1_RUN_CLASSIFICATIONS)[number];
 
+export type E1OpenSpecWorkflowRecord = {
+  protocol_profile_id: "e1-openspec-workflow-v0";
+  profile_version: string;
+  openspec_version: string;
+  archive_records: Partial<Record<ConditionId, E1OpenSpecArchiveStepRecord[]>>;
+  scenario_parity: Array<{ checkpoint_id: string; ok: boolean }>;
+};
+
 export type E1TaskPackageProviderBundle = {
   schema_version: "e1-task-package-provider-bundle-v0";
   grade: "dev" | "evidence";
@@ -166,6 +184,7 @@ export type E1TaskPackageProviderBundle = {
     provider_transport_kind: "canned" | "live";
   };
   provider_run: E1TaskPackageProviderRunBundle;
+  openspec_workflow?: E1OpenSpecWorkflowRecord;
   oracle_scoring: E1TaskPackageNoProviderBundle["oracle_scoring"];
   metrics: {
     formula_id: "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1";
@@ -186,6 +205,8 @@ type TaskPackageJson = {
   readme_path: string;
   visible_specs: Record<string, string>;
   feedback_assets: string;
+  workflow?: "openspec";
+  workflow_changes?: Record<string, string>;
 };
 
 type FeedbackAssetManifest = {
@@ -249,7 +270,9 @@ export async function loadE1TaskPackage(packagePath: string): Promise<E1TaskPack
     template_workspace_path: resolveInside(packageRoot, taskJson.template_workspace),
     readme_text: await readFile(resolveInside(packageRoot, taskJson.readme_path), "utf8"),
     visible_specs: visibleSpecs,
-    feedback_assets: feedbackAssets
+    feedback_assets: feedbackAssets,
+    ...(taskJson.workflow ? { workflow: taskJson.workflow } : {}),
+    ...(taskJson.workflow_changes ? { workflow_changes: taskJson.workflow_changes } : {})
   };
 }
 
@@ -316,10 +339,19 @@ export async function runE1TaskPackageNoProvider(input: {
   runsRoot: string;
   runId: string;
   protocolDocumentHash?: string;
+  openspecProfile?: E1OpenSpecProfile;
   arms: Record<ConditionId, (input: E1CheckpointProviderFactoryInput) => E1AgentProvider>;
 }): Promise<E1TaskPackageNoProviderBundle> {
   await validateE1DependencyLockfileBoundary(process.cwd());
   assertPackageCompatibility(input.taskPackage, input.oraclePackage);
+  const openspecProfile = assertOpenSpecProfileForWorkflow(input.taskPackage, input.openspecProfile);
+  const snapshotOptions: E1SnapshotOptions | undefined = openspecProfile
+    ? {
+        includedRoots: openspecProfile.snapshotIncludedRoots,
+        excludedPathPrefixes: openspecProfile.snapshotExcludedPathPrefixes
+      }
+    : undefined;
+  const openspecRecord = openspecProfile ? emptyOpenSpecWorkflowRecord(openspecProfile) : undefined;
   const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
   const runRoot = join(input.runsRoot, input.runId);
   const workspaceRoot = join(runRoot, "workspaces");
@@ -336,7 +368,7 @@ export async function runE1TaskPackageNoProvider(input: {
     conditionId: "feedback_capable_spec",
     workspacePath: feedbackWorkspace
   });
-  await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
+  await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage, snapshotOptions);
 
   const noProviderRun = await runE1NoProviderRun({
     constants: input.constants,
@@ -357,9 +389,41 @@ export async function runE1TaskPackageNoProvider(input: {
       taskPackage: input.taskPackage,
       conditionId,
       checkpointId,
-      workspacePath: conditionId === "context_only_spec" ? contextWorkspace : feedbackWorkspace
+      workspacePath: conditionId === "context_only_spec" ? contextWorkspace : feedbackWorkspace,
+      snapshotOptions
     }),
-    artifactDir: join(runRoot, "e1-no-provider-run")
+    artifactDir: join(runRoot, "e1-no-provider-run"),
+    workflowGuards: openspecProfile?.workflowGuards,
+    checkpointHooks: openspecProfile
+      ? {
+          before: async ({ checkpointId, checkpointIndex }) => {
+            const parity = await validateE1OpenSpecScenarioParity({
+              contextWorkspacePath: contextWorkspace,
+              feedbackWorkspacePath: feedbackWorkspace
+            });
+            openspecRecord!.scenario_parity.push({ checkpoint_id: checkpointId, ok: parity.ok });
+
+            // Fresh mounts must be canonically identical; from the first agent-maintained
+            // checkpoint onward, spec-of-record divergence is measured outcome (the survival
+            // ledger), not a parity violation.
+            if (checkpointIndex === 0 && !parity.ok) {
+              throw new Error(
+                `OpenSpec scenario parity failed at fresh mount for checkpoint ${checkpointId}: ${JSON.stringify(parity)}`
+              );
+            }
+          },
+          afterArm: async ({ conditionId, checkpointId, workspacePath }) => {
+            await runOpenSpecAfterArmStep({
+              profile: openspecProfile,
+              record: openspecRecord!,
+              taskPackage: input.taskPackage,
+              conditionId,
+              checkpointId,
+              workspacePath
+            });
+          }
+        }
+      : undefined
   });
   const oracleScoring = await scoreNoProviderRun({
     taskPackage: input.taskPackage,
@@ -374,7 +438,8 @@ export async function runE1TaskPackageNoProvider(input: {
     prompt_template_hash: promptTemplateHash,
     no_provider_run_hash: hashText(JSON.stringify(noProviderRun)),
     oracle_scoring_hash: hashText(JSON.stringify(oracleScoring)),
-    metrics_hash: hashText(JSON.stringify(metrics))
+    metrics_hash: hashText(JSON.stringify(metrics)),
+    ...(openspecRecord ? { openspec_workflow_hash: hashText(JSON.stringify(openspecRecord)) } : {})
   };
   const bundle: E1TaskPackageNoProviderBundle = {
     schema_version: "e1-task-package-no-provider-bundle-v0",
@@ -388,6 +453,7 @@ export async function runE1TaskPackageNoProvider(input: {
       seed: "scripted"
     },
     no_provider_run: noProviderRun,
+    ...(openspecRecord ? { openspec_workflow: openspecRecord } : {}),
     oracle_scoring: oracleScoring,
     metrics,
     content_hash_manifest: contentHashManifest,
@@ -409,6 +475,7 @@ export async function runE1TaskPackageProvider(input: {
   conditions: ConditionId[];
   checkpoints?: string[];
   runClassification?: E1RunClassification;
+  openspecProfile?: E1OpenSpecProfile;
   providerFactory: (input: E1CheckpointProviderFactoryInput) => E1AgentProvider;
   maxModelTurns?: number;
   maxVerificationExecutions?: number;
@@ -426,6 +493,14 @@ export async function runE1TaskPackageProvider(input: {
 
   const checkpoints = input.checkpoints ?? input.taskPackage.checkpoints;
   assertSelectedCheckpoints(input.taskPackage, checkpoints);
+  const openspecProfile = assertOpenSpecProfileForWorkflow(input.taskPackage, input.openspecProfile);
+  const snapshotOptions: E1SnapshotOptions | undefined = openspecProfile
+    ? {
+        includedRoots: openspecProfile.snapshotIncludedRoots,
+        excludedPathPrefixes: openspecProfile.snapshotExcludedPathPrefixes
+      }
+    : undefined;
+  const openspecRecord = openspecProfile ? emptyOpenSpecWorkflowRecord(openspecProfile) : undefined;
   const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
   const runRoot = join(input.runsRoot, input.runId);
   const workspaceRoot = join(runRoot, "workspaces");
@@ -436,7 +511,7 @@ export async function runE1TaskPackageProvider(input: {
   let runStatus: E1TaskPackageProviderRunBundle["run_summary"]["status"] = "completed";
 
   await mkdir(runRoot, { recursive: true });
-  await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
+  await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage, snapshotOptions);
 
   for (const conditionId of input.conditions) {
     await mountTaskWorkspace({
@@ -450,12 +525,28 @@ export async function runE1TaskPackageProvider(input: {
     const checkpointId = checkpoints[checkpointIndex];
     const promptsByCondition = {} as Record<ConditionId, E1CheckpointPromptInput>;
 
+    if (openspecRecord && input.conditions.length === 2) {
+      const parity = await validateE1OpenSpecScenarioParity({
+        contextWorkspacePath: join(workspaceRoot, "context_only_spec"),
+        feedbackWorkspacePath: join(workspaceRoot, "feedback_capable_spec")
+      });
+      openspecRecord.scenario_parity.push({ checkpoint_id: checkpointId, ok: parity.ok });
+
+      // Fresh mounts must be canonically identical; later divergence is measured outcome.
+      if (checkpointIndex === 0 && !parity.ok) {
+        throw new Error(
+          `OpenSpec scenario parity failed at fresh mount for checkpoint ${checkpointId}: ${JSON.stringify(parity)}`
+        );
+      }
+    }
+
     for (const conditionId of input.conditions) {
       promptsByCondition[conditionId] = await buildPrompt({
         taskPackage: input.taskPackage,
         conditionId,
         checkpointId,
-        workspacePath: join(workspaceRoot, conditionId)
+        workspacePath: join(workspaceRoot, conditionId),
+        snapshotOptions
       });
     }
 
@@ -481,10 +572,28 @@ export async function runE1TaskPackageProvider(input: {
         maxModelTurns: input.maxModelTurns,
         maxVerificationExecutions: input.maxVerificationExecutions,
         maxCheckpointTokens: input.maxCheckpointTokens,
-        redactionSecrets: input.redactionSecrets
+        redactionSecrets: input.redactionSecrets,
+        workflowGuards: openspecProfile?.workflowGuards
       });
 
       conditionBundles[conditionId].push(checkpointBundle);
+
+      if (
+        openspecProfile &&
+        openspecRecord &&
+        checkpointBundle.termination?.classification !== "invalid_integrity" &&
+        checkpointBundle.termination?.classification !== "provider_error" &&
+        checkpointBundle.termination?.classification !== "spend_cap_reached"
+      ) {
+        await runOpenSpecAfterArmStep({
+          profile: openspecProfile,
+          record: openspecRecord,
+          taskPackage: input.taskPackage,
+          conditionId,
+          checkpointId,
+          workspacePath: join(workspaceRoot, conditionId)
+        });
+      }
 
       if (checkpointBundle.termination?.classification === "provider_error") {
         providerErrorCounts[conditionId] += 1;
@@ -542,7 +651,8 @@ export async function runE1TaskPackageProvider(input: {
     provider_run_hash: hashText(JSON.stringify(providerRun)),
     oracle_scoring_hash: hashText(JSON.stringify(oracleScoring)),
     metrics_hash: hashText(JSON.stringify(metrics)),
-    provider_usage_totals_hash: hashText(JSON.stringify(providerUsageTotals))
+    provider_usage_totals_hash: hashText(JSON.stringify(providerUsageTotals)),
+    ...(openspecRecord ? { openspec_workflow_hash: hashText(JSON.stringify(openspecRecord)) } : {})
   };
   const bundle: E1TaskPackageProviderBundle = {
     schema_version: "e1-task-package-provider-bundle-v0",
@@ -560,6 +670,7 @@ export async function runE1TaskPackageProvider(input: {
       ...providerIdentity
     },
     provider_run: providerRun,
+    ...(openspecRecord ? { openspec_workflow: openspecRecord } : {}),
     oracle_scoring: oracleScoring,
     metrics,
     provider_usage_totals: providerUsageTotals,
@@ -624,19 +735,20 @@ export async function mountTaskWorkspace(input: {
 
 async function validateAllCheckpointPromptDiffs(
   constants: E1SealedConstants,
-  taskPackage: E1TaskPackage
+  taskPackage: E1TaskPackage,
+  snapshotOptions?: E1SnapshotOptions
 ): Promise<void> {
   // Static fresh-mount parity: synthesize each arm's checkpoint-start snapshot from the
   // template workspace (plus mounted feedback assets for the feedback arm) so every
   // checkpoint's template content is validated before any agent turn exists.
-  const templateFiles = await collectE1SnapshotFiles(taskPackage.template_workspace_path);
+  const templateFiles = await collectE1SnapshotFiles(taskPackage.template_workspace_path, snapshotOptions);
   const feedbackAssetPaths = taskPackage.feedback_assets.map((asset) => asset.relative_path);
   const feedbackFiles = {
     ...templateFiles,
     ...Object.fromEntries(taskPackage.feedback_assets.map((asset) => [asset.relative_path, asset.content]))
   };
-  const contextSnapshot = renderE1WorkspaceSnapshotFromFiles(templateFiles);
-  const feedbackSnapshot = renderE1WorkspaceSnapshotFromFiles(feedbackFiles);
+  const contextSnapshot = renderE1WorkspaceSnapshotFromFiles(templateFiles, snapshotOptions);
+  const feedbackSnapshot = renderE1WorkspaceSnapshotFromFiles(feedbackFiles, snapshotOptions);
 
   for (const checkpointId of taskPackage.checkpoints) {
     const context = assembleE1CheckpointConversation({
@@ -668,8 +780,9 @@ async function buildPrompt(input: {
   conditionId: ConditionId;
   checkpointId: string;
   workspacePath: string;
+  snapshotOptions?: E1SnapshotOptions;
 }): Promise<E1CheckpointPromptInput> {
-  const snapshot = await renderE1WorkspaceSnapshot(input.workspacePath);
+  const snapshot = await renderE1WorkspaceSnapshot(input.workspacePath, input.snapshotOptions);
 
   return {
     ...buildStaticPrompt(input),
@@ -1041,6 +1154,62 @@ export function bundleGrade(constants: E1SealedConstants, protocolDocumentHash: 
     Boolean(protocolDocumentHash)
     ? "evidence"
     : "dev";
+}
+
+
+function assertOpenSpecProfileForWorkflow(
+  taskPackage: E1TaskPackage,
+  openspecProfile: E1OpenSpecProfile | undefined
+): E1OpenSpecProfile | undefined {
+  if (taskPackage.workflow === "openspec") {
+    if (!openspecProfile) {
+      throw new Error("Task package declares workflow=openspec; openspecProfile is required");
+    }
+
+    return openspecProfile;
+  }
+
+  if (openspecProfile) {
+    throw new Error("openspecProfile provided for a task package that does not declare workflow=openspec");
+  }
+
+  return undefined;
+}
+
+function emptyOpenSpecWorkflowRecord(profile: E1OpenSpecProfile): E1OpenSpecWorkflowRecord {
+  return {
+    protocol_profile_id: profile.profile.protocol_profile_id,
+    profile_version: profile.profile.version,
+    openspec_version: profile.profile.workflow_profile.openspec_version,
+    archive_records: {},
+    scenario_parity: []
+  };
+}
+
+async function runOpenSpecAfterArmStep(input: {
+  profile: E1OpenSpecProfile;
+  record: E1OpenSpecWorkflowRecord;
+  taskPackage: E1TaskPackage;
+  conditionId: ConditionId;
+  checkpointId: string;
+  workspacePath: string;
+}): Promise<void> {
+  const changeName = input.taskPackage.workflow_changes?.[input.checkpointId];
+
+  if (!changeName) {
+    return;
+  }
+
+  const archiveRecord = await runE1OpenSpecArchiveStep({
+    repoRoot: process.cwd(),
+    workspacePath: input.workspacePath,
+    changeName
+  });
+
+  input.record.archive_records[input.conditionId] = [
+    ...(input.record.archive_records[input.conditionId] ?? []),
+    archiveRecord
+  ];
 }
 
 function assertPackageCompatibility(taskPackage: E1TaskPackage, oraclePackage: E1OraclePackage): void {

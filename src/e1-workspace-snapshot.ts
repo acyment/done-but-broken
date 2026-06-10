@@ -16,16 +16,28 @@ export type E1WorkspaceSnapshot = {
   file_paths: string[];
 };
 
-export async function renderE1WorkspaceSnapshot(workspacePath: string): Promise<E1WorkspaceSnapshot> {
-  return renderE1WorkspaceSnapshotFromFiles(await collectE1SnapshotFiles(workspacePath));
+export type E1SnapshotOptions = {
+  includedRoots?: readonly string[];
+  excludedPathPrefixes?: readonly string[];
+};
+
+export async function renderE1WorkspaceSnapshot(
+  workspacePath: string,
+  options?: E1SnapshotOptions
+): Promise<E1WorkspaceSnapshot> {
+  return renderE1WorkspaceSnapshotFromFiles(await collectE1SnapshotFiles(workspacePath, options), options);
 }
 
-export function renderE1WorkspaceSnapshotFromFiles(files: Record<string, string>): E1WorkspaceSnapshot {
+export function renderE1WorkspaceSnapshotFromFiles(
+  files: Record<string, string>,
+  options?: E1SnapshotOptions
+): E1WorkspaceSnapshot {
+  const includedRoots = options?.includedRoots ?? E1_SNAPSHOT_INCLUDED_ROOTS;
   const paths = Object.keys(files).toSorted(compareBytewise);
   const lines: string[] = [SNAPSHOT_BEGIN];
 
   if (paths.length === 0) {
-    lines.push(`(no files under ${E1_SNAPSHOT_INCLUDED_ROOTS.join(", ")})`);
+    lines.push(`(no files under ${includedRoots.join(", ")})`);
   } else {
     lines.push("Files:");
 
@@ -49,13 +61,22 @@ export function renderE1WorkspaceSnapshotFromFiles(files: Record<string, string>
   };
 }
 
-export async function collectE1SnapshotFiles(workspacePath: string): Promise<Record<string, string>> {
+export async function collectE1SnapshotFiles(
+  workspacePath: string,
+  options?: E1SnapshotOptions
+): Promise<Record<string, string>> {
+  const includedRoots = options?.includedRoots ?? E1_SNAPSHOT_INCLUDED_ROOTS;
+  const excludedPathPrefixes = options?.excludedPathPrefixes ?? [];
   const files: Record<string, string> = {};
 
   for (const filePath of await walkFiles(workspacePath)) {
     const relativePath = relative(workspacePath, filePath).split(sep).join("/");
 
-    if (!E1_SNAPSHOT_INCLUDED_ROOTS.some((root) => relativePath.startsWith(root))) {
+    if (!includedRoots.some((root) => relativePath.startsWith(root))) {
+      continue;
+    }
+
+    if (excludedPathPrefixes.some((prefix) => relativePath.startsWith(prefix))) {
       continue;
     }
 

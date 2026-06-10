@@ -5,6 +5,7 @@ import {
   runVerificationRequest,
   verifyProtectedPathHashes,
   type ApplyReplacementResult,
+  type E1WorkflowGuards,
   type ProtectedPathHashes,
   type ProtectedPathHashMismatch,
   type VerificationRunResult
@@ -141,6 +142,7 @@ export class E1TurnAdapter {
       constants: E1SealedConstants;
       workspacePath: string;
       protectedPathBaseline?: ProtectedPathHashes;
+      workflowGuards?: E1WorkflowGuards;
       timeoutMs?: number;
       outputLimit?: number;
     }
@@ -213,13 +215,15 @@ export class E1TurnAdapter {
     const replacementResult = parsed.replacements.length
       ? await applyFullFileReplacementEntries({
           workspacePath: this.input.workspacePath,
-          replacements: parsed.replacements
+          replacements: parsed.replacements,
+          workflowGuards: this.input.workflowGuards
         })
       : null;
     const postReplacementIntegrity = this.input.protectedPathBaseline
       ? await verifyProtectedPathHashes({
           workspacePath: this.input.workspacePath,
-          baseline: this.input.protectedPathBaseline
+          baseline: this.input.protectedPathBaseline,
+          workflowGuards: this.input.workflowGuards
         })
       : undefined;
     const replacementInjections = replacementResult ? summarizeReplacementResult(replacementResult) : [];
@@ -281,7 +285,8 @@ export class E1TurnAdapter {
       checkpoints: input.checkpoints,
       timeoutMs: this.input.timeoutMs,
       outputLimit: this.input.outputLimit,
-      protectedPathBaseline: this.input.protectedPathBaseline
+      protectedPathBaseline: this.input.protectedPathBaseline,
+      workflowGuards: this.input.workflowGuards
     });
     const verificationInjection = summarizeVerificationResult(verificationResult);
     const postVerificationIntegrity = verificationResult.protected_path_integrity;

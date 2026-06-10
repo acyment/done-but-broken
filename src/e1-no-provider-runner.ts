@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { CONDITION_IDS, type ConditionId } from "./conditions";
-import { hashProtectedPaths } from "./e1-harness";
+import { hashProtectedPaths, type E1WorkflowGuards } from "./e1-harness";
 import type { E1SealedConstants } from "./e1-l1-constants";
 import type {
   E1OpenAICompatibleProviderProfile,
@@ -363,8 +363,9 @@ export async function runE1NoProviderCheckpoint(input: {
   timeoutMs?: number;
   outputLimit?: number;
   redactionSecrets?: E1RedactionSecret[];
+  workflowGuards?: E1WorkflowGuards;
 }): Promise<E1NoProviderCheckpointBundle> {
-  const protectedPathBaseline = await hashProtectedPaths(input.workspacePath);
+  const protectedPathBaseline = await hashProtectedPaths(input.workspacePath, input.workflowGuards);
   const maxModelTurns = input.maxModelTurns ?? input.constants.turn_protocol.max_turns_per_checkpoint;
   const maxVerificationExecutions =
     input.maxVerificationExecutions ??
@@ -378,6 +379,7 @@ export async function runE1NoProviderCheckpoint(input: {
     constants: input.constants,
     workspacePath: input.workspacePath,
     protectedPathBaseline,
+    workflowGuards: input.workflowGuards,
     timeoutMs: input.timeoutMs,
     outputLimit: input.outputLimit ?? input.constants.turn_protocol.verification_output_token_cap
   });
@@ -521,12 +523,13 @@ export async function replayE1NoProviderCheckpointBundle(input: {
   constants: E1SealedConstants;
   workspacePath: string;
   bundle: E1NoProviderCheckpointBundle;
+  workflowGuards?: E1WorkflowGuards;
 }): Promise<{
   final_workspace_hash: string;
   final_workspace_code_hash: string;
   turn_hash_mismatches: Array<{ turn_index: number; expected: string; actual: string }>;
 }> {
-  const protectedPathBaseline = await hashProtectedPaths(input.workspacePath);
+  const protectedPathBaseline = await hashProtectedPaths(input.workspacePath, input.workflowGuards);
   const state = new E1CheckpointTurnState({
     maxModelTurns: input.bundle.run_manifest.budget.max_model_turns,
     maxVerificationExecutions: input.bundle.run_manifest.budget.max_verification_executions,
@@ -538,6 +541,7 @@ export async function replayE1NoProviderCheckpointBundle(input: {
     constants: input.constants,
     workspacePath: input.workspacePath,
     protectedPathBaseline,
+    workflowGuards: input.workflowGuards,
     outputLimit: input.constants.turn_protocol.verification_output_token_cap
   });
 
@@ -587,6 +591,16 @@ export async function runE1NoProviderRun(input: {
   timeoutMs?: number;
   outputLimit?: number;
   redactionSecrets?: E1RedactionSecret[];
+  workflowGuards?: E1WorkflowGuards;
+  checkpointHooks?: {
+    before?: (input: { checkpointId: string; checkpointIndex: number }) => Promise<void>;
+    afterArm?: (input: {
+      conditionId: ConditionId;
+      checkpointId: string;
+      checkpointIndex: number;
+      workspacePath: string;
+    }) => Promise<void>;
+  };
 }): Promise<E1NoProviderRunBundle> {
   const arms = orderedUniqueArms(input.arms);
   const armBundles = emptyArmBundleRecord();
@@ -600,6 +614,9 @@ export async function runE1NoProviderRun(input: {
 
   for (let checkpointIndex = 0; checkpointIndex < input.checkpoints.length; checkpointIndex += 1) {
     const checkpointId = input.checkpoints[checkpointIndex];
+
+    await input.checkpointHooks?.before?.({ checkpointId, checkpointIndex });
+
     const promptsByCondition = {} as Record<ConditionId, E1CheckpointPromptInput>;
 
     for (const arm of arms) {
@@ -638,11 +655,25 @@ export async function runE1NoProviderRun(input: {
         maxCheckpointTokens: input.maxCheckpointTokens,
         timeoutMs: input.timeoutMs,
         outputLimit: input.outputLimit,
-        redactionSecrets: input.redactionSecrets
+        redactionSecrets: input.redactionSecrets,
+        workflowGuards: input.workflowGuards
       });
 
       armBundles[arm.conditionId].push(checkpointBundle);
       verificationSlots[arm.conditionId] += lastVerificationSlotCount(checkpointBundle);
+
+      if (
+        checkpointBundle.termination?.classification !== "invalid_integrity" &&
+        checkpointBundle.termination?.classification !== "provider_error" &&
+        checkpointBundle.termination?.classification !== "spend_cap_reached"
+      ) {
+        await input.checkpointHooks?.afterArm?.({
+          conditionId: arm.conditionId,
+          checkpointId,
+          checkpointIndex,
+          workspacePath: arm.workspacePath
+        });
+      }
 
       if (checkpointBundle.termination?.classification === "agent_stalled") {
         stallCounts[arm.conditionId] += 1;
