@@ -34,7 +34,7 @@ The command defaults to `--transport=canned`. `--live` enables the same spend ga
 
 ## Real Provider Smoke
 
-Only after the canned command passes and secrets are registered, run one real provider smoke:
+Only after the canned command passes and secrets are registered, run one real provider smoke. Prefer a direct provider or LiteLLM endpoint for calibration/evidence; OpenRouter is acceptable only as a transport sanity check and must remain a distinct provider-route boundary.
 
 ```sh
 OPENROUTER_API_KEY=sk-or-... bun run e1 -- \
@@ -72,15 +72,15 @@ If the real call breaks, fix it as a provider-path defect and rerun the smoke. D
 - Termination: `done`
 - Hidden oracle score: 4/4
 - Provider usage through the compatibility layer: `fresh_input_tokens=1020`, `cached_input_tokens=48`, `output_tokens=582`
-- Derived spend: `spend_usd=0.002188800`
-- Spend basis: `derived_from_provider_usage_and_configured_prices`
-- Configured price table: `{ "input": 1, "cached_input": 0.1, "output": 2 }` USD per million tokens
 - Provider-reported OpenRouter usage cost in raw response: `0.00063675`
+- Derived cap-guardrail spend from the configured price table before the hierarchy fix: `0.002188800`
+- Post-fix cost hierarchy: `spend_usd` is provider-reported when `usage.cost` is present, otherwise derived from configured prices; derived spend remains recorded separately as the cap/projection guardrail.
 
 Empirical answers:
 
 - Real API shape matched the canned compatibility fixture shape for E1: HTTP 200, `object=chat.completion`, `choices[0].message.content` as a string, `usage.prompt_tokens`, `usage.completion_tokens`, and `usage.prompt_tokens_details.cached_tokens`.
 - Cache-read usage is distinguishable through the compatibility layer: OpenRouter returned `cached_tokens=48`; the bundle recorded `cached_input_tokens=48`.
+- The OpenRouter smoke was a compatibility check, not a calibration route decision. CartCalc calibration should use the planned direct/LiteLLM path unless explicitly overridden.
 
 Defects found and fixed before the clean rerun:
 

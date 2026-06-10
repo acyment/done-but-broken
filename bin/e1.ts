@@ -100,10 +100,17 @@ async function run(options: CliOptions): Promise<string> {
   console.log(`provider_usage=${JSON.stringify(usage.provider)}`);
   console.log(`cached_input_tokens=${usage.provider.cached_input_tokens}`);
   console.log(`spend_usd=${usage.spend.actual_spend_usd.toFixed(9)}`);
+  console.log(`cost_of_record_source=${usage.spend.cost_of_record_source}`);
+  console.log(`provider_reported_spend_usd=${formatOptionalUsd(usage.spend.provider_reported_spend_usd)}`);
+  console.log(`derived_spend_usd=${usage.spend.derived_spend_usd.toFixed(9)}`);
   console.log(`spend_usd_basis=${usage.spend.cost_basis}`);
   console.log(`pricing_usd_per_million_tokens=${JSON.stringify(usage.spend.pricing_usd_per_million_tokens)}`);
 
   return join(options.runsRoot, options.runId, "e1-task-package-provider-bundle.json");
+}
+
+function formatOptionalUsd(value: number | null): string {
+  return value === null ? "none" : value.toFixed(9);
 }
 
 function makeProvider(input: {
@@ -155,6 +162,7 @@ function createCannedCartCalcTransport(): E1ProviderTransport {
           usage: {
             prompt_tokens: 1200 + checkpoint * 100,
             completion_tokens: 220,
+            cost: 0.0005 + checkpoint / 1_000_000,
             prompt_tokens_details: { cached_tokens: 120 + checkpoint }
           }
         }

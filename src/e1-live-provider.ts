@@ -55,7 +55,11 @@ export type E1ProviderExchangeRecord = {
 };
 
 export type E1ProviderSpendRecord = E1SpendCapSnapshot & {
-  cost_basis: "derived_from_provider_usage_and_configured_prices";
+  cost_basis: "provider_reported_when_available_else_derived";
+  cost_of_record_source: "provider_reported" | "derived";
+  cost_of_record_usd: number;
+  provider_reported_cost_usd?: number;
+  derived_call_cost_usd: number;
   pricing_usd_per_million_tokens: E1OpenAICompatibleProviderOptions["pricingUsdPerMillionTokens"];
   actual_call_cost_usd: number;
 };
@@ -73,7 +77,8 @@ export type E1OpenAICompatibleProviderProfile = {
   };
   live_mode: E1SpendCapSnapshot;
   cost_accounting: {
-    basis: "derived_from_provider_usage_and_configured_prices";
+    basis: "provider_reported_when_available_else_derived";
+    cap_guardrail_basis: "derived_from_provider_usage_and_configured_prices";
     pricing_usd_per_million_tokens: E1OpenAICompatibleProviderOptions["pricingUsdPerMillionTokens"];
   };
   redaction: {
@@ -146,12 +151,14 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
     });
     const text = extractOpenAICompatibleText(response.value.body);
     const usage = extractOpenAICompatibleUsage(response.value.body);
-    const actualCallCostUsd = estimateOpenAICompatibleCostUsd({
+    const derivedCallCostUsd = estimateOpenAICompatibleCostUsd({
       usage,
       pricingUsdPerMillionTokens: this.options.pricingUsdPerMillionTokens
     });
+    const providerReportedCostUsd = extractOpenAICompatibleReportedCostUsd(response.value.body);
+    const costOfRecordUsd = providerReportedCostUsd ?? derivedCallCostUsd;
 
-    this.estimatedSpendUsd += actualCallCostUsd;
+    this.estimatedSpendUsd += derivedCallCostUsd;
 
     return {
       text,
@@ -169,9 +176,13 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
       provider_attempts: response.attempts,
       provider_spend: {
         ...this.spendSnapshot(),
-        cost_basis: "derived_from_provider_usage_and_configured_prices",
+        cost_basis: "provider_reported_when_available_else_derived",
+        cost_of_record_source: providerReportedCostUsd === undefined ? "derived" : "provider_reported",
+        cost_of_record_usd: costOfRecordUsd,
+        ...(providerReportedCostUsd === undefined ? {} : { provider_reported_cost_usd: providerReportedCostUsd }),
+        derived_call_cost_usd: derivedCallCostUsd,
         pricing_usd_per_million_tokens: this.options.pricingUsdPerMillionTokens,
-        actual_call_cost_usd: actualCallCostUsd
+        actual_call_cost_usd: costOfRecordUsd
       },
       provider_exchange: this.recordExchange(request, response.value)
     };
@@ -235,7 +246,8 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
       },
       live_mode: this.spendSnapshot(),
       cost_accounting: {
-        basis: "derived_from_provider_usage_and_configured_prices",
+        basis: "provider_reported_when_available_else_derived",
+        cap_guardrail_basis: "derived_from_provider_usage_and_configured_prices",
         pricing_usd_per_million_tokens: this.options.pricingUsdPerMillionTokens
       },
       redaction: {
@@ -330,6 +342,10 @@ function extractOpenAICompatibleUsage(body: unknown): {
   };
 }
 
+function extractOpenAICompatibleReportedCostUsd(body: unknown): number | undefined {
+  return optionalNumber(asRecord(asRecord(body).usage ?? {}).cost);
+}
+
 function estimateOpenAICompatibleCostUsd(input: {
   usage: { prompt_tokens?: number; completion_tokens?: number; cached_input_tokens?: number };
   pricingUsdPerMillionTokens: E1OpenAICompatibleProviderOptions["pricingUsdPerMillionTokens"];
@@ -355,6 +371,10 @@ function roundUsd(value: number): number {
 
 function optionalInteger(value: unknown): number | undefined {
   return Number.isInteger(value) && Number(value) >= 0 ? Number(value) : undefined;
+}
+
+function optionalNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : undefined;
 }
 
 function asRecord(value: unknown): Record<string, unknown> {

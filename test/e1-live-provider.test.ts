@@ -49,6 +49,7 @@ describe("E1 live provider client seam", () => {
               usage: {
                 prompt_tokens: 100,
                 completion_tokens: 7,
+                cost: 0.000123,
                 prompt_tokens_details: { cached_tokens: 40 }
               }
             }
@@ -75,7 +76,12 @@ describe("E1 live provider client seam", () => {
     });
     expect(response.provider_attempts).toEqual([{ attempt: 1, outcome: "success" }]);
     expect(response.provider_spend).toMatchObject({
-      cost_basis: "derived_from_provider_usage_and_configured_prices",
+      cost_basis: "provider_reported_when_available_else_derived",
+      cost_of_record_source: "provider_reported",
+      cost_of_record_usd: 0.000123,
+      actual_call_cost_usd: 0.000123,
+      provider_reported_cost_usd: 0.000123,
+      derived_call_cost_usd: 0.000078,
       pricing_usd_per_million_tokens: {
         input: 1,
         cached_input: 0.1,
@@ -120,6 +126,12 @@ describe("E1 live provider client seam", () => {
     });
 
     expect(response.text).toBe("<<<DONE>>>");
+    expect(response.provider_spend).toMatchObject({
+      cost_basis: "provider_reported_when_available_else_derived",
+      cost_of_record_source: "derived",
+      actual_call_cost_usd: 0.000014,
+      derived_call_cost_usd: 0.000014
+    });
     expect(response.provider_attempts?.map((attempt) => attempt.outcome)).toEqual([
       "retryable_failure",
       "success"

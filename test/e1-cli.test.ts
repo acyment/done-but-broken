@@ -44,7 +44,10 @@ describe("E1 CartCalc CLI", () => {
     expect(stdout).toContain("provider_usage=");
     expect(stdout).toContain("spend_usd=");
     expect(stdout).toContain("cached_input_tokens=");
-    expect(stdout).toContain("spend_usd_basis=derived_from_provider_usage_and_configured_prices");
+    expect(stdout).toContain("cost_of_record_source=provider_reported");
+    expect(stdout).toContain("provider_reported_spend_usd=0.000501000");
+    expect(stdout).toContain("derived_spend_usd=0.001631100");
+    expect(stdout).toContain("spend_usd_basis=provider_reported_when_available_else_derived");
     expect(stdout).toContain("pricing_usd_per_million_tokens=");
 
     const bundle = JSON.parse(
@@ -58,18 +61,22 @@ describe("E1 CartCalc CLI", () => {
     expect(bundle.provider_run.condition_bundles.feedback_capable_spec).toHaveLength(0);
     expect(bundle.provider_usage_totals.provider.cached_input_tokens).toBeGreaterThan(0);
     expect(bundle.provider_usage_totals.spend.cost_basis).toBe(
-      "derived_from_provider_usage_and_configured_prices"
+      "provider_reported_when_available_else_derived"
     );
+    expect(bundle.provider_usage_totals.spend.cost_of_record_source).toBe("provider_reported");
+    expect(bundle.provider_usage_totals.spend.provider_reported_spend_usd).toBe(0.000501);
+    expect(bundle.provider_usage_totals.spend.derived_spend_usd).toBe(0.0016311);
     expect(bundle.provider_usage_totals.spend.pricing_usd_per_million_tokens).toEqual({
       input: 1,
       cached_input: 0.1,
       output: 2
     });
-    expect(bundle.provider_usage_totals.spend.actual_spend_usd).toBeGreaterThan(0);
+    expect(bundle.provider_usage_totals.spend.actual_spend_usd).toBe(0.000501);
     expect(
       bundle.provider_run.condition_bundles.context_only_spec[0].run_manifest.provider_profile.cost_accounting
     ).toEqual({
-      basis: "derived_from_provider_usage_and_configured_prices",
+      basis: "provider_reported_when_available_else_derived",
+      cap_guardrail_basis: "derived_from_provider_usage_and_configured_prices",
       pricing_usd_per_million_tokens: {
         input: 1,
         cached_input: 0.1,

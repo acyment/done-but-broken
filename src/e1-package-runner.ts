@@ -101,12 +101,15 @@ export type E1ProviderUsageTotals = {
     output_tokens: number;
   };
   spend: {
-    cost_basis: "derived_from_provider_usage_and_configured_prices";
+    cost_basis: "provider_reported_when_available_else_derived";
+    cost_of_record_source: "provider_reported" | "derived";
     pricing_usd_per_million_tokens: {
       input: number;
       cached_input: number;
       output: number;
     } | null;
+    provider_reported_spend_usd: number | null;
+    derived_spend_usd: number;
     actual_spend_usd: number;
   };
   exchange_count: number;
@@ -827,8 +830,11 @@ function aggregateProviderUsage(
       output_tokens: 0
     },
     spend: {
-      cost_basis: "derived_from_provider_usage_and_configured_prices",
+      cost_basis: "provider_reported_when_available_else_derived",
+      cost_of_record_source: "derived",
       pricing_usd_per_million_tokens: null,
+      provider_reported_spend_usd: null,
+      derived_spend_usd: 0,
       actual_spend_usd: 0
     },
     exchange_count: 0
@@ -844,6 +850,14 @@ function aggregateProviderUsage(
         totals.estimator.output_tokens += turn.provider_usage?.estimator.output_tokens ?? 0;
         totals.spend.pricing_usd_per_million_tokens ??=
           turn.provider_spend?.pricing_usd_per_million_tokens ?? null;
+        totals.spend.derived_spend_usd = roundUsd(
+          totals.spend.derived_spend_usd + (turn.provider_spend?.derived_call_cost_usd ?? 0)
+        );
+        if (turn.provider_spend?.provider_reported_cost_usd !== undefined) {
+          totals.spend.provider_reported_spend_usd = roundUsd(
+            (totals.spend.provider_reported_spend_usd ?? 0) + turn.provider_spend.provider_reported_cost_usd
+          );
+        }
         totals.spend.actual_spend_usd = roundUsd(
           totals.spend.actual_spend_usd + (turn.provider_spend?.actual_call_cost_usd ?? 0)
         );
@@ -851,6 +865,9 @@ function aggregateProviderUsage(
       }
     }
   }
+
+  totals.spend.cost_of_record_source =
+    totals.spend.provider_reported_spend_usd === null ? "derived" : "provider_reported";
 
   return totals;
 }
