@@ -33,6 +33,8 @@ The L0/L1/L2 implementation must cover:
 - deterministic head+tail truncation;
 - budget counters for turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost as a separate statistic;
 - bounded provider retries logged as provider-attempt metadata, with exhausted retries classified as `provider_error` and excluded from analysis;
+- explicit live-mode and spend-cap gating, with cap breaches classified as `spend_cap_reached` before any transport call;
+- fail-closed redaction for provider exchange recordings and emitted bundles;
 - deterministic model-facing replacement confirmations;
 - audit-only unified diffs between pre/post snapshots;
 - per-turn logging: command, exit code, wall time, full-output hash, shown output, workspace snapshot, and hidden-oracle score.
@@ -75,6 +77,7 @@ Record:
 - block-grammar no-op rate;
 - `agent_stalled` rate per model and arm;
 - `provider_error` count and attempt traces;
+- `spend_cap_reached` count and spend snapshot;
 - turns used per checkpoint;
 - verification calls used per checkpoint;
 - fresh input tokens per turn;
@@ -108,7 +111,8 @@ Required coverage:
 - Mounts and persistence: scratch file written at CP1 is readable at CP3; read-only enforcement survives checkpoint transitions; example test is green in fresh sandboxes in both arms.
 - Integrity: protected-path hashes cover `specs/`, `specs/steps/`, `package.json`, `bunfig.toml`, `tsconfig.json`, and Bun lockfiles when present; replacement-time or verification-time drift terminates `invalid_integrity`.
 - Parser and termination semantics: zero valid blocks consume turns, inject the one-line harness notice, and three consecutive no-op turns terminate `agent_stalled`.
-- Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates `budget_exhausted`; provider retry exhaustion terminates `provider_error` without consuming a model turn or token budget; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture, including multi-byte content that would otherwise decode to replacement characters; per-turn snapshots replay to bit-identical workspace state.
+- Accounting and logging: verification counter refuses at exactly 6; refusals consume slots; token-budget exhaustion mid-checkpoint terminates `budget_exhausted`; provider retry exhaustion terminates `provider_error` without consuming a model turn or token budget; spend-cap breach terminates `spend_cap_reached` before transport invocation; full-output hash matches independently recomputed hash; truncation marker is present and head/tail split is correct on the noisy fixture, including multi-byte content that would otherwise decode to replacement characters; per-turn snapshots replay to bit-identical workspace state.
+- Provider client seam: live transport requires `live_mode=true`; canned transport proves retry/malformed-response handling; provider exchange records are redacted and include raw hashes; bundle emission fails if a configured secret appears in serialized artifacts.
 - Snapshot replay: after a full CartCalc run, replay artifact snapshots onto a fresh workspace and byte-compare final state.
 
 Layer 1 must be green on two clean environments before Billing v2 design starts: macOS local and an Ubuntu 24 container, with the same pinned Bun version.

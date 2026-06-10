@@ -17,9 +17,11 @@ export type E1Termination =
   | { classification: "agent_stalled"; reason: string }
   | { classification: "budget_exhausted"; reason: string }
   | { classification: "invalid_integrity"; reason: string }
-  | { classification: "provider_error"; reason: string };
+  | { classification: "provider_error"; reason: string }
+  | { classification: "spend_cap_reached"; reason: string };
 
 export type E1TokenUsageSide = {
+  fresh_input_tokens?: number;
   output_tokens?: number;
   injected_verification_output_tokens?: number;
   cached_input_tokens?: number;

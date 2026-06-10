@@ -36,6 +36,18 @@ export interface E1SealedConstants {
       debit_policy: "record_not_debit";
       smoke_assertion_rule: string;
     };
+    live_mode_gate: {
+      explicit_flag_required: true;
+      spend_cap_required: true;
+      spend_cap_classification: "spend_cap_reached";
+      spend_cap_policy: "terminate_and_exclude_from_analysis";
+      manifest_rule: string;
+    };
+    redaction: {
+      fail_closed_bundle_check: true;
+      secret_value_policy: "never_record_raw";
+      recording_fixture_policy: string;
+    };
   };
   token_estimator: {
     status: "sealed" | "TBD";
@@ -67,6 +79,7 @@ export interface E1SealedConstants {
     budget_exhausted: "continue_from_workspace_as_is";
     invalid_integrity: "terminate_run";
     provider_error: "terminate_run";
+    spend_cap_reached: "terminate_run";
     non_done_scoring_rule: string;
   };
   package_separation: {
@@ -297,6 +310,10 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
     throw new E1ConstantsValidationError("provider_error must terminate the run");
   }
 
+  if (constants.checkpoint_continuation.spend_cap_reached !== "terminate_run") {
+    throw new E1ConstantsValidationError("spend_cap_reached must terminate the run");
+  }
+
   if (constants.package_separation.oracle_package_visibility !== "external_never_mounted") {
     throw new E1ConstantsValidationError("oracle package must be external and never mounted");
   }
@@ -461,6 +478,26 @@ function validateProviderRuntime(constants: E1SealedConstants): void {
     cache.debit_policy !== "record_not_debit"
   ) {
     throw new E1ConstantsValidationError("cache breakpoint policy is not sealed");
+  }
+
+  const liveModeGate = constants.provider_runtime.live_mode_gate;
+
+  if (
+    liveModeGate.explicit_flag_required !== true ||
+    liveModeGate.spend_cap_required !== true ||
+    liveModeGate.spend_cap_classification !== "spend_cap_reached" ||
+    liveModeGate.spend_cap_policy !== "terminate_and_exclude_from_analysis"
+  ) {
+    throw new E1ConstantsValidationError("live mode gate policy is not sealed");
+  }
+
+  const redaction = constants.provider_runtime.redaction;
+
+  if (
+    redaction.fail_closed_bundle_check !== true ||
+    redaction.secret_value_policy !== "never_record_raw"
+  ) {
+    throw new E1ConstantsValidationError("redaction policy is not sealed");
   }
 }
 

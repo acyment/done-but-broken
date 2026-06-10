@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.2`).
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.3`).
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -138,7 +138,11 @@ Transport-level failures are separate from model behavior. API errors, timeouts,
 
 Sampling defaults are sealed per provider profile before a live call: temperature `0.2`, top_p `1`, max output tokens per turn `4000`, plus the exact model id, route, timeout, retry policy, cache-breakpoint policy, and seed-support status. If a later model requires different parameters, that is a new non-pooled provider profile boundary.
 
+Live provider transport is mechanically gated. A live transport cannot run unless `live_mode=true` and a positive per-invocation spend cap are stamped into the provider profile. If the estimated maximum call cost would exceed the remaining cap, the runner terminates before transport invocation as `spend_cap_reached`. This is an operator-budget stop, not model behavior, and is excluded from analysis.
+
 Cache breakpoints are sealed at the system/template boundary and the checkpoint-start repo injection. Provider-reported cache-read tokens are recorded in `cached_prefix_tokens`, not in fresh debited tokens. Missing provider cache fields are recorded as absent rather than inferred.
+
+Provider exchange recording is designed in before live use. The provider client accepts an injectable transport, so retry/ledger/termination behavior is tested against canned responses. Real smoke exchanges can be stored as redacted request/response fixtures with raw hashes. Bundle emission is fail-closed against configured secrets: if a raw credential appears in serialized artifacts, the run does not emit.
 
 ## Token Ledger
 

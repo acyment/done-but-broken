@@ -1,6 +1,6 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
@@ -47,6 +47,18 @@
       "cached_usage_ledger_field": "cached_prefix_tokens",
       "debit_policy": "record_not_debit",
       "smoke_assertion_rule": "Provider-reported cache-read tokens must be recorded in cached_prefix_tokens, not fresh debited tokens; missing provider cache fields are recorded as absent, not inferred."
+    },
+    "live_mode_gate": {
+      "explicit_flag_required": true,
+      "spend_cap_required": true,
+      "spend_cap_classification": "spend_cap_reached",
+      "spend_cap_policy": "terminate_and_exclude_from_analysis",
+      "manifest_rule": "Any live provider transport call requires live_mode=true and a positive per-invocation spend cap stamped into the provider profile. If the estimated maximum call cost would exceed the remaining cap, the runner terminates before transport invocation as spend_cap_reached."
+    },
+    "redaction": {
+      "fail_closed_bundle_check": true,
+      "secret_value_policy": "never_record_raw",
+      "recording_fixture_policy": "Provider exchange recordings store redacted request/response fixtures plus raw hashes. Bundle emission fails if any configured secret value appears in serialized artifacts."
     }
   },
 
@@ -98,7 +110,8 @@
     "budget_exhausted": "continue_from_workspace_as_is",
     "invalid_integrity": "terminate_run",
     "provider_error": "terminate_run",
-    "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity and provider_error terminate the entire run; provider_error is transport failure, excluded from analysis, and rerun only under a fresh run identity."
+    "spend_cap_reached": "terminate_run",
+    "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity, provider_error, and spend_cap_reached terminate the entire run; provider_error is transport failure, and spend_cap_reached is operator-budget stop. Both are excluded from analysis and rerun only under a fresh run identity."
   },
 
   "package_separation": {

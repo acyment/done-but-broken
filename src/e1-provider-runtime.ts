@@ -17,6 +17,14 @@ export type E1ProviderAttemptRecord = {
   backoff_ms?: number;
 };
 
+export type E1SpendCapSnapshot = {
+  live_mode: boolean;
+  spend_cap_usd: number;
+  estimated_spend_usd: number;
+  estimated_max_call_cost_usd: number;
+  remaining_spend_usd: number;
+};
+
 export class E1ProviderFailureError extends Error {
   readonly failure_kind: E1ProviderFailureKind;
   readonly provider_status?: number;
@@ -26,6 +34,23 @@ export class E1ProviderFailureError extends Error {
     this.name = "E1ProviderFailureError";
     this.failure_kind = input.failureKind;
     this.provider_status = input.providerStatus;
+  }
+}
+
+export class E1LiveModeRequiredError extends Error {
+  constructor(message = "live_mode must be explicitly enabled before live provider transport calls") {
+    super(message);
+    this.name = "E1LiveModeRequiredError";
+  }
+}
+
+export class E1SpendCapReachedError extends Error {
+  readonly spend: E1SpendCapSnapshot;
+
+  constructor(input: { message: string; spend: E1SpendCapSnapshot }) {
+    super(input.message);
+    this.name = "E1SpendCapReachedError";
+    this.spend = input.spend;
   }
 }
 
@@ -88,6 +113,10 @@ export async function callE1ProviderWithRetries<T>(input: {
 
 export function isE1ProviderExhaustedError(error: unknown): error is E1ProviderExhaustedError {
   return error instanceof E1ProviderExhaustedError;
+}
+
+export function isE1SpendCapReachedError(error: unknown): error is E1SpendCapReachedError {
+  return error instanceof E1SpendCapReachedError;
 }
 
 export function normalizeE1ProviderException(error: unknown): {

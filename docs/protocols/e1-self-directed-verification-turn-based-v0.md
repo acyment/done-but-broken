@@ -42,7 +42,7 @@ On each turn the model output is scanned in fixed precedence order:
 
 The harness applies full-file replacements atomically, then executes at most one verification request. Verification output is injected verbatim at the start of the next model turn. The checkpoint ends when the model declares done, the turn budget is exhausted, the sealed token budget is exhausted, three consecutive no-op turns occur, protected-path integrity fails, or provider retries are exhausted.
 
-After `done`, `agent_stalled`, or `budget_exhausted`, the next checkpoint starts from the current workspace as-is. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run. `provider_error` also terminates the run, but is transport failure rather than agent behavior; it is excluded from analysis and rerun only under a fresh run identity.
+After `done`, `agent_stalled`, or `budget_exhausted`, the next checkpoint starts from the current workspace as-is. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run. `provider_error` also terminates the run, but is transport failure rather than agent behavior; it is excluded from analysis and rerun only under a fresh run identity. `spend_cap_reached` terminates before transport invocation when the explicit spend cap would be exceeded; it is an operator-budget stop and is also excluded from analysis.
 
 Unified diffs are not supported as a model-facing format. A replacement block contains one or more `<<<FILE path>>>` ... `<<<END>>>` sections. Rejections are deterministic: malformed delimiters, invalid paths, or attempts to write read-only paths. Rejection is logged and consumes the replacement opportunity for that turn.
 
@@ -162,6 +162,10 @@ The per-checkpoint token ledger debits model output tokens plus injected verific
 
 Transport-level API errors, timeouts, rate limits, malformed provider responses, and network errors use the sealed retry policy: 3 attempts with 250ms, 1000ms, and 4000ms backoff slots. Retries cost no model turns and no tokens but are logged in provider-attempt metadata. Exhausted retries terminate the run as `provider_error`.
 
+Live provider calls require `live_mode=true` and a positive per-invocation spend cap in the provider profile. The client checks the cap before invoking transport; a projected cap breach terminates as `spend_cap_reached` with zero model turns and zero provider calls.
+
+The provider client is transport-injectable. Canned transports are used to prove retry, usage-ledger, recording, redaction, and termination behavior before authorization. Live smoke exchanges are intended to become redacted request/response fixtures with raw request/response hashes.
+
 ## Shared Verification Scaffolding
 
 Both arms receive identical harness-mechanics documentation in the shared README:
@@ -199,6 +203,8 @@ For every verification request, artifacts record:
 
 For every provider call, artifacts record provider-attempt metadata when retries occur or fail. Exhausted provider retries produce a `provider_error` record with no model turn consumed.
 
+For every provider exchange recording, artifacts store only redacted request and response bodies plus raw hashes. Bundle emission fails closed if any configured secret value appears in serialized artifacts.
+
 The full untruncated output must be archived with the publication bundle. A reviewer should be able to reconstruct the exact information channel for each arm.
 
 Model-authored files in `scratch/` are snapshotted per turn like application code.
@@ -230,5 +236,7 @@ Before any E1 evidence-generating run, add test-first harness support for:
 - full-output hashing;
 - budget accounting for model turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost;
 - provider-error retry logging and `provider_error` run termination;
+- live-mode/spend-cap gating and `spend_cap_reached` termination before transport invocation;
+- fail-closed redaction checks for provider exchange fixtures and emitted bundles;
 - audit-only replacement diffs and model-facing confirmation lines;
 - compatibility-profile recording for all constants above.

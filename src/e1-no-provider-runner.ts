@@ -3,6 +3,11 @@ import { join } from "node:path";
 import { CONDITION_IDS, type ConditionId } from "./conditions";
 import { hashProtectedPaths } from "./e1-harness";
 import type { E1SealedConstants } from "./e1-l1-constants";
+import type {
+  E1OpenAICompatibleProviderProfile,
+  E1ProviderExchangeRecord,
+  E1ProviderSpendRecord
+} from "./e1-live-provider";
 import {
   E1CheckpointTurnState,
   E1TokenLedger,
@@ -11,7 +16,13 @@ import {
   type E1TokenUsage,
   type E1TurnAdapterResult
 } from "./e1-turn-adapter";
-import { normalizeE1ProviderException, type E1ProviderAttemptRecord } from "./e1-provider-runtime";
+import {
+  isE1SpendCapReachedError,
+  normalizeE1ProviderException,
+  type E1ProviderAttemptRecord,
+  type E1SpendCapSnapshot
+} from "./e1-provider-runtime";
+import { assertE1NoSecretsInJson, type E1RedactionSecret } from "./e1-redaction";
 import { captureWorkspaceCode, hashText, hashWorkspace, type WorkspaceCodeSnapshot } from "./snapshot";
 
 export type E1ConversationMessage = {
@@ -51,10 +62,17 @@ export type E1AgentProviderResponse = {
   text: string;
   usage?: E1TokenUsage;
   provider_attempts?: E1ProviderAttemptRecord[];
+  provider_spend?: E1ProviderSpendRecord;
+  provider_exchange?: E1ProviderExchangeRecord;
 };
+
+export type E1AgentProviderMetadata =
+  | { provider_kind: "scripted" }
+  | E1OpenAICompatibleProviderProfile;
 
 export interface E1AgentProvider {
   readonly provider_id: string;
+  readonly provider_metadata?: E1AgentProviderMetadata;
   nextTurn(context: E1AgentProviderContext): Promise<E1AgentProviderResponse>;
 }
 
@@ -89,6 +107,8 @@ export type E1NoProviderTurnRecord = E1TurnAdapterResult & {
   raw_model_output: string;
   provider_usage?: E1TokenUsage;
   provider_attempts?: E1ProviderAttemptRecord[];
+  provider_spend?: E1ProviderSpendRecord;
+  provider_exchange?: E1ProviderExchangeRecord;
   conversation_before_turn: E1ConversationMessage[];
   workspace_before_hash: string;
   workspace_after_hash: string;
@@ -102,6 +122,13 @@ export type E1CheckpointProviderErrorRecord = {
   attempts: E1ProviderAttemptRecord[];
 };
 
+export type E1CheckpointSpendCapRecord = {
+  turn_index: number;
+  classification: "spend_cap_reached";
+  reason: string;
+  spend: E1SpendCapSnapshot;
+};
+
 export type E1NoProviderCheckpointBundle = {
   schema_version: "e1-no-provider-checkpoint-bundle-v0";
   constants_version: string;
@@ -113,7 +140,8 @@ export type E1NoProviderCheckpointBundle = {
     checkpoint_id: string;
     checkpoints: string[];
     task_id: string;
-    provider_kind: "scripted";
+    provider_kind: E1AgentProviderMetadata["provider_kind"];
+    provider_profile?: E1AgentProviderMetadata;
     budget: {
       max_model_turns: number;
       max_verification_executions: number;
@@ -123,6 +151,7 @@ export type E1NoProviderCheckpointBundle = {
   initial_conversation: E1ConversationMessage[];
   turn_records: E1NoProviderTurnRecord[];
   provider_error?: E1CheckpointProviderErrorRecord;
+  spend_cap_reached?: E1CheckpointSpendCapRecord;
   termination: E1Termination | null;
   final_workspace_hash: string;
   final_workspace_code_hash: string;
@@ -148,11 +177,12 @@ export type E1NoProviderRunBundle = {
   checkpoints: string[];
   arm_bundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>;
   run_summary: {
-    status: "completed" | "invalid_integrity" | "provider_error";
+    status: "completed" | "invalid_integrity" | "provider_error" | "spend_cap_reached";
     stopped_at?: { condition_id: ConditionId; checkpoint_id: string };
     stall_counts_by_condition: Record<ConditionId, number>;
     budget_exhausted_counts_by_condition: Record<ConditionId, number>;
     provider_error_counts_by_condition: Record<ConditionId, number>;
+    spend_cap_reached_counts_by_condition: Record<ConditionId, number>;
     verification_slots_used_by_condition: Record<ConditionId, number>;
   };
   structural_comparison: {
@@ -294,6 +324,7 @@ export async function runE1NoProviderCheckpoint(input: {
   maxCheckpointTokens?: number;
   timeoutMs?: number;
   outputLimit?: number;
+  redactionSecrets?: E1RedactionSecret[];
 }): Promise<E1NoProviderCheckpointBundle> {
   const protectedPathBaseline = await hashProtectedPaths(input.workspacePath);
   const maxModelTurns = input.maxModelTurns ?? input.constants.turn_protocol.max_turns_per_checkpoint;
@@ -322,7 +353,9 @@ export async function runE1NoProviderCheckpoint(input: {
   const initialConversation = conversation.messages;
   const turnRecords: E1NoProviderTurnRecord[] = [];
   let providerError: E1CheckpointProviderErrorRecord | undefined;
+  let spendCapReached: E1CheckpointSpendCapRecord | undefined;
   let termination: E1Termination | null = null;
+  const providerMetadata = input.provider.provider_metadata ?? { provider_kind: "scripted" as const };
 
   while (!termination && state.turnsUsed < state.maxModelTurns) {
     const turnIndex = state.turnsUsed + 1;
@@ -338,6 +371,17 @@ export async function runE1NoProviderCheckpoint(input: {
         messages: conversation.messages
       });
     } catch (error) {
+      if (isE1SpendCapReachedError(error)) {
+        spendCapReached = {
+          turn_index: turnIndex,
+          classification: "spend_cap_reached",
+          reason: error.message,
+          spend: error.spend
+        };
+        termination = { classification: "spend_cap_reached", reason: error.message };
+        break;
+      }
+
       const normalized = normalizeE1ProviderException(error);
       providerError = {
         turn_index: turnIndex,
@@ -365,6 +409,8 @@ export async function runE1NoProviderCheckpoint(input: {
       raw_model_output: response.text,
       ...(response.usage ? { provider_usage: response.usage } : {}),
       ...(response.provider_attempts ? { provider_attempts: response.provider_attempts } : {}),
+      ...(response.provider_spend ? { provider_spend: response.provider_spend } : {}),
+      ...(response.provider_exchange ? { provider_exchange: response.provider_exchange } : {}),
       conversation_before_turn: conversation.messages,
       workspace_before_hash: workspaceBefore.hash,
       workspace_after_hash: workspaceAfter.hash,
@@ -392,7 +438,8 @@ export async function runE1NoProviderCheckpoint(input: {
       checkpoint_id: input.checkpointId,
       checkpoints: input.checkpoints,
       task_id: input.prompt.taskId,
-      provider_kind: "scripted",
+      provider_kind: providerMetadata.provider_kind,
+      ...(providerMetadata.provider_kind !== "scripted" ? { provider_profile: providerMetadata } : {}),
       budget: {
         max_model_turns: maxModelTurns,
         max_verification_executions: maxVerificationExecutions,
@@ -404,10 +451,13 @@ export async function runE1NoProviderCheckpoint(input: {
     initial_conversation: initialConversation,
     turn_records: turnRecords,
     ...(providerError ? { provider_error: providerError } : {}),
+    ...(spendCapReached ? { spend_cap_reached: spendCapReached } : {}),
     termination,
     final_workspace_hash: finalWorkspace.hash,
     final_workspace_code_hash: finalWorkspaceCode.hash
   };
+
+  assertE1NoSecretsInJson(bundle, input.redactionSecrets ?? []);
 
   if (input.artifactDir) {
     await mkdir(input.artifactDir, { recursive: true });
@@ -469,12 +519,14 @@ export async function runE1NoProviderRun(input: {
   maxCheckpointTokens?: number;
   timeoutMs?: number;
   outputLimit?: number;
+  redactionSecrets?: E1RedactionSecret[];
 }): Promise<E1NoProviderRunBundle> {
   const arms = orderedUniqueArms(input.arms);
   const armBundles = emptyArmBundleRecord();
   const stallCounts = emptyConditionNumberRecord();
   const budgetExhaustedCounts = emptyConditionNumberRecord();
   const providerErrorCounts = emptyConditionNumberRecord();
+  const spendCapReachedCounts = emptyConditionNumberRecord();
   const verificationSlots = emptyConditionNumberRecord();
   let stoppedAt: { condition_id: ConditionId; checkpoint_id: string } | undefined;
   let runStatus: E1NoProviderRunBundle["run_summary"]["status"] = "completed";
@@ -506,7 +558,8 @@ export async function runE1NoProviderRun(input: {
         maxVerificationExecutions: input.maxVerificationExecutions,
         maxCheckpointTokens: input.maxCheckpointTokens,
         timeoutMs: input.timeoutMs,
-        outputLimit: input.outputLimit
+        outputLimit: input.outputLimit,
+        redactionSecrets: input.redactionSecrets
       });
 
       armBundles[arm.conditionId].push(checkpointBundle);
@@ -523,6 +576,13 @@ export async function runE1NoProviderRun(input: {
       if (checkpointBundle.termination?.classification === "provider_error") {
         providerErrorCounts[arm.conditionId] += 1;
         runStatus = "provider_error";
+        stoppedAt = { condition_id: arm.conditionId, checkpoint_id: checkpointId };
+        break;
+      }
+
+      if (checkpointBundle.termination?.classification === "spend_cap_reached") {
+        spendCapReachedCounts[arm.conditionId] += 1;
+        runStatus = "spend_cap_reached";
         stoppedAt = { condition_id: arm.conditionId, checkpoint_id: checkpointId };
         break;
       }
@@ -551,6 +611,7 @@ export async function runE1NoProviderRun(input: {
       stall_counts_by_condition: stallCounts,
       budget_exhausted_counts_by_condition: budgetExhaustedCounts,
       provider_error_counts_by_condition: providerErrorCounts,
+      spend_cap_reached_counts_by_condition: spendCapReachedCounts,
       verification_slots_used_by_condition: verificationSlots
     },
     structural_comparison: {
@@ -558,6 +619,8 @@ export async function runE1NoProviderRun(input: {
       condition_ids: CONDITION_IDS.slice()
     }
   };
+
+  assertE1NoSecretsInJson(bundle, input.redactionSecrets ?? []);
 
   if (input.artifactDir) {
     await mkdir(input.artifactDir, { recursive: true });

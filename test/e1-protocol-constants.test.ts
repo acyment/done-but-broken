@@ -16,7 +16,7 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.3.2");
+    expect(constants.version).toBe("0.3.3");
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
     expect(constants.deferred_before_provider_seal).toEqual([]);
     expect(constants.provider_runtime.failure_policy).toMatchObject({
@@ -45,6 +45,16 @@ describe("E1 frontier sealed constants", () => {
       cached_usage_ledger_field: "cached_prefix_tokens",
       debit_policy: "record_not_debit"
     });
+    expect(constants.provider_runtime.live_mode_gate).toMatchObject({
+      explicit_flag_required: true,
+      spend_cap_required: true,
+      spend_cap_classification: "spend_cap_reached",
+      spend_cap_policy: "terminate_and_exclude_from_analysis"
+    });
+    expect(constants.provider_runtime.redaction).toMatchObject({
+      fail_closed_bundle_check: true,
+      secret_value_policy: "never_record_raw"
+    });
     expect(constants.token_estimator.status).toBe("sealed");
     expect(constants.token_estimator.estimator_id).toBe("js-tiktoken-o200k_base-v1");
     expect(constants.token_estimator.package).toBe("js-tiktoken");
@@ -71,6 +81,7 @@ describe("E1 frontier sealed constants", () => {
     expect(constants.checkpoint_continuation.budget_exhausted).toBe("continue_from_workspace_as_is");
     expect(constants.checkpoint_continuation.invalid_integrity).toBe("terminate_run");
     expect(constants.checkpoint_continuation.provider_error).toBe("terminate_run");
+    expect(constants.checkpoint_continuation.spend_cap_reached).toBe("terminate_run");
     expect(constants.oracle_scoring.cadence).toBe("every_turn_snapshot");
     expect(constants.metrics.regression_free_auc.formula_id).toBe(
       "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1"
@@ -132,5 +143,13 @@ describe("E1 frontier sealed constants", () => {
     const wrongCache = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
     wrongCache.provider_runtime.cache_breakpoints.breakpoints = ["system_template_boundary"];
     expect(() => validateE1Constants(wrongCache)).toThrow("cache breakpoint policy is not sealed");
+
+    const wrongLiveGate = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    wrongLiveGate.provider_runtime.live_mode_gate.explicit_flag_required = false;
+    expect(() => validateE1Constants(wrongLiveGate)).toThrow("live mode gate policy is not sealed");
+
+    const wrongRedaction = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    wrongRedaction.provider_runtime.redaction.fail_closed_bundle_check = false;
+    expect(() => validateE1Constants(wrongRedaction)).toThrow("redaction policy is not sealed");
   });
 });
