@@ -5,6 +5,7 @@ import { dirname, extname, isAbsolute, join, normalize, resolve, sep } from "nod
 import { promisify } from "node:util";
 import type { ConditionId } from "./conditions";
 import type { E1ParsedTurn } from "./e1-l1-parser";
+import { truncateE1OutputByTokens, type E1TokenTruncationResult } from "./e1-token-estimator";
 
 const execFileAsync = promisify(execFile);
 
@@ -450,25 +451,12 @@ export function truncateHeadTail(input: {
   limit?: number;
   head?: number;
   tail?: number;
-}): { shown: string; truncated: boolean; full_output_hash: string } {
+}): E1TokenTruncationResult {
   const limit = input.limit ?? 4000;
   const head = input.head ?? 2500;
   const tail = input.tail ?? 1500;
-  const full_output_hash = sha256Text(input.text);
 
-  if (input.text.length <= limit) {
-    return { shown: input.text, truncated: false, full_output_hash };
-  }
-
-  const shownHead = input.text.slice(0, head);
-  const shownTail = input.text.slice(-tail);
-  const omitted = input.text.length - shownHead.length - shownTail.length;
-
-  return {
-    shown: `${shownHead}\n[... truncated ${omitted} chars ...]\n${shownTail}`,
-    truncated: true,
-    full_output_hash
-  };
+  return truncateE1OutputByTokens({ text: input.text, limit, head, tail });
 }
 
 export function sha256Text(text: string): string {

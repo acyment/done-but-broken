@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   calculateE1CheckpointMeanPassRateAuc,
+  calculateE1PromptTemplateHash,
   loadE1OraclePackage,
   loadE1TaskPackage,
   runE1TaskPackageNoProvider,
@@ -98,6 +99,13 @@ describe("E1 task/oracle package runner", () => {
     expect(score).toBe((0.5 + 0.75 + 1) / 3);
   });
 
+  test("hashes the shared prompt template into run identity", () => {
+    const promptTemplateHash = calculateE1PromptTemplateHash(constants);
+
+    expect(promptTemplateHash).toHaveLength(64);
+    expect(promptTemplateHash).toBe(calculateE1PromptTemplateHash(constants));
+  });
+
   test("runs CartCalc through dev-grade no-provider package/oracle bundles with per-turn scoring", async () => {
     const runsRoot = await setupTempDir();
     const taskPackage = await loadE1TaskPackage(TASK_PACKAGE_PATH);
@@ -138,6 +146,8 @@ describe("E1 task/oracle package runner", () => {
     expect(bundle.grade).toBe("dev");
     expect(bundle.run_identity.task_package_hash).toBe(taskPackage.package_hash);
     expect(bundle.run_identity.oracle_package_hash).toBe(oraclePackage.package_hash);
+    expect(bundle.run_identity.prompt_template_hash).toHaveLength(64);
+    expect(bundle.content_hash_manifest.prompt_template_hash).toBe(bundle.run_identity.prompt_template_hash);
     expect(bundle.oracle_scoring.cadence).toBe("every_turn_snapshot");
     expect(bundle.oracle_scoring.per_turn.feedback_capable_spec["2"]).toHaveLength(2);
     expect(bundle.oracle_scoring.per_turn.feedback_capable_spec["2"][0].summary.passed).toBeLessThan(

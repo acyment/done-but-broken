@@ -5,7 +5,17 @@ export interface E1SealedConstants {
   status: string;
   condition_ids: ["context_only_spec", "feedback_capable_spec"];
   deferred_before_provider_seal: string[];
-  token_estimator: { status: string; rule: string; divergence_review_threshold: number };
+  token_estimator: {
+    status: "sealed" | "TBD";
+    estimator_id: "js-tiktoken-o200k_base-v1";
+    package: "js-tiktoken";
+    package_version: "1.0.21";
+    encoding: "o200k_base";
+    truncation_boundary_rule: string;
+    operational_uses: Array<"verification_output_truncation" | "shadow_token_ledger">;
+    rule: string;
+    divergence_review_threshold: number;
+  };
   conversation: {
     thread_scope: "fresh_per_checkpoint";
     prior_checkpoint_memory: "workspace_only";
@@ -186,6 +196,28 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
     JSON.stringify(["context_only_spec", "feedback_capable_spec"])
   ) {
     throw new E1ConstantsValidationError("condition_ids must match the active two-arm protocol");
+  }
+
+  if (constants.token_estimator.status !== "sealed") {
+    throw new E1ConstantsValidationError("token_estimator.status must be sealed before provider runs");
+  }
+
+  if (
+    constants.token_estimator.estimator_id !== "js-tiktoken-o200k_base-v1" ||
+    constants.token_estimator.package !== "js-tiktoken" ||
+    constants.token_estimator.package_version !== "1.0.21" ||
+    constants.token_estimator.encoding !== "o200k_base"
+  ) {
+    throw new E1ConstantsValidationError("token_estimator must seal js-tiktoken o200k_base v1");
+  }
+
+  if (
+    !constants.token_estimator.operational_uses.includes("verification_output_truncation") ||
+    !constants.token_estimator.operational_uses.includes("shadow_token_ledger")
+  ) {
+    throw new E1ConstantsValidationError(
+      "token_estimator operational uses must include truncation and shadow ledger"
+    );
   }
 
   if (constants.conversation.thread_scope !== "fresh_per_checkpoint") {

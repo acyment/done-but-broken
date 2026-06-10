@@ -11,6 +11,7 @@ import {
   runVerificationRequest,
   verifyProtectedPathHashes
 } from "../src/e1-harness";
+import { decodeE1Tokens, encodeE1Tokens } from "../src/e1-token-estimator";
 
 const tempRoots: string[] = [];
 
@@ -236,18 +237,21 @@ describe("E1 harness mechanics", () => {
 
   test("hashes full output while showing deterministic head and tail", () => {
     const output = Array.from({ length: 20 }, (_, index) => `line-${index}`).join("\n");
+    const tokens = encodeE1Tokens(output);
     const truncated = truncateHeadTail({
       text: output,
-      limit: 40,
-      head: 20,
-      tail: 12
+      limit: 20,
+      head: 7,
+      tail: 5
     });
 
     expect(truncated.truncated).toBe(true);
     expect(truncated.shown).toContain("[... truncated ");
-    expect(truncated.shown.startsWith("line-0\nline-1\nline-2")).toBe(true);
-    expect(truncated.shown.endsWith("18\nline-19")).toBe(true);
+    expect(truncated.shown).toContain("tokens using js-tiktoken-o200k_base-v1");
+    expect(truncated.shown.startsWith(decodeE1Tokens(tokens.slice(0, 7)))).toBe(true);
+    expect(truncated.shown.endsWith(decodeE1Tokens(tokens.slice(-5)))).toBe(true);
     expect(truncated.full_output_hash).toHaveLength(64);
+    expect(truncated.full_output_tokens).toBe(tokens.length);
   });
 
   test("runs accepted Bun test commands and records shown output plus full hash", async () => {

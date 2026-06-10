@@ -16,8 +16,17 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.3.0");
+    expect(constants.version).toBe("0.3.1");
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
+    expect(constants.token_estimator.status).toBe("sealed");
+    expect(constants.token_estimator.estimator_id).toBe("js-tiktoken-o200k_base-v1");
+    expect(constants.token_estimator.package).toBe("js-tiktoken");
+    expect(constants.token_estimator.package_version).toBe("1.0.21");
+    expect(constants.token_estimator.encoding).toBe("o200k_base");
+    expect(constants.token_estimator.operational_uses).toEqual([
+      "verification_output_truncation",
+      "shadow_token_ledger"
+    ]);
     expect(constants.path_grammar.regex).toBe("^[A-Za-z0-9._-][A-Za-z0-9._/-]*$");
     expect(constants.path_grammar.relative_only).toBe(true);
     expect(constants.path_grammar.no_trailing_slash).toBe(true);
@@ -44,7 +53,7 @@ describe("E1 frontier sealed constants", () => {
     expect(constants.bundle_grading.dev_when_constants_status).toBe("draft-pre-seal");
     expect(constants.audit.integrity_rule).toContain("replacement application");
     expect(constants.audit.integrity_rule).toContain("verification execution");
-    expect(providerSealBlockers(constants)).toEqual(["token_estimator"]);
+    expect(providerSealBlockers(constants)).toEqual([]);
   });
 
   test("rejects missing and unknown top-level fields so docs and runtime cannot drift", async () => {
@@ -71,5 +80,15 @@ describe("E1 frontier sealed constants", () => {
     const raw = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
     raw.command_grammar.templates[0].conditions = ["context", "feedback"];
     expect(() => validateE1Constants(raw)).toThrow("non-protocol condition id");
+  });
+
+  test("rejects token-estimator seal drift", async () => {
+    const raw = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    raw.token_estimator.status = "TBD";
+    expect(() => validateE1Constants(raw)).toThrow("token_estimator.status must be sealed");
+
+    const wrongEncoding = JSON.parse(await readFile(CONSTANTS_PATH, "utf8"));
+    wrongEncoding.token_estimator.encoding = "cl100k_base";
+    expect(() => validateE1Constants(wrongEncoding)).toThrow("js-tiktoken o200k_base");
   });
 });

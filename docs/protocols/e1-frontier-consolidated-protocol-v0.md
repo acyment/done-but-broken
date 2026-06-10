@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.0`).
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.1`).
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -82,7 +82,7 @@ The sealed E1 AUC formula is `checkpoint_mean_cumulative_hidden_assertion_pass_r
 
 Every task and oracle package declares a fixed `virtual_now`. Reachable `Date.now`, `new Date()`, and `performance.now` references in package-controlled files are package-validation failures.
 
-Bundles are self-labeled. A bundle emitted from `draft-pre-seal` constants or without a protocol-document hash is `dev`; evidence-grade emission requires sealed constants and a recorded protocol-document hash.
+Bundles are self-labeled. A bundle emitted from `draft-pre-seal` constants or without a protocol-document hash is `dev`; evidence-grade emission requires sealed constants and a recorded protocol-document hash. Run identity includes the task package hash, oracle package hash, constants version, prompt-template hash, model, and seed.
 
 ## Editing And Parser Policy
 
@@ -132,7 +132,9 @@ Diff scope, exclusions, sort order, line-ending policy, and binary policy are se
 
 ## Token Ledger
 
-Provider-reported usage is the ledger of record when present. A sealed local estimator runs in shadow mode every turn and is recorded next to provider usage. It is the fallback only when provider usage is absent.
+Provider-reported usage is the ledger of record when present. The sealed local estimator is `js-tiktoken-o200k_base-v1` (`js-tiktoken@1.0.21`, `o200k_base`). It runs in shadow mode every turn and is recorded next to provider usage. It is the fallback only when provider usage is absent.
+
+Verification-output truncation happens before output is shown to the model, so provider-reported usage is too late for that boundary. Truncation is therefore computed with the sealed estimator, deterministically and identically for all providers: first 2500 estimated tokens plus last 1500 estimated tokens, with an explicit marker.
 
 Sustained provider-vs-estimator drift greater than 15 percent over a checkpoint flags the run for review. Budgets are provider-tokenizer-denominated, so cross-provider absolute token budgets are not interpreted directly. The clean comparison is arm-vs-arm within a model.
 

@@ -128,7 +128,7 @@ Environment boundary:
 - sandbox setup uses `bun install --frozen-lockfile` whenever a Bun lockfile exists;
 - runtime verification commands use `--no-install`;
 - Bun version and lockfile hash are compatibility fields;
-- while the package has zero dependencies and Bun deletes an empty lockfile, record `deps: none` plus `lockfile: absent` as the compatibility value rather than adding a fake dependency;
+- the repo now has its first runtime dependency, `js-tiktoken`, so `bun.lock` is required;
 - from the first commit where `package.json` declares any runtime or dev dependency, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
 ## Package, Oracle, And Scoring Boundary
@@ -141,7 +141,7 @@ The sealed AUC formula is `checkpoint_mean_cumulative_hidden_assertion_pass_rate
 
 Task and oracle packages must declare the same fixed `virtual_now`. Reachable real-clock APIs in package-controlled files are rejected during package loading.
 
-Bundle grade is explicit: `dev` for draft constants or missing protocol-document hash; `evidence` only when constants are sealed and the protocol-document hash is recorded.
+Bundle grade is explicit: `dev` for draft constants or missing protocol-document hash; `evidence` only when constants are sealed and the protocol-document hash is recorded. Run identity includes the prompt-template hash so shared prompt drift between calibration and later runs is an explicit compatibility change.
 
 ## Budgets
 
@@ -151,12 +151,12 @@ All constants are part of the compatibility boundary and must be sealed before e
 - max verification executions per checkpoint: `6`;
 - verification timeout: `60s`;
 - output shown to model per execution: `4000` tokens;
-- truncation rule: first `2500` tokens plus last `1500` tokens, with an explicit truncation marker;
+- truncation rule: first `2500` `js-tiktoken` `o200k_base` tokens plus last `1500` tokens, with an explicit truncation marker;
 - verification output tokens count against the per-checkpoint token budget.
 
 The `6` verification executions are shared across command types. For the feedback arm, `bun run spec` consumes the same quota as self-authored tests or probes. The feedback arm is not compensated with extra executions.
 
-The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Provider-reported usage is the ledger of record whenever the API returns it. A sealed local estimator runs in shadow mode on every turn, with tokenizer name/version recorded in compatibility metadata; it is the fallback only when provider usage is missing. Sustained provider-vs-estimator drift greater than 15 percent across a checkpoint flags the run for review. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. Token budgets are provider-tokenizer-denominated and are compared arm-vs-arm within a model, not as absolute cross-provider budgets. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
+The per-checkpoint token ledger debits model output tokens plus injected verification-output tokens. Provider-reported usage is the ledger of record whenever the API returns it. The sealed local estimator is `js-tiktoken-o200k_base-v1` (`js-tiktoken@1.0.21`, `o200k_base`). It is the operational tokenizer for verification-output truncation because truncation happens before provider usage can be known, and it also runs in shadow mode on every turn. It is the fallback only when provider usage is missing. Sustained provider-vs-estimator drift greater than 15 percent across a checkpoint flags the run for review. Cached repo prefix cost is recorded separately as a cost statistic and compatibility field; it is not debited from the checkpoint budget. Token budgets are provider-tokenizer-denominated and are compared arm-vs-arm within a model, not as absolute cross-provider budgets. If token exhaustion occurs mid-checkpoint, the checkpoint terminates cleanly as `budget_exhausted`, snapshots the current workspace, and the hidden oracle scores that snapshot as-is.
 
 ## Shared Verification Scaffolding
 

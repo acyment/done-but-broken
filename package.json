@@ -9,5 +9,8 @@
     "pilot:fake": "bun run bin/run-fake-pilot.ts",
     "test": "bun test --path-ignore-patterns='runs/**'",
     "spec": "bun test"
+  },
+  "dependencies": {
+    "js-tiktoken": "^1.0.21"
   }
 }

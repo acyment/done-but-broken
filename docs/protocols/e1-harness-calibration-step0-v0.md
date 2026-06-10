@@ -116,7 +116,7 @@ Lockfile/environment requirement:
 - if a Bun lockfile exists, sandbox setup runs `bun install --frozen-lockfile`;
 - runtime uses `--no-install`;
 - environment boundary records Bun version plus lockfile hash;
-- for the current zero-dependency package, Bun deletes an empty lockfile, so the boundary records `deps: none` plus `lockfile: absent` until a real dependency makes `bun.lock` meaningful;
+- the repo now has its first runtime dependency, `js-tiktoken`, so `bun.lock` is required and part of the environment boundary;
 - from the first commit with any runtime or dev dependency in `package.json`, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
 Full-suite stability is a gate, not a footnote. Harness tests must not depend on real-clock sleeps; use fake timers or injected clocks for timeout behavior. Step 0 requires 10 consecutive green full-suite runs on both environments, with zero quarantined tests or a published exclusion list.

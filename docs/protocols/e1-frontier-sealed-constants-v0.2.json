@@ -1,14 +1,20 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
   "deferred_before_provider_seal": ["token_estimator"],
 
   "token_estimator": {
-    "status": "TBD",
-    "rule": "Provider-reported usage is the ledger of record. This estimator runs in shadow mode on every turn. It MUST be selected and sealed before any provider calibration run; the orchestrator must refuse to start provider runs while status is TBD.",
+    "status": "sealed",
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "package": "js-tiktoken",
+    "package_version": "1.0.21",
+    "encoding": "o200k_base",
+    "truncation_boundary_rule": "Verification-output truncation boundaries are computed with this sealed tokenizer before output is shown to the model. The same tokenizer is used deterministically for all providers; provider-specific token fidelity is not part of the truncation boundary.",
+    "operational_uses": ["verification_output_truncation", "shadow_token_ledger"],
+    "rule": "Provider-reported usage remains the ledger of record when available. The sealed estimator is the operational tokenizer for verification-output truncation and runs in shadow mode on every turn for provider-vs-estimator divergence review.",
     "divergence_review_threshold": 0.15
   },
 

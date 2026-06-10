@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { dirname, extname, join, resolve } from "node:path";
 import type { ConditionId } from "./conditions";
+import { validateE1DependencyLockfileBoundary } from "./e1-environment";
 import type { E1SealedConstants } from "./e1-l1-constants";
 import {
   assembleE1CheckpointConversation,
@@ -68,6 +69,7 @@ export type E1TaskPackageNoProviderBundle = {
     task_package_hash: string;
     oracle_package_hash: string;
     constants_version: string;
+    prompt_template_hash: string;
     model: "scripted";
     seed: "scripted";
   };
@@ -228,7 +230,9 @@ export async function runE1TaskPackageNoProvider(input: {
   protocolDocumentHash?: string;
   arms: Record<ConditionId, (input: E1CheckpointProviderFactoryInput) => E1AgentProvider>;
 }): Promise<E1TaskPackageNoProviderBundle> {
+  await validateE1DependencyLockfileBoundary(process.cwd());
   assertPackageCompatibility(input.taskPackage, input.oraclePackage);
+  const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
   const runRoot = join(input.runsRoot, input.runId);
   const workspaceRoot = join(runRoot, "workspaces");
   const contextWorkspace = join(workspaceRoot, "context_only_spec");
@@ -278,6 +282,7 @@ export async function runE1TaskPackageNoProvider(input: {
   const contentHashManifest = {
     task_package_hash: input.taskPackage.package_hash,
     oracle_package_hash: input.oraclePackage.package_hash,
+    prompt_template_hash: promptTemplateHash,
     no_provider_run_hash: hashText(JSON.stringify(noProviderRun)),
     oracle_scoring_hash: hashText(JSON.stringify(oracleScoring)),
     metrics_hash: hashText(JSON.stringify(metrics))
@@ -289,6 +294,7 @@ export async function runE1TaskPackageNoProvider(input: {
       task_package_hash: input.taskPackage.package_hash,
       oracle_package_hash: input.oraclePackage.package_hash,
       constants_version: input.constants.version,
+      prompt_template_hash: promptTemplateHash,
       model: "scripted",
       seed: "scripted"
     },
@@ -302,6 +308,37 @@ export async function runE1TaskPackageNoProvider(input: {
   await writeFile(join(runRoot, "e1-task-package-bundle.json"), `${JSON.stringify(bundle, null, 2)}\n`);
 
   return bundle;
+}
+
+export function calculateE1PromptTemplateHash(constants: E1SealedConstants): string {
+  const placeholder = {
+    taskId: "<task-id>",
+    visibleSpecText: "<cumulative-visible-spec>",
+    checkpointSpecText: "<checkpoint-visible-spec>",
+    workspaceSnapshotText: "<workspace-snapshot>",
+    readmeText: "<readme>",
+    feedbackAssetPaths: ["<feedback-asset-path>"]
+  };
+
+  return hashText(
+    JSON.stringify({
+      context_only_spec: assembleE1CheckpointConversation({
+        constants,
+        conditionId: "context_only_spec",
+        checkpointId: "<checkpoint>",
+        checkpoints: ["<checkpoint>"],
+        ...placeholder,
+        feedbackAssetPaths: undefined
+      }),
+      feedback_capable_spec: assembleE1CheckpointConversation({
+        constants,
+        conditionId: "feedback_capable_spec",
+        checkpointId: "<checkpoint>",
+        checkpoints: ["<checkpoint>"],
+        ...placeholder
+      })
+    })
+  );
 }
 
 async function mountTaskWorkspace(input: {
