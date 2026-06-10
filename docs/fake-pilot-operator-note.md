@@ -51,6 +51,10 @@ This task validates provenance, visible feedback assets, and hidden-oracle scori
 
 The subscription task package also includes `local-acceptance-criteria.json` and sealed `analysis-plan.json`. These are pre-provider gates for auditing the local feedback/oracle implementation before any explicitly requested provider probe.
 
+Protocol profile selection is explicit. The default generated manifest profile is `final-checkpoint-primary-v1`. Use `--protocol-profile-id path-survival-primary-v1` only for future path-survival-primary validation runs after the protocol and run matrix are reviewed and approved. Do not run provider/model experiments while freezing protocol docs or metric-profile manifests.
+
+Do not run provider/model experiments while freezing protocol docs.
+
 Run the same pilot with the direct OpenRouter adapter:
 
 ```sh
@@ -67,11 +71,19 @@ OPENROUTER_API_KEY=sk-or-... bun run pilot:run --task tasks/role-permissions-cal
 
 The loop default policy is `max_model_turns=3` and `max_feedback_runs=2`. In `feedback_capable_spec`, the model receives public-safe summaries from the visible feedback command. In `context_only_spec`, later turns self-review against the same visible semantic spec text without feedback output. Hidden oracle checks still run only after agent work and are never included in prompt packets or feedback summaries.
 
-OpenRouter request behavior is part of the recorded provider execution profile. The CLI supports `--request-timeout-ms`, `--max-output-tokens`, and `--temperature`; changing any of these creates a different compatibility boundary and must not be pooled with prior runs.
+OpenRouter request behavior is part of the recorded provider execution profile. The CLI supports `--request-timeout-ms`, `--max-output-tokens`, `--max-workspace-bytes`, `--max-feedback-output-bytes`, `--openrouter-response-format`, `--openrouter-require-parameters`, `--protocol-profile-id`, and `--temperature`; changing any of these creates a different compatibility boundary and must not be pooled with prior runs. Profiles also record the model ID, provider route, endpoint, response parser version, request parameter version, response format version, provider parameter-routing requirement, prompt renderer version, feedback summary version, and retry policy.
 
 Validity-flagged provider runs are not clean primary evidence. A causal pilot is clean primary evidence eligible only when it is classified as `causal_pilot` and has no validity flags. Timeout details record provider failure phase, feedback availability, model-response receipt, code-change state, retry count, and whether the workspace was carried forward because no usable provider action was available.
 
-Before another full provider run, use `docs/provider-smoke-test-plan.md`. The current planned smoke profile is `openrouter-loop-v1-timeout90000-output8000-temp0.2-retry0`; it is a provider reliability check, not primary evidence.
+Before another full provider run, use `docs/provider-smoke-test-plan.md`. The latest loop-policy-versioned clean smoke profile is `openrouter-loop-v1-modelmistralai-mistral-small-2603-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1`; it is provider reliability evidence, not primary evidence. Any model/provider/profile change needs an explicit analysis-plan or compatibility-boundary decision before causal use.
+
+Public-facing evidence artifacts start at `docs/public-evidence-status.md`, with a compact cross-run claim matrix at `docs/public-evidence-matrix.md`. The current set includes run cards for clean difficulty and causal runs, task cards for the sealed task families, regression-free success plots, and an explainer for why timeout-flagged 9/9 runs are not clean evidence.
+
+The first clean Sonnet causal pilot is `subscription-entitlements-causal-pilot-20260605-002`. Inspection reports `valid=true`, zero replay mismatches, no provider validity flags, clean primary evidence eligibility, and complete feedback opportunity integrity on 9/9 checkpoints. The measured treatment result is flat under this task/model/budget: both arms passed 9/9, final delta 0, and regression-free AUC delta 0. The prior causal attempt `subscription-entitlements-causal-pilot-20260605-001` is invalid diagnostic context because feedback opportunity integrity was incomplete.
+
+The first clean Mistral causal pilot is `subscription-entitlements-causal-pilot-20260605-003`. Inspection reports `valid=true`, zero replay mismatches, no provider validity flags, clean primary evidence eligibility, and complete feedback opportunity integrity on 9/9 checkpoints. The primary final pass-rate delta is 0, while the secondary regression-free AUC delta is 0.1111 because context-only missed I01 before recovering and feedback-capable passed from I01 onward. This is still task/model/budget-specific evidence, not a generalized benchmark claim.
+
+The first clean inventory causal pilot is `inventory-reservations-causal-pilot-20260605-001`. Inspection reports `valid=true`, zero replay mismatches, no provider validity flags, clean primary evidence eligibility, and complete feedback opportunity integrity on 9/9 checkpoints. Both arms passed all checkpoints, with primary final pass-rate delta 0 and secondary regression-free AUC delta 0. This is task/model/budget-specific evidence, not a generalized benchmark claim.
 
 Run the stubbed loop tests without real network access:
 
@@ -91,7 +103,7 @@ bun run inspect:run --run-manifest runs/sample-local/run.json
 
 The inspection command validates the run manifest, provider execution profile, clean primary evidence eligibility, provider/network validity details, paired result/summary declarations, checkpoint manifests, checkpoint hash and agent-status consistency with `run.json`, declared artifact paths, artifact hashes, replay plan, result record, summary hash, checkpoint-level provider-failure carry-forward, and causal feedback-use evidence for feedback-capable causal pilots. Feedback-capable causal pilots must show a persisted `model_turn -> feedback_run -> model_turn` transcript sequence before they can count as causal feedback-use evidence.
 
-Inspection also prints public evidence-status fields: run classification, clean primary evidence eligibility, validity flags, provider profile ID, provider timeout phases, timeout detail count, provider-failure carry-forward checkpoint count, and feedback opportunity integrity.
+Inspection also prints public evidence-status fields: run classification, protocol profile ID, clean primary evidence eligibility, validity flags, provider profile ID, provider timeout phases, timeout detail count, provider-failure carry-forward checkpoint count, and feedback opportunity integrity.
 
 Print inspection help without loading a manifest:
 
@@ -117,7 +129,7 @@ The replay agent-status drift fixture is tracked at `test/fixtures/replay-agent-
 
 The run root is `runs/<run_id>/`.
 
-- `runs/<run_id>/run.json`: run manifest and provenance entry point. It records run classification, validity flags, clean primary evidence eligibility, model/provider settings, provider execution profile, and compatibility hashes.
+- `runs/<run_id>/run.json`: run manifest and provenance entry point. It records run classification, validity flags, clean primary evidence eligibility, model/provider settings, protocol profile, provider execution profile, and compatibility hashes.
 - `runs/<run_id>/task-seal.json`: task sealing manifest with checkpoint order, visible spec hashes, feedback asset hashes, hidden oracle hash, template workspace hash, package hashes, and public API contract.
 - `runs/<run_id>/result.json`: `result-schema-v1` result record when hidden oracle checks run.
 - `runs/<run_id>/summary.md`: Markdown result summary, including evidence-status metadata when hidden-oracle results are present.

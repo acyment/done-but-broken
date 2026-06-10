@@ -6,9 +6,11 @@ import { validateE1DependencyLockfileBoundary } from "./e1-environment";
 import type { E1SealedConstants } from "./e1-l1-constants";
 import {
   assembleE1CheckpointConversation,
+  runE1NoProviderCheckpoint,
   runE1NoProviderRun,
   validateE1ArmConversationDiff,
   type E1AgentProvider,
+  type E1NoProviderCheckpointBundle,
   type E1CheckpointProviderFactoryInput,
   type E1NoProviderRunBundle
 } from "./e1-no-provider-runner";
@@ -84,6 +86,60 @@ export type E1TaskPackageNoProviderBundle = {
     by_condition: Record<ConditionId, number>;
     delta_feedback_minus_context: number;
   };
+  content_hash_manifest: Record<string, string>;
+  content_hash_manifest_hash: string;
+};
+
+export type E1ProviderUsageTotals = {
+  provider: {
+    fresh_input_tokens: number;
+    cached_input_tokens: number;
+    output_tokens: number;
+  };
+  estimator: {
+    fresh_input_tokens: number;
+    output_tokens: number;
+  };
+  spend: {
+    actual_spend_usd: number;
+  };
+  exchange_count: number;
+};
+
+export type E1TaskPackageProviderRunBundle = {
+  schema_version: "e1-selected-provider-run-bundle-v0";
+  constants_version: string;
+  constants_hash: string;
+  checkpoints: string[];
+  selected_conditions: ConditionId[];
+  condition_bundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>;
+  run_summary: {
+    status: "completed" | "invalid_integrity" | "provider_error" | "spend_cap_reached";
+    stopped_at?: { condition_id: ConditionId; checkpoint_id: string };
+    provider_error_counts_by_condition: Record<ConditionId, number>;
+    spend_cap_reached_counts_by_condition: Record<ConditionId, number>;
+  };
+};
+
+export type E1TaskPackageProviderBundle = {
+  schema_version: "e1-task-package-provider-bundle-v0";
+  grade: "dev" | "evidence";
+  selected_conditions: ConditionId[];
+  checkpoints: string[];
+  run_identity: {
+    task_package_hash: string;
+    oracle_package_hash: string;
+    constants_version: string;
+    prompt_template_hash: string;
+    model_provider: "openai_compatible";
+  };
+  provider_run: E1TaskPackageProviderRunBundle;
+  oracle_scoring: E1TaskPackageNoProviderBundle["oracle_scoring"];
+  metrics: {
+    formula_id: "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1";
+    by_condition: Partial<Record<ConditionId, number>>;
+  };
+  provider_usage_totals: E1ProviderUsageTotals;
   content_hash_manifest: Record<string, string>;
   content_hash_manifest_hash: string;
 };
@@ -306,6 +362,149 @@ export async function runE1TaskPackageNoProvider(input: {
   };
 
   await writeFile(join(runRoot, "e1-task-package-bundle.json"), `${JSON.stringify(bundle, null, 2)}\n`);
+
+  return bundle;
+}
+
+export async function runE1TaskPackageProvider(input: {
+  constants: E1SealedConstants;
+  taskPackage: E1TaskPackage;
+  oraclePackage: E1OraclePackage;
+  runsRoot: string;
+  runId: string;
+  protocolDocumentHash?: string;
+  conditions: ConditionId[];
+  checkpoints?: string[];
+  providerFactory: (input: E1CheckpointProviderFactoryInput) => E1AgentProvider;
+  maxModelTurns?: number;
+  maxVerificationExecutions?: number;
+  maxCheckpointTokens?: number;
+  redactionSecrets?: Array<{ id: string; value: string }>;
+}): Promise<E1TaskPackageProviderBundle> {
+  await validateE1DependencyLockfileBoundary(process.cwd());
+  assertPackageCompatibility(input.taskPackage, input.oraclePackage);
+  assertSelectedConditions(input.conditions);
+  const checkpoints = input.checkpoints ?? input.taskPackage.checkpoints;
+  assertSelectedCheckpoints(input.taskPackage, checkpoints);
+  const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
+  const runRoot = join(input.runsRoot, input.runId);
+  const workspaceRoot = join(runRoot, "workspaces");
+  const conditionBundles = emptyCheckpointBundleRecord();
+  const providerErrorCounts = emptyConditionNumberRecord();
+  const spendCapReachedCounts = emptyConditionNumberRecord();
+  let stoppedAt: { condition_id: ConditionId; checkpoint_id: string } | undefined;
+  let runStatus: E1TaskPackageProviderRunBundle["run_summary"]["status"] = "completed";
+
+  await mkdir(runRoot, { recursive: true });
+  validateAllCheckpointPromptDiffs(input.constants, input.taskPackage);
+
+  for (const conditionId of input.conditions) {
+    await mountTaskWorkspace({
+      taskPackage: input.taskPackage,
+      conditionId,
+      workspacePath: join(workspaceRoot, conditionId)
+    });
+  }
+
+  for (let checkpointIndex = 0; checkpointIndex < checkpoints.length; checkpointIndex += 1) {
+    const checkpointId = checkpoints[checkpointIndex];
+
+    for (const conditionId of input.conditions) {
+      const checkpointBundle = await runE1NoProviderCheckpoint({
+        constants: input.constants,
+        workspacePath: join(workspaceRoot, conditionId),
+        conditionId,
+        checkpointId,
+        checkpoints,
+        provider: input.providerFactory({ conditionId, checkpointId, checkpointIndex }),
+        prompt: buildPrompt({ taskPackage: input.taskPackage, conditionId, checkpointId }),
+        artifactDir: join(runRoot, "e1-provider-run", conditionId, `checkpoint-${checkpointId}`),
+        maxModelTurns: input.maxModelTurns,
+        maxVerificationExecutions: input.maxVerificationExecutions,
+        maxCheckpointTokens: input.maxCheckpointTokens,
+        redactionSecrets: input.redactionSecrets
+      });
+
+      conditionBundles[conditionId].push(checkpointBundle);
+
+      if (checkpointBundle.termination?.classification === "provider_error") {
+        providerErrorCounts[conditionId] += 1;
+        runStatus = "provider_error";
+        stoppedAt = { condition_id: conditionId, checkpoint_id: checkpointId };
+        break;
+      }
+
+      if (checkpointBundle.termination?.classification === "spend_cap_reached") {
+        spendCapReachedCounts[conditionId] += 1;
+        runStatus = "spend_cap_reached";
+        stoppedAt = { condition_id: conditionId, checkpoint_id: checkpointId };
+        break;
+      }
+
+      if (checkpointBundle.termination?.classification === "invalid_integrity") {
+        runStatus = "invalid_integrity";
+        stoppedAt = { condition_id: conditionId, checkpoint_id: checkpointId };
+        break;
+      }
+    }
+
+    if (stoppedAt) {
+      break;
+    }
+  }
+
+  const providerRun: E1TaskPackageProviderRunBundle = {
+    schema_version: "e1-selected-provider-run-bundle-v0",
+    constants_version: input.constants.version,
+    constants_hash: hashText(JSON.stringify(input.constants)),
+    checkpoints,
+    selected_conditions: input.conditions,
+    condition_bundles: conditionBundles,
+    run_summary: {
+      status: runStatus,
+      ...(stoppedAt ? { stopped_at: stoppedAt } : {}),
+      provider_error_counts_by_condition: providerErrorCounts,
+      spend_cap_reached_counts_by_condition: spendCapReachedCounts
+    }
+  };
+  const oracleScoring = await scoreNoProviderRun({
+    taskPackage: input.taskPackage,
+    oraclePackage: input.oraclePackage,
+    noProviderRun: noProviderRunForScoring(input.constants, checkpoints, conditionBundles),
+    tmpRoot: join(runRoot, "oracle-tmp")
+  });
+  const metrics = buildSelectedMetrics(input.constants, input.conditions, oracleScoring.checkpoint_end);
+  const providerUsageTotals = aggregateProviderUsage(conditionBundles);
+  const contentHashManifest = {
+    task_package_hash: input.taskPackage.package_hash,
+    oracle_package_hash: input.oraclePackage.package_hash,
+    prompt_template_hash: promptTemplateHash,
+    provider_run_hash: hashText(JSON.stringify(providerRun)),
+    oracle_scoring_hash: hashText(JSON.stringify(oracleScoring)),
+    metrics_hash: hashText(JSON.stringify(metrics)),
+    provider_usage_totals_hash: hashText(JSON.stringify(providerUsageTotals))
+  };
+  const bundle: E1TaskPackageProviderBundle = {
+    schema_version: "e1-task-package-provider-bundle-v0",
+    grade: bundleGrade(input.constants, input.protocolDocumentHash),
+    selected_conditions: input.conditions,
+    checkpoints,
+    run_identity: {
+      task_package_hash: input.taskPackage.package_hash,
+      oracle_package_hash: input.oraclePackage.package_hash,
+      constants_version: input.constants.version,
+      prompt_template_hash: promptTemplateHash,
+      model_provider: "openai_compatible"
+    },
+    provider_run: providerRun,
+    oracle_scoring: oracleScoring,
+    metrics,
+    provider_usage_totals: providerUsageTotals,
+    content_hash_manifest: contentHashManifest,
+    content_hash_manifest_hash: hashText(JSON.stringify(contentHashManifest))
+  };
+
+  await writeFile(join(runRoot, "e1-task-package-provider-bundle.json"), `${JSON.stringify(bundle, null, 2)}\n`);
 
   return bundle;
 }
@@ -588,6 +787,89 @@ function buildMetrics(
   };
 }
 
+function buildSelectedMetrics(
+  constants: E1SealedConstants,
+  conditions: ConditionId[],
+  checkpointEnd: E1TaskPackageNoProviderBundle["oracle_scoring"]["checkpoint_end"]
+): E1TaskPackageProviderBundle["metrics"] {
+  const byCondition: Partial<Record<ConditionId, number>> = {};
+
+  for (const conditionId of conditions) {
+    byCondition[conditionId] = calculateE1CheckpointMeanPassRateAuc(
+      checkpointEnd[conditionId].map(flattenSummary)
+    );
+  }
+
+  return {
+    formula_id: constants.metrics.regression_free_auc.formula_id,
+    by_condition: byCondition
+  };
+}
+
+function aggregateProviderUsage(
+  conditionBundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>
+): E1ProviderUsageTotals {
+  const totals: E1ProviderUsageTotals = {
+    provider: {
+      fresh_input_tokens: 0,
+      cached_input_tokens: 0,
+      output_tokens: 0
+    },
+    estimator: {
+      fresh_input_tokens: 0,
+      output_tokens: 0
+    },
+    spend: {
+      actual_spend_usd: 0
+    },
+    exchange_count: 0
+  };
+
+  for (const bundles of Object.values(conditionBundles)) {
+    for (const bundle of bundles) {
+      for (const turn of bundle.turn_records) {
+        totals.provider.fresh_input_tokens += turn.provider_usage?.provider.fresh_input_tokens ?? 0;
+        totals.provider.cached_input_tokens += turn.provider_usage?.provider.cached_input_tokens ?? 0;
+        totals.provider.output_tokens += turn.provider_usage?.provider.output_tokens ?? 0;
+        totals.estimator.fresh_input_tokens += turn.provider_usage?.estimator.fresh_input_tokens ?? 0;
+        totals.estimator.output_tokens += turn.provider_usage?.estimator.output_tokens ?? 0;
+        totals.spend.actual_spend_usd = roundUsd(
+          totals.spend.actual_spend_usd + (turn.provider_spend?.actual_call_cost_usd ?? 0)
+        );
+        totals.exchange_count += turn.provider_exchange ? 1 : 0;
+      }
+    }
+  }
+
+  return totals;
+}
+
+function noProviderRunForScoring(
+  constants: E1SealedConstants,
+  checkpoints: string[],
+  conditionBundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>
+): E1NoProviderRunBundle {
+  return {
+    schema_version: "e1-no-provider-run-bundle-v0",
+    constants_version: constants.version,
+    constants_hash: hashText(JSON.stringify(constants)),
+    checkpoints,
+    arm_bundles: conditionBundles,
+    run_summary: {
+      status: "completed",
+      stall_counts_by_condition: emptyConditionNumberRecord(),
+      budget_exhausted_counts_by_condition: emptyConditionNumberRecord(),
+      provider_error_counts_by_condition: emptyConditionNumberRecord(),
+      spend_cap_reached_counts_by_condition: emptyConditionNumberRecord(),
+      verification_slots_used_by_condition: emptyConditionNumberRecord()
+    },
+    structural_comparison: {
+      checkpoint_counts_match: true,
+      condition_ids: ["context_only_spec", "feedback_capable_spec"]
+    }
+  };
+}
+
 function flattenSummary(input: { checkpoint_id: string; summary: E1OracleTurnScore["summary"] }) {
   return {
     checkpoint_id: input.checkpoint_id,
@@ -617,12 +899,60 @@ function assertPackageCompatibility(taskPackage: E1TaskPackage, oraclePackage: E
   }
 }
 
+function assertSelectedConditions(conditions: ConditionId[]): void {
+  if (conditions.length === 0) {
+    throw new Error("At least one E1 condition must be selected");
+  }
+
+  const seen = new Set<ConditionId>();
+
+  for (const condition of conditions) {
+    if (condition !== "context_only_spec" && condition !== "feedback_capable_spec") {
+      throw new Error(`Unknown E1 condition ${condition}`);
+    }
+
+    if (seen.has(condition)) {
+      throw new Error(`Duplicate E1 condition ${condition}`);
+    }
+
+    seen.add(condition);
+  }
+}
+
+function assertSelectedCheckpoints(taskPackage: E1TaskPackage, checkpoints: string[]): void {
+  if (checkpoints.length === 0) {
+    throw new Error("At least one E1 checkpoint must be selected");
+  }
+
+  for (const checkpoint of checkpoints) {
+    checkpointIndex(taskPackage.checkpoints, checkpoint);
+  }
+}
+
+function emptyCheckpointBundleRecord(): Record<ConditionId, E1NoProviderCheckpointBundle[]> {
+  return {
+    context_only_spec: [],
+    feedback_capable_spec: []
+  };
+}
+
+function emptyConditionNumberRecord(): Record<ConditionId, number> {
+  return {
+    context_only_spec: 0,
+    feedback_capable_spec: 0
+  };
+}
+
 function assertCheckpointSpecMap(checkpoints: string[], visibleSpecs: Record<string, string>): void {
   for (const checkpoint of checkpoints) {
     if (typeof visibleSpecs[checkpoint] !== "string") {
       throw new Error(`Missing visible spec path for ${checkpoint}`);
     }
   }
+}
+
+function roundUsd(value: number): number {
+  return Math.round(value * 1_000_000_000) / 1_000_000_000;
 }
 
 function assertIsoInstant(value: string, field: string): void {

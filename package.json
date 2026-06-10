@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "e1": "bun run bin/e1.ts",
     "inspect:run": "bun run bin/inspect-run.ts",
     "pilot:run": "bun run bin/run-fake-pilot.ts",
     "pilot:fake": "bun run bin/run-fake-pilot.ts",

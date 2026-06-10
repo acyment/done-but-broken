@@ -17,6 +17,8 @@ describe("operator note", () => {
     expect(note).toContain("--temperature");
     expect(note).toContain("provider execution profile");
     expect(note).toContain("clean primary evidence eligible");
+    expect(note).toContain("path-survival-primary-v1");
+    expect(note).toContain("Do not run provider/model experiments while freezing protocol docs");
     expect(note).toContain("model_turn -> feedback_run -> model_turn");
     expect(note).toContain("deepseek/deepseek-v4-flash");
     expect(note).toContain("test/model-loop-agent.test.ts");
@@ -197,5 +199,7 @@ describe("operator note", () => {
     expect(progress).toContain("provider timeout phase classification");
     expect(progress).toContain("workspace_carried_forward_due_to_provider_failure");
     expect(progress).toContain("model_turn -> feedback_run -> model_turn");
+    expect(progress).toContain("path-survival-primary-v1");
+    expect(progress).toContain("regression-free AUC is primary only for future path-survival-primary-v1 runs");
   });
 });
