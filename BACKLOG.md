@@ -8,8 +8,10 @@
 - Keep the causal variable narrow: same visible semantic spec content with executable feedback off versus the same visible semantic spec content with executable feedback on.
 - Keep the bounded loop budget at 2/1 for causal feedback-use runs unless a later analysis plan precommits a different equal-turn budget.
 - Treat one-turn runs as difficulty probes only unless feedback can actually influence a later model turn.
-- Avoid adding arms, legacy condition IDs, ordinary-test comparisons, spec-format comparisons, permission-checkpoint extensions, formal statistical replication, many-model matrices, or a general benchmark platform while clean provider execution is the bottleneck.
-- The next internal validation phase is `path-survival-primary-v1`: path survival / `regression_free_auc` is primary only for future runs that explicitly declare that protocol profile. Existing clean pilots remain historical final-pass-primary evidence with retrospective AUC observations.
+- Avoid adding arms, legacy condition IDs, ordinary-test comparisons, spec-format comparisons between arms, permission-checkpoint extensions, formal statistical replication, many-model matrices, or a general benchmark platform.
+- The shared-environment OpenSpec workflow under protocol profile `e1-openspec-workflow-v0` is in scope: both arms work inside the same OpenSpec-initialized workspace and the harness runs the pinned `openspec` archive step identically in both arms; the causal variable remains executable-feedback availability. It is its own non-pooled compatibility boundary. (Guardrail revision 2026-06-10, made before any OpenSpec-profile run existed.)
+- The active program is the E1 frontier path: bring E1 to evidence grade, add the OpenSpec workflow profile, then design the first multi-file evidence task where frontier models do not ceiling.
+- `path-survival-primary-v1` remains the metric profile rule: path survival / `regression_free_auc` is primary only for runs that explicitly declare that protocol profile. Existing clean pilots remain historical final-pass-primary evidence with retrospective AUC observations. The Stage 1 subscription/inventory validation matrix is superseded before execution (see `docs/protocols/path-survival-primary-v1-validation-matrix-supersession-v1.md`).
 
 ## Current Evidence State
 
@@ -82,6 +84,13 @@
 - A run may be classified as causal feedback-use evidence only if feedback ran and had a possible path to influence a later model turn.
 - One-turn runs where feedback cannot influence a later turn are difficulty calibration only.
 
+## Current Priorities (2026-06-10)
+
+- P0 — E1 to evidence grade: close the Step 0 go-gate in `docs/protocols/e1-harness-calibration-step0-v0.md`. Known items: real workspace-snapshot injection replacing the prompt stub (`src/e1-package-runner.ts`), sealed cache-breakpoint conversation structure, publication-grade replay/tamper/classification inspection, wall-time capture plus a measurements extractor, end-to-end scripted shakedown, the 10-consecutive-green two-environment stability gate, re-run cheap-model calibration after the prompt-template hash changes, then seal base constants v1.0. Pre-snapshot-fix calibration bundles are a dead compatibility boundary for sealing purposes.
+- P1 — OpenSpec workflow profile `e1-openspec-workflow-v0`: pin `@fission-ai/openspec` exactly, neutralize its telemetry fail-closed, characterization-test the archive MODIFIED-replace semantics (whole-requirement-block replacement silently drops omitted scenarios — the honest prose-regression surface), integrate the harness-run archive step identically in both arms, add the scenario-text canonicalizer parity check and the requirement-survival ledger (secondary descriptive metric), and seal separate profile constants.
+- P2 — First E1 evidence task: precommit design gates (`docs/protocols/e1-first-evidence-task-design-gates-v0.md`), then design a multi-file task with scattered cross-file invariants, partial seed, hidden reference, and a naive-agent discrimination proof before seal. Billing v2 (`docs/protocols/billing-v2-frontier-branch-proposal-v0.md`) is the candidate domain.
+- All provider runs remain operator-authorized only, with precommitted classification, profile, budget, and metrics.
+
 ## P0 - Freeze Path-Survival-Primary Protocol
 
 - Status: protocol profile support added locally; operator approval is still required before evidence-generating provider runs.
@@ -95,7 +104,9 @@
 - Existing final-pass-primary run interpretation remains unchanged; old AUC values are retrospective secondary observations only.
 - Do not run providers while freezing protocol docs and manifests.
 
-## P1 - Predeclared Internal Validation Runs
+## Superseded (pre-execution): P1 - Predeclared Internal Validation Runs
+
+Superseded 2026-06-10 before any Stage 1 run was executed; see `docs/protocols/path-survival-primary-v1-validation-matrix-supersession-v1.md`. Subscription and inventory cannot discriminate path survival (full-solution template seeds, ceiling behavior, 3/108 non-perfect arm-checkpoints and zero true regressions across the 6 clean runs). The historical content below is preserved verbatim as a frozen pre-registration.
 
 Predeclared matrix: `docs/protocols/path-survival-primary-v1-validation-matrix.md`.
 
@@ -258,12 +269,12 @@ Checkpoint sequence:
 - More task families: initial expansion added with `inventory-reservations-lifecycle-v0`; clean difficulty probe and clean causal pilot completed. Do not add another task family without a precommitted reason and scope.
 - More models: initial single-model expansion completed with the sealed Mistral Small profile. Do not turn this into a many-model matrix without a separate precommitted plan.
 - Additional arms.
-- BDD vs OpenSpec or spec-format comparisons.
+- Spec-format comparisons between arms (the shared-environment OpenSpec workflow under `e1-openspec-workflow-v0` is NOT this — it is in scope and tracked under Current Priorities P1).
 - Formal statistical replication.
 - Many-model matrices.
 - General benchmark platform work.
 
-These are later because the current bottleneck is clean provider execution plus public-legible evidence artifacts.
+These are later because the current bottleneck is bringing E1 to evidence grade plus public-legible evidence artifacts.
 
 ## Test-First Backlog
 
@@ -294,7 +305,7 @@ Write or update tests before implementing each validity-critical change:
 
 - Do not add more `role-permissions-calibration` checkpoints as the next move.
 - Do not add new arms or aliases.
-- Do not compare spec formats.
+- Do not compare spec formats between arms. The shared-environment OpenSpec workflow under `e1-openspec-workflow-v0` (same scenario content both arms, executable feedback as the only causal variable) is in scope and is not a spec-format comparison.
 - Do not tune hidden oracle or visible feedback after seeing arm-level outcomes.
 - Do not pool pre-patch and post-patch runs.
 - Do not count one-turn no-feedback runs as feedback-use evidence.

@@ -40,9 +40,11 @@ The active pilot has exactly two condition IDs:
 - `context_only_spec`
 - `feedback_capable_spec`
 
-Do not add aliases. Do not add legacy condition names. Do not introduce HIT-SDD, OpenSpec, BDD, Gherkin, Three Amigos, or ordinary-test condition IDs in active protocol code.
+Do not add aliases. Do not add legacy condition names. Do not introduce HIT-SDD, OpenSpec, BDD, Gherkin, Three Amigos, or ordinary-test names as condition IDs or arms in active protocol code.
 
 The causal variable is whether the same semantic spec can be used as automated feedback during agent work. Both arms must receive semantically equivalent visible spec content. Only `feedback_capable_spec` may receive executable feedback assets or a command to run them.
+
+The OpenSpec workflow is permitted as a shared task-environment property under the named protocol profile `e1-openspec-workflow-v0`: both arms work inside the same OpenSpec-initialized workspace, both arms maintain spec deltas, and the harness runs the pinned `openspec` archive step identically in both arms at checkpoint transitions. This is not a spec-format comparison between arms — both arms see the same scenario content, and the causal variable remains executable-feedback availability. Runs under `e1-openspec-workflow-v0` form their own compatibility boundary and are never pooled with base-profile runs. This scoping was decided before any OpenSpec-profile run existed (guardrail revision of 2026-06-10).
 
 The sibling repo at `../hit-sdd-bench.old` is read-only salvage material. Active runtime code must not import modules from it by relative path.
 
@@ -117,14 +119,16 @@ Avoid wording:
 
 ## Current Scientific Direction
 
+- The active program is the E1 frontier path: a turn-based, full-file-replacement, multi-file protocol designed so frontier models do not ceiling the task. Bring E1 to evidence grade (Step 0 go-gate in `docs/protocols/e1-harness-calibration-step0-v0.md`) before any evidence-generating E1 run.
+- The bounded positive result stands as-is: pricing content-controlled showed a clean run-loop benefit for a cheap/weak model (mean AUC delta +0.1852, 3/3); frontier models ceilinged all tested single-file tasks. Do not reinterpret or extend that claim without new clean evidence.
+- The `path-survival-primary-v1` Stage 1 validation matrix (subscription + inventory) is superseded before execution; see `docs/protocols/path-survival-primary-v1-validation-matrix-supersession-v1.md`. Do not execute it.
+- Subscription, inventory, payroll, and role-permissions task families remain calibration/difficulty/ceiling context with their existing classifications.
 - Freeze `role-permissions-calibration-v0` as harness/provenance calibration.
 - Do not add more permission checkpoints as the next scientific move.
-- The active task family is the sealed stateful lifecycle task `subscription-entitlements-lifecycle-v0`.
 - Do not mutate `subscription-entitlements-lifecycle-v0` in response to the timeout-flagged 9/9 difficulty probe.
 - Do not treat the timeout-flagged 9/9 provider probe as clean evidence that the task is too easy.
-- Mitigate and version provider timeout/retry/profile settings before another clean provider difficulty probe.
-- The project is not ready for public validation claims that executable feedback wins.
-- Future evidence-generating runs should use the frozen `path-survival-primary-v1` profile once explicitly approved.
+- The project is not ready for public validation claims that executable feedback wins for frontier models.
+- Future evidence-generating runs must declare their protocol profile (`path-survival-primary-v1` or a sealed E1 profile) and be explicitly approved.
 - `regression_free_auc` is primary only for runs whose manifest declares `protocol_profile_id=path-survival-primary-v1`; older runs may mention AUC only as retrospective secondary observations.
 - Do not run provider/model experiments unless explicitly authorized.
 - Do not change primary metrics after observing outcomes, and preserve compatibility boundaries for task, provider, budget, loop policy, protocol profile, and metric definition.

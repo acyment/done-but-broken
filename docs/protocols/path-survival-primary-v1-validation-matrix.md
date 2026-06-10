@@ -1,5 +1,7 @@
 # Path-Survival Primary v1 Validation Matrix
 
+> **SUPERSEDED (pre-execution, 2026-06-10).** This matrix was never executed: no Stage 1 or Stage 2 provider run occurred, no `stage1_execution_freeze_commit` was created, and no operator approval was given. It is superseded by `docs/protocols/path-survival-primary-v1-validation-matrix-supersession-v1.md` because the subscription/inventory boundary cannot discriminate path survival (full-solution template seeds; 3/108 non-perfect arm-checkpoints and zero true regressions across the 6 existing clean runs). The content below is preserved verbatim as a frozen pre-registration. Do not execute this matrix.
+
 This document predeclares the next internal validation phase for `path-survival-primary-v1`. It is not a public validation claim and does not reinterpret historical `final-checkpoint-primary-v1` runs.
 
 ## Freeze Provenance

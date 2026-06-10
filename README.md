@@ -36,7 +36,7 @@ This repo intentionally contains only a small framework skeleton:
 - task-specific hidden oracles for `tasks/sample-cart` and `tasks/role-permissions-calibration`
 - a small pilot CLI with fake, OpenRouter, and OpenRouter feedback-loop adapter modes
 
-It does not contain a general benchmark platform, legacy condition names, OpenSpec/Bdd/HIT-SDD arms, a full tool-loop coding-agent protocol, or multi-agent protocols.
+It does not contain a general benchmark platform, legacy condition names, OpenSpec/BDD/HIT-SDD arms, or multi-agent protocols. The OpenSpec workflow may appear only as a shared task-environment property under protocol profile `e1-openspec-workflow-v0` — both arms in the same OpenSpec workspace, with executable feedback availability as the only causal variable — never as a condition ID or an arm-vs-arm spec-format comparison.
 
 ## Task Package
 
