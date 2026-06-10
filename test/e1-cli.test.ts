@@ -42,6 +42,7 @@ describe("E1 CartCalc CLI", () => {
     const stdout = process.stdout.toString();
     expect(stdout).toContain(`bundle=${join(root, "runs", runId, "e1-task-package-provider-bundle.json")}`);
     expect(stdout).toContain("provider_usage=");
+    expect(stdout).toContain("provider_route_id=canned-cartcalc-transport");
     expect(stdout).toContain("spend_usd=");
     expect(stdout).toContain("cached_input_tokens=");
     expect(stdout).toContain("cost_of_record_source=provider_reported");
@@ -57,6 +58,14 @@ describe("E1 CartCalc CLI", () => {
     expect(bundle.schema_version).toBe("e1-task-package-provider-bundle-v0");
     expect(bundle.selected_conditions).toEqual(["context_only_spec"]);
     expect(bundle.checkpoints).toEqual(["1"]);
+    expect(bundle.run_identity).toMatchObject({
+      model_provider: "openai_compatible",
+      provider_profile_id: "e1-cartcalc-canned-canned-cartcalc-transport-canned-cartcalc-fixture",
+      provider_route_id: "canned-cartcalc-transport",
+      provider_model: "canned/cartcalc-fixture",
+      provider_endpoint: "https://provider.invalid/v1/chat/completions",
+      provider_transport_kind: "canned"
+    });
     expect(bundle.provider_run.condition_bundles.context_only_spec).toHaveLength(1);
     expect(bundle.provider_run.condition_bundles.feedback_capable_spec).toHaveLength(0);
     expect(bundle.provider_usage_totals.provider.cached_input_tokens).toBeGreaterThan(0);
@@ -83,6 +92,9 @@ describe("E1 CartCalc CLI", () => {
         output: 2
       }
     });
+    expect(
+      bundle.provider_run.condition_bundles.context_only_spec[0].run_manifest.provider_profile.provider_route_id
+    ).toBe("canned-cartcalc-transport");
     expect(bundle.oracle_scoring.checkpoint_end.context_only_spec[0].summary.pass_rate).toBe(1);
   });
 });

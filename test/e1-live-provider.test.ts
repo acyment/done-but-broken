@@ -202,6 +202,7 @@ describe("E1 live provider client seam", () => {
     });
     expect(bundle.run_manifest.provider_profile).toMatchObject({
       provider_kind: "openai_compatible",
+      provider_route_id: "test-openai-compatible-route",
       live_mode: { spend_cap_usd: 0.001, estimated_max_call_cost_usd: 0.01 }
     });
     expect(JSON.stringify(bundle)).not.toContain(API_KEY);
@@ -237,6 +238,7 @@ function makeProvider(input: {
 }): E1OpenAICompatibleAgentProvider {
   return new E1OpenAICompatibleAgentProvider({
     providerId: "openai-compatible-test-profile",
+    providerRouteId: "test-openai-compatible-route",
     model: "test/model",
     endpoint: "https://provider.example.test/v1/chat/completions",
     apiKey: API_KEY,

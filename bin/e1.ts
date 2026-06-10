@@ -25,6 +25,7 @@ type CliOptions = {
   checkpoints?: string[];
   model?: string;
   endpoint?: string;
+  routeId?: string;
   apiKeyEnv: string;
   maxEstimatedCallCostUsd: number;
   inputUsdPerMillionTokens: number;
@@ -97,6 +98,7 @@ async function run(options: CliOptions): Promise<string> {
   console.log(`status=${bundle.provider_run.run_summary.status}`);
   console.log(`conditions=${conditions.join(",")}`);
   console.log(`checkpoints=${bundle.checkpoints.join(",")}`);
+  console.log(`provider_route_id=${bundle.run_identity.provider_route_id}`);
   console.log(`provider_usage=${JSON.stringify(usage.provider)}`);
   console.log(`cached_input_tokens=${usage.provider.cached_input_tokens}`);
   console.log(`spend_usd=${usage.spend.actual_spend_usd.toFixed(9)}`);
@@ -124,13 +126,15 @@ function makeProvider(input: {
     (input.options.transport === "live"
       ? "https://openrouter.ai/api/v1/chat/completions"
       : "https://provider.invalid/v1/chat/completions");
+  const routeId = input.options.routeId ?? defaultProviderRouteId(input.options.transport, endpoint);
 
   if (!model) {
     throw new Error("--model is required when --transport=live");
   }
 
   return new E1OpenAICompatibleAgentProvider({
-    providerId: `e1-cartcalc-${input.options.transport}-${sanitizeProfileId(model)}`,
+    providerId: `e1-cartcalc-${input.options.transport}-${sanitizeProfileId(routeId)}-${sanitizeProfileId(model)}`,
+    providerRouteId: routeId,
     model,
     endpoint,
     apiKey: input.apiKey,
@@ -287,6 +291,7 @@ function parseArgs(args: string[]): { help: true } | { help: false; value: CliOp
       checkpoints: parseCheckpoints(optionalString(flags, "checkpoint") ?? optionalString(flags, "checkpoints")),
       model: optionalString(flags, "model") ?? Bun.env.E1_MODEL,
       endpoint: optionalString(flags, "endpoint") ?? Bun.env.E1_ENDPOINT,
+      routeId: optionalString(flags, "route-id") ?? Bun.env.E1_ROUTE_ID,
       apiKeyEnv: optionalString(flags, "api-key-env") ?? "OPENROUTER_API_KEY",
       maxEstimatedCallCostUsd: optionalNumber(flags, "max-call-cost") ?? 0.01,
       inputUsdPerMillionTokens: optionalNumber(flags, "input-usd-per-mtok") ?? 1,
@@ -315,6 +320,7 @@ function printHelp(): void {
       "  --run-id <id>",
       "  --model <id>                Required for --transport=live.",
       "  --endpoint <url>            Defaults to OpenRouter for --transport=live.",
+      "  --route-id <id>             Stable route identity stamped into bundle manifests.",
       "  --api-key-env <name>        Defaults to OPENROUTER_API_KEY."
     ].join("\n")
   );
@@ -404,4 +410,20 @@ function parseCheckpoints(value: string | undefined): string[] | undefined {
 
 function sanitizeProfileId(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "unknown";
+}
+
+function defaultProviderRouteId(transport: CliOptions["transport"], endpoint: string): string {
+  if (transport === "canned") {
+    return "canned-cartcalc-transport";
+  }
+
+  if (endpoint === "https://openrouter.ai/api/v1/chat/completions") {
+    return "openrouter-chat-completions";
+  }
+
+  if (endpoint === "http://localhost:4000/v1/chat/completions") {
+    return "litellm-chat-completions";
+  }
+
+  return `openai-compatible-chat-completions-${sanitizeProfileId(endpoint)}`;
 }

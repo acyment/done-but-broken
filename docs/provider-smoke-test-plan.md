@@ -24,9 +24,11 @@ Done means the command writes `runs/e1-cartcalc-canned-context-cp1/e1-task-packa
 - `schema_version=e1-task-package-provider-bundle-v0`
 - `selected_conditions=["context_only_spec"]`
 - `checkpoints=["1"]`
+- top-level `run_identity` includes `provider_profile_id`, `provider_route_id`, provider model, endpoint, and transport kind
+- per-checkpoint `run_manifest.provider_profile` includes the same `provider_route_id`
 - a redacted provider exchange record
 - provider usage with `fresh_input_tokens`, `cached_input_tokens`, and `output_tokens`
-- a non-zero `spend_usd`, labeled `derived_from_provider_usage_and_configured_prices`
+- a non-zero `spend_usd`, with `cost_of_record_source` labeled as `provider_reported` or `derived`
 - the configured `pricing_usd_per_million_tokens` table used for the spend estimate
 - hidden-oracle checkpoint scoring for CartCalc CP1
 
@@ -45,6 +47,7 @@ OPENROUTER_API_KEY=sk-or-... bun run e1 -- \
   --cap=1.00 \
   --checkpoint=1 \
   --model <cheapest-approved-model-id> \
+  --route-id openrouter-chat-completions \
   --runs-root runs \
   --run-id e1-cartcalc-provider-context-cp1
 ```
@@ -55,8 +58,10 @@ Record from stdout and the bundle:
 - provider usage block
 - dollar figure (`spend_usd`) and its derivation label
 - configured price table (`pricing_usd_per_million_tokens`)
+- provider route id from `run_identity.provider_route_id`
 - whether the real API response shape matches the canned fixtures closely enough for the E1 compatibility layer
 - whether cache-read usage is distinguishable as `cached_input_tokens`
+- whether provider-reported cost is present; if absent, `cost_of_record_source=derived`
 
 If the real call breaks, fix it as a provider-path defect and rerun the smoke. Do not promote the failure or the fix into a sealed task boundary.
 
@@ -81,6 +86,28 @@ Empirical answers:
 - Real API shape matched the canned compatibility fixture shape for E1: HTTP 200, `object=chat.completion`, `choices[0].message.content` as a string, `usage.prompt_tokens`, `usage.completion_tokens`, and `usage.prompt_tokens_details.cached_tokens`.
 - Cache-read usage is distinguishable through the compatibility layer: OpenRouter returned `cached_tokens=48`; the bundle recorded `cached_input_tokens=48`.
 - The OpenRouter smoke was a compatibility check, not a calibration route decision. CartCalc calibration should use the planned direct/LiteLLM path unless explicitly overridden.
+
+## Direct/LiteLLM Route Smoke
+
+Before calibration uses a direct or LiteLLM route, run the same one-checkpoint CartCalc smoke through that route and record the same fields. Example LiteLLM shape:
+
+```sh
+LITELLM_API_KEY=<configured-key> bun run e1 -- \
+  --task=cartcalc \
+  --arm=context \
+  --live \
+  --transport=live \
+  --cap=1.00 \
+  --checkpoint=1 \
+  --model <direct-provider-model-id> \
+  --endpoint http://localhost:4000/v1/chat/completions \
+  --route-id litellm-chat-completions \
+  --api-key-env LITELLM_API_KEY \
+  --runs-root runs \
+  --run-id e1-cartcalc-litellm-context-cp1
+```
+
+Done means the bundle stamps `provider_route_id=litellm-chat-completions` in both top-level run identity and the checkpoint provider profile, reports whether the route exposes `usage.cost`, and shows whether cached-token usage remains distinguishable through the route.
 
 Defects found and fixed before the clean rerun:
 

@@ -1,10 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { execFile } from "node:child_process";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 import {
   buildTaskSealManifest,
   loadReplayPlan,
@@ -18,6 +16,7 @@ import { runPilot } from "../src/runner";
 import { hashFile } from "../src/snapshot";
 import { loadTaskPackage } from "../src/task-package";
 import { createPricingDiscountOracle } from "../src/pricing-discount-oracle";
+import { execFileWithSpawnRetry } from "./support/exec-file";
 import { createFakeAgent } from "./support/fake-agent";
 import { createPricingNaiveAgent, createPricingReferenceAgent } from "./support/pricing-discount-agents";
 
@@ -32,7 +31,6 @@ const deepseekProControlProviderExecutionProfileId =
   "openrouter-loop-v1-modeldeepseek-deepseek-v4-pro-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-formatmodel-loop-response-json-schema-v1-requireparams1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
 const gemini25FlashNoSchemaControlProviderExecutionProfileId =
   "openrouter-loop-v1-modelgoogle-gemini-2.5-flash-routeopenrouter-chat-completions-parseropenrouter-response-parser-v1-requestopenrouter-chat-request-max-tokens-v1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1";
-const execFileAsync = promisify(execFile);
 
 afterEach(async () => {
   for (const root of tempRoots.splice(0)) {
@@ -277,7 +275,7 @@ describe("pricing-discount-lifecycle task", () => {
     );
     await writeFeedbackAssets({ workspace_path: workspacePath, packet });
 
-    const { stdout, stderr } = await execFileAsync("bun", ["run", "spec"], {
+    const { stdout, stderr } = await execFileWithSpawnRetry("bun", ["run", "spec"], {
       cwd: workspacePath,
       timeout: 15000,
       maxBuffer: 1024 * 1024

@@ -141,6 +141,11 @@ export type E1TaskPackageProviderBundle = {
     constants_version: string;
     prompt_template_hash: string;
     model_provider: "openai_compatible";
+    provider_profile_id: string;
+    provider_route_id: string;
+    provider_model: string;
+    provider_endpoint: string;
+    provider_transport_kind: "canned" | "live";
   };
   provider_run: E1TaskPackageProviderRunBundle;
   oracle_scoring: E1TaskPackageNoProviderBundle["oracle_scoring"];
@@ -484,6 +489,7 @@ export async function runE1TaskPackageProvider(input: {
   });
   const metrics = buildSelectedMetrics(input.constants, input.conditions, oracleScoring.checkpoint_end);
   const providerUsageTotals = aggregateProviderUsage(conditionBundles);
+  const providerIdentity = extractOpenAICompatibleRunIdentity(conditionBundles);
   const contentHashManifest = {
     task_package_hash: input.taskPackage.package_hash,
     oracle_package_hash: input.oraclePackage.package_hash,
@@ -503,7 +509,8 @@ export async function runE1TaskPackageProvider(input: {
       oracle_package_hash: input.oraclePackage.package_hash,
       constants_version: input.constants.version,
       prompt_template_hash: promptTemplateHash,
-      model_provider: "openai_compatible"
+      model_provider: "openai_compatible",
+      ...providerIdentity
     },
     provider_run: providerRun,
     oracle_scoring: oracleScoring,
@@ -870,6 +877,50 @@ function aggregateProviderUsage(
     totals.spend.provider_reported_spend_usd === null ? "derived" : "provider_reported";
 
   return totals;
+}
+
+function extractOpenAICompatibleRunIdentity(
+  conditionBundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>
+): Pick<
+  E1TaskPackageProviderBundle["run_identity"],
+  "provider_profile_id" | "provider_route_id" | "provider_model" | "provider_endpoint" | "provider_transport_kind"
+> {
+  let identity:
+    | Pick<
+        E1TaskPackageProviderBundle["run_identity"],
+        "provider_profile_id" | "provider_route_id" | "provider_model" | "provider_endpoint" | "provider_transport_kind"
+      >
+    | undefined;
+
+  for (const bundles of Object.values(conditionBundles)) {
+    for (const bundle of bundles) {
+      const profile = bundle.run_manifest.provider_profile;
+
+      if (!profile || profile.provider_kind !== "openai_compatible") {
+        continue;
+      }
+
+      const nextIdentity = {
+        provider_profile_id: profile.provider_profile_id,
+        provider_route_id: profile.provider_route_id,
+        provider_model: profile.model,
+        provider_endpoint: profile.endpoint,
+        provider_transport_kind: profile.transport_kind
+      };
+
+      if (identity && JSON.stringify(identity) !== JSON.stringify(nextIdentity)) {
+        throw new Error("E1 provider run used multiple openai-compatible provider identities");
+      }
+
+      identity = nextIdentity;
+    }
+  }
+
+  if (!identity) {
+    throw new Error("E1 provider bundle is missing openai-compatible provider identity");
+  }
+
+  return identity;
 }
 
 function noProviderRunForScoring(

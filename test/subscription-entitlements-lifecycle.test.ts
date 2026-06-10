@@ -1,10 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { execFile } from "node:child_process";
 import { cp, mkdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 import {
   buildTaskSealManifest,
   loadReplayPlan,
@@ -17,11 +15,11 @@ import { renderSpecPacket, writeFeedbackAssets } from "../src/renderer";
 import { runPilot } from "../src/runner";
 import { hashFile } from "../src/snapshot";
 import { loadTaskPackage } from "../src/task-package";
+import { execFileWithSpawnRetry } from "./support/exec-file";
 import { createFakeAgent } from "./support/fake-agent";
 
 const repoRoot = dirname(fileURLToPath(import.meta.url)).replace(/\/test$/, "");
 const tempRoots: string[] = [];
-const execFileAsync = promisify(execFile);
 
 afterEach(async () => {
   for (const root of tempRoots.splice(0)) {
@@ -292,7 +290,7 @@ describe("subscription-entitlements-lifecycle task draft", () => {
       packet
     });
 
-    const { stdout, stderr } = await execFileAsync("bun", ["run", "spec"], {
+    const { stdout, stderr } = await execFileWithSpawnRetry("bun", ["run", "spec"], {
       cwd: workspacePath,
       timeout: 10000,
       maxBuffer: 1024 * 1024

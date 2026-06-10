@@ -67,6 +67,7 @@ export type E1ProviderSpendRecord = E1SpendCapSnapshot & {
 export type E1OpenAICompatibleProviderProfile = {
   provider_kind: "openai_compatible";
   provider_profile_id: string;
+  provider_route_id: string;
   model: string;
   endpoint: string;
   transport_kind: E1ProviderTransportKind;
@@ -89,6 +90,7 @@ export type E1OpenAICompatibleProviderProfile = {
 
 export type E1OpenAICompatibleProviderOptions = {
   providerId: string;
+  providerRouteId: string;
   model: string;
   endpoint: string;
   apiKey: string;
@@ -236,6 +238,7 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
     return {
       provider_kind: "openai_compatible",
       provider_profile_id: this.options.providerId,
+      provider_route_id: this.options.providerRouteId,
       model: this.options.model,
       endpoint: this.options.endpoint,
       transport_kind: this.options.transport.transport_kind,

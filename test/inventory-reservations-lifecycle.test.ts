@@ -1,10 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { execFile } from "node:child_process";
 import { cp, mkdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 import {
   buildTaskSealManifest,
   loadReplayPlan,
@@ -18,12 +16,12 @@ import { runPilot } from "../src/runner";
 import { hashFile } from "../src/snapshot";
 import { loadTaskPackage } from "../src/task-package";
 import { createInventoryReservationsOracle } from "../src/inventory-reservations-oracle";
+import { execFileWithSpawnRetry } from "./support/exec-file";
 import { createFakeAgent } from "./support/fake-agent";
 
 const repoRoot = dirname(fileURLToPath(import.meta.url)).replace(/\/test$/, "");
 const tempRoots: string[] = [];
 const checkpointIds = ["I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09"];
-const execFileAsync = promisify(execFile);
 
 afterEach(async () => {
   for (const root of tempRoots.splice(0)) {
@@ -204,7 +202,7 @@ describe("inventory-reservations-lifecycle task draft", () => {
       packet
     });
 
-    const { stdout, stderr } = await execFileAsync("bun", ["run", "spec"], {
+    const { stdout, stderr } = await execFileWithSpawnRetry("bun", ["run", "spec"], {
       cwd: workspacePath,
       timeout: 10000,
       maxBuffer: 1024 * 1024
