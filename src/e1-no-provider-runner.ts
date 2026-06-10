@@ -224,7 +224,8 @@ export function assembleE1CheckpointConversation(input: {
         content: [
           "You are an E1 turn-based coding agent.",
           "Use protocol blocks exactly: <<<FILE path>>>, <<<VERIFY>>>, and <<<DONE>>>.",
-          "All edits must be full-file replacements. Unified diffs are not accepted."
+          "All edits must be full-file replacements. Unified diffs are not accepted.",
+          "Every <<<FILE path>>> or <<<VERIFY>>> block must close with <<<END>>> before any <<<DONE>>> token."
         ].join("\n")
       },
       {

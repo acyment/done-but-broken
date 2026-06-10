@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, describe, expect, test } from "bun:test";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -155,6 +155,8 @@ describe("E1 task/oracle package runner", () => {
     );
     expect(bundle.metrics.by_condition.feedback_capable_spec).toBe(1);
     expect(bundle.content_hash_manifest_hash).toHaveLength(64);
+    expect((await stat(join(runsRoot, "cartcalc-scripted-dev", "workspaces", "context_only_spec", "scratch"))).isDirectory()).toBe(true);
+    expect((await stat(join(runsRoot, "cartcalc-scripted-dev", "workspaces", "feedback_capable_spec", "scratch"))).isDirectory()).toBe(true);
   });
 });
 

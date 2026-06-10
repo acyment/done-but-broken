@@ -55,6 +55,8 @@ export type E1ProviderExchangeRecord = {
 };
 
 export type E1ProviderSpendRecord = E1SpendCapSnapshot & {
+  cost_basis: "derived_from_provider_usage_and_configured_prices";
+  pricing_usd_per_million_tokens: E1OpenAICompatibleProviderOptions["pricingUsdPerMillionTokens"];
   actual_call_cost_usd: number;
 };
 
@@ -70,6 +72,10 @@ export type E1OpenAICompatibleProviderProfile = {
     max_output_tokens_per_turn: number;
   };
   live_mode: E1SpendCapSnapshot;
+  cost_accounting: {
+    basis: "derived_from_provider_usage_and_configured_prices";
+    pricing_usd_per_million_tokens: E1OpenAICompatibleProviderOptions["pricingUsdPerMillionTokens"];
+  };
   redaction: {
     checked: true;
     secret_ids: string[];
@@ -163,6 +169,8 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
       provider_attempts: response.attempts,
       provider_spend: {
         ...this.spendSnapshot(),
+        cost_basis: "derived_from_provider_usage_and_configured_prices",
+        pricing_usd_per_million_tokens: this.options.pricingUsdPerMillionTokens,
         actual_call_cost_usd: actualCallCostUsd
       },
       provider_exchange: this.recordExchange(request, response.value)
@@ -226,6 +234,10 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
         max_output_tokens_per_turn: this.options.maxOutputTokens ?? 4000
       },
       live_mode: this.spendSnapshot(),
+      cost_accounting: {
+        basis: "derived_from_provider_usage_and_configured_prices",
+        pricing_usd_per_million_tokens: this.options.pricingUsdPerMillionTokens
+      },
       redaction: {
         checked: true,
         secret_ids: this.redactionSecrets().map((secret) => secret.id)

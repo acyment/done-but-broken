@@ -44,6 +44,8 @@ describe("E1 CartCalc CLI", () => {
     expect(stdout).toContain("provider_usage=");
     expect(stdout).toContain("spend_usd=");
     expect(stdout).toContain("cached_input_tokens=");
+    expect(stdout).toContain("spend_usd_basis=derived_from_provider_usage_and_configured_prices");
+    expect(stdout).toContain("pricing_usd_per_million_tokens=");
 
     const bundle = JSON.parse(
       await readFile(join(root, "runs", runId, "e1-task-package-provider-bundle.json"), "utf8")
@@ -55,7 +57,25 @@ describe("E1 CartCalc CLI", () => {
     expect(bundle.provider_run.condition_bundles.context_only_spec).toHaveLength(1);
     expect(bundle.provider_run.condition_bundles.feedback_capable_spec).toHaveLength(0);
     expect(bundle.provider_usage_totals.provider.cached_input_tokens).toBeGreaterThan(0);
+    expect(bundle.provider_usage_totals.spend.cost_basis).toBe(
+      "derived_from_provider_usage_and_configured_prices"
+    );
+    expect(bundle.provider_usage_totals.spend.pricing_usd_per_million_tokens).toEqual({
+      input: 1,
+      cached_input: 0.1,
+      output: 2
+    });
     expect(bundle.provider_usage_totals.spend.actual_spend_usd).toBeGreaterThan(0);
+    expect(
+      bundle.provider_run.condition_bundles.context_only_spec[0].run_manifest.provider_profile.cost_accounting
+    ).toEqual({
+      basis: "derived_from_provider_usage_and_configured_prices",
+      pricing_usd_per_million_tokens: {
+        input: 1,
+        cached_input: 0.1,
+        output: 2
+      }
+    });
     expect(bundle.oracle_scoring.checkpoint_end.context_only_spec[0].summary.pass_rate).toBe(1);
   });
 });

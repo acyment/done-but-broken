@@ -100,6 +100,8 @@ async function run(options: CliOptions): Promise<string> {
   console.log(`provider_usage=${JSON.stringify(usage.provider)}`);
   console.log(`cached_input_tokens=${usage.provider.cached_input_tokens}`);
   console.log(`spend_usd=${usage.spend.actual_spend_usd.toFixed(9)}`);
+  console.log(`spend_usd_basis=${usage.spend.cost_basis}`);
+  console.log(`pricing_usd_per_million_tokens=${JSON.stringify(usage.spend.pricing_usd_per_million_tokens)}`);
 
   return join(options.runsRoot, options.runId, "e1-task-package-provider-bundle.json");
 }

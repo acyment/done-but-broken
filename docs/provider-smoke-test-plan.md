@@ -26,7 +26,8 @@ Done means the command writes `runs/e1-cartcalc-canned-context-cp1/e1-task-packa
 - `checkpoints=["1"]`
 - a redacted provider exchange record
 - provider usage with `fresh_input_tokens`, `cached_input_tokens`, and `output_tokens`
-- a non-zero `spend_usd` derived from the compatibility pricing inputs
+- a non-zero `spend_usd`, labeled `derived_from_provider_usage_and_configured_prices`
+- the configured `pricing_usd_per_million_tokens` table used for the spend estimate
 - hidden-oracle checkpoint scoring for CartCalc CP1
 
 The command defaults to `--transport=canned`. `--live` enables the same spend gate that real provider calls use; it does not by itself call the network.
@@ -52,11 +53,39 @@ Record from stdout and the bundle:
 
 - bundle path
 - provider usage block
-- dollar figure (`spend_usd`)
+- dollar figure (`spend_usd`) and its derivation label
+- configured price table (`pricing_usd_per_million_tokens`)
 - whether the real API response shape matches the canned fixtures closely enough for the E1 compatibility layer
 - whether cache-read usage is distinguishable as `cached_input_tokens`
 
 If the real call breaks, fix it as a provider-path defect and rerun the smoke. Do not promote the failure or the fix into a sealed task boundary.
+
+## Latest E1 CartCalc Smoke Outcome
+
+`e1-cartcalc-provider-context-cp1-20260610-003` completed the current Step 2 smoke after two defect-fix reruns:
+
+- Bundle: `runs/e1-cartcalc-provider-context-cp1-20260610-003/e1-task-package-provider-bundle.json`
+- Model/provider: OpenRouter `mistralai/mistral-small-2603`, routed provider `Venice`
+- Arm/checkpoint: `context_only_spec`, CP1 only
+- Status: `completed`
+- Turn count: 1
+- Termination: `done`
+- Hidden oracle score: 4/4
+- Provider usage through the compatibility layer: `fresh_input_tokens=1020`, `cached_input_tokens=48`, `output_tokens=582`
+- Derived spend: `spend_usd=0.002188800`
+- Spend basis: `derived_from_provider_usage_and_configured_prices`
+- Configured price table: `{ "input": 1, "cached_input": 0.1, "output": 2 }` USD per million tokens
+- Provider-reported OpenRouter usage cost in raw response: `0.00063675`
+
+Empirical answers:
+
+- Real API shape matched the canned compatibility fixture shape for E1: HTTP 200, `object=chat.completion`, `choices[0].message.content` as a string, `usage.prompt_tokens`, `usage.completion_tokens`, and `usage.prompt_tokens_details.cached_tokens`.
+- Cache-read usage is distinguishable through the compatibility layer: OpenRouter returned `cached_tokens=48`; the bundle recorded `cached_input_tokens=48`.
+
+Defects found and fixed before the clean rerun:
+
+- `e1-cartcalc-provider-context-cp1-20260610-001`: model closed a `<<<FILE>>>` block with `<<<DONE>>>` instead of `<<<END>>>`; prompt template now explicitly states that `FILE` and `VERIFY` blocks must close with `<<<END>>>` before `<<<DONE>>>`.
+- `e1-cartcalc-provider-context-cp1-20260610-002`: package-mounted workspaces lacked `scratch/`; `mountTaskWorkspace` now creates `scratch/` for every E1 condition workspace.
 
 ## Historical OpenRouter Mitigation Profile
 

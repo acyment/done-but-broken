@@ -65,6 +65,9 @@ describe("E1 no-provider runner", () => {
 
     expect(context.thread_scope).toBe("fresh_per_checkpoint");
     expect(context.messages.map((message) => message.content).join("\n")).toContain("Visible rule A");
+    expect(context.messages.map((message) => message.content).join("\n")).toContain(
+      "Every <<<FILE path>>> or <<<VERIFY>>> block must close with <<<END>>> before any <<<DONE>>> token."
+    );
     expect(feedback.messages.map((message) => message.content).join("\n")).toContain("Visible rule A");
     expect(context.messages.map((message) => message.content).join("\n")).not.toContain("bun run spec");
     expect(feedback.messages.map((message) => message.content).join("\n")).toContain("bun run spec");

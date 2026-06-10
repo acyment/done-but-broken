@@ -74,6 +74,14 @@ describe("E1 live provider client seam", () => {
       output_tokens: 7
     });
     expect(response.provider_attempts).toEqual([{ attempt: 1, outcome: "success" }]);
+    expect(response.provider_spend).toMatchObject({
+      cost_basis: "derived_from_provider_usage_and_configured_prices",
+      pricing_usd_per_million_tokens: {
+        input: 1,
+        cached_input: 0.1,
+        output: 2
+      }
+    });
     expect(response.provider_exchange?.redacted_request.headers.authorization).toBe(
       "Bearer [REDACTED:api_key]"
     );
