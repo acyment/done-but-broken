@@ -66,7 +66,13 @@ describe("E1 no-provider runner", () => {
     expect(context.thread_scope).toBe("fresh_per_checkpoint");
     expect(context.messages.map((message) => message.content).join("\n")).toContain("Visible rule A");
     expect(context.messages.map((message) => message.content).join("\n")).toContain(
-      "Every <<<FILE path>>> or <<<VERIFY>>> block must close with <<<END>>> before any <<<DONE>>> token."
+      "Every <<<FILE path>>> or <<<VERIFY>>> block must close with <<<END>>> on its own line before any <<<DONE>>> token."
+    );
+    expect(context.messages.map((message) => message.content).join("\n")).toContain(
+      "Every protocol delimiter must be alone on its own line with no leading spaces and no trailing content."
+    );
+    expect(context.messages.map((message) => message.content).join("\n")).toContain(
+      "Never write inline blocks such as <<<VERIFY>>>command<<<END>>> or <<<FILE path>>>content."
     );
     expect(feedback.messages.map((message) => message.content).join("\n")).toContain("Visible rule A");
     expect(context.messages.map((message) => message.content).join("\n")).not.toContain("bun run spec");

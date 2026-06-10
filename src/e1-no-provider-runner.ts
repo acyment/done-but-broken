@@ -225,7 +225,12 @@ export function assembleE1CheckpointConversation(input: {
           "You are an E1 turn-based coding agent.",
           "Use protocol blocks exactly: <<<FILE path>>>, <<<VERIFY>>>, and <<<DONE>>>.",
           "All edits must be full-file replacements. Unified diffs are not accepted.",
-          "Every <<<FILE path>>> or <<<VERIFY>>> block must close with <<<END>>> before any <<<DONE>>> token."
+          "Every protocol delimiter must be alone on its own line with no leading spaces and no trailing content.",
+          "Open file blocks with exactly <<<FILE relative/path.ts>>> on one line; file content starts on the next line.",
+          "Open verification blocks with exactly <<<VERIFY>>> on one line; put the command on the next line.",
+          "Never write inline blocks such as <<<VERIFY>>>command<<<END>>> or <<<FILE path>>>content.",
+          "Every <<<FILE path>>> or <<<VERIFY>>> block must close with <<<END>>> on its own line before any <<<DONE>>> token.",
+          "When finished, write exactly <<<DONE>>> on its own line."
         ].join("\n")
       },
       {
