@@ -137,9 +137,20 @@ export type E1TaskPackageProviderRunBundle = {
   };
 };
 
+export const E1_RUN_CLASSIFICATIONS = [
+  "calibration",
+  "difficulty_probe",
+  "causal_pilot",
+  "diagnostic_invalid"
+] as const;
+
+export type E1RunClassification = (typeof E1_RUN_CLASSIFICATIONS)[number];
+
 export type E1TaskPackageProviderBundle = {
   schema_version: "e1-task-package-provider-bundle-v0";
   grade: "dev" | "evidence";
+  run_classification: E1RunClassification;
+  invalid_run: boolean;
   selected_conditions: ConditionId[];
   checkpoints: string[];
   run_identity: {
@@ -397,6 +408,7 @@ export async function runE1TaskPackageProvider(input: {
   protocolDocumentHash?: string;
   conditions: ConditionId[];
   checkpoints?: string[];
+  runClassification?: E1RunClassification;
   providerFactory: (input: E1CheckpointProviderFactoryInput) => E1AgentProvider;
   maxModelTurns?: number;
   maxVerificationExecutions?: number;
@@ -406,6 +418,12 @@ export async function runE1TaskPackageProvider(input: {
   await validateE1DependencyLockfileBoundary(process.cwd());
   assertPackageCompatibility(input.taskPackage, input.oraclePackage);
   assertSelectedConditions(input.conditions);
+  const runClassification = input.runClassification ?? "calibration";
+
+  if (!E1_RUN_CLASSIFICATIONS.includes(runClassification)) {
+    throw new Error(`Unknown E1 run classification ${String(runClassification)}`);
+  }
+
   const checkpoints = input.checkpoints ?? input.taskPackage.checkpoints;
   assertSelectedCheckpoints(input.taskPackage, checkpoints);
   const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
@@ -529,6 +547,8 @@ export async function runE1TaskPackageProvider(input: {
   const bundle: E1TaskPackageProviderBundle = {
     schema_version: "e1-task-package-provider-bundle-v0",
     grade: bundleGrade(input.constants, input.protocolDocumentHash),
+    run_classification: runClassification,
+    invalid_run: runStatus !== "completed",
     selected_conditions: input.conditions,
     checkpoints,
     run_identity: {
@@ -583,7 +603,7 @@ export function calculateE1PromptTemplateHash(constants: E1SealedConstants): str
   );
 }
 
-async function mountTaskWorkspace(input: {
+export async function mountTaskWorkspace(input: {
   taskPackage: E1TaskPackage;
   conditionId: ConditionId;
   workspacePath: string;
@@ -695,7 +715,7 @@ function inputSpec(taskPackage: E1TaskPackage, checkpointId: string): string {
   return spec;
 }
 
-async function scoreNoProviderRun(input: {
+export async function scoreNoProviderRun(input: {
   taskPackage: E1TaskPackage;
   oraclePackage: E1OraclePackage;
   noProviderRun: E1NoProviderRunBundle;
@@ -847,7 +867,7 @@ function cumulativeCases(
   );
 }
 
-function buildMetrics(
+export function buildMetrics(
   constants: E1SealedConstants,
   checkpointEnd: E1TaskPackageNoProviderBundle["oracle_scoring"]["checkpoint_end"]
 ): E1TaskPackageNoProviderBundle["metrics"] {
@@ -863,7 +883,7 @@ function buildMetrics(
   };
 }
 
-function buildSelectedMetrics(
+export function buildSelectedMetrics(
   constants: E1SealedConstants,
   conditions: ConditionId[],
   checkpointEnd: E1TaskPackageNoProviderBundle["oracle_scoring"]["checkpoint_end"]
@@ -982,7 +1002,7 @@ function extractOpenAICompatibleRunIdentity(
   return identity;
 }
 
-function noProviderRunForScoring(
+export function noProviderRunForScoring(
   constants: E1SealedConstants,
   checkpoints: string[],
   conditionBundles: Record<ConditionId, E1NoProviderCheckpointBundle[]>
@@ -1016,7 +1036,7 @@ function flattenSummary(input: { checkpoint_id: string; summary: E1OracleTurnSco
   };
 }
 
-function bundleGrade(constants: E1SealedConstants, protocolDocumentHash: string | undefined): "dev" | "evidence" {
+export function bundleGrade(constants: E1SealedConstants, protocolDocumentHash: string | undefined): "dev" | "evidence" {
   return constants.status === constants.bundle_grading.evidence_requires_constants_status &&
     Boolean(protocolDocumentHash)
     ? "evidence"

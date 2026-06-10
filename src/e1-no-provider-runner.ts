@@ -521,7 +521,11 @@ export async function replayE1NoProviderCheckpointBundle(input: {
   constants: E1SealedConstants;
   workspacePath: string;
   bundle: E1NoProviderCheckpointBundle;
-}): Promise<{ final_workspace_hash: string; final_workspace_code_hash: string }> {
+}): Promise<{
+  final_workspace_hash: string;
+  final_workspace_code_hash: string;
+  turn_hash_mismatches: Array<{ turn_index: number; expected: string; actual: string }>;
+}> {
   const protectedPathBaseline = await hashProtectedPaths(input.workspacePath);
   const state = new E1CheckpointTurnState({
     maxModelTurns: input.bundle.run_manifest.budget.max_model_turns,
@@ -537,6 +541,8 @@ export async function replayE1NoProviderCheckpointBundle(input: {
     outputLimit: input.constants.turn_protocol.verification_output_token_cap
   });
 
+  const turnHashMismatches: Array<{ turn_index: number; expected: string; actual: string }> = [];
+
   for (const record of input.bundle.turn_records) {
     await adapter.runTurn({
       conditionId: input.bundle.run_manifest.condition_id,
@@ -546,11 +552,22 @@ export async function replayE1NoProviderCheckpointBundle(input: {
       state,
       tokenUsage: record.provider_usage
     });
+
+    const workspaceAfter = await hashWorkspace(input.workspacePath);
+
+    if (workspaceAfter.hash !== record.workspace_after_hash) {
+      turnHashMismatches.push({
+        turn_index: record.turn_index,
+        expected: record.workspace_after_hash,
+        actual: workspaceAfter.hash
+      });
+    }
   }
 
   return {
     final_workspace_hash: (await hashWorkspace(input.workspacePath)).hash,
-    final_workspace_code_hash: (await captureWorkspaceCode(input.workspacePath)).hash
+    final_workspace_code_hash: (await captureWorkspaceCode(input.workspacePath)).hash,
+    turn_hash_mismatches: turnHashMismatches
   };
 }
 

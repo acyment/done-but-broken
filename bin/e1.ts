@@ -9,9 +9,11 @@ import {
   type E1ProviderTransportRequest
 } from "../src/e1-live-provider";
 import {
+  E1_RUN_CLASSIFICATIONS,
   loadE1OraclePackage,
   loadE1TaskPackage,
-  runE1TaskPackageProvider
+  runE1TaskPackageProvider,
+  type E1RunClassification
 } from "../src/e1-package-runner";
 
 type CliOptions = {
@@ -33,6 +35,7 @@ type CliOptions = {
   outputUsdPerMillionTokens: number;
   maxOutputTokens: number;
   temperature: number;
+  classification: E1RunClassification;
 };
 
 const repoRoot = resolve(import.meta.dir, "..");
@@ -78,6 +81,7 @@ async function run(options: CliOptions): Promise<string> {
     runId: options.runId,
     conditions,
     checkpoints: options.checkpoints,
+    runClassification: options.classification,
     providerFactory: ({ conditionId }) => {
       const existing = providers.get(conditionId);
 
@@ -95,6 +99,8 @@ async function run(options: CliOptions): Promise<string> {
   const usage = bundle.provider_usage_totals;
 
   console.log(`run_id=${options.runId}`);
+  console.log(`run_classification=${bundle.run_classification}`);
+  console.log(`invalid_run=${bundle.invalid_run}`);
   console.log(`status=${bundle.provider_run.run_summary.status}`);
   console.log(`conditions=${conditions.join(",")}`);
   console.log(`checkpoints=${bundle.checkpoints.join(",")}`);
@@ -298,9 +304,18 @@ function parseArgs(args: string[]): { help: true } | { help: false; value: CliOp
       cachedInputUsdPerMillionTokens: optionalNumber(flags, "cached-input-usd-per-mtok") ?? 0.1,
       outputUsdPerMillionTokens: optionalNumber(flags, "output-usd-per-mtok") ?? 2,
       maxOutputTokens: optionalInteger(flags, "max-output-tokens") ?? 4000,
-      temperature: optionalNumber(flags, "temperature") ?? 0.2
+      temperature: optionalNumber(flags, "temperature") ?? 0.2,
+      classification: parseClassification(optionalString(flags, "classification") ?? "calibration")
     }
   };
+}
+
+function parseClassification(value: string): E1RunClassification {
+  if ((E1_RUN_CLASSIFICATIONS as readonly string[]).includes(value)) {
+    return value as E1RunClassification;
+  }
+
+  throw new Error(`--classification must be one of ${E1_RUN_CLASSIFICATIONS.join(", ")}`);
 }
 
 function printHelp(): void {
@@ -321,7 +336,9 @@ function printHelp(): void {
       "  --model <id>                Required for --transport=live.",
       "  --endpoint <url>            Defaults to OpenRouter for --transport=live.",
       "  --route-id <id>             Stable route identity stamped into bundle manifests.",
-      "  --api-key-env <name>        Defaults to OPENROUTER_API_KEY."
+      "  --api-key-env <name>        Defaults to OPENROUTER_API_KEY.",
+      "  --classification <value>    Precommitted run classification: calibration (default),",
+      "                              difficulty_probe, causal_pilot, or diagnostic_invalid."
     ].join("\n")
   );
 }
