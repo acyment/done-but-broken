@@ -1,0 +1,123 @@
+[
+  {
+    "check_id": "CP1-line-mug",
+    "commitment_id": "CP1-line-subtotal",
+    "checkpoint_introduced": "1",
+    "call": "lineSubtotalCents",
+    "input": { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+    "expected": 2000
+  },
+  {
+    "check_id": "CP1-line-sticker",
+    "commitment_id": "CP1-line-subtotal",
+    "checkpoint_introduced": "1",
+    "call": "lineSubtotalCents",
+    "input": { "sku": "sticker", "unitCents": 125, "quantity": 3 },
+    "expected": 375
+  },
+  {
+    "check_id": "CP1-subtotal-mixed",
+    "commitment_id": "CP1-cart-subtotal",
+    "checkpoint_introduced": "1",
+    "call": "subtotalCents",
+    "input": [
+      { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+      { "sku": "pin", "unitCents": 500, "quantity": 1 }
+    ],
+    "expected": 2500
+  },
+  {
+    "check_id": "CP1-total-no-discount",
+    "commitment_id": "CP1-total",
+    "checkpoint_introduced": "1",
+    "call": "totalCents",
+    "input": {
+      "items": [
+        { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+        { "sku": "pin", "unitCents": 500, "quantity": 1 }
+      ]
+    },
+    "expected": 2500
+  },
+  {
+    "check_id": "CP2-discount-bps",
+    "commitment_id": "CP2-basis-point-discount",
+    "checkpoint_introduced": "2",
+    "call": "discountCents",
+    "input": {
+      "items": [
+        { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+        { "sku": "pin", "unitCents": 500, "quantity": 1 }
+      ],
+      "discountBps": 1000
+    },
+    "expected": 250
+  },
+  {
+    "check_id": "CP2-total-discounted",
+    "commitment_id": "CP2-discounted-total",
+    "checkpoint_introduced": "2",
+    "call": "totalCents",
+    "input": {
+      "items": [
+        { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+        { "sku": "pin", "unitCents": 500, "quantity": 1 }
+      ],
+      "discountBps": 1000
+    },
+    "expected": 2250
+  },
+  {
+    "check_id": "CP2-discount-floors",
+    "commitment_id": "CP2-basis-point-discount",
+    "checkpoint_introduced": "2",
+    "call": "discountCents",
+    "input": {
+      "items": [{ "sku": "rounding", "unitCents": 333, "quantity": 1 }],
+      "discountBps": 1000
+    },
+    "expected": 33
+  },
+  {
+    "check_id": "CP3-discount-cap",
+    "commitment_id": "CP3-discount-cap",
+    "checkpoint_introduced": "3",
+    "call": "discountCents",
+    "input": {
+      "items": [
+        { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+        { "sku": "pin", "unitCents": 500, "quantity": 1 }
+      ],
+      "discountBps": 2000,
+      "discountCapCents": 100
+    },
+    "expected": 100
+  },
+  {
+    "check_id": "CP3-total-capped",
+    "commitment_id": "CP3-capped-total",
+    "checkpoint_introduced": "3",
+    "call": "totalCents",
+    "input": {
+      "items": [
+        { "sku": "mug", "unitCents": 1000, "quantity": 2 },
+        { "sku": "pin", "unitCents": 500, "quantity": 1 }
+      ],
+      "discountBps": 2000,
+      "discountCapCents": 100
+    },
+    "expected": 2400
+  },
+  {
+    "check_id": "CP3-discount-below-cap",
+    "commitment_id": "CP3-discount-cap",
+    "checkpoint_introduced": "3",
+    "call": "discountCents",
+    "input": {
+      "items": [{ "sku": "book", "unitCents": 1000, "quantity": 1 }],
+      "discountBps": 1000,
+      "discountCapCents": 200
+    },
+    "expected": 100
+  }
+]

@@ -2,7 +2,7 @@
 
 Status: draft consolidation protocol. No provider run is authorized by this document. Billing v2 design remains blocked until `e1-harness-calibration-step0-v0` passes.
 
-Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.2.2`).
+Canonical machine-readable constants: `docs/protocols/e1-frontier-sealed-constants-v0.2.json` (`version=0.3.0`).
 
 The JSON file is the constants appendix future L1/L2 runtime code must load and record by hash. This markdown file is the human-readable companion. Do not duplicate constants into implementation code without reading the JSON boundary.
 
@@ -37,7 +37,7 @@ L0 exists today:
 - protected-path hashing;
 - verification-budget counters.
 
-L1 parser/shakedown, the no-provider local turn adapter shell, no-provider conversation/checkpoint runner, and no-provider multi-checkpoint/arm shakedown runner exist; live provider conversation assembly is still missing:
+L1 parser/shakedown, the no-provider local turn adapter shell, no-provider conversation/checkpoint runner, no-provider multi-checkpoint/arm shakedown runner, and dev-grade no-provider task/oracle package runner exist; live provider conversation assembly is still missing:
 
 - parse model output into protocol blocks;
 - strip one outer markdown fence layer before parsing;
@@ -49,18 +49,16 @@ L1 parser/shakedown, the no-provider local turn adapter shell, no-provider conve
 - assemble fresh per-checkpoint no-provider conversations;
 - run scripted-agent checkpoint loops with bundle emission and replay checks;
 - run paired no-provider multi-checkpoint/arm shakedowns with checkpoint continuation rules;
+- seed workspaces from separate task packages and score turn snapshots against separate hidden oracle packages in dev-grade no-provider runs;
 - assemble live provider turns with cached-prefix accounting;
 - call providers.
 
 Full evidence-generating L2 is still missing:
 
-- seed arm workspaces from task packages;
-- advance checkpoints with hidden-oracle scoring;
-- preserve `scratch/`;
 - emit publication-grade replayable artifact bundles;
 - integrate live providers.
 
-CartCalc cannot be considered Step 0 complete until live provider conversation assembly and full task-package/oracle L2 exist and one orchestrator command runs the full calibration bundle.
+CartCalc cannot be considered Step 0 complete until live provider conversation assembly exists and one orchestrator command runs the full calibration bundle. The current CartCalc runner is dev-grade no-provider shakedown only.
 
 ## Conversation Thread Scope
 
@@ -73,6 +71,18 @@ The assembled checkpoint-start prompts for both arms are part of the parity surf
 ## Checkpoint Continuation
 
 Checkpoint termination does not automatically end the run. `done`, `agent_stalled`, and `budget_exhausted` snapshot the workspace as-is and continue into the next checkpoint from that same workspace. For non-done terminations, the checkpoint's new assertions score as failed. `invalid_integrity` terminates the entire run because protected-path drift invalidates the evidence channel.
+
+## Package And Oracle Boundary
+
+Task packages and oracle packages are separate artifacts with separate hashes. The task package is mounted into arm workspaces and may contain visible specs plus feedback assets for `feedback_capable_spec`. The oracle package is loaded only by the external scorer and is never copied into an agent workspace.
+
+Oracle scoring runs on every turn snapshot. The primary endpoint is computed over checkpoint-end snapshots; all-turn snapshots remain available for regression birth/recovery analysis.
+
+The sealed E1 AUC formula is `checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1`: for each checkpoint-end snapshot `k`, compute the fraction of cumulative hidden assertions introduced at any checkpoint `j <= k` that pass, then mean those pass rates equally over checkpoints.
+
+Every task and oracle package declares a fixed `virtual_now`. Reachable `Date.now`, `new Date()`, and `performance.now` references in package-controlled files are package-validation failures.
+
+Bundles are self-labeled. A bundle emitted from `draft-pre-seal` constants or without a protocol-document hash is `dev`; evidence-grade emission requires sealed constants and a recorded protocol-document hash.
 
 ## Editing And Parser Policy
 

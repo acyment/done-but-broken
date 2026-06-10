@@ -1,6 +1,6 @@
 # e1-harness-calibration-step0-v0
 
-Status: draft calibration protocol. Local E1 L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, a no-provider scripted checkpoint runner, and a no-provider multi-checkpoint/arm shakedown runner are implemented; the live provider conversation adapter, full task-package/oracle L2 run orchestrator, CartCalc task, and provider calibration are not implemented. No provider run is authorized by this document.
+Status: draft calibration protocol. Local E1 L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, a no-provider scripted checkpoint runner, a no-provider multi-checkpoint/arm shakedown runner, and a dev-grade no-provider CartCalc task/oracle package runner are implemented; the live provider conversation adapter, evidence-grade L2 run orchestrator, and provider calibration are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -14,7 +14,7 @@ Step 0 is not complete until all three layers exist:
 
 - L0 mechanics library: patch application, command validation, protected-path integrity, verification execution, output truncation/hashing, and local counters.
 - L1 agent loop adapter: parse model output blocks, consume local turns through L0, assemble checkpoint conversations, inject harness notices and verification output, debit the token ledger, and call providers. Parser/shakedown, local turn consumption, and no-provider conversation assembly exist; live provider conversation assembly remains missing.
-- L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle. A no-provider multi-checkpoint/arm shakedown runner exists for scripted agents; full task-package seeding, hidden-oracle scoring, live-provider orchestration, and publication-grade artifact emission remain missing.
+- L2 run orchestrator: seed workspaces, configure arms, advance checkpoints, persist scratch, snapshot each turn, classify terminations, and emit the artifact bundle. A dev-grade no-provider task/oracle package runner exists for scripted agents with hidden-oracle scoring on every turn snapshot; live-provider orchestration and publication-grade artifact emission remain missing.
 
 The L0/L1/L2 implementation must cover:
 
@@ -34,7 +34,7 @@ The L0/L1/L2 implementation must cover:
 - budget counters for turns, verification executions, model output tokens, injected verification-output tokens, and cached-prefix cost as a separate statistic;
 - deterministic model-facing replacement confirmations;
 - audit-only unified diffs between pre/post snapshots;
-- per-turn logging: command, exit code, wall time, full-output hash, shown output, and workspace snapshot.
+- per-turn logging: command, exit code, wall time, full-output hash, shown output, workspace snapshot, and hidden-oracle score.
 - assembled-conversation parity: both arms' checkpoint-start prompts are diffed, and only the sealed arm-difference allowlist is permitted.
 
 Every item above can contaminate future runs if it silently malfunctions. None requires Billing v2 to exist.
@@ -43,15 +43,15 @@ Every item above can contaminate future runs if it silently malfunctions. None r
 
 `CartCalc` is deliberately trivial.
 
-- four small TypeScript modules: `types.ts`, `pricing.ts`, `discounts.ts`, and `totals.ts`;
+- one small TypeScript module: `src/cartcalc.ts`;
 - 3 checkpoints:
-  - CP1: line totals with rounding;
-  - CP2: percent discount;
-  - CP3: discount cap rule that perturbs CP2 and requires coordinated edits to `discounts.ts` and `totals.ts`;
-- visible Gherkin/spec text;
+  - 1: line and cart subtotals;
+  - 2: basis-point discount with flooring;
+  - 3: discount cap rule that perturbs checkpoint 2 behavior;
+- visible semantic spec text;
 - runnable steps for `feedback_capable_spec`;
 - 10-assertion hidden mini-oracle;
-- one deliberately noisy CP2 failure fixture that emits more than 4000 tokens so head+tail truncation is tested against real Bun output shape.
+- one scripted checkpoint 2 regression/recovery fixture that fails the hidden discount assertions on the first turn and fixes them on the second turn.
 
 The task should be easy for both arms. A difficult CartCalc result means the harness or prompt format is defective.
 
@@ -193,7 +193,7 @@ If worst-case Stage B cannot be funded, do not start Stage A.
 
 Do not build Billing v2 until:
 
-- L1 and L2 are implemented and a CartCalc run executes end-to-end from one orchestrator command, emitting the full artifact bundle;
+- L1 and L2 are implemented and a CartCalc run executes end-to-end from one orchestrator command, emitting the full artifact bundle; the current dev-grade no-provider package/oracle runner is a partial prerequisite, not the provider-ready gate;
 - L1-shakedown passes scripted fake agents and one cheap real model no-op-rate check;
 - the Layer 1 battery is green on macOS local and Ubuntu 24 with the same pinned Bun version;
 - the stability gate records 10 consecutive green full-suite runs on both environments;

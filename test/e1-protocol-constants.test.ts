@@ -16,7 +16,7 @@ describe("E1 frontier sealed constants", () => {
     const constants = await loadE1Constants(CONSTANTS_PATH);
 
     expect(constants.schema).toBe("e1-sealed-constants");
-    expect(constants.version).toBe("0.2.2");
+    expect(constants.version).toBe("0.3.0");
     expect(constants.condition_ids).toEqual(["context_only_spec", "feedback_capable_spec"]);
     expect(constants.path_grammar.regex).toBe("^[A-Za-z0-9._-][A-Za-z0-9._/-]*$");
     expect(constants.path_grammar.relative_only).toBe(true);
@@ -34,6 +34,14 @@ describe("E1 frontier sealed constants", () => {
     expect(constants.checkpoint_continuation.agent_stalled).toBe("continue_from_workspace_as_is");
     expect(constants.checkpoint_continuation.budget_exhausted).toBe("continue_from_workspace_as_is");
     expect(constants.checkpoint_continuation.invalid_integrity).toBe("terminate_run");
+    expect(constants.oracle_scoring.cadence).toBe("every_turn_snapshot");
+    expect(constants.metrics.regression_free_auc.formula_id).toBe(
+      "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1"
+    );
+    expect(constants.package_separation.task_package_visibility).toBe("mounted_into_agent_workspaces");
+    expect(constants.package_separation.oracle_package_visibility).toBe("external_never_mounted");
+    expect(constants.virtual_clock.required).toBe(true);
+    expect(constants.bundle_grading.dev_when_constants_status).toBe("draft-pre-seal");
     expect(constants.audit.integrity_rule).toContain("replacement application");
     expect(constants.audit.integrity_rule).toContain("verification execution");
     expect(providerSealBlockers(constants)).toEqual(["token_estimator"]);

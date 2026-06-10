@@ -1,0 +1,20 @@
+{
+  "schema_version": "e1-task-package-v0",
+  "task_id": "e1-cartcalc",
+  "task_version": "e1-cartcalc-v0",
+  "virtual_now": "2026-01-01T00:00:00.000Z",
+  "checkpoints": ["1", "2", "3"],
+  "template_workspace": "template-workspace",
+  "readme_path": "template-workspace/README.md",
+  "visible_specs": {
+    "1": "visible-specs/CP1.md",
+    "2": "visible-specs/CP2.md",
+    "3": "visible-specs/CP3.md"
+  },
+  "feedback_assets": "feedback-assets/manifest.json",
+  "billing_v2_future_sections": {
+    "interaction_graph": [],
+    "friction_registry": [],
+    "escalation_package": []
+  }
+}

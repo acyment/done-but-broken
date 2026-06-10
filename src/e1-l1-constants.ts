@@ -26,6 +26,34 @@ export interface E1SealedConstants {
     invalid_integrity: "terminate_run";
     non_done_scoring_rule: string;
   };
+  package_separation: {
+    task_package_visibility: "mounted_into_agent_workspaces";
+    oracle_package_visibility: "external_never_mounted";
+    hash_rule: string;
+  };
+  oracle_scoring: {
+    cadence: "every_turn_snapshot";
+    primary_endpoint_subset: "checkpoint_end_snapshots";
+    secondary_endpoint_subset: "all_turn_snapshots";
+  };
+  metrics: {
+    regression_free_auc: {
+      formula_id: "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1";
+      formula: string;
+      checkpoint_weighting: "equal";
+      assertion_denominator: "cumulative_hidden_assertions_introduced_through_checkpoint";
+    };
+  };
+  virtual_clock: {
+    required: true;
+    package_field: "virtual_now";
+    real_clock_references_rejected: string[];
+  };
+  bundle_grading: {
+    dev_when_constants_status: "draft-pre-seal";
+    evidence_requires_constants_status: "sealed";
+    evidence_requires_protocol_document_hash: true;
+  };
   turn_protocol: {
     max_turns_per_checkpoint: number;
     max_verification_executions_per_checkpoint: number;
@@ -104,6 +132,11 @@ const TOP_LEVEL_KEYS = [
   "conversation",
   "arm_difference_allowlist",
   "checkpoint_continuation",
+  "package_separation",
+  "oracle_scoring",
+  "metrics",
+  "virtual_clock",
+  "bundle_grading",
   "turn_protocol",
   "stall_reporting",
   "block_grammar",
@@ -186,6 +219,29 @@ export function validateE1Constants(raw: unknown): E1SealedConstants {
 
   if (constants.checkpoint_continuation.invalid_integrity !== "terminate_run") {
     throw new E1ConstantsValidationError("invalid_integrity must terminate the run");
+  }
+
+  if (constants.package_separation.oracle_package_visibility !== "external_never_mounted") {
+    throw new E1ConstantsValidationError("oracle package must be external and never mounted");
+  }
+
+  if (constants.oracle_scoring.cadence !== "every_turn_snapshot") {
+    throw new E1ConstantsValidationError("oracle_scoring.cadence must be every_turn_snapshot");
+  }
+
+  if (
+    constants.metrics.regression_free_auc.formula_id !==
+    "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1"
+  ) {
+    throw new E1ConstantsValidationError("regression_free_auc formula_id is not sealed");
+  }
+
+  if (constants.virtual_clock.required !== true) {
+    throw new E1ConstantsValidationError("virtual_clock.required must be true");
+  }
+
+  if (constants.bundle_grading.evidence_requires_protocol_document_hash !== true) {
+    throw new E1ConstantsValidationError("evidence bundles must require a protocol document hash");
   }
 
   validateRegex("block_grammar.file_open_regex", constants.block_grammar.file_open_regex);

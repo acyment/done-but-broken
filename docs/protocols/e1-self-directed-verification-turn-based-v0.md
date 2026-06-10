@@ -1,6 +1,6 @@
 # e1-self-directed-verification-turn-based-v0
 
-Status: draft protocol profile. Step 0 local L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, a scripted no-provider checkpoint runner, and a no-provider multi-checkpoint/arm shakedown runner are implemented; the live provider conversation adapter and full task-package/oracle L2 run orchestrator are not implemented. No provider run is authorized by this document.
+Status: draft protocol profile. Step 0 local L0 mechanics, L1 parser shakedown, no-provider L1 turn consumption, a scripted no-provider checkpoint runner, a no-provider multi-checkpoint/arm shakedown runner, and a dev-grade no-provider task/oracle package runner are implemented; the live provider conversation adapter and evidence-grade L2 run orchestrator are not implemented. No provider run is authorized by this document.
 
 ## Purpose
 
@@ -14,13 +14,13 @@ This is the industry-relevant question. A production frontier coding agent can u
 
 ## Layer Decomposition
 
-"E1 harness" means three layers. L0 exists today, the L1 block parser exists, and no-provider L1/L2 shakedown support exists; live provider conversation integration and full task-package/oracle L2 orchestration do not.
+"E1 harness" means three layers. L0 exists today, the L1 block parser exists, and no-provider L1/L2 shakedown support exists; live provider conversation integration and evidence-grade L2 orchestration do not.
 
 - L0 mechanics library: full-file replacement parsing/application, command validation, protected-path checks, verification execution, truncation, hashes, and counters.
 - L1 agent loop adapter: parses model output into protocol blocks, assembles model turns, maintains the provider conversation/cached prefix, injects verification output, debits the token ledger, and talks to providers. Parser, local turn consumption, and no-provider checkpoint conversation assembly are implemented in `src/e1-l1-parser.ts`, `src/e1-turn-adapter.ts`, and `src/e1-no-provider-runner.ts`; live provider conversation assembly is still missing.
-- L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications. A no-provider multi-checkpoint/arm runner exists for scripted shakedown; full task-package seeding, hidden-oracle scoring, live-provider orchestration, and publication-grade L2 remain missing.
+- L2 run orchestrator: seeds workspaces, configures arms, advances checkpoints, records budget ledgers, snapshots workspaces, emits artifact bundles, and assigns run/checkpoint classifications. A dev-grade no-provider task/oracle package runner exists for scripted shakedown, including hidden-oracle scoring on every turn snapshot; live-provider orchestration and publication-grade L2 remain missing.
 
-CartCalc calibration and any Billing v2 run require live provider conversation integration plus full task-package/oracle L2. L0 mechanics plus the no-provider runner are not an evidence-generating harness.
+CartCalc calibration and any Billing v2 run require live provider conversation integration plus evidence-grade L2. L0 mechanics plus the no-provider runner are not an evidence-generating harness.
 
 ## Conversation Scope
 
@@ -131,6 +131,18 @@ Environment boundary:
 - while the package has zero dependencies and Bun deletes an empty lockfile, record `deps: none` plus `lockfile: absent` as the compatibility value rather than adding a fake dependency;
 - from the first commit where `package.json` declares any runtime or dev dependency, missing or stale `bun.lock` is an invalid environment boundary and the orchestrator refuses to start a run.
 
+## Package, Oracle, And Scoring Boundary
+
+Task packages and oracle packages are separate artifacts with separate hashes. The task package is mounted into arm workspaces. The oracle package is never mounted and is used only by the external scorer.
+
+Oracle scoring runs against every turn snapshot. The primary endpoint uses checkpoint-end snapshots; all-turn scoring is retained for recovery-latency and drift analysis.
+
+The sealed AUC formula is `checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1`: mean, over checkpoints, of the cumulative hidden assertion pass rate at each checkpoint-end snapshot.
+
+Task and oracle packages must declare the same fixed `virtual_now`. Reachable real-clock APIs in package-controlled files are rejected during package loading.
+
+Bundle grade is explicit: `dev` for draft constants or missing protocol-document hash; `evidence` only when constants are sealed and the protocol-document hash is recorded.
+
 ## Budgets
 
 All constants are part of the compatibility boundary and must be sealed before evidence-generating runs:
@@ -199,7 +211,7 @@ The isolated mechanism is the cost of self-authoring and self-maintaining verifi
 
 ## Harness Gap
 
-The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, the constants-driven L1 block parser exists in `src/e1-l1-parser.ts`, local turn consumption exists in `src/e1-turn-adapter.ts`, and scripted no-provider checkpoint loops exist in `src/e1-no-provider-runner.ts`, but the live provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
+The current provider model loop does not yet implement this profile end-to-end. Step 0 L0 mechanics exist in `src/e1-harness.ts`, the constants-driven L1 block parser exists in `src/e1-l1-parser.ts`, local turn consumption exists in `src/e1-turn-adapter.ts`, scripted no-provider checkpoint loops exist in `src/e1-no-provider-runner.ts`, and dev-grade no-provider task/oracle package execution exists in `src/e1-package-runner.ts`, but the live provider loop still only runs the provided feedback command for `feedback_capable_spec`; it does not yet support symmetric model-requested verification commands for both arms.
 
 Before any E1 evidence-generating run, add test-first harness support for:
 

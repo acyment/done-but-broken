@@ -1,6 +1,6 @@
 {
   "schema": "e1-sealed-constants",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "supersedes": "e1-frontier-sealed-constants-v0.json",
   "status": "draft-pre-seal",
   "condition_ids": ["context_only_spec", "feedback_capable_spec"],
@@ -48,6 +48,39 @@
     "budget_exhausted": "continue_from_workspace_as_is",
     "invalid_integrity": "terminate_run",
     "non_done_scoring_rule": "If a checkpoint ends agent_stalled or budget_exhausted, snapshot the workspace as-is, score that checkpoint's new assertions as failed, and continue into the next checkpoint from that workspace. invalid_integrity terminates the entire run."
+  },
+
+  "package_separation": {
+    "task_package_visibility": "mounted_into_agent_workspaces",
+    "oracle_package_visibility": "external_never_mounted",
+    "hash_rule": "Task package and oracle package are separate artifacts with separate hashes. The task package is mounted into agent workspaces. The oracle package is loaded only by the external scorer and is never copied into an agent workspace."
+  },
+
+  "oracle_scoring": {
+    "cadence": "every_turn_snapshot",
+    "primary_endpoint_subset": "checkpoint_end_snapshots",
+    "secondary_endpoint_subset": "all_turn_snapshots"
+  },
+
+  "metrics": {
+    "regression_free_auc": {
+      "formula_id": "checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1",
+      "formula": "For each checkpoint-end snapshot k, p_k is the fraction of all cumulative hidden-oracle assertions introduced at any j <= k that pass. The run score is mean(p_k) over k = 1..K. Checkpoints are equally weighted. agent_stalled and budget_exhausted snapshots score as-is with the checkpoint's new assertions failed.",
+      "checkpoint_weighting": "equal",
+      "assertion_denominator": "cumulative_hidden_assertions_introduced_through_checkpoint"
+    }
+  },
+
+  "virtual_clock": {
+    "required": true,
+    "package_field": "virtual_now",
+    "real_clock_references_rejected": ["Date.now", "new Date()", "performance.now"]
+  },
+
+  "bundle_grading": {
+    "dev_when_constants_status": "draft-pre-seal",
+    "evidence_requires_constants_status": "sealed",
+    "evidence_requires_protocol_document_hash": true
   },
 
   "turn_protocol": {
