@@ -8,6 +8,7 @@ import {
   type E1ProviderTransport,
   type E1ProviderTransportRequest
 } from "../src/e1-live-provider";
+import { readFile, readdir } from "node:fs/promises";
 import { loadE1OpenSpecProfile, type E1OpenSpecProfile } from "../src/e1-openspec-constants";
 import {
   E1_RUN_CLASSIFICATIONS,
@@ -37,6 +38,8 @@ type CliOptions = {
   maxOutputTokens: number;
   temperature: number;
   classification: E1RunClassification;
+  baselineDir?: string;
+  protocolDocumentHash?: string;
 };
 
 const repoRoot = resolve(import.meta.dir, "..");
@@ -72,6 +75,10 @@ async function run(options: CliOptions): Promise<string> {
     throw new Error(`${options.apiKeyEnv} is required when --transport=live`);
   }
 
+  if (options.transport === "canned" && options.task === "billing-v2") {
+    throw new Error("--transport=canned is only supported for the cartcalc tasks");
+  }
+
   const transport = options.transport === "live" ? createFetchE1ProviderTransport() : createCannedCartCalcTransport();
   const providers = new Map<ConditionId, E1OpenAICompatibleAgentProvider>();
 
@@ -87,6 +94,8 @@ async function run(options: CliOptions): Promise<string> {
     checkpoints: options.checkpoints,
     runClassification: options.classification,
     openspecProfile,
+    protocolDocumentHash: options.protocolDocumentHash,
+    baselineOverlay: options.baselineDir ? await readBaselineOverlay(options.baselineDir) : undefined,
     providerFactory: ({ conditionId }) => {
       const existing = providers.get(conditionId);
 
@@ -104,6 +113,7 @@ async function run(options: CliOptions): Promise<string> {
   const usage = bundle.provider_usage_totals;
 
   console.log(`run_id=${options.runId}`);
+  console.log(`grade=${bundle.grade}`);
   console.log(`run_classification=${bundle.run_classification}`);
   console.log(`invalid_run=${bundle.invalid_run}`);
   console.log(`status=${bundle.provider_run.run_summary.status}`);
@@ -144,7 +154,7 @@ function makeProvider(input: {
   }
 
   return new E1OpenAICompatibleAgentProvider({
-    providerId: `e1-cartcalc-${input.options.transport}-${sanitizeProfileId(routeId)}-${sanitizeProfileId(model)}`,
+    providerId: `e1-${sanitizeProfileId(input.options.task)}-${input.options.transport}-${sanitizeProfileId(routeId)}-${sanitizeProfileId(model)}`,
     providerRouteId: routeId,
     model,
     endpoint,
@@ -248,7 +258,40 @@ function resolveTask(task: string): {
     };
   }
 
-  throw new Error("--task must be cartcalc or cartcalc-openspec for the E1 runner");
+  if (task === "billing-v2") {
+    return {
+      taskPackagePath: join(repoRoot, "tasks", "e1-billing-v2", "task-package"),
+      oraclePackagePath: join(repoRoot, "tasks", "e1-billing-v2", "oracle-package"),
+      openspecProfilePath: join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json")
+    };
+  }
+
+  throw new Error("--task must be cartcalc, cartcalc-openspec, or billing-v2 for the E1 runner");
+}
+
+async function readBaselineOverlay(baselineDir: string): Promise<{ files: Record<string, string> }> {
+  const files: Record<string, string> = {};
+
+  async function walk(dir: string, prefix: string): Promise<void> {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+
+      if (entry.isDirectory()) {
+        await walk(full, relativePath);
+      } else if (entry.isFile()) {
+        files[relativePath] = await readFile(full, "utf8");
+      }
+    }
+  }
+
+  await walk(resolve(baselineDir), "");
+
+  if (Object.keys(files).length === 0) {
+    throw new Error(`--baseline-dir ${baselineDir} contains no files`);
+  }
+
+  return { files };
 }
 
 function armConditions(arm: CliOptions["arm"]): ConditionId[] {
@@ -322,7 +365,9 @@ function parseArgs(args: string[]): { help: true } | { help: false; value: CliOp
       outputUsdPerMillionTokens: optionalNumber(flags, "output-usd-per-mtok") ?? 2,
       maxOutputTokens: optionalInteger(flags, "max-output-tokens") ?? 4000,
       temperature: optionalNumber(flags, "temperature") ?? 0.2,
-      classification: parseClassification(optionalString(flags, "classification") ?? "calibration")
+      classification: parseClassification(optionalString(flags, "classification") ?? "calibration"),
+      baselineDir: optionalString(flags, "baseline-dir"),
+      protocolDocumentHash: optionalString(flags, "protocol-document-hash")
     }
   };
 }
@@ -341,7 +386,7 @@ function printHelp(): void {
       "Usage: bun run e1 -- --task=cartcalc --arm=context --live --cap=1.00",
       "",
       "Options:",
-      "  --task=cartcalc | cartcalc-openspec",
+      "  --task=cartcalc | cartcalc-openspec | billing-v2",
       "  --arm=context | feedback | both",
       "  --live                      Enables the live-mode spend gate.",
       "  --transport=canned | live   Defaults to canned.",
@@ -355,7 +400,10 @@ function printHelp(): void {
       "  --route-id <id>             Stable route identity stamped into bundle manifests.",
       "  --api-key-env <name>        Defaults to OPENROUTER_API_KEY.",
       "  --classification <value>    Precommitted run classification: calibration (default),",
-      "                              difficulty_probe, causal_pilot, or diagnostic_invalid."
+      "                              difficulty_probe, causal_pilot, or diagnostic_invalid.",
+      "  --baseline-dir <path>       Isolated-competence baseline: files overlaid onto every",
+      "                              arm's workspace after mounting (recorded in the bundle).",
+      "  --protocol-document-hash <sha256>  Required for evidence-grade bundles under sealed constants."
     ].join("\n")
   );
 }

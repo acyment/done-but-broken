@@ -108,6 +108,7 @@ export type E1TaskPackageNoProviderBundle = {
     seed: "scripted";
   };
   no_provider_run: E1NoProviderRunBundle;
+  baseline_overlay?: E1BaselineOverlayRecord;
   openspec_workflow?: E1OpenSpecWorkflowRecord;
   oracle_scoring: {
     cadence: "every_turn_snapshot";
@@ -172,6 +173,19 @@ export const E1_RUN_CLASSIFICATIONS = [
 
 export type E1RunClassification = (typeof E1_RUN_CLASSIFICATIONS)[number];
 
+// Isolated-competence diagnostics start a single checkpoint from a baseline workspace that
+// correctly implements all earlier checkpoints. The overlay is written into both arms after
+// mounting and recorded verbatim in the bundle so replay can reproduce the starting state.
+export type E1BaselineOverlay = {
+  files: Record<string, string>;
+};
+
+export type E1BaselineOverlayRecord = {
+  file_count: number;
+  files: Record<string, string>;
+  files_hash: string;
+};
+
 export type E1OpenSpecWorkflowRecord = {
   protocol_profile_id: "e1-openspec-workflow-v0";
   profile_version: string;
@@ -200,6 +214,7 @@ export type E1TaskPackageProviderBundle = {
     provider_transport_kind: "canned" | "live";
   };
   provider_run: E1TaskPackageProviderRunBundle;
+  baseline_overlay?: E1BaselineOverlayRecord;
   openspec_workflow?: E1OpenSpecWorkflowRecord;
   oracle_scoring: E1TaskPackageNoProviderBundle["oracle_scoring"];
   metrics: {
@@ -360,6 +375,7 @@ export async function runE1TaskPackageNoProvider(input: {
   runId: string;
   protocolDocumentHash?: string;
   openspecProfile?: E1OpenSpecProfile;
+  baselineOverlay?: E1BaselineOverlay;
   arms: Record<ConditionId, (input: E1CheckpointProviderFactoryInput) => E1AgentProvider>;
 }): Promise<E1TaskPackageNoProviderBundle> {
   await validateE1DependencyLockfileBoundary(process.cwd());
@@ -372,6 +388,7 @@ export async function runE1TaskPackageNoProvider(input: {
       }
     : undefined;
   const openspecRecord = openspecProfile ? emptyOpenSpecWorkflowRecord(openspecProfile) : undefined;
+  const baselineRecord = input.baselineOverlay ? recordE1BaselineOverlay(input.baselineOverlay) : undefined;
   const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
   const runRoot = join(input.runsRoot, input.runId);
   const workspaceRoot = join(runRoot, "workspaces");
@@ -388,6 +405,12 @@ export async function runE1TaskPackageNoProvider(input: {
     conditionId: "feedback_capable_spec",
     workspacePath: feedbackWorkspace
   });
+
+  if (input.baselineOverlay) {
+    await applyE1BaselineOverlay(contextWorkspace, input.baselineOverlay);
+    await applyE1BaselineOverlay(feedbackWorkspace, input.baselineOverlay);
+  }
+
   await validateAllCheckpointPromptDiffs(input.constants, input.taskPackage, snapshotOptions);
 
   const noProviderRun = await runE1NoProviderRun({
@@ -459,6 +482,7 @@ export async function runE1TaskPackageNoProvider(input: {
     no_provider_run_hash: hashText(JSON.stringify(noProviderRun)),
     oracle_scoring_hash: hashText(JSON.stringify(oracleScoring)),
     metrics_hash: hashText(JSON.stringify(metrics)),
+    ...(baselineRecord ? { baseline_overlay_hash: baselineRecord.files_hash } : {}),
     ...(openspecRecord ? { openspec_workflow_hash: hashText(JSON.stringify(openspecRecord)) } : {})
   };
   const bundle: E1TaskPackageNoProviderBundle = {
@@ -473,6 +497,7 @@ export async function runE1TaskPackageNoProvider(input: {
       seed: "scripted"
     },
     no_provider_run: noProviderRun,
+    ...(baselineRecord ? { baseline_overlay: baselineRecord } : {}),
     ...(openspecRecord ? { openspec_workflow: openspecRecord } : {}),
     oracle_scoring: oracleScoring,
     metrics,
@@ -496,6 +521,7 @@ export async function runE1TaskPackageProvider(input: {
   checkpoints?: string[];
   runClassification?: E1RunClassification;
   openspecProfile?: E1OpenSpecProfile;
+  baselineOverlay?: E1BaselineOverlay;
   providerFactory: (input: E1CheckpointProviderFactoryInput) => E1AgentProvider;
   maxModelTurns?: number;
   maxVerificationExecutions?: number;
@@ -521,6 +547,7 @@ export async function runE1TaskPackageProvider(input: {
       }
     : undefined;
   const openspecRecord = openspecProfile ? emptyOpenSpecWorkflowRecord(openspecProfile) : undefined;
+  const baselineRecord = input.baselineOverlay ? recordE1BaselineOverlay(input.baselineOverlay) : undefined;
   const promptTemplateHash = calculateE1PromptTemplateHash(input.constants);
   const runRoot = join(input.runsRoot, input.runId);
   const workspaceRoot = join(runRoot, "workspaces");
@@ -539,6 +566,10 @@ export async function runE1TaskPackageProvider(input: {
       conditionId,
       workspacePath: join(workspaceRoot, conditionId)
     });
+
+    if (input.baselineOverlay) {
+      await applyE1BaselineOverlay(join(workspaceRoot, conditionId), input.baselineOverlay);
+    }
   }
 
   for (let checkpointIndex = 0; checkpointIndex < checkpoints.length; checkpointIndex += 1) {
@@ -672,6 +703,7 @@ export async function runE1TaskPackageProvider(input: {
     oracle_scoring_hash: hashText(JSON.stringify(oracleScoring)),
     metrics_hash: hashText(JSON.stringify(metrics)),
     provider_usage_totals_hash: hashText(JSON.stringify(providerUsageTotals)),
+    ...(baselineRecord ? { baseline_overlay_hash: baselineRecord.files_hash } : {}),
     ...(openspecRecord ? { openspec_workflow_hash: hashText(JSON.stringify(openspecRecord)) } : {})
   };
   const bundle: E1TaskPackageProviderBundle = {
@@ -690,6 +722,7 @@ export async function runE1TaskPackageProvider(input: {
       ...providerIdentity
     },
     provider_run: providerRun,
+    ...(baselineRecord ? { baseline_overlay: baselineRecord } : {}),
     ...(openspecRecord ? { openspec_workflow: openspecRecord } : {}),
     oracle_scoring: oracleScoring,
     metrics,
@@ -1284,6 +1317,27 @@ export function bundleGrade(constants: E1SealedConstants, protocolDocumentHash: 
     : "dev";
 }
 
+
+export async function applyE1BaselineOverlay(
+  workspacePath: string,
+  overlay: E1BaselineOverlay
+): Promise<void> {
+  for (const [path, content] of Object.entries(overlay.files).sort()) {
+    const target = resolveInside(workspacePath, path);
+    await mkdir(dirname(target), { recursive: true });
+    await writeFile(target, content);
+  }
+}
+
+export function recordE1BaselineOverlay(overlay: E1BaselineOverlay): E1BaselineOverlayRecord {
+  const sorted = Object.fromEntries(Object.entries(overlay.files).sort(([a], [b]) => (a < b ? -1 : 1)));
+
+  return {
+    file_count: Object.keys(sorted).length,
+    files: sorted,
+    files_hash: hashText(JSON.stringify(sorted))
+  };
+}
 
 function assertOpenSpecProfileForWorkflow(
   taskPackage: E1TaskPackage,

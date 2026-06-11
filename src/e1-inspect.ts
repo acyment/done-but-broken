@@ -9,6 +9,7 @@ import {
 import type { E1OpenSpecProfile } from "./e1-openspec-constants";
 import { runE1OpenSpecArchiveStep, type E1OpenSpecArchiveStepRecord } from "./e1-openspec-harness";
 import {
+  applyE1BaselineOverlay,
   buildMetrics,
   buildSelectedMetrics,
   calculateE1PromptTemplateHash,
@@ -16,6 +17,7 @@ import {
   loadE1TaskPackage,
   mountTaskWorkspace,
   noProviderRunForScoring,
+  recordE1BaselineOverlay,
   scoreNoProviderRun,
   type E1TaskPackageNoProviderBundle,
   type E1TaskPackageProviderBundle
@@ -95,6 +97,20 @@ export async function inspectE1Bundle(input: {
     });
   }
 
+  if (bundle.baseline_overlay) {
+    const recomputed = recordE1BaselineOverlay({ files: bundle.baseline_overlay.files });
+
+    if (
+      recomputed.files_hash !== bundle.baseline_overlay.files_hash ||
+      recomputed.file_count !== bundle.baseline_overlay.file_count
+    ) {
+      mismatches.push({
+        kind: "baseline_overlay",
+        detail: `recorded files_hash=${bundle.baseline_overlay.files_hash} recomputed=${recomputed.files_hash}`
+      });
+    }
+  }
+
   mismatches.push(...verifyContentHashManifest(loaded));
 
   const conditionBundles = bundlesByCondition(loaded);
@@ -113,6 +129,11 @@ export async function inspectE1Bundle(input: {
       const workspacePath = join(input.tmpRoot, "replay-workspaces", conditionId);
       await rm(workspacePath, { recursive: true, force: true });
       await mountTaskWorkspace({ taskPackage, conditionId, workspacePath });
+
+      if (bundle.baseline_overlay) {
+        await applyE1BaselineOverlay(workspacePath, { files: bundle.baseline_overlay.files });
+      }
+
       const recordedArchives = [...(openspecArchiveRecords(loaded)[conditionId] ?? [])];
 
       for (const checkpointBundle of checkpointBundles) {
@@ -258,6 +279,9 @@ function verifyContentHashManifest(loaded: LoadedBundle): E1InspectionMismatch[]
           oracle_scoring_hash: hashText(JSON.stringify(loaded.bundle.oracle_scoring)),
           metrics_hash: hashText(JSON.stringify(loaded.bundle.metrics)),
           provider_usage_totals_hash: hashText(JSON.stringify(loaded.bundle.provider_usage_totals)),
+          ...(loaded.bundle.baseline_overlay
+            ? { baseline_overlay_hash: loaded.bundle.baseline_overlay.files_hash }
+            : {}),
           ...(loaded.bundle.openspec_workflow
             ? { openspec_workflow_hash: hashText(JSON.stringify(loaded.bundle.openspec_workflow)) }
             : {})
@@ -266,6 +290,9 @@ function verifyContentHashManifest(loaded: LoadedBundle): E1InspectionMismatch[]
           no_provider_run_hash: hashText(JSON.stringify(loaded.bundle.no_provider_run)),
           oracle_scoring_hash: hashText(JSON.stringify(loaded.bundle.oracle_scoring)),
           metrics_hash: hashText(JSON.stringify(loaded.bundle.metrics)),
+          ...(loaded.bundle.baseline_overlay
+            ? { baseline_overlay_hash: loaded.bundle.baseline_overlay.files_hash }
+            : {}),
           ...(loaded.bundle.openspec_workflow
             ? { openspec_workflow_hash: hashText(JSON.stringify(loaded.bundle.openspec_workflow)) }
             : {})

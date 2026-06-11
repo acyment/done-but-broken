@@ -11,7 +11,7 @@ const constantsPath = join(repoRoot, "docs", "protocols", "e1-frontier-sealed-co
 function printHelp(): void {
   console.log(
     [
-      "Usage: bun run e1:inspect -- --bundle <path> [--task cartcalc|cartcalc-openspec | --task-package <path> --oracle-package <path>]",
+      "Usage: bun run e1:inspect -- --bundle <path> [--task cartcalc|cartcalc-openspec|billing-v2 | --task-package <path> --oracle-package <path>]",
       "",
       "Replays an E1 bundle's recorded turns onto fresh template mounts, byte-compares",
       "per-turn and final workspace hashes, recomputes oracle scoring, metrics, and the",
@@ -75,6 +75,12 @@ if (task === "cartcalc") {
 if (task === "cartcalc-openspec") {
   taskPackagePath = join(repoRoot, "tasks", "e1-cartcalc-openspec", "task-package");
   oraclePackagePath = join(repoRoot, "tasks", "e1-cartcalc-openspec", "oracle-package");
+  openspecProfilePath ??= join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json");
+}
+
+if (task === "billing-v2") {
+  taskPackagePath = join(repoRoot, "tasks", "e1-billing-v2", "task-package");
+  oraclePackagePath = join(repoRoot, "tasks", "e1-billing-v2", "oracle-package");
   openspecProfilePath ??= join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json");
 }
 

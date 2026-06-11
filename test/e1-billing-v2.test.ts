@@ -286,6 +286,114 @@ describe("e1-billing-v2 acceptance gates", () => {
   }, 120000);
 });
 
+describe("e1-billing-v2 isolated-competence support", () => {
+  test("a single checkpoint runs from a stage baseline, is solvable, and replays with the overlay", async () => {
+    const { inspectE1Bundle } = await import("../src/e1-inspect");
+    const { E1OpenAICompatibleAgentProvider } = await import("../src/e1-live-provider");
+    const runsRoot = join(tmpdir(), `hit-sdd-billing-iso-${Date.now()}`);
+    tempRoots.push(runsRoot);
+    await mkdir(runsRoot, { recursive: true });
+
+    const baselineFiles = { ...referenceFiles, ...(await stageOverrides("cp04")) };
+    const solverTurn = [
+      ...Object.entries(referenceFiles)
+        .sort()
+        .map(([path, content]) => fileBlock(path, content)),
+      fileBlock(`openspec/changes/${CHANGE_NAMES["5"]}/specs/billing/spec.md`, deltaFor("5")),
+      "<<<DONE>>>"
+    ].join("\n");
+
+    const makeProvider = (turns: string[]) => {
+      let index = 0;
+
+      return new E1OpenAICompatibleAgentProvider({
+        providerId: "billing-iso-canned",
+        providerRouteId: "canned-isolated-competence",
+        model: "canned/billing-fixture",
+        endpoint: "https://provider.invalid/v1/chat/completions",
+        apiKey: "sk-canned-billing",
+        transport: {
+          transport_kind: "canned",
+          async send() {
+            const content = turns[Math.min(index, turns.length - 1)];
+            index += 1;
+
+            return {
+              status: 200,
+              body: {
+                choices: [{ message: { content } }],
+                usage: { prompt_tokens: 1000, completion_tokens: 200 }
+              }
+            };
+          }
+        },
+        liveMode: false,
+        spendCapUsd: 1,
+        maxEstimatedCallCostUsd: 0.01,
+        pricingUsdPerMillionTokens: { input: 1, cached_input: 0.1, output: 2 }
+      });
+    };
+
+    const { runE1TaskPackageProvider } = await import("../src/e1-package-runner");
+    const solverBundle = await runE1TaskPackageProvider({
+      constants: profile.constants,
+      taskPackage,
+      oraclePackage,
+      runsRoot,
+      runId: "billing-iso-solver",
+      conditions: ["context_only_spec"],
+      checkpoints: ["5"],
+      runClassification: "diagnostic_invalid",
+      openspecProfile: profile,
+      baselineOverlay: { files: baselineFiles },
+      providerFactory: () => makeProvider([solverTurn])
+    });
+
+    expect(solverBundle.baseline_overlay?.file_count).toBe(Object.keys(baselineFiles).length);
+    expect(solverBundle.baseline_overlay?.files_hash).toHaveLength(64);
+    expect(solverBundle.content_hash_manifest.baseline_overlay_hash).toBe(
+      solverBundle.baseline_overlay!.files_hash
+    );
+    expect(solverBundle.metrics.by_condition.context_only_spec).toBe(1);
+
+    const idleBundle = await runE1TaskPackageProvider({
+      constants: profile.constants,
+      taskPackage,
+      oraclePackage,
+      runsRoot,
+      runId: "billing-iso-idle",
+      conditions: ["context_only_spec"],
+      checkpoints: ["5"],
+      runClassification: "diagnostic_invalid",
+      openspecProfile: profile,
+      baselineOverlay: { files: baselineFiles },
+      providerFactory: () => makeProvider(["<<<DONE>>>"])
+    });
+
+    // The baseline preserves everything through CP04 but cannot pass CP05's new cases.
+    const idleScore = idleBundle.metrics.by_condition.context_only_spec!;
+    expect(idleScore).toBeLessThan(1);
+    expect(idleScore).toBeGreaterThan(0.5);
+
+    const inspectTmp = join(tmpdir(), `hit-sdd-billing-iso-inspect-${Date.now()}`);
+    tempRoots.push(inspectTmp);
+    await mkdir(inspectTmp, { recursive: true });
+
+    const report = await inspectE1Bundle({
+      constants: profile.constants,
+      bundlePath: join(runsRoot, "billing-iso-solver", "e1-task-package-provider-bundle.json"),
+      taskPackagePath: join(ROOT, "task-package"),
+      oraclePackagePath: join(ROOT, "oracle-package"),
+      tmpRoot: inspectTmp,
+      openspecProfile: profile
+    });
+
+    expect(report.mismatches).toEqual([]);
+    expect(report.valid).toBe(true);
+    expect(report.run_classification).toBe("diagnostic_invalid");
+  }, 120000);
+});
+
 function patch(source: string, patches: Array<{ find: string; replace: string }>): string {
   let result = source;
 
