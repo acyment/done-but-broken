@@ -127,6 +127,77 @@
     }
   },
   {
+    "check_id": "cp07-alloc-equal-tie",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 1000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 125,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 1000,
+              "quantity_milli": 1000
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "open",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 1000,
+          "discount_cents": 13
+        },
+        {
+          "line_id": "U1",
+          "kind": "usage",
+          "description": "API calls",
+          "amount_cents": 1000,
+          "discount_cents": 12
+        }
+      ],
+      "subtotal_cents": 2000,
+      "discount_cents": 25,
+      "total_cents": 1975
+    }
+  },
+  {
     "check_id": "cp07-duration-expiry",
     "args": [
       [

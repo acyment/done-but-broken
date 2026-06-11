@@ -527,6 +527,21 @@ export const SCENARIOS: Scenario[] = [
     ],
     qInv("INV-1")
   ),
+  // Two equal positive lines with an odd discount: exact shares are .5/.5, so per-line
+  // rounding produces 13/13 (sum drifts) while largest remainder produces 13/12. This is
+  // the friction-registry row 2 mutation witness.
+  s(
+    7,
+    "cp07-alloc-equal-tie",
+    "I-ALLOC",
+    true,
+    [
+      created("S1", { plan_price_cents: 1000 }),
+      percentCoupon("S1", { percent_bp: 125 }),
+      invoice("INV-1", "S1", { usage: [usage("U1", 1000, 1000)] })
+    ],
+    qInv("INV-1")
+  ),
   s(
     7,
     "cp07-duration-expiry",
