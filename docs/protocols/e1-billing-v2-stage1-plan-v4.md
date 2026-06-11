@@ -1,13 +1,16 @@
 # e1-billing-v2 Stage 1 Frontier Difficulty Probe — Sealed Analysis Plan (v4)
 
-Date sealed: 2026-06-11. Supersedes `e1-billing-v2-stage1-plan-v3.md` **before execution**
-(no run was ever fired under the v3 plan; the v3 task content and design boundary carry
-over unchanged). Two changes only: (1) the provider route moves from OpenRouter to a
-local LiteLLM proxy with direct provider keys — OpenRouter is retired by operator
-decision 2026-06-11 and the runner now refuses `openrouter.ai` endpoints; (2) the probe
-model becomes `qwen3.7-max` (Alibaba Qwen 3.7 Max), a frontier-class model by current
-public rankings, at roughly one-third of Sonnet 4.6's token prices. Execution requires
-explicit operator authorization; this document only fixes what an authorized run means.
+Date sealed: 2026-06-11 (route detail revised same day, pre-execution: direct provider
+endpoint instead of a LiteLLM proxy — the runner's own OpenAI-compatible transport calls
+DashScope directly, so no intermediary process exists). Supersedes
+`e1-billing-v2-stage1-plan-v3.md` **before execution** (no run was ever fired under the
+v3 plan; the v3 task content and design boundary carry over unchanged). Two changes only:
+(1) the provider route moves from OpenRouter to the operator's DashScope-compatible
+endpoint with a direct key — OpenRouter is retired by operator decision 2026-06-11 and
+the runner now refuses `openrouter.ai` endpoints; (2) the probe model becomes
+`qwen3.7-max` (Alibaba Qwen 3.7 Max), a frontier-class model by current public rankings,
+at roughly one-third of Sonnet 4.6's token prices. Execution requires explicit operator
+authorization; this document only fixes what an authorized run means.
 
 ## Boundary
 
@@ -18,7 +21,7 @@ explicit operator authorization; this document only fixes what an authorized run
 | Protocol profile | `e1-openspec-workflow-v0` (sealed 1.0.0) over base constants `e1-frontier-sealed-constants-v1.0.json` (sealed 1.0.0) |
 | Run classification | `difficulty_probe` (not causal evidence) |
 | Condition | `context_only_spec` only; 3 runs with pairing labels `seed-a`, `seed-b`, `seed-c`, fired sequentially with a read between runs, subject to the early-stop rule |
-| Model/route | `qwen3.7-max` via local LiteLLM proxy (`litellm-chat-completions`, endpoint `http://localhost:4000/v1/chat/completions`); the proxy config must map this model name to Alibaba DashScope `qwen3.7-max` with a direct DashScope key |
+| Model/route | `qwen3.7-max` direct to the operator's Alibaba MaaS OpenAI-compatible endpoint (route id `dashscope-compatible-chat-completions`, key env `DASHSCOPE_API_KEY`). The workspace-scoped endpoint URL lives in `.env` as `MODEL_LOOP_ENDPOINT` (gitignored; it is stamped into local bundle manifests, which stay private — published run cards quote the route id only) |
 | Budgets | sealed constants: 12 turns/checkpoint, 6 verification executions/checkpoint, 4000 output tokens/turn |
 | Primary metric | hidden-oracle `checkpoint_mean_cumulative_hidden_assertion_pass_rate_v1` (regression-free AUC) |
 | Bundle grade | evidence requires the sealed constants plus `--protocol-document-hash` of this plan's commitments doc at invocation |
@@ -95,22 +98,24 @@ No measured Qwen run exists; projection uses the v2 Sonnet run shape (1.287M fre
   `cached_input_tokens > 0` in the run summary; if caching is not engaging, stop and
   investigate before further seeds.
 
-Cost-of-record: LiteLLM's OpenAI-compatible body carries no `usage.cost`, so the bundle's
-derived spend (configured prices × recorded usage) is the cost of record
-(`cost_of_record_source=derived`); cross-check against the LiteLLM dashboard and the
-DashScope console. Per-call guardrail: worst-case single call ≈ $0.12 (80k fresh input +
-4k output), so `--max-call-cost 0.15`. Suggested cap: $5 with caching confirmed, $10
-for the first run.
+Cost-of-record: the DashScope OpenAI-compatible body carries no `usage.cost`, so the
+bundle's derived spend (configured prices × recorded usage) is the cost of record
+(`cost_of_record_source=derived`); cross-check against the Alibaba console. Per-call
+guardrail: worst-case single call ≈ $0.12 (80k fresh input + 4k output), so
+`--max-call-cost 0.15`. Suggested cap: $5 with caching confirmed, $10 for the first run.
 
 ## Invocation template (requires explicit authorization)
 
-Prerequisites: LiteLLM proxy running on `localhost:4000` with a `model_list` entry
-mapping `qwen3.7-max` → DashScope `qwen3.7-max` (direct `DASHSCOPE_API_KEY`), and
-`LITELLM_MASTER_KEY` exported.
+Prerequisites: `.env` provides `DASHSCOPE_API_KEY` and `MODEL_LOOP_ENDPOINT` (the
+workspace-scoped `/compatible-mode/v1/chat/completions` URL). No proxy or other process
+is involved; the runner's own transport calls the endpoint directly.
 
 ```
+set -a; source .env; set +a
 bun run e1 -- --task=billing-v2 --arm=context --live --transport=live \
-  --model qwen3.7-max --route-id litellm-chat-completions \
+  --model qwen3.7-max --endpoint "$MODEL_LOOP_ENDPOINT" \
+  --route-id dashscope-compatible-chat-completions \
+  --api-key-env DASHSCOPE_API_KEY \
   --classification=difficulty_probe \
   --input-usd-per-mtok 1.25 --cached-input-usd-per-mtok 0.25 --output-usd-per-mtok 3.75 \
   --max-call-cost 0.15 --cap <operator-cap> \
