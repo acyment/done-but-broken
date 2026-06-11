@@ -1,0 +1,373 @@
+[
+  {
+    "check_id": "cp11-refund-discounted",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 999,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 500,
+              "quantity_milli": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1349
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 500
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "paid",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 999,
+          "discount_cents": 100,
+          "refunded_cents": 333
+        },
+        {
+          "line_id": "U1",
+          "kind": "usage",
+          "description": "API calls",
+          "amount_cents": 500,
+          "discount_cents": 50,
+          "refunded_cents": 167
+        }
+      ],
+      "subtotal_cents": 1499,
+      "discount_cents": 150,
+      "total_cents": 1349,
+      "captured_cents": 1349,
+      "refunded_cents": 500
+    }
+  },
+  {
+    "check_id": "cp11-refund-prorated",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "S1-upgrade",
+          "type": "plan_upgraded",
+          "at": "2026-01-16T00:00:00.000Z",
+          "subscription_id": "S1",
+          "new_plan_id": "pro",
+          "new_plan_price_cents": 5000,
+          "remaining_days": 15,
+          "period_days": 30
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 5400
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1000
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "paid",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan pro",
+          "amount_cents": 5000,
+          "discount_cents": 400,
+          "refunded_cents": 667
+        },
+        {
+          "line_id": "S1-upgrade-credit",
+          "kind": "proration_credit",
+          "description": "Unused time on plan basic (15 of 30 days)",
+          "amount_cents": -1500
+        },
+        {
+          "line_id": "S1-upgrade-charge",
+          "kind": "proration_charge",
+          "description": "Remaining time on plan pro (15 of 30 days)",
+          "amount_cents": 2500,
+          "discount_cents": 200,
+          "refunded_cents": 333
+        }
+      ],
+      "subtotal_cents": 6000,
+      "discount_cents": 600,
+      "total_cents": 5400,
+      "captured_cents": 5400,
+      "refunded_cents": 1000
+    }
+  },
+  {
+    "check_id": "cp11-second-refund",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 999,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 500,
+              "quantity_milli": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1349
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 500
+        },
+        {
+          "event_id": "ref-2",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 300
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "paid",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 999,
+          "discount_cents": 100,
+          "refunded_cents": 533
+        },
+        {
+          "line_id": "U1",
+          "kind": "usage",
+          "description": "API calls",
+          "amount_cents": 500,
+          "discount_cents": 50,
+          "refunded_cents": 267
+        }
+      ],
+      "subtotal_cents": 1499,
+      "discount_cents": 150,
+      "total_cents": 1349,
+      "captured_cents": 1349,
+      "refunded_cents": 800
+    }
+  },
+  {
+    "check_id": "cp11-refund-full",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 999,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 500,
+              "quantity_milli": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1349
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1349
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "paid",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 999,
+          "discount_cents": 100,
+          "refunded_cents": 899
+        },
+        {
+          "line_id": "U1",
+          "kind": "usage",
+          "description": "API calls",
+          "amount_cents": 500,
+          "discount_cents": 50,
+          "refunded_cents": 450
+        }
+      ],
+      "subtotal_cents": 1499,
+      "discount_cents": 150,
+      "total_cents": 1349,
+      "captured_cents": 1349,
+      "refunded_cents": 1349
+    }
+  }
+]

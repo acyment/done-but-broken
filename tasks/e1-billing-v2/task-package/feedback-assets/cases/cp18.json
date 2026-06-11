@@ -1,0 +1,324 @@
+[
+  {
+    "check_id": "cp18-dup-refund",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1000
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1000
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "paid",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 3000,
+          "refunded_cents": 1000
+        }
+      ],
+      "subtotal_cents": 3000,
+      "total_cents": 3000,
+      "captured_cents": 3000,
+      "refunded_cents": 1000
+    }
+  },
+  {
+    "check_id": "cp18-dup-failure",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        }
+      ],
+      {
+        "kind": "entitlement",
+        "subscription_id": "S1"
+      }
+    ],
+    "expected": "grace"
+  },
+  {
+    "check_id": "cp18-dup-upgrade",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-upgrade",
+          "type": "plan_upgraded",
+          "at": "2026-01-16T00:00:00.000Z",
+          "subscription_id": "S1",
+          "new_plan_id": "pro",
+          "new_plan_price_cents": 5000,
+          "remaining_days": 15,
+          "period_days": 30
+        },
+        {
+          "event_id": "S1-upgrade",
+          "type": "plan_upgraded",
+          "at": "2026-01-16T00:00:00.000Z",
+          "subscription_id": "S1",
+          "new_plan_id": "pro",
+          "new_plan_price_cents": 5000,
+          "remaining_days": 15,
+          "period_days": 30
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "open",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan pro",
+          "amount_cents": 5000
+        },
+        {
+          "line_id": "S1-upgrade-credit",
+          "kind": "proration_credit",
+          "description": "Unused time on plan basic (15 of 30 days)",
+          "amount_cents": -1500
+        },
+        {
+          "line_id": "S1-upgrade-charge",
+          "kind": "proration_charge",
+          "description": "Remaining time on plan pro (15 of 30 days)",
+          "amount_cents": 2500
+        }
+      ],
+      "subtotal_cents": 6000,
+      "total_cents": 6000
+    }
+  },
+  {
+    "check_id": "cp18-dup-coupon",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-1",
+      "subscription_id": "S1",
+      "status": "open",
+      "lines": [
+        {
+          "line_id": "INV-1-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 3000,
+          "discount_cents": 300
+        }
+      ],
+      "subtotal_cents": 3000,
+      "discount_cents": 300,
+      "total_cents": 2700
+    }
+  },
+  {
+    "check_id": "cp18-dup-audit",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1000
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1000
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "INV-1"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      },
+      {
+        "seq": 2,
+        "event_id": "cap-1",
+        "event_type": "payment_captured",
+        "at": "2026-01-18T00:00:00.000Z"
+      },
+      {
+        "seq": 3,
+        "event_id": "ref-1",
+        "event_type": "payment_refunded",
+        "at": "2026-01-20T00:00:00.000Z"
+      }
+    ]
+  }
+]

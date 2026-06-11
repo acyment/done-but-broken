@@ -1,0 +1,181 @@
+[
+  {
+    "check_id": "cp04-v1-plan",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000}],\"subtotal\":3000,\"total\":3000}"
+  },
+  {
+    "check_id": "cp04-v1-usage",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 125,
+              "quantity_milli": 500
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000},{\"id\":\"U1\",\"kind\":\"usage\",\"desc\":\"API calls\",\"amount\":62}],\"subtotal\":3062,\"total\":3062}"
+  },
+  {
+    "check_id": "cp04-v1-paid",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"paid\",\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000}],\"subtotal\":3000,\"total\":3000}"
+  },
+  {
+    "check_id": "cp04-v1-multi",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 125,
+              "quantity_milli": 500
+            },
+            {
+              "line_id": "U2",
+              "description": "Storage",
+              "unit_price_cents": 125,
+              "quantity_milli": 1500
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000},{\"id\":\"U1\",\"kind\":\"usage\",\"desc\":\"API calls\",\"amount\":62},{\"id\":\"U2\",\"kind\":\"usage\",\"desc\":\"Storage\",\"amount\":188}],\"subtotal\":3250,\"total\":3250}"
+  },
+  {
+    "check_id": "cp04-v1-team",
+    "args": [
+      [
+        {
+          "event_id": "S3-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S3",
+          "customer_id": "C-S3",
+          "plan_id": "team",
+          "plan_price_cents": 12500,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-3-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-3",
+          "subscription_id": "S3"
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-3"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-3\",\"subscription\":\"S3\",\"status\":\"open\",\"lines\":[{\"id\":\"INV-3-plan\",\"kind\":\"plan\",\"desc\":\"Plan team\",\"amount\":12500}],\"subtotal\":12500,\"total\":12500}"
+  }
+]

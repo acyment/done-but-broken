@@ -1,0 +1,176 @@
+[
+  {
+    "check_id": "cp01-sub-active",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S1"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S1",
+      "customer_id": "C-S1",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "active",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp01-sub-trialing",
+    "args": [
+      [
+        {
+          "event_id": "S2-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S2",
+          "customer_id": "C-S2",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31",
+          "trial": true
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S2"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S2",
+      "customer_id": "C-S2",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "trialing",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp01-trial-activated",
+    "args": [
+      [
+        {
+          "event_id": "S2-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S2",
+          "customer_id": "C-S2",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31",
+          "trial": true
+        },
+        {
+          "event_id": "S2-activate",
+          "type": "subscription_activated",
+          "at": "2026-01-02T00:00:00.000Z",
+          "subscription_id": "S2"
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S2"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S2",
+      "customer_id": "C-S2",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "active",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp01-audit-create",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "S1"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "S1-create",
+        "event_type": "subscription_created",
+        "at": "2026-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp01-audit-two",
+    "args": [
+      [
+        {
+          "event_id": "S2-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S2",
+          "customer_id": "C-S2",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31",
+          "trial": true
+        },
+        {
+          "event_id": "S2-activate",
+          "type": "subscription_activated",
+          "at": "2026-01-02T00:00:00.000Z",
+          "subscription_id": "S2"
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "S2"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "S2-create",
+        "event_type": "subscription_created",
+        "at": "2026-01-01T00:00:00.000Z"
+      },
+      {
+        "seq": 2,
+        "event_id": "S2-activate",
+        "event_type": "subscription_activated",
+        "at": "2026-01-02T00:00:00.000Z"
+      }
+    ]
+  }
+]

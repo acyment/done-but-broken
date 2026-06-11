@@ -1,0 +1,271 @@
+[
+  {
+    "check_id": "cp12-failure-pastdue",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S1"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S1",
+      "customer_id": "C-S1",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "past_due",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp12-failure-audit",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        },
+        {
+          "event_id": "fail-2",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "INV-1"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      },
+      {
+        "seq": 2,
+        "event_id": "fail-1",
+        "event_type": "payment_failed",
+        "at": "2026-01-19T00:00:00.000Z"
+      },
+      {
+        "seq": 3,
+        "event_id": "fail-2",
+        "event_type": "payment_failed",
+        "at": "2026-01-19T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp12-recovery",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S1"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S1",
+      "customer_id": "C-S1",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "active",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp12-partial-no-recovery",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1000
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S1"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S1",
+      "customer_id": "C-S1",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "past_due",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp12-audit-recovery",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "fail-1",
+          "type": "payment_failed",
+          "at": "2026-01-19T00:00:00.000Z",
+          "invoice_id": "INV-1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "INV-1"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      },
+      {
+        "seq": 2,
+        "event_id": "fail-1",
+        "event_type": "payment_failed",
+        "at": "2026-01-19T00:00:00.000Z"
+      },
+      {
+        "seq": 3,
+        "event_id": "cap-1",
+        "event_type": "payment_captured",
+        "at": "2026-01-18T00:00:00.000Z"
+      }
+    ]
+  }
+]

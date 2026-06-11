@@ -1,0 +1,241 @@
+[
+  {
+    "check_id": "cp15-v2-basic",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "serialize_v2",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":2,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"finalized\":false,\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000,\"discount\":0,\"refunded\":0}],\"subtotal\":3000,\"discount\":0,\"total\":3000,\"captured\":0,\"refunded\":0}"
+  },
+  {
+    "check_id": "cp15-v2-discount-refund",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 999,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1",
+          "usage": [
+            {
+              "line_id": "U1",
+              "description": "API calls",
+              "unit_price_cents": 500,
+              "quantity_milli": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 1349
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 500
+        }
+      ],
+      {
+        "kind": "serialize_v2",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":2,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"paid\",\"finalized\":false,\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":999,\"discount\":100,\"refunded\":333},{\"id\":\"U1\",\"kind\":\"usage\",\"desc\":\"API calls\",\"amount\":500,\"discount\":50,\"refunded\":167}],\"subtotal\":1499,\"discount\":150,\"total\":1349,\"captured\":1349,\"refunded\":500}"
+  },
+  {
+    "check_id": "cp15-v2-prorated",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-upgrade",
+          "type": "plan_upgraded",
+          "at": "2026-01-16T00:00:00.000Z",
+          "subscription_id": "S1",
+          "new_plan_id": "pro",
+          "new_plan_price_cents": 5000,
+          "remaining_days": 15,
+          "period_days": 30
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "serialize_v2",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":2,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"finalized\":false,\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan pro\",\"amount\":5000,\"discount\":0,\"refunded\":0},{\"id\":\"S1-upgrade-credit\",\"kind\":\"proration_credit\",\"desc\":\"Unused time on plan basic (15 of 30 days)\",\"amount\":-1500,\"discount\":0,\"refunded\":0},{\"id\":\"S1-upgrade-charge\",\"kind\":\"proration_charge\",\"desc\":\"Remaining time on plan pro (15 of 30 days)\",\"amount\":2500,\"discount\":0,\"refunded\":0}],\"subtotal\":6000,\"discount\":0,\"total\":6000,\"captured\":0,\"refunded\":0}"
+  },
+  {
+    "check_id": "cp15-v1-stable-plan",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000}],\"subtotal\":3000,\"total\":3000}"
+  },
+  {
+    "check_id": "cp15-v1-stable-discount",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        }
+      ],
+      {
+        "kind": "serialize_v1",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":1,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"open\",\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000,\"discount\":300}],\"subtotal\":3000,\"discount\":300,\"total\":2700}"
+  },
+  {
+    "check_id": "cp15-v2-paid",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "serialize_v2",
+        "invoice_id": "INV-1"
+      }
+    ],
+    "expected": "{\"v\":2,\"invoice\":\"INV-1\",\"subscription\":\"S1\",\"status\":\"paid\",\"finalized\":false,\"lines\":[{\"id\":\"INV-1-plan\",\"kind\":\"plan\",\"desc\":\"Plan basic\",\"amount\":3000,\"discount\":0,\"refunded\":0}],\"subtotal\":3000,\"discount\":0,\"total\":3000,\"captured\":3000,\"refunded\":0}"
+  }
+]
