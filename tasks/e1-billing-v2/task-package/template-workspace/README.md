@@ -13,10 +13,15 @@ Workspace layout:
 - `src/events/audit.ts` - audit log helpers.
 - `specs/` - read-only provided spec tooling; do not modify anything under it.
 
-Keep this module split as the engine grows: each turn replaces whole files, so every file
-must stay small enough to rewrite in full within one turn's output budget. When a file
-approaches a few hundred lines, move cohesive pieces into a new module instead of letting
-it grow.
+Output discipline (important):
+
+- Each of your responses has a hard output cap. A file block cut off by that cap is
+  discarded entirely — the edit does not apply and the turn is wasted.
+- Therefore rewrite **at most one source file per turn**. Never batch multiple files into
+  a single response; spread a multi-file change across consecutive turns, one file each.
+- Keep this module split as the engine grows: every file must stay small enough to
+  rewrite in full within a single turn's output budget. When a file approaches a few
+  hundred lines, move cohesive pieces into a new module instead of letting it grow.
 
 Money rules:
 

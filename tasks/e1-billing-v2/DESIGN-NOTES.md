@@ -60,8 +60,30 @@ and instructs the agent to keep files within the one-turn rewrite budget. Task v
 `e1-billing-v2-v2` (task.json + oracle.json); the v1 oracle carries over because no
 evidence package was published against the v1 commitments.
 
+## v3 (2026-06-11): output-discipline instruction
+
+The v2 Stage 1 probe returned the predeclared structural verdict again with a new
+mechanism (run card
+`docs/run-cards/e1-billing-v2-sonnet-context-probe-v2-seed-a-20260611.md`): the per-file
+ceiling was fixed (gate 6 held), but the agent batched multiple modules into single
+responses (~4,400+ tokens of code vs the 4000-token cap), losing 22/86 turns to
+`finish_reason=length` (`output_truncated_turn_rate=0.2558`; CP07 opened with 4
+consecutive truncated turns). Per the precommitted amendment
+(`docs/protocols/billing-v2-task-design-v3.md`, Amendment 5), the seed README gains an
+explicit output-discipline section: output is hard-capped, truncated file blocks are
+discarded, rewrite at most one source file per turn. Source files, specs, change
+requests, stage variants, and oracle cases are byte-identical to v2; only the README and
+`task_version` fields changed. Task version: `e1-billing-v2-v3`. The oracle carries over
+again (no evidence package was published against v2 commitments).
+
+Notable v2-probe observations recorded in the run card: zero cross-checkpoint regressions
+despite the truncation chaos (directional evidence the v3 probe may return a
+context-ceiling boundary result), and the CP17 replay-hash checks failing from
+introduction (prose-spec hardness, 0 truncations, verification budget exhausted). The v3
+plan adds a predeclared early-stop rule for the ceiling case.
+
 ## Not done yet (before any provider run)
 
-- Operator authorization for the v2 Stage 1 frontier difficulty probe
-  (`docs/protocols/e1-billing-v2-stage1-plan-v2.md`, commitments
-  `e1-billing-v2-commitments-v2.md`).
+- Operator authorization for the v3 Stage 1 frontier difficulty probe
+  (`docs/protocols/e1-billing-v2-stage1-plan-v3.md`, commitments
+  `e1-billing-v2-commitments-v3.md`).
