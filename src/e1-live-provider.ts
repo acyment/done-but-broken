@@ -22,12 +22,23 @@ import { hashText } from "./snapshot";
 
 export type E1ProviderTransportKind = "canned" | "live";
 
+export type E1ProviderWireTextPart = {
+  type: "text";
+  text: string;
+  cache_control?: { type: "ephemeral" };
+};
+
+export type E1ProviderWireMessage = {
+  role: E1ConversationMessage["role"];
+  content: string | E1ProviderWireTextPart[];
+};
+
 export type E1ProviderTransportRequest = {
   endpoint: string;
   headers: Record<string, string>;
   body: {
     model: string;
-    messages: E1ConversationMessage[];
+    messages: E1ProviderWireMessage[];
     temperature: number;
     top_p: number;
     max_tokens: number;
@@ -82,6 +93,10 @@ export type E1OpenAICompatibleProviderProfile = {
     cap_guardrail_basis: "derived_from_provider_usage_and_configured_prices";
     pricing_usd_per_million_tokens: E1OpenAICompatibleProviderOptions["pricingUsdPerMillionTokens"];
   };
+  prompt_caching: {
+    enabled: boolean;
+    breakpoint_strategy: "e1-prompt-cache-breakpoints-v1";
+  };
   redaction: {
     checked: true;
     secret_ids: string[];
@@ -103,6 +118,7 @@ export type E1OpenAICompatibleProviderOptions = {
     cached_input: number;
     output: number;
   };
+  promptCacheBreakpoints?: boolean;
   temperature?: number;
   topP?: number;
   maxOutputTokens?: number;
@@ -171,7 +187,7 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
           output_tokens: usage.completion_tokens
         },
         estimator: {
-          fresh_input_tokens: countMessagesTokens(request.body.messages),
+          fresh_input_tokens: countMessagesTokens(context.messages),
           output_tokens: countE1Tokens(text)
         }
       },
@@ -199,12 +215,32 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
       },
       body: {
         model: this.options.model,
-        messages,
+        messages: this.toWireMessages(messages),
         temperature: this.options.temperature ?? 0.2,
         top_p: this.options.topP ?? 1,
         max_tokens: this.options.maxOutputTokens ?? 4000
       }
     };
+  }
+
+  // Anthropic-style providers only cache marked prefixes. The sealed conversation layout keeps
+  // the heavy stable content in the first two messages (system template, workspace snapshot);
+  // the moving mark on the final message caches accumulated turn history within a checkpoint.
+  private toWireMessages(messages: E1ConversationMessage[]): E1ProviderWireMessage[] {
+    if (!this.options.promptCacheBreakpoints) {
+      return messages.map((message) => ({ role: message.role, content: message.content }));
+    }
+
+    const breakpoints = new Set([0, Math.min(1, messages.length - 1), messages.length - 1]);
+
+    return messages.map((message, index) =>
+      breakpoints.has(index)
+        ? {
+            role: message.role,
+            content: [{ type: "text" as const, text: message.content, cache_control: { type: "ephemeral" as const } }]
+          }
+        : { role: message.role, content: message.content }
+    );
   }
 
   private enforceLiveGate(): void {
@@ -252,6 +288,10 @@ export class E1OpenAICompatibleAgentProvider implements E1AgentProvider {
         basis: "provider_reported_when_available_else_derived",
         cap_guardrail_basis: "derived_from_provider_usage_and_configured_prices",
         pricing_usd_per_million_tokens: this.options.pricingUsdPerMillionTokens
+      },
+      prompt_caching: {
+        enabled: this.options.promptCacheBreakpoints ?? false,
+        breakpoint_strategy: "e1-prompt-cache-breakpoints-v1"
       },
       redaction: {
         checked: true,

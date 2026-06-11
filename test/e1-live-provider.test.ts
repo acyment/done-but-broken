@@ -94,6 +94,149 @@ describe("E1 live provider client seam", () => {
     expect(JSON.stringify(response)).not.toContain(API_KEY);
   });
 
+  test("marks prompt cache breakpoints on first two and last messages when enabled", async () => {
+    const requests: E1ProviderTransportRequest[] = [];
+    const provider = makeProvider({
+      promptCacheBreakpoints: true,
+      transport: {
+        transport_kind: "canned",
+        async send(request) {
+          requests.push(request);
+
+          return {
+            status: 200,
+            body: {
+              choices: [{ message: { content: "<<<DONE>>>" } }],
+              usage: { prompt_tokens: 100, completion_tokens: 7 }
+            }
+          };
+        }
+      }
+    });
+
+    const messages = [
+      { role: "system" as const, content: "system template" },
+      { role: "user" as const, content: "workspace snapshot" },
+      { role: "user" as const, content: "checkpoint variant" },
+      { role: "assistant" as const, content: "turn 1 reply" },
+      { role: "user" as const, content: "turn 2 prompt" }
+    ];
+    const response = await provider.nextTurn({
+      conditionId: "context_only_spec",
+      checkpointId: "1",
+      turnIndex: 2,
+      workspacePath: "/tmp/e1",
+      messages
+    });
+
+    expect(requests).toHaveLength(1);
+    const wire = requests[0].body.messages;
+    expect(wire).toHaveLength(5);
+    expect(wire[0]).toEqual({
+      role: "system",
+      content: [{ type: "text", text: "system template", cache_control: { type: "ephemeral" } }]
+    });
+    expect(wire[1]).toEqual({
+      role: "user",
+      content: [{ type: "text", text: "workspace snapshot", cache_control: { type: "ephemeral" } }]
+    });
+    expect(wire[2]).toEqual({ role: "user", content: "checkpoint variant" });
+    expect(wire[3]).toEqual({ role: "assistant", content: "turn 1 reply" });
+    expect(wire[4]).toEqual({
+      role: "user",
+      content: [{ type: "text", text: "turn 2 prompt", cache_control: { type: "ephemeral" } }]
+    });
+    expect(response.usage?.estimator?.fresh_input_tokens).toBeGreaterThan(0);
+    expect(provider.provider_metadata.prompt_caching).toEqual({
+      enabled: true,
+      breakpoint_strategy: "e1-prompt-cache-breakpoints-v1"
+    });
+  });
+
+  test("short conversations never mark the same message twice", async () => {
+    const requests: E1ProviderTransportRequest[] = [];
+    const provider = makeProvider({
+      promptCacheBreakpoints: true,
+      transport: {
+        transport_kind: "canned",
+        async send(request) {
+          requests.push(request);
+
+          return {
+            status: 200,
+            body: {
+              choices: [{ message: { content: "<<<DONE>>>" } }],
+              usage: { prompt_tokens: 10, completion_tokens: 2 }
+            }
+          };
+        }
+      }
+    });
+
+    await provider.nextTurn({
+      conditionId: "context_only_spec",
+      checkpointId: "1",
+      turnIndex: 1,
+      workspacePath: "/tmp/e1",
+      messages: [
+        { role: "system", content: "system template" },
+        { role: "user", content: "only user message" }
+      ]
+    });
+
+    const wire = requests[0].body.messages;
+    expect(wire).toEqual([
+      {
+        role: "system",
+        content: [{ type: "text", text: "system template", cache_control: { type: "ephemeral" } }]
+      },
+      {
+        role: "user",
+        content: [{ type: "text", text: "only user message", cache_control: { type: "ephemeral" } }]
+      }
+    ]);
+  });
+
+  test("leaves messages as plain strings when prompt caching is disabled", async () => {
+    const requests: E1ProviderTransportRequest[] = [];
+    const provider = makeProvider({
+      transport: {
+        transport_kind: "canned",
+        async send(request) {
+          requests.push(request);
+
+          return {
+            status: 200,
+            body: {
+              choices: [{ message: { content: "<<<DONE>>>" } }],
+              usage: { prompt_tokens: 10, completion_tokens: 2 }
+            }
+          };
+        }
+      }
+    });
+
+    await provider.nextTurn({
+      conditionId: "context_only_spec",
+      checkpointId: "1",
+      turnIndex: 1,
+      workspacePath: "/tmp/e1",
+      messages: [
+        { role: "system", content: "system template" },
+        { role: "user", content: "hello" }
+      ]
+    });
+
+    expect(requests[0].body.messages).toEqual([
+      { role: "system", content: "system template" },
+      { role: "user", content: "hello" }
+    ]);
+    expect(provider.provider_metadata.prompt_caching).toEqual({
+      enabled: false,
+      breakpoint_strategy: "e1-prompt-cache-breakpoints-v1"
+    });
+  });
+
   test("retries malformed canned responses before returning a clean turn", async () => {
     let calls = 0;
     const provider = makeProvider({
@@ -235,6 +378,7 @@ function makeProvider(input: {
   liveMode?: boolean;
   spendCapUsd?: number;
   maxEstimatedCallCostUsd?: number;
+  promptCacheBreakpoints?: boolean;
 }): E1OpenAICompatibleAgentProvider {
   return new E1OpenAICompatibleAgentProvider({
     providerId: "openai-compatible-test-profile",
@@ -244,6 +388,7 @@ function makeProvider(input: {
     apiKey: API_KEY,
     transport: input.transport,
     liveMode: input.liveMode ?? true,
+    promptCacheBreakpoints: input.promptCacheBreakpoints,
     spendCapUsd: input.spendCapUsd ?? 1,
     maxEstimatedCallCostUsd: input.maxEstimatedCallCostUsd ?? 0.01,
     pricingUsdPerMillionTokens: {

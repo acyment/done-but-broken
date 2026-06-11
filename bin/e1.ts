@@ -37,6 +37,7 @@ type CliOptions = {
   outputUsdPerMillionTokens: number;
   maxOutputTokens: number;
   temperature: number;
+  promptCache: boolean;
   classification: E1RunClassification;
   baselineDir?: string;
   protocolDocumentHash?: string;
@@ -168,6 +169,7 @@ function makeProvider(input: {
       cached_input: input.options.cachedInputUsdPerMillionTokens,
       output: input.options.outputUsdPerMillionTokens
     },
+    promptCacheBreakpoints: input.options.promptCache,
     temperature: input.options.temperature,
     maxOutputTokens: input.options.maxOutputTokens,
     sleep: async () => {}
@@ -232,7 +234,13 @@ function cartCalcImplementation(checkpoint: number): string {
 }
 
 function detectCheckpoint(request: E1ProviderTransportRequest): number {
-  const text = request.body.messages.map((message) => message.content).join("\n");
+  const text = request.body.messages
+    .map((message) =>
+      typeof message.content === "string"
+        ? message.content
+        : message.content.map((part) => part.text).join("")
+    )
+    .join("\n");
   const match = /^Checkpoint: (\d+)/m.exec(text);
 
   return match ? Number(match[1]) : 1;
@@ -365,11 +373,29 @@ function parseArgs(args: string[]): { help: true } | { help: false; value: CliOp
       outputUsdPerMillionTokens: optionalNumber(flags, "output-usd-per-mtok") ?? 2,
       maxOutputTokens: optionalInteger(flags, "max-output-tokens") ?? 4000,
       temperature: optionalNumber(flags, "temperature") ?? 0.2,
+      promptCache: parsePromptCache(
+        optionalString(flags, "prompt-cache"),
+        parseTransport(optionalString(flags, "transport") ?? "canned")
+      ),
       classification: parseClassification(optionalString(flags, "classification") ?? "calibration"),
       baselineDir: optionalString(flags, "baseline-dir"),
       protocolDocumentHash: optionalString(flags, "protocol-document-hash")
     }
   };
+}
+
+// Cache breakpoints are behavior-neutral (same tokens reach the model) but only pay off on
+// live Anthropic-style routes; canned transports keep plain string messages.
+function parsePromptCache(value: string | undefined, transport: "canned" | "live"): boolean {
+  if (value === undefined) {
+    return transport === "live";
+  }
+
+  if (value === "on" || value === "off") {
+    return value === "on";
+  }
+
+  throw new Error("--prompt-cache must be on or off");
 }
 
 function parseClassification(value: string): E1RunClassification {
@@ -399,6 +425,8 @@ function printHelp(): void {
       "  --endpoint <url>            Defaults to OpenRouter for --transport=live.",
       "  --route-id <id>             Stable route identity stamped into bundle manifests.",
       "  --api-key-env <name>        Defaults to OPENROUTER_API_KEY.",
+      "  --prompt-cache <on|off>     Cache-control breakpoints on stable prefix messages.",
+      "                              Defaults to on for --transport=live, off for canned.",
       "  --classification <value>    Precommitted run classification: calibration (default),",
       "                              difficulty_probe, causal_pilot, or diagnostic_invalid.",
       "  --baseline-dir <path>       Isolated-competence baseline: files overlaid onto every",
