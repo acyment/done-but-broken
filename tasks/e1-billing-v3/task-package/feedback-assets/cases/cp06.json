@@ -1,0 +1,288 @@
+[
+  {
+    "check_id": "cp06-downgrade-no-change",
+    "args": [
+      [
+        {
+          "event_id": "S4-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "customer_id": "C-S4",
+          "plan_id": "pro",
+          "plan_price_cents": 5000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S4-downgrade",
+          "type": "plan_downgraded",
+          "at": "2026-01-04T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_plan_id": "basic",
+          "new_plan_price_cents": 3000
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S4"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S4",
+      "customer_id": "C-S4",
+      "plan_id": "pro",
+      "plan_price_cents": 5000,
+      "status": "active",
+      "period_start": "2026-01-01",
+      "period_end": "2026-01-31"
+    }
+  },
+  {
+    "check_id": "cp06-invoice-before-renewal",
+    "args": [
+      [
+        {
+          "event_id": "S4-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "customer_id": "C-S4",
+          "plan_id": "pro",
+          "plan_price_cents": 5000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S4-downgrade",
+          "type": "plan_downgraded",
+          "at": "2026-01-04T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_plan_id": "basic",
+          "new_plan_price_cents": 3000
+        },
+        {
+          "event_id": "INV-4-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-4",
+          "subscription_id": "S4"
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-4"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-4",
+      "subscription_id": "S4",
+      "status": "open",
+      "lines": [
+        {
+          "line_id": "INV-4-plan",
+          "kind": "plan",
+          "description": "Plan pro",
+          "amount_cents": 5000
+        }
+      ],
+      "subtotal_cents": 5000,
+      "total_cents": 5000
+    }
+  },
+  {
+    "check_id": "cp06-renewal-applies",
+    "args": [
+      [
+        {
+          "event_id": "S4-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "customer_id": "C-S4",
+          "plan_id": "pro",
+          "plan_price_cents": 5000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S4-downgrade",
+          "type": "plan_downgraded",
+          "at": "2026-01-04T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_plan_id": "basic",
+          "new_plan_price_cents": 3000
+        },
+        {
+          "event_id": "S4-renew",
+          "type": "period_renewed",
+          "at": "2026-02-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_period_start": "2026-02-01",
+          "new_period_end": "2026-02-28"
+        }
+      ],
+      {
+        "kind": "subscription",
+        "subscription_id": "S4"
+      }
+    ],
+    "expected": {
+      "subscription_id": "S4",
+      "customer_id": "C-S4",
+      "plan_id": "basic",
+      "plan_price_cents": 3000,
+      "status": "active",
+      "period_start": "2026-02-01",
+      "period_end": "2026-02-28"
+    }
+  },
+  {
+    "check_id": "cp06-invoice-after-renewal",
+    "args": [
+      [
+        {
+          "event_id": "S4-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "customer_id": "C-S4",
+          "plan_id": "pro",
+          "plan_price_cents": 5000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S4-downgrade",
+          "type": "plan_downgraded",
+          "at": "2026-01-04T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_plan_id": "basic",
+          "new_plan_price_cents": 3000
+        },
+        {
+          "event_id": "S4-renew",
+          "type": "period_renewed",
+          "at": "2026-02-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_period_start": "2026-02-01",
+          "new_period_end": "2026-02-28"
+        },
+        {
+          "event_id": "INV-4-gen2",
+          "type": "invoice_generated",
+          "at": "2026-02-01T00:00:00.000Z",
+          "invoice_id": "INV-4",
+          "subscription_id": "S4"
+        }
+      ],
+      {
+        "kind": "invoice",
+        "invoice_id": "INV-4"
+      }
+    ],
+    "expected": {
+      "invoice_id": "INV-4",
+      "subscription_id": "S4",
+      "status": "open",
+      "lines": [
+        {
+          "line_id": "INV-4-plan",
+          "kind": "plan",
+          "description": "Plan basic",
+          "amount_cents": 3000
+        }
+      ],
+      "subtotal_cents": 3000,
+      "total_cents": 3000
+    }
+  },
+  {
+    "check_id": "cp06-audit",
+    "args": [
+      [
+        {
+          "event_id": "S4-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "customer_id": "C-S4",
+          "plan_id": "pro",
+          "plan_price_cents": 5000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S4-downgrade",
+          "type": "plan_downgraded",
+          "at": "2026-01-04T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_plan_id": "basic",
+          "new_plan_price_cents": 3000
+        },
+        {
+          "event_id": "S4-renew",
+          "type": "period_renewed",
+          "at": "2026-02-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_period_start": "2026-02-01",
+          "new_period_end": "2026-02-28"
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "S4"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "S4-create",
+        "event_type": "subscription_created",
+        "at": "2026-01-01T00:00:00.000Z"
+      },
+      {
+        "seq": 2,
+        "event_id": "S4-downgrade",
+        "event_type": "plan_downgraded",
+        "at": "2026-01-04T00:00:00.000Z"
+      },
+      {
+        "seq": 3,
+        "event_id": "S4-renew",
+        "event_type": "period_renewed",
+        "at": "2026-02-01T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp06-hash-scheduled",
+    "args": [
+      [
+        {
+          "event_id": "S4-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S4",
+          "customer_id": "C-S4",
+          "plan_id": "pro",
+          "plan_price_cents": 5000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S4-downgrade",
+          "type": "plan_downgraded",
+          "at": "2026-01-04T00:00:00.000Z",
+          "subscription_id": "S4",
+          "new_plan_id": "basic",
+          "new_plan_price_cents": 3000
+        }
+      ],
+      {
+        "kind": "replay_hash"
+      }
+    ],
+    "expected": "6f4b84c4"
+  }
+]

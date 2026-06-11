@@ -1,0 +1,270 @@
+[
+  {
+    "check_id": "cp13-feed-basic",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "audit_feed"
+      }
+    ],
+    "expected": [
+      {
+        "feed_seq": 1,
+        "aggregate_id": "S1",
+        "seq": 1,
+        "event_id": "S1-create",
+        "event_type": "subscription_created",
+        "at": "2026-01-01T00:00:00.000Z"
+      },
+      {
+        "feed_seq": 2,
+        "aggregate_id": "INV-1",
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      },
+      {
+        "feed_seq": 3,
+        "aggregate_id": "INV-1",
+        "seq": 2,
+        "event_id": "cap-1",
+        "event_type": "payment_captured",
+        "at": "2026-01-18T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp13-feed-after-limit",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "audit_feed",
+        "after_feed_seq": 1,
+        "limit": 1
+      }
+    ],
+    "expected": [
+      {
+        "feed_seq": 2,
+        "aggregate_id": "INV-1",
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp13-feed-type-filter",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "S1-coupon-pct",
+          "type": "coupon_applied",
+          "at": "2026-01-03T00:00:00.000Z",
+          "subscription_id": "S1",
+          "coupon_id": "SAVE10",
+          "coupon_kind": "percent",
+          "percent_bp": 1000,
+          "duration_invoices": 2
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 2700
+        }
+      ],
+      {
+        "kind": "audit_feed",
+        "event_types": [
+          "invoice_generated",
+          "payment_captured"
+        ]
+      }
+    ],
+    "expected": [
+      {
+        "feed_seq": 3,
+        "aggregate_id": "INV-1",
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      },
+      {
+        "feed_seq": 4,
+        "aggregate_id": "INV-1",
+        "seq": 2,
+        "event_id": "cap-1",
+        "event_type": "payment_captured",
+        "at": "2026-01-18T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp13-feed-preserves-seq",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "audit_log",
+        "aggregate_id": "INV-1"
+      }
+    ],
+    "expected": [
+      {
+        "seq": 1,
+        "event_id": "INV-1-gen",
+        "event_type": "invoice_generated",
+        "at": "2026-01-17T00:00:00.000Z"
+      },
+      {
+        "seq": 2,
+        "event_id": "cap-1",
+        "event_type": "payment_captured",
+        "at": "2026-01-18T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "check_id": "cp13-hash-feed-excluded",
+    "args": [
+      [
+        {
+          "event_id": "S1-create",
+          "type": "subscription_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "subscription_id": "S1",
+          "customer_id": "C-S1",
+          "plan_id": "basic",
+          "plan_price_cents": 3000,
+          "period_start": "2026-01-01",
+          "period_end": "2026-01-31"
+        },
+        {
+          "event_id": "INV-1-gen",
+          "type": "invoice_generated",
+          "at": "2026-01-17T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "subscription_id": "S1"
+        },
+        {
+          "event_id": "cap-1",
+          "type": "payment_captured",
+          "at": "2026-01-18T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 3000
+        },
+        {
+          "event_id": "ref-1",
+          "type": "payment_refunded",
+          "at": "2026-01-20T00:00:00.000Z",
+          "invoice_id": "INV-1",
+          "amount_cents": 600
+        }
+      ],
+      {
+        "kind": "replay_hash"
+      }
+    ],
+    "expected": "cc09947e"
+  }
+]
