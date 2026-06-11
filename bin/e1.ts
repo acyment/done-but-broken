@@ -76,7 +76,7 @@ async function run(options: CliOptions): Promise<string> {
     throw new Error(`${options.apiKeyEnv} is required when --transport=live`);
   }
 
-  if (options.transport === "canned" && options.task === "billing-v2") {
+  if (options.transport === "canned" && (options.task === "billing-v2" || options.task === "billing-v3")) {
     throw new Error("--transport=canned is only supported for the cartcalc tasks");
   }
 
@@ -281,7 +281,15 @@ function resolveTask(task: string): {
     };
   }
 
-  throw new Error("--task must be cartcalc, cartcalc-openspec, or billing-v2 for the E1 runner");
+  if (task === "billing-v3") {
+    return {
+      taskPackagePath: join(repoRoot, "tasks", "e1-billing-v3", "task-package"),
+      oraclePackagePath: join(repoRoot, "tasks", "e1-billing-v3", "oracle-package"),
+      openspecProfilePath: join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json")
+    };
+  }
+
+  throw new Error("--task must be cartcalc, cartcalc-openspec, billing-v2, or billing-v3 for the E1 runner");
 }
 
 async function readBaselineOverlay(baselineDir: string): Promise<{ files: Record<string, string> }> {
@@ -419,7 +427,7 @@ function printHelp(): void {
       "Usage: bun run e1 -- --task=cartcalc --arm=context --live --cap=1.00",
       "",
       "Options:",
-      "  --task=cartcalc | cartcalc-openspec | billing-v2",
+      "  --task=cartcalc | cartcalc-openspec | billing-v2 | billing-v3",
       "  --arm=context | feedback | both",
       "  --live                      Enables the live-mode spend gate.",
       "  --transport=canned | live   Defaults to canned.",
