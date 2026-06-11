@@ -120,6 +120,7 @@ Avoid wording:
 ## Current Scientific Direction
 
 - The active program is the E1 frontier path: a turn-based, full-file-replacement, multi-file protocol designed so frontier models do not ceiling the task. Bring E1 to evidence grade (Step 0 go-gate in `docs/protocols/e1-harness-calibration-step0-v0.md`) before any evidence-generating E1 run.
+- **Billing domain closed (2026-06-11):** Both billing-v2 and billing-v3 ceilinged under clean frontier probes (Sonnet 4.6 AUC 0.9929; Qwen 3.7 Max billing-v2 AUC 0.9361, billing-v3 AUC 0.9628; all zero on-graph regressions). The billing domain closes for frontier discrimination claims per the third-ceiling closure rule (`e1-billing-v3-stage1-plan-v1.md`). A new task domain is required; proposing another billing version is not permitted without a domain-change justification reviewed at this level.
 - The bounded positive result stands as-is: pricing content-controlled showed a clean run-loop benefit for a cheap/weak model (mean AUC delta +0.1852, 3/3); frontier models ceilinged all tested single-file tasks. Do not reinterpret or extend that claim without new clean evidence.
 - The `path-survival-primary-v1` Stage 1 validation matrix (subscription + inventory) is superseded before execution; see `docs/protocols/path-survival-primary-v1-validation-matrix-supersession-v1.md`. Do not execute it.
 - Subscription, inventory, payroll, and role-permissions task families remain calibration/difficulty/ceiling context with their existing classifications.
