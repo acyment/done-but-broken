@@ -95,8 +95,24 @@ content is byte-identical to the v3 boundary; only the plan and commitments docu
 changed (`e1-billing-v2-stage1-plan-v4.md`, `e1-billing-v2-commitments-v4.md`). Qwen
 results are never pooled with the Sonnet v1/v2 observations.
 
-## Not done yet (before any provider run)
+## v4 probe result (2026-06-11): context ceiling — task saturated
 
-- Operator authorization for the v4 Stage 1 frontier difficulty probe
-  (`docs/protocols/e1-billing-v2-stage1-plan-v4.md`, commitments
-  `e1-billing-v2-commitments-v4.md`).
+Stage 1 difficulty probe under plan v4 (`e1-billing-v2-stage1-plan-v4.md`) completed. Run
+card: `docs/run-cards/e1-billing-v2-qwen37max-context-probe-v4-seed-a-20260611-001.md`.
+
+Gate verdict: **context ceiling, early-stop applied.** Criterion 3 (structural) passes for
+the first time (`output_truncated_turn_rate=0.0227` — Amendment 5 one-file-per-turn
+instruction was effective). Criteria 1 and 2 both fail on the ceiling side: AUC=0.9361
+(> 0.92 threshold) and zero cross-checkpoint regressions. Seeds b/c not fired.
+
+12 never-passing checks at CP18: all 8 I-REPLAY (CP17), 2 I-ALLOC (CP09 three-line
+edge case), 2 I-IMMUT (CP16 recompute-new-doc). Qwen 3.7 Max fails 3 more commitment
+classes than Sonnet v2, yet AUC is still well above the 0.92 ceiling. Both frontier
+models saturate the task; zero regressions in both.
+
+**Implication:** The task does not discriminate frontier models. Redesign with harder
+tasks is required before Stage 2 causal pilots. The direction for redesign is documented
+in the harder-task design pattern memory (`harder-task-design-pattern.md`): partial seed
++ hidden reference + naive-agent proof + more cross-file invariants with later-checkpoint
+perturbations. No on-the-fly escalation — new sealed design revision and task version
+required.
