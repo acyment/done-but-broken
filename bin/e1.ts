@@ -146,8 +146,15 @@ function makeProvider(input: {
   const endpoint =
     input.options.endpoint ??
     (input.options.transport === "live"
-      ? "https://openrouter.ai/api/v1/chat/completions"
+      ? "http://localhost:4000/v1/chat/completions"
       : "https://provider.invalid/v1/chat/completions");
+
+  if (endpoint.includes("openrouter.ai")) {
+    throw new Error(
+      "OpenRouter routes are retired (operator decision 2026-06-11). Use the LiteLLM proxy with direct provider keys (default http://localhost:4000/v1/chat/completions)."
+    );
+  }
+
   const routeId = input.options.routeId ?? defaultProviderRouteId(input.options.transport, endpoint);
 
   if (!model) {
@@ -366,7 +373,7 @@ function parseArgs(args: string[]): { help: true } | { help: false; value: CliOp
       model: optionalString(flags, "model") ?? Bun.env.E1_MODEL,
       endpoint: optionalString(flags, "endpoint") ?? Bun.env.E1_ENDPOINT,
       routeId: optionalString(flags, "route-id") ?? Bun.env.E1_ROUTE_ID,
-      apiKeyEnv: optionalString(flags, "api-key-env") ?? "OPENROUTER_API_KEY",
+      apiKeyEnv: optionalString(flags, "api-key-env") ?? "LITELLM_MASTER_KEY",
       maxEstimatedCallCostUsd: optionalNumber(flags, "max-call-cost") ?? 0.01,
       inputUsdPerMillionTokens: optionalNumber(flags, "input-usd-per-mtok") ?? 1,
       cachedInputUsdPerMillionTokens: optionalNumber(flags, "cached-input-usd-per-mtok") ?? 0.1,
@@ -422,9 +429,11 @@ function printHelp(): void {
       "  --runs-root <path>",
       "  --run-id <id>",
       "  --model <id>                Required for --transport=live.",
-      "  --endpoint <url>            Defaults to OpenRouter for --transport=live.",
+      "  --endpoint <url>            Defaults to the local LiteLLM proxy for --transport=live",
+      "                              (http://localhost:4000/v1/chat/completions). OpenRouter",
+      "                              endpoints are refused (retired 2026-06-11).",
       "  --route-id <id>             Stable route identity stamped into bundle manifests.",
-      "  --api-key-env <name>        Defaults to OPENROUTER_API_KEY.",
+      "  --api-key-env <name>        Defaults to LITELLM_MASTER_KEY.",
       "  --prompt-cache <on|off>     Cache-control breakpoints on stable prefix messages.",
       "                              Defaults to on for --transport=live, off for canned.",
       "  --classification <value>    Precommitted run classification: calibration (default),",
@@ -525,10 +534,6 @@ function sanitizeProfileId(value: string): string {
 function defaultProviderRouteId(transport: CliOptions["transport"], endpoint: string): string {
   if (transport === "canned") {
     return "canned-cartcalc-transport";
-  }
-
-  if (endpoint === "https://openrouter.ai/api/v1/chat/completions") {
-    return "openrouter-chat-completions";
   }
 
   if (endpoint === "http://localhost:4000/v1/chat/completions") {

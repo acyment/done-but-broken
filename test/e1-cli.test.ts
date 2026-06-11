@@ -97,6 +97,35 @@ describe("E1 CartCalc CLI", () => {
     ).toBe("canned-cartcalc-transport");
     expect(bundle.oracle_scoring.checkpoint_end.context_only_spec[0].summary.pass_rate).toBe(1);
   });
+
+  test("refuses OpenRouter endpoints (route retired 2026-06-11)", () => {
+    const spawned = Bun.spawnSync({
+      cmd: [
+        "bun",
+        "run",
+        "e1",
+        "--",
+        "--task=cartcalc",
+        "--arm=context",
+        "--live",
+        "--transport=live",
+        "--model",
+        "anthropic/claude-sonnet-4.6",
+        "--endpoint",
+        "https://openrouter.ai/api/v1/chat/completions",
+        "--api-key-env",
+        "E1_TEST_FAKE_KEY",
+        "--cap=1.00"
+      ],
+      cwd: repoRoot,
+      env: { ...process.env, E1_TEST_FAKE_KEY: "sk-fake" },
+      stdout: "pipe",
+      stderr: "pipe"
+    });
+
+    expect(spawned.exitCode).not.toBe(0);
+    expect(spawned.stderr.toString()).toContain("OpenRouter routes are retired");
+  });
 });
 
 function mkTempRoot(): string {

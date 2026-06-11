@@ -82,8 +82,21 @@ context-ceiling boundary result), and the CP17 replay-hash checks failing from
 introduction (prose-spec hardness, 0 truncations, verification budget exhausted). The v3
 plan adds a predeclared early-stop rule for the ceiling case.
 
+## Plan v4 (2026-06-11): route and model change, pre-execution
+
+The v3 plan was superseded before any run was fired. Operator decision: OpenRouter is
+retired (the E1 runner now refuses `openrouter.ai` endpoints); live runs go through a
+local LiteLLM proxy with direct provider keys (`litellm-chat-completions`). The probe
+model becomes `qwen3.7-max` (frontier-class by public rankings, ~1/3 of Sonnet's token
+prices; projected ~$3.62/run with DashScope implicit caching vs $9.08 measured for
+Sonnet). Task content is byte-identical to the v3 boundary; only the plan and commitments
+documents changed (`e1-billing-v2-stage1-plan-v4.md`, `e1-billing-v2-commitments-v4.md`).
+Qwen results are never pooled with the Sonnet v1/v2 observations.
+
 ## Not done yet (before any provider run)
 
-- Operator authorization for the v3 Stage 1 frontier difficulty probe
-  (`docs/protocols/e1-billing-v2-stage1-plan-v3.md`, commitments
-  `e1-billing-v2-commitments-v3.md`).
+- LiteLLM proxy configured on `localhost:4000` mapping `qwen3.7-max` → DashScope with a
+  direct key; `LITELLM_MASTER_KEY` exported.
+- Operator authorization for the v4 Stage 1 frontier difficulty probe
+  (`docs/protocols/e1-billing-v2-stage1-plan-v4.md`, commitments
+  `e1-billing-v2-commitments-v4.md`).
