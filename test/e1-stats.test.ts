@@ -69,6 +69,36 @@ describe("E1 stats extractor", () => {
     expect(lines).toContain("context_only_spec.terminations.agent_stalled=1");
   });
 
+  test("counts provider output truncation from recorded finish_reason", async () => {
+    const bundle = await runCheckpoint([
+      ["<<<FILE src/result.ts>>>", "export const result = 1;", "<<<END>>>"].join("\n"),
+      "<<<DONE>>>"
+    ]);
+    const truncated = structuredClone(bundle);
+
+    for (const turn of truncated.turn_records) {
+      turn.provider_exchange = {
+        schema_version: "e1-provider-exchange-record-v0",
+        transport_kind: "canned",
+        request_hash: "stub",
+        response_hash: "stub",
+        redacted_request: {} as never,
+        redacted_response: {
+          status: 200,
+          body: { choices: [{ finish_reason: "length", message: { content: "" } }] }
+        },
+        redaction: { secret_ids: [], replacements: 0 } as never
+      };
+    }
+
+    const summary = summarizeE1Stats([{ context_only_spec: [bundle, truncated] }]);
+    const group = summary.by_condition.context_only_spec!;
+
+    expect(group.output_truncated_turns).toBe(2);
+    expect(group.output_truncated_turn_rate).toBe(0.5);
+    expect(renderE1StatsLines(summary)).toContain("overall.output_truncated_turn_rate=0.5");
+  });
+
   test("extracts condition bundles from provider and no-provider bundle schemas", () => {
     const checkpointBundle = { turn_records: [] } as unknown as E1NoProviderCheckpointBundle;
 

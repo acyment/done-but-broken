@@ -22,6 +22,8 @@ export type E1StatsGroupSummary = {
   };
   truncation_hits: number;
   truncation_hit_rate: number | null;
+  output_truncated_turns: number;
+  output_truncated_turn_rate: number | null;
   wall_time_ms_per_turn: {
     provider_call_mean: number | null;
     harness_apply_mean: number | null;
@@ -107,6 +109,7 @@ function summarizeGroup(bundles: E1NoProviderCheckpointBundle[]): E1StatsGroupSu
   const violationCounts: Record<string, number> = {};
   const terminations: Record<string, number> = {};
   const truncationHits = verificationResults.filter((turn) => turn.l0.verification_result?.truncated).length;
+  const outputTruncatedTurns = turns.filter((turn) => turnFinishReason(turn) === "length").length;
 
   for (const turn of turns) {
     for (const violation of turn.parsed.violations) {
@@ -149,6 +152,8 @@ function summarizeGroup(bundles: E1NoProviderCheckpointBundle[]): E1StatsGroupSu
     },
     truncation_hits: truncationHits,
     truncation_hit_rate: ratio(truncationHits, verificationResults.length),
+    output_truncated_turns: outputTruncatedTurns,
+    output_truncated_turn_rate: ratio(outputTruncatedTurns, turns.length),
     wall_time_ms_per_turn: {
       provider_call_mean: mean(wallTimes.map((wall) => wall.provider_call_ms)),
       harness_apply_mean: mean(wallTimes.map((wall) => wall.harness_apply_ms)),
@@ -170,6 +175,7 @@ function renderGroupLines(prefix: string, group: E1StatsGroupSummary): string[] 
     `${prefix}.violation_turn_rate=${formatNumber(group.violation_turn_rate)}`,
     `${prefix}.agent_stalled_checkpoint_rate=${formatNumber(group.agent_stalled_checkpoint_rate)}`,
     `${prefix}.truncation_hit_rate=${formatNumber(group.truncation_hit_rate)}`,
+    `${prefix}.output_truncated_turn_rate=${formatNumber(group.output_truncated_turn_rate)}`,
     `${prefix}.provider_fresh_input_tokens_per_turn=${formatNumber(group.provider_tokens_per_turn.fresh_input_mean)}`,
     `${prefix}.provider_cached_input_tokens_per_turn=${formatNumber(group.provider_tokens_per_turn.cached_input_mean)}`,
     `${prefix}.provider_output_tokens_per_turn=${formatNumber(group.provider_tokens_per_turn.output_mean)}`,
@@ -188,6 +194,15 @@ function renderGroupLines(prefix: string, group: E1StatsGroupSummary): string[] 
   }
 
   return lines;
+}
+
+function turnFinishReason(turn: E1NoProviderCheckpointBundle["turn_records"][number]): string | undefined {
+  const body = turn.provider_exchange?.redacted_response?.body as
+    | { choices?: Array<{ finish_reason?: unknown }> }
+    | undefined;
+  const reason = body?.choices?.[0]?.finish_reason;
+
+  return typeof reason === "string" ? reason : undefined;
 }
 
 function ratio(numerator: number, denominator: number): number | null {
