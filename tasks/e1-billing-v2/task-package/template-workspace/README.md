@@ -5,10 +5,18 @@ Implement the exported billing engine API in `src/billing.ts` using only the vis
 Workspace layout:
 
 - `src/billing.ts` - engine facade and the public API (`evaluate(events, query)` is the single entry point: fold events, answer one query).
+- `src/billing-types.ts` - engine state, event/query types, and shared guards.
+- `src/billing-handlers.ts` - subscription-lifecycle handlers and the dispatch switch.
+- `src/billing-invoice-handlers.ts` - invoice and payment handlers.
 - `src/domain/` - `money.ts` (integer-cents arithmetic), `subscription.ts` (lifecycle), `invoice.ts` (invoices and lines), plus further domain modules as the spec grows.
 - `src/api/serializers.ts` - invoice serializers (pure string builders, fixed field order).
 - `src/events/audit.ts` - audit log helpers.
 - `specs/` - read-only provided spec tooling; do not modify anything under it.
+
+Keep this module split as the engine grows: each turn replaces whole files, so every file
+must stay small enough to rewrite in full within one turn's output budget. When a file
+approaches a few hundred lines, move cohesive pieces into a new module instead of letting
+it grow.
 
 Money rules:
 

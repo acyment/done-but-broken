@@ -20,13 +20,16 @@ model finding. v1 is burned for evidence; no further runs under it.
 
 ## Amendment 1 — module layout
 
-`src/billing.ts` splits into three modules; all other files keep their v1 layout (12 source
-files total):
+`src/billing.ts` splits into four modules; all other files keep their v1 layout (13 source
+files total). (Build correction, recorded before commitments: the originally drafted
+three-way split left the combined handlers file at 2,557 estimated tokens — above the
+Amendment 2 gate — so the handlers split once more along the subscription/invoice seam.)
 
 | File | Contents |
 | --- | --- |
 | `src/billing-types.ts` | `BillingEvent`, `BillingState`, `Query`, `SubscriptionView`, `JsonValue`, `DispatchOutcome`, `emptyState`, and the shared guards/builders (`requireString`, `requireSubscription`, `requireInvoice`, `withSubscription`, `withInvoice`) |
-| `src/billing-handlers.ts` | the per-event-type handlers and the `dispatch` switch |
+| `src/billing-invoice-handlers.ts` | `buildInvoiceLines` and the invoice/payment handlers (`invoice_generated`, `payment_captured`, `payment_refunded`, `payment_failed`, `invoice_finalized`, `invoice_recomputed`) |
+| `src/billing-handlers.ts` | the subscription-lifecycle and coupon handlers (`subscription_created`, `subscription_activated`, `plan_upgraded`, `plan_downgraded`, `period_renewed`, `coupon_applied`, `subscription_canceled`) and the `dispatch` switch (which imports the invoice handlers) |
 | `src/billing.ts` | facade: `applyEvent` (idempotency + audit append), the deprecated `applyEvents` wrapper, the view/serialize/audit accessors, `replayStateHash`, and the `evaluate(events, query)` oracle/spec entry point; re-exports the public types |
 
 Behavior is identical to v1 by construction: the split moves code without changing it. The

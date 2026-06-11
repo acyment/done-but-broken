@@ -37,7 +37,31 @@ Built 2026-06-10 against `docs/protocols/billing-v2-task-design-v1.md` (the prec
 
 153 oracle cases, 61 held-out (39.9%); 8–11 per checkpoint, ≥3 held-out each. All cases call `evaluate(events, query)` on `src/billing.ts`.
 
+## v2 (2026-06-11): emission-budget split
+
+The v1 Stage 1 probe returned the predeclared structural verdict (run card
+`docs/run-cards/e1-billing-v2-sonnet-context-probe-seed-a-20260611.md`): the reference
+`src/billing.ts` (~4,063 estimated tokens) exceeded the sealed 4000-output-token turn
+budget, so under full-file replacement the canonical solution was inexpressible in one
+turn and CP07–CP14 stalled on `finish_reason=length`. Per the precommitted amendment
+(`docs/protocols/billing-v2-task-design-v2.md`), `billing.ts` split into four modules —
+`billing-types.ts` (state/types/guards), `billing-invoice-handlers.ts`,
+`billing-handlers.ts` (subscription/coupon handlers + dispatch), and the `billing.ts`
+facade (fold + views + `evaluate`) — in the reference, the CP01–CP04 seed, and the
+cp04/cp09/cp14 stage variants. Build correction recorded honestly: the first-drafted
+three-way split left the combined handlers at 2,557 tokens, above the gate, so it split
+once more along the subscription/invoice seam before commitments.
+
+Behavioral invariance is proven by construction and generation: regenerated `cases.json`
+is byte-identical (153 cases, 39.9% held-out) and the visible specs are unchanged. New
+gate 6 enforces every reference and seed source file ≤ 2400 estimated tokens (largest:
+reference `billing-handlers.ts` at 1,372). The seed README now documents the split layout
+and instructs the agent to keep files within the one-turn rewrite budget. Task version:
+`e1-billing-v2-v2` (task.json + oracle.json); the v1 oracle carries over because no
+evidence package was published against the v1 commitments.
+
 ## Not done yet (before any provider run)
 
-- Seal: freeze the package version + hashes, publish pre-run commitments.
-- Operator authorization: isolated-competence diagnostics, then the Stage 1 frontier difficulty probe (gate: context AUC ≤ 0.92, ≥2 on-graph drift regressions), per the design doc.
+- Operator authorization for the v2 Stage 1 frontier difficulty probe
+  (`docs/protocols/e1-billing-v2-stage1-plan-v2.md`, commitments
+  `e1-billing-v2-commitments-v2.md`).

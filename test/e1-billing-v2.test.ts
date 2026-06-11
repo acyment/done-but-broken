@@ -284,6 +284,29 @@ describe("e1-billing-v2 acceptance gates", () => {
       expect(MUTATIONS.filter((m) => m.phase === phase).length).toBeGreaterThanOrEqual(3);
     }
   }, 120000);
+
+  // Design boundary v2, Amendment 2: every source file must be re-emittable in full within
+  // one turn's output budget, with margin. Scripted gates cannot observe max_tokens, so
+  // expressibility is enforced as a static property of the package.
+  test("gate 6: every reference and seed source file fits the emission budget", async () => {
+    const { countE1Tokens } = await import("../src/e1-token-estimator");
+    const BUDGET_TOKENS = 2400;
+    const breaches: string[] = [];
+
+    for (const root of [join(ROOT, "reference", "src"), join(ROOT, "task-package", "template-workspace", "src")]) {
+      const files = await readTree(root, "src");
+
+      for (const [path, content] of Object.entries(files)) {
+        const tokens = countE1Tokens(content);
+
+        if (tokens > BUDGET_TOKENS) {
+          breaches.push(`${root.includes("reference") ? "reference" : "seed"}:${path}=${tokens}`);
+        }
+      }
+    }
+
+    expect(breaches).toEqual([]);
+  });
 });
 
 describe("e1-billing-v2 isolated-competence support", () => {
@@ -507,6 +530,9 @@ async function stageOverrides(stage: string): Promise<Record<string, string>> {
     invoice: "src/domain/invoice.ts",
     audit: "src/events/audit.ts",
     serializers: "src/api/serializers.ts",
+    billingtypes: "src/billing-types.ts",
+    billinghandlers: "src/billing-handlers.ts",
+    billinginvoicehandlers: "src/billing-invoice-handlers.ts",
     billing: "src/billing.ts"
   };
 

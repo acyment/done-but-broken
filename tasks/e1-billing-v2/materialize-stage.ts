@@ -25,6 +25,9 @@ const STAGE_FILE_MAPPING: Record<string, string> = {
   invoice: "src/domain/invoice.ts",
   audit: "src/events/audit.ts",
   serializers: "src/api/serializers.ts",
+  billingtypes: "src/billing-types.ts",
+  billinghandlers: "src/billing-handlers.ts",
+  billinginvoicehandlers: "src/billing-invoice-handlers.ts",
   billing: "src/billing.ts"
 };
 
