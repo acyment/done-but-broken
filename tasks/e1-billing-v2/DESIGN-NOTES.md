@@ -110,9 +110,12 @@ edge case), 2 I-IMMUT (CP16 recompute-new-doc). Qwen 3.7 Max fails 3 more commit
 classes than Sonnet v2, yet AUC is still well above the 0.92 ceiling. Both frontier
 models saturate the task; zero regressions in both.
 
-**Implication:** The task does not discriminate frontier models. Redesign with harder
-tasks is required before Stage 2 causal pilots. The direction for redesign is documented
-in the harder-task design pattern memory (`harder-task-design-pattern.md`): partial seed
-+ hidden reference + naive-agent proof + more cross-file invariants with later-checkpoint
-perturbations. No on-the-fly escalation — new sealed design revision and task version
-required.
+**Implication:** The task does not discriminate frontier models. The billing-v2 boundary
+is closed as frontier ceiling evidence; no further runs under any billing-v2 version.
+
+**Successor:** `docs/protocols/billing-v3-task-design-v1.md` (precommitted 2026-06-11) —
+new task `e1-billing-v3`, new compatibility boundary. Core changes: the replay-hash spine
+is seeded from CP01 instead of introduced at CP17 (late-introduced hardness can never
+regress — the central v2/v4 lesson), four late checkpoints force structural rewrites of
+frozen-invariant files, and the naive-agent gate strengthens to ≥4 regressions across ≥3
+frozen files plus new forced-touch and spine-threat audits.
