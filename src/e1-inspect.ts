@@ -319,6 +319,19 @@ function verifyContentHashManifest(loaded: LoadedBundle): E1InspectionMismatch[]
   return mismatches;
 }
 
+// Oracle check `details` strings can embed the absolute scoring tmp directory (e.g. a
+// module import error quoting the mounted file path). Scoring mounts snapshots under
+// `<tmpRoot>/<conditionId>/<checkpointId>/turn-<n>/`, so the rescore's tmp prefix always
+// differs from the recorded run's. Strip everything before the condition segment in
+// details strings only; pass/fail values and the rest of the error text stay compared.
+function normalizeOracleScoringForComparison(scoring: unknown): string {
+  return JSON.stringify(scoring, (key, value) =>
+    key === "details" && typeof value === "string"
+      ? value.replace(/[^\s"'`]*\/(context_only_spec|feedback_capable_spec)\//g, "<scoring-tmp>/$1/")
+      : value
+  );
+}
+
 async function verifyOracleScoringAndMetrics(input: {
   constants: E1SealedConstants;
   loaded: LoadedBundle;
@@ -343,7 +356,10 @@ async function verifyOracleScoringAndMetrics(input: {
     tmpRoot: input.tmpRoot
   });
 
-  if (JSON.stringify(rescored) !== JSON.stringify(input.loaded.bundle.oracle_scoring)) {
+  if (
+    normalizeOracleScoringForComparison(rescored) !==
+    normalizeOracleScoringForComparison(input.loaded.bundle.oracle_scoring)
+  ) {
     mismatches.push({
       kind: "oracle_scoring",
       detail: "re-scored hidden-oracle results differ from the recorded oracle_scoring section"

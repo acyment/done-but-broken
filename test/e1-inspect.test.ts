@@ -132,6 +132,77 @@ describe("E1 publication-grade bundle inspection", () => {
     expect(report.mismatches.map((m) => m.kind)).toContain("task_package_hash");
   });
 
+  test("oracle failure details embedding scoring tmp paths do not invalidate replay", async () => {
+    // A failing oracle check records `module import failed: ... '/abs/tmp/.../src/cartcalc.ts'`.
+    // The rescore runs in a different tmp root, so the comparison must be path-insensitive
+    // while still catching pass/fail tampering.
+    const runsRoot = join(tmpdir(), `hit-sdd-e1-inspect-pathdetails-${Date.now()}`);
+    tempRoots.push(runsRoot);
+    await mkdir(runsRoot, { recursive: true });
+
+    const taskPackage = await loadE1TaskPackage(TASK_PACKAGE_PATH);
+    const oraclePackage = await loadE1OraclePackage(ORACLE_PACKAGE_PATH);
+    const brokenImport = (checkpointId: string): string =>
+      checkpointId === "3"
+        ? [
+            "<<<FILE src/cartcalc.ts>>>",
+            'import { nope } from "./missing-module";',
+            "export const broken = nope;",
+            cartCalcImplementation({ cap: true })
+              .split("\n")
+              .slice(1)
+              .join("\n"),
+            "<<<DONE>>>"
+          ].join("\n")
+        : [cartCalcImplementation({ cap: false }), "<<<DONE>>>"].join("\n");
+
+    await runE1TaskPackageNoProvider({
+      constants,
+      taskPackage,
+      oraclePackage,
+      runsRoot,
+      runId: "inspect-path-details",
+      arms: {
+        context_only_spec: ({ checkpointId }) =>
+          new ScriptedAgentProvider({
+            providerId: `context-${checkpointId}`,
+            script: [brokenImport(checkpointId)]
+          }),
+        feedback_capable_spec: ({ checkpointId }) =>
+          new ScriptedAgentProvider({
+            providerId: `feedback-${checkpointId}`,
+            script: [brokenImport(checkpointId)]
+          })
+      }
+    });
+
+    const bundlePath = join(runsRoot, "inspect-path-details", "e1-task-package-bundle.json");
+    const recorded = JSON.parse(await readFile(bundlePath, "utf8"));
+    const cp3Details: string = recorded.oracle_scoring.per_turn.context_only_spec["3"][0].checks[0].details;
+
+    expect(cp3Details).toContain("module import failed");
+    expect(cp3Details).toContain(runsRoot);
+
+    const report = await inspect(bundlePath);
+
+    expect(report.mismatches.map((m) => m.kind)).not.toContain("oracle_scoring");
+    expect(report.mismatches.map((m) => m.kind)).not.toContain("metrics");
+    expect(report.valid).toBe(true);
+
+    // Path-insensitivity must not mask real tampering: flip the failing check to passed.
+    const tampered = JSON.parse(await readFile(bundlePath, "utf8"));
+    for (const check of tampered.oracle_scoring.per_turn.context_only_spec["3"][0].checks) {
+      check.passed = true;
+    }
+    const tamperedPath = join(runsRoot, "tampered-path-details.json");
+    await writeFile(tamperedPath, JSON.stringify(tampered, null, 2));
+
+    const tamperedReport = await inspect(tamperedPath);
+
+    expect(tamperedReport.valid).toBe(false);
+    expect(tamperedReport.mismatches.map((m) => m.kind)).toContain("oracle_scoring");
+  });
+
   test("a constants-version drift blocks replay and is reported", async () => {
     const report = await inspectTampered((bundle) => {
       bundle.run_identity.constants_version = "0.0.1";
