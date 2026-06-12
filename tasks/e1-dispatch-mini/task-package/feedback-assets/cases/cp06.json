@@ -1,0 +1,162 @@
+[
+  {
+    "check_id": "cp06-status-cancel-partial",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-193",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-194",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-195",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-196",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "C1"
+      }
+    ],
+    "expected": {
+      "order_id": "C1",
+      "status": "cancelled_partial"
+    }
+  },
+  {
+    "check_id": "cp06-export-requires-refund",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-197",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-198",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-199",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-200",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "C1"
+      }
+    ],
+    "expected": "{\"order\":\"C1\",\"status\":\"cancelled_partial\",\"total_cents\":7000,\"requires_refund\":true,\"lines\":[{\"line\":\"C1-L1\",\"amount_cents\":3000,\"shipped\":true},{\"line\":\"C1-L2\",\"amount_cents\":4000}]}"
+  },
+  {
+    "check_id": "cp06-reimport-cancel-partial",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-201",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-202",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-203",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-204",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "C1"
+      }
+    ],
+    "expected": {
+      "order_id": "C1",
+      "status": "cancelled_partial",
+      "total_cents": 7000,
+      "requires_refund": true,
+      "lines": [
+        {
+          "line_id": "C1-L1",
+          "amount_cents": 3000,
+          "shipped": true
+        },
+        {
+          "line_id": "C1-L2",
+          "amount_cents": 4000
+        }
+      ]
+    }
+  }
+]

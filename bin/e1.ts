@@ -76,7 +76,10 @@ async function run(options: CliOptions): Promise<string> {
     throw new Error(`${options.apiKeyEnv} is required when --transport=live`);
   }
 
-  if (options.transport === "canned" && (options.task === "billing-v2" || options.task === "billing-v3")) {
+  if (
+    options.transport === "canned" &&
+    (options.task === "billing-v2" || options.task === "billing-v3" || options.task === "dispatch-mini")
+  ) {
     throw new Error("--transport=canned is only supported for the cartcalc tasks");
   }
 
@@ -289,7 +292,15 @@ function resolveTask(task: string): {
     };
   }
 
-  throw new Error("--task must be cartcalc, cartcalc-openspec, billing-v2, or billing-v3 for the E1 runner");
+  if (task === "dispatch-mini") {
+    return {
+      taskPackagePath: join(repoRoot, "tasks", "e1-dispatch-mini", "task-package"),
+      oraclePackagePath: join(repoRoot, "tasks", "e1-dispatch-mini", "oracle-package"),
+      openspecProfilePath: join(repoRoot, "docs", "protocols", "e1-openspec-workflow-constants-v0.json")
+    };
+  }
+
+  throw new Error("--task must be cartcalc, cartcalc-openspec, billing-v2, billing-v3, or dispatch-mini for the E1 runner");
 }
 
 async function readBaselineOverlay(baselineDir: string): Promise<{ files: Record<string, string> }> {

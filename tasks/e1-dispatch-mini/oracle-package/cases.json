@@ -1,0 +1,3177 @@
+[
+  {
+    "check_id": "cp01-status-processing",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O1-create-1",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O1",
+          "lines": [
+            {
+              "line_id": "O1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O1-pay-2",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O1"
+      }
+    ],
+    "expected": {
+      "order_id": "O1",
+      "status": "processing"
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp01-status-awaiting",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O2-create-3",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O2",
+          "lines": [
+            {
+              "line_id": "O2-L1",
+              "amount_cents": 2500
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O2"
+      }
+    ],
+    "expected": {
+      "order_id": "O2",
+      "status": "awaiting_payment"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp01-status-shipped",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O3-create-4",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O3",
+          "lines": [
+            {
+              "line_id": "O3-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O3-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O3-pay-5",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O3"
+        },
+        {
+          "event_id": "O3-ship-6",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O3",
+          "line_id": "O3-L1"
+        },
+        {
+          "event_id": "O3-ship-7",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O3",
+          "line_id": "O3-L2"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O3"
+      }
+    ],
+    "expected": {
+      "order_id": "O3",
+      "status": "shipped"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp01-status-cancelled",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O4-create-8",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O4",
+          "lines": [
+            {
+              "line_id": "O4-L1",
+              "amount_cents": 1500
+            }
+          ]
+        },
+        {
+          "event_id": "O4-cancel-9",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O4"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O4"
+      }
+    ],
+    "expected": {
+      "order_id": "O4",
+      "status": "cancelled"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp01-export-note",
+    "commitment_id": "I-NOTES",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O5-create-10",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "lines": [
+            {
+              "line_id": "O5-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O5-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O5-pay-11",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5"
+        },
+        {
+          "event_id": "O5-note-12",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "note": "gift wrap"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "O5"
+      }
+    ],
+    "expected": "{\"order\":\"O5\",\"status\":\"processing\",\"total_cents\":7000,\"lines\":[{\"line\":\"O5-L1\",\"amount_cents\":3000},{\"line\":\"O5-L2\",\"amount_cents\":4000}],\"notes\":[\"gift wrap\"]}",
+    "held_out": false
+  },
+  {
+    "check_id": "cp01-reimport-note",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O5-create-13",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "lines": [
+            {
+              "line_id": "O5-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O5-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O5-pay-14",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5"
+        },
+        {
+          "event_id": "O5-note-15",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "note": "gift wrap"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "O5"
+      }
+    ],
+    "expected": {
+      "order_id": "O5",
+      "status": "processing",
+      "total_cents": 7000,
+      "lines": [
+        {
+          "line_id": "O5-L1",
+          "amount_cents": 3000
+        },
+        {
+          "line_id": "O5-L2",
+          "amount_cents": 4000
+        }
+      ],
+      "notes": [
+        "gift wrap"
+      ]
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp01-note-keeps-status",
+    "commitment_id": "I-NOTES",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O6-create-16",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O6",
+          "lines": [
+            {
+              "line_id": "O6-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "O6-pay-17",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O6"
+        },
+        {
+          "event_id": "O6-note-18",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O6",
+          "note": "leave at door"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O6"
+      }
+    ],
+    "expected": {
+      "order_id": "O6",
+      "status": "processing"
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp01-export-shipped-notes",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O7-create-19",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "lines": [
+            {
+              "line_id": "O7-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O7-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O7-pay-20",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7"
+        },
+        {
+          "event_id": "O7-ship-21",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "line_id": "O7-L1"
+        },
+        {
+          "event_id": "O7-ship-22",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "line_id": "O7-L2"
+        },
+        {
+          "event_id": "O7-note-23",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "note": "fragile"
+        },
+        {
+          "event_id": "O7-note-24",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "note": "call first"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "O7"
+      }
+    ],
+    "expected": "{\"order\":\"O7\",\"status\":\"shipped\",\"total_cents\":7000,\"lines\":[{\"line\":\"O7-L1\",\"amount_cents\":3000,\"shipped\":true},{\"line\":\"O7-L2\",\"amount_cents\":4000,\"shipped\":true}],\"notes\":[\"fragile\",\"call first\"]}",
+    "held_out": true
+  },
+  {
+    "check_id": "cp01-reimport-shipped-notes",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O7-create-25",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "lines": [
+            {
+              "line_id": "O7-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O7-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O7-pay-26",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7"
+        },
+        {
+          "event_id": "O7-ship-27",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "line_id": "O7-L1"
+        },
+        {
+          "event_id": "O7-ship-28",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "line_id": "O7-L2"
+        },
+        {
+          "event_id": "O7-note-29",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "note": "fragile"
+        },
+        {
+          "event_id": "O7-note-30",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O7",
+          "note": "call first"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "O7"
+      }
+    ],
+    "expected": {
+      "order_id": "O7",
+      "status": "shipped",
+      "total_cents": 7000,
+      "lines": [
+        {
+          "line_id": "O7-L1",
+          "amount_cents": 3000,
+          "shipped": true
+        },
+        {
+          "line_id": "O7-L2",
+          "amount_cents": 4000,
+          "shipped": true
+        }
+      ],
+      "notes": [
+        "fragile",
+        "call first"
+      ]
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp01-export-plain",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "1",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "O8-create-31",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O8",
+          "lines": [
+            {
+              "line_id": "O8-L1",
+              "amount_cents": 9900
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "O8"
+      }
+    ],
+    "expected": "{\"order\":\"O8\",\"status\":\"awaiting_payment\",\"total_cents\":9900,\"lines\":[{\"line\":\"O8-L1\",\"amount_cents\":9900}]}",
+    "held_out": true
+  },
+  {
+    "check_id": "cp02-digest-mixed-statuses",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "2",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "D1-create-32",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D1",
+          "lines": [
+            {
+              "line_id": "D1-L1",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "D2-create-33",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D2",
+          "lines": [
+            {
+              "line_id": "D2-L1",
+              "amount_cents": 4000
+            },
+            {
+              "line_id": "D2-L2",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "D2-pay-34",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D2"
+        },
+        {
+          "event_id": "D3-create-35",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D3",
+          "lines": [
+            {
+              "line_id": "D3-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "D3-pay-36",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D3"
+        },
+        {
+          "event_id": "D3-ship-37",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D3",
+          "line_id": "D3-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "awaiting_payment",
+        "count": 1,
+        "total_cents": 3000
+      },
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 2000
+      }
+    ],
+    "held_out": false
+  },
+  {
+    "check_id": "cp02-digest-omit-empty",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "2",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "D4-create-38",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D4",
+          "lines": [
+            {
+              "line_id": "D4-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "D4-pay-39",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D4"
+        },
+        {
+          "event_id": "D5-create-40",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D5",
+          "lines": [
+            {
+              "line_id": "D5-L1",
+              "amount_cents": 1500
+            }
+          ]
+        },
+        {
+          "event_id": "D5-pay-41",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D5"
+        },
+        {
+          "event_id": "D5-ship-42",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D5",
+          "line_id": "D5-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 1500
+      }
+    ],
+    "held_out": false
+  },
+  {
+    "check_id": "cp02-digest-sums-bucket",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "2",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "D6-create-43",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D6",
+          "lines": [
+            {
+              "line_id": "D6-L1",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "D6-pay-44",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D6"
+        },
+        {
+          "event_id": "D7-create-45",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D7",
+          "lines": [
+            {
+              "line_id": "D7-L1",
+              "amount_cents": 4500
+            },
+            {
+              "line_id": "D7-L2",
+              "amount_cents": 500
+            }
+          ]
+        },
+        {
+          "event_id": "D7-pay-46",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D7"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 2,
+        "total_cents": 8000
+      }
+    ],
+    "held_out": false
+  },
+  {
+    "check_id": "cp02-digest-cancelled",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "2",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "D8-create-47",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D8",
+          "lines": [
+            {
+              "line_id": "D8-L1",
+              "amount_cents": 2500
+            }
+          ]
+        },
+        {
+          "event_id": "D8-cancel-48",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D8"
+        },
+        {
+          "event_id": "D9-create-49",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D9",
+          "lines": [
+            {
+              "line_id": "D9-L1",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "D9-pay-50",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D9"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 1000
+      },
+      {
+        "status": "cancelled",
+        "count": 1,
+        "total_cents": 2500
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp02-digest-single",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "2",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "DA-create-51",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "DA",
+          "lines": [
+            {
+              "line_id": "DA-L1",
+              "amount_cents": 700
+            },
+            {
+              "line_id": "DA-L2",
+              "amount_cents": 800
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "awaiting_payment",
+        "count": 1,
+        "total_cents": 1500
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp02-digest-notes-ignored",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "2",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "DB-create-52",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "DB",
+          "lines": [
+            {
+              "line_id": "DB-L1",
+              "amount_cents": 6000
+            }
+          ]
+        },
+        {
+          "event_id": "DB-pay-53",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "DB"
+        },
+        {
+          "event_id": "DB-note-54",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "DB",
+          "note": "expedite"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 6000
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp03-status-returned",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R1-create-55",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R1",
+          "lines": [
+            {
+              "line_id": "R1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "R1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "R1-pay-56",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R1"
+        },
+        {
+          "event_id": "R1-ship-57",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R1",
+          "line_id": "R1-L1"
+        },
+        {
+          "event_id": "R1-ship-58",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R1",
+          "line_id": "R1-L2"
+        },
+        {
+          "event_id": "R1-ret-59",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R1",
+          "line_id": "R1-L1"
+        },
+        {
+          "event_id": "R1-ret-60",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R1",
+          "line_id": "R1-L2"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "R1"
+      }
+    ],
+    "expected": {
+      "order_id": "R1",
+      "status": "returned"
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp03-export-returned",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R2-create-61",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2",
+          "lines": [
+            {
+              "line_id": "R2-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "R2-pay-62",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2"
+        },
+        {
+          "event_id": "R2-ship-63",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2",
+          "line_id": "R2-L1"
+        },
+        {
+          "event_id": "R2-ret-64",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2",
+          "line_id": "R2-L1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "R2"
+      }
+    ],
+    "expected": "{\"order\":\"R2\",\"status\":\"returned\",\"total_cents\":2000,\"lines\":[{\"line\":\"R2-L1\",\"amount_cents\":2000,\"shipped\":true,\"returned\":true}]}",
+    "held_out": false
+  },
+  {
+    "check_id": "cp03-reimport-returned",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R2-create-65",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2",
+          "lines": [
+            {
+              "line_id": "R2-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "R2-pay-66",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2"
+        },
+        {
+          "event_id": "R2-ship-67",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2",
+          "line_id": "R2-L1"
+        },
+        {
+          "event_id": "R2-ret-68",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R2",
+          "line_id": "R2-L1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "R2"
+      }
+    ],
+    "expected": {
+      "order_id": "R2",
+      "status": "returned",
+      "total_cents": 2000,
+      "lines": [
+        {
+          "line_id": "R2-L1",
+          "amount_cents": 2000,
+          "shipped": true,
+          "returned": true
+        }
+      ]
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp03-digest-returned",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R3-create-69",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R3",
+          "lines": [
+            {
+              "line_id": "R3-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "R3-pay-70",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R3"
+        },
+        {
+          "event_id": "R3-ship-71",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R3",
+          "line_id": "R3-L1"
+        },
+        {
+          "event_id": "R3-ret-72",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R3",
+          "line_id": "R3-L1"
+        },
+        {
+          "event_id": "R4-create-73",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R4",
+          "lines": [
+            {
+              "line_id": "R4-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "R4-pay-74",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R4"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "returned",
+        "count": 1,
+        "total_cents": 2000
+      }
+    ],
+    "held_out": false
+  },
+  {
+    "check_id": "cp03-return-unshipped-ignored",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R5-create-75",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R5",
+          "lines": [
+            {
+              "line_id": "R5-L1",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "R5-pay-76",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R5"
+        },
+        {
+          "event_id": "R5-ret-77",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R5",
+          "line_id": "R5-L1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "R5"
+      }
+    ],
+    "expected": {
+      "order_id": "R5",
+      "status": "processing"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp03-export-returned-note",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R6-create-78",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R6",
+          "lines": [
+            {
+              "line_id": "R6-L1",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "R6-pay-79",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R6"
+        },
+        {
+          "event_id": "R6-note-80",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R6",
+          "note": "defective"
+        },
+        {
+          "event_id": "R6-ship-81",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R6",
+          "line_id": "R6-L1"
+        },
+        {
+          "event_id": "R6-ret-82",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R6",
+          "line_id": "R6-L1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "R6"
+      }
+    ],
+    "expected": "{\"order\":\"R6\",\"status\":\"returned\",\"total_cents\":4000,\"lines\":[{\"line\":\"R6-L1\",\"amount_cents\":4000,\"shipped\":true,\"returned\":true}],\"notes\":[\"defective\"]}",
+    "held_out": true
+  },
+  {
+    "check_id": "cp03-reimport-two-returned",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R7-create-83",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R7",
+          "lines": [
+            {
+              "line_id": "R7-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "R7-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "R7-pay-84",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R7"
+        },
+        {
+          "event_id": "R7-ship-85",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R7",
+          "line_id": "R7-L1"
+        },
+        {
+          "event_id": "R7-ship-86",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R7",
+          "line_id": "R7-L2"
+        },
+        {
+          "event_id": "R7-ret-87",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R7",
+          "line_id": "R7-L1"
+        },
+        {
+          "event_id": "R7-ret-88",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R7",
+          "line_id": "R7-L2"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "R7"
+      }
+    ],
+    "expected": {
+      "order_id": "R7",
+      "status": "returned",
+      "total_cents": 3000,
+      "lines": [
+        {
+          "line_id": "R7-L1",
+          "amount_cents": 1000,
+          "shipped": true,
+          "returned": true
+        },
+        {
+          "line_id": "R7-L2",
+          "amount_cents": 2000,
+          "shipped": true,
+          "returned": true
+        }
+      ]
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp03-digest-mixed",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "R8-create-89",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R8",
+          "lines": [
+            {
+              "line_id": "R8-L1",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "R8-pay-90",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R8"
+        },
+        {
+          "event_id": "R8-ship-91",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R8",
+          "line_id": "R8-L1"
+        },
+        {
+          "event_id": "R8-ret-92",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R8",
+          "line_id": "R8-L1"
+        },
+        {
+          "event_id": "R9-create-93",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R9",
+          "lines": [
+            {
+              "line_id": "R9-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "R9-pay-94",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R9"
+        },
+        {
+          "event_id": "R9-ship-95",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "R9",
+          "line_id": "R9-L1"
+        },
+        {
+          "event_id": "RA-create-96",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RA",
+          "lines": [
+            {
+              "line_id": "RA-L1",
+              "amount_cents": 3000
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "awaiting_payment",
+        "count": 1,
+        "total_cents": 3000
+      },
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 2000
+      },
+      {
+        "status": "returned",
+        "count": 1,
+        "total_cents": 1000
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp03-status-single-returned",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "3",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "RB-create-97",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RB",
+          "lines": [
+            {
+              "line_id": "RB-L1",
+              "amount_cents": 4400
+            }
+          ]
+        },
+        {
+          "event_id": "RB-pay-98",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RB"
+        },
+        {
+          "event_id": "RB-ship-99",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RB",
+          "line_id": "RB-L1"
+        },
+        {
+          "event_id": "RB-ret-100",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RB",
+          "line_id": "RB-L1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "RB"
+      }
+    ],
+    "expected": {
+      "order_id": "RB",
+      "status": "returned"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp04-status-partial",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P1-create-101",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1",
+          "lines": [
+            {
+              "line_id": "P1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "P1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "P1-pay-102",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1"
+        },
+        {
+          "event_id": "P1-ship-103",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1",
+          "line_id": "P1-L1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "P1"
+      }
+    ],
+    "expected": {
+      "order_id": "P1",
+      "status": "partially_shipped"
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp04-export-partial",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P1-create-104",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1",
+          "lines": [
+            {
+              "line_id": "P1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "P1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "P1-pay-105",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1"
+        },
+        {
+          "event_id": "P1-ship-106",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1",
+          "line_id": "P1-L1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "P1"
+      }
+    ],
+    "expected": "{\"order\":\"P1\",\"status\":\"partially_shipped\",\"total_cents\":7000,\"lines\":[{\"line\":\"P1-L1\",\"amount_cents\":3000,\"shipped\":true},{\"line\":\"P1-L2\",\"amount_cents\":4000}]}",
+    "held_out": false
+  },
+  {
+    "check_id": "cp04-reimport-partial",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P1-create-107",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1",
+          "lines": [
+            {
+              "line_id": "P1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "P1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "P1-pay-108",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1"
+        },
+        {
+          "event_id": "P1-ship-109",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P1",
+          "line_id": "P1-L1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "P1"
+      }
+    ],
+    "expected": {
+      "order_id": "P1",
+      "status": "partially_shipped",
+      "total_cents": 7000,
+      "lines": [
+        {
+          "line_id": "P1-L1",
+          "amount_cents": 3000,
+          "shipped": true
+        },
+        {
+          "line_id": "P1-L2",
+          "amount_cents": 4000
+        }
+      ]
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp04-digest-partial",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P2-create-110",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P2",
+          "lines": [
+            {
+              "line_id": "P2-L1",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "P2-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "P2-pay-111",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P2"
+        },
+        {
+          "event_id": "P2-ship-112",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P2",
+          "line_id": "P2-L1"
+        },
+        {
+          "event_id": "P3-create-113",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P3",
+          "lines": [
+            {
+              "line_id": "P3-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "P3-pay-114",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P3"
+        },
+        {
+          "event_id": "P4-create-115",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P4",
+          "lines": [
+            {
+              "line_id": "P4-L1",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "P4-pay-116",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P4"
+        },
+        {
+          "event_id": "P4-ship-117",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P4",
+          "line_id": "P4-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "partially_shipped",
+        "count": 1,
+        "total_cents": 4000
+      },
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 1000
+      }
+    ],
+    "held_out": false
+  },
+  {
+    "check_id": "cp04-status-two-of-three",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P5-create-118",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5",
+          "lines": [
+            {
+              "line_id": "P5-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "P5-L2",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "P5-L3",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "P5-pay-119",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5"
+        },
+        {
+          "event_id": "P5-ship-120",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5",
+          "line_id": "P5-L1"
+        },
+        {
+          "event_id": "P5-ship-121",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5",
+          "line_id": "P5-L3"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "P5"
+      }
+    ],
+    "expected": {
+      "order_id": "P5",
+      "status": "partially_shipped"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp04-reimport-two-of-three",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P5-create-122",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5",
+          "lines": [
+            {
+              "line_id": "P5-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "P5-L2",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "P5-L3",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "P5-pay-123",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5"
+        },
+        {
+          "event_id": "P5-ship-124",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5",
+          "line_id": "P5-L1"
+        },
+        {
+          "event_id": "P5-ship-125",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P5",
+          "line_id": "P5-L3"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "P5"
+      }
+    ],
+    "expected": {
+      "order_id": "P5",
+      "status": "partially_shipped",
+      "total_cents": 6000,
+      "lines": [
+        {
+          "line_id": "P5-L1",
+          "amount_cents": 1000,
+          "shipped": true
+        },
+        {
+          "line_id": "P5-L2",
+          "amount_cents": 2000
+        },
+        {
+          "line_id": "P5-L3",
+          "amount_cents": 3000,
+          "shipped": true
+        }
+      ]
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp04-digest-three-buckets",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P6-create-126",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P6",
+          "lines": [
+            {
+              "line_id": "P6-L1",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "P6-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "P6-pay-127",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P6"
+        },
+        {
+          "event_id": "P6-ship-128",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P6",
+          "line_id": "P6-L1"
+        },
+        {
+          "event_id": "P7-create-129",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P7",
+          "lines": [
+            {
+              "line_id": "P7-L1",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "P7-pay-130",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P7"
+        },
+        {
+          "event_id": "P8-create-131",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P8",
+          "lines": [
+            {
+              "line_id": "P8-L1",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "P8-pay-132",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P8"
+        },
+        {
+          "event_id": "P8-ship-133",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P8",
+          "line_id": "P8-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 3000
+      },
+      {
+        "status": "partially_shipped",
+        "count": 1,
+        "total_cents": 4000
+      },
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 4000
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp04-export-partial-note",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "P9-create-134",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P9",
+          "lines": [
+            {
+              "line_id": "P9-L1",
+              "amount_cents": 1500
+            },
+            {
+              "line_id": "P9-L2",
+              "amount_cents": 1500
+            }
+          ]
+        },
+        {
+          "event_id": "P9-pay-135",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P9"
+        },
+        {
+          "event_id": "P9-note-136",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P9",
+          "note": "split shipment ok"
+        },
+        {
+          "event_id": "P9-ship-137",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "P9",
+          "line_id": "P9-L2"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "P9"
+      }
+    ],
+    "expected": "{\"order\":\"P9\",\"status\":\"partially_shipped\",\"total_cents\":3000,\"lines\":[{\"line\":\"P9-L1\",\"amount_cents\":1500},{\"line\":\"P9-L2\",\"amount_cents\":1500,\"shipped\":true}],\"notes\":[\"split shipment ok\"]}",
+    "held_out": true
+  },
+  {
+    "check_id": "cp04-status-completes-to-shipped",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "4",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "PA-create-138",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PA",
+          "lines": [
+            {
+              "line_id": "PA-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "PA-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "PA-pay-139",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PA"
+        },
+        {
+          "event_id": "PA-ship-140",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PA",
+          "line_id": "PA-L1"
+        },
+        {
+          "event_id": "PA-ship-141",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PA",
+          "line_id": "PA-L2"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "PA"
+      }
+    ],
+    "expected": {
+      "order_id": "PA",
+      "status": "shipped"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp05-status-partial-return",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q1-create-142",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "lines": [
+            {
+              "line_id": "Q1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "Q1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "Q1-pay-143",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1"
+        },
+        {
+          "event_id": "Q1-ship-144",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        },
+        {
+          "event_id": "Q1-ship-145",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L2"
+        },
+        {
+          "event_id": "Q1-ret-146",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "Q1"
+      }
+    ],
+    "expected": {
+      "order_id": "Q1",
+      "status": "partially_returned"
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp05-reimport-partial-return",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q1-create-147",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "lines": [
+            {
+              "line_id": "Q1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "Q1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "Q1-pay-148",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1"
+        },
+        {
+          "event_id": "Q1-ship-149",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        },
+        {
+          "event_id": "Q1-ship-150",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L2"
+        },
+        {
+          "event_id": "Q1-ret-151",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "Q1"
+      }
+    ],
+    "expected": {
+      "order_id": "Q1",
+      "status": "partially_returned",
+      "total_cents": 7000,
+      "lines": [
+        {
+          "line_id": "Q1-L1",
+          "amount_cents": 3000,
+          "shipped": true,
+          "returned": true
+        },
+        {
+          "line_id": "Q1-L2",
+          "amount_cents": 4000,
+          "shipped": true
+        }
+      ]
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp05-digest-partial-return",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q2-create-152",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "lines": [
+            {
+              "line_id": "Q2-L1",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "Q2-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "Q2-pay-153",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2"
+        },
+        {
+          "event_id": "Q2-ship-154",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "line_id": "Q2-L1"
+        },
+        {
+          "event_id": "Q2-ship-155",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "line_id": "Q2-L2"
+        },
+        {
+          "event_id": "Q2-ret-156",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "line_id": "Q2-L1"
+        },
+        {
+          "event_id": "Q3-create-157",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q3",
+          "lines": [
+            {
+              "line_id": "Q3-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "Q3-pay-158",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q3"
+        },
+        {
+          "event_id": "Q3-ship-159",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q3",
+          "line_id": "Q3-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "partially_returned",
+        "count": 1,
+        "total_cents": 4000
+      }
+    ],
+    "held_out": false
+  },
+  {
+    "check_id": "cp05-export-partial-return",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q4-create-160",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q4",
+          "lines": [
+            {
+              "line_id": "Q4-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "Q4-L2",
+              "amount_cents": 9000
+            }
+          ]
+        },
+        {
+          "event_id": "Q4-pay-161",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q4"
+        },
+        {
+          "event_id": "Q4-ship-162",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q4",
+          "line_id": "Q4-L1"
+        },
+        {
+          "event_id": "Q4-ship-163",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q4",
+          "line_id": "Q4-L2"
+        },
+        {
+          "event_id": "Q4-ret-164",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q4",
+          "line_id": "Q4-L2"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "Q4"
+      }
+    ],
+    "expected": "{\"order\":\"Q4\",\"status\":\"partially_returned\",\"total_cents\":10000,\"lines\":[{\"line\":\"Q4-L1\",\"amount_cents\":1000,\"shipped\":true},{\"line\":\"Q4-L2\",\"amount_cents\":9000,\"shipped\":true,\"returned\":true}]}",
+    "held_out": true
+  },
+  {
+    "check_id": "cp05-status-one-of-three-returned",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q5-create-165",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q5",
+          "lines": [
+            {
+              "line_id": "Q5-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "Q5-L2",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "Q5-L3",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "Q5-pay-166",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q5"
+        },
+        {
+          "event_id": "Q5-ship-167",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q5",
+          "line_id": "Q5-L1"
+        },
+        {
+          "event_id": "Q5-ship-168",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q5",
+          "line_id": "Q5-L2"
+        },
+        {
+          "event_id": "Q5-ship-169",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q5",
+          "line_id": "Q5-L3"
+        },
+        {
+          "event_id": "Q5-ret-170",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q5",
+          "line_id": "Q5-L2"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "Q5"
+      }
+    ],
+    "expected": {
+      "order_id": "Q5",
+      "status": "partially_returned"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp05-digest-return-spectrum",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q6-create-171",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q6",
+          "lines": [
+            {
+              "line_id": "Q6-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "Q6-L2",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "Q6-pay-172",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q6"
+        },
+        {
+          "event_id": "Q6-ship-173",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q6",
+          "line_id": "Q6-L1"
+        },
+        {
+          "event_id": "Q6-ship-174",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q6",
+          "line_id": "Q6-L2"
+        },
+        {
+          "event_id": "Q6-ret-175",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q6",
+          "line_id": "Q6-L1"
+        },
+        {
+          "event_id": "Q7-create-176",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q7",
+          "lines": [
+            {
+              "line_id": "Q7-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "Q7-pay-177",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q7"
+        },
+        {
+          "event_id": "Q7-ship-178",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q7",
+          "line_id": "Q7-L1"
+        },
+        {
+          "event_id": "Q7-ret-179",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q7",
+          "line_id": "Q7-L1"
+        },
+        {
+          "event_id": "Q8-create-180",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q8",
+          "lines": [
+            {
+              "line_id": "Q8-L1",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "Q8-pay-181",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q8"
+        },
+        {
+          "event_id": "Q8-ship-182",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q8",
+          "line_id": "Q8-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 3000
+      },
+      {
+        "status": "partially_returned",
+        "count": 1,
+        "total_cents": 2000
+      },
+      {
+        "status": "returned",
+        "count": 1,
+        "total_cents": 2000
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp05-reimport-return-flags",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "Q9-create-183",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q9",
+          "lines": [
+            {
+              "line_id": "Q9-L1",
+              "amount_cents": 4000
+            },
+            {
+              "line_id": "Q9-L2",
+              "amount_cents": 6000
+            }
+          ]
+        },
+        {
+          "event_id": "Q9-pay-184",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q9"
+        },
+        {
+          "event_id": "Q9-ship-185",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q9",
+          "line_id": "Q9-L1"
+        },
+        {
+          "event_id": "Q9-ship-186",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q9",
+          "line_id": "Q9-L2"
+        },
+        {
+          "event_id": "Q9-ret-187",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q9",
+          "line_id": "Q9-L2"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "Q9"
+      }
+    ],
+    "expected": {
+      "order_id": "Q9",
+      "status": "partially_returned",
+      "total_cents": 10000,
+      "lines": [
+        {
+          "line_id": "Q9-L1",
+          "amount_cents": 4000,
+          "shipped": true
+        },
+        {
+          "line_id": "Q9-L2",
+          "amount_cents": 6000,
+          "shipped": true,
+          "returned": true
+        }
+      ]
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp05-mixed-ship-beats-return",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "5",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "QA-create-188",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "QA",
+          "lines": [
+            {
+              "line_id": "QA-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "QA-L2",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "QA-L3",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "QA-pay-189",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "QA"
+        },
+        {
+          "event_id": "QA-ship-190",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "QA",
+          "line_id": "QA-L1"
+        },
+        {
+          "event_id": "QA-ship-191",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "QA",
+          "line_id": "QA-L2"
+        },
+        {
+          "event_id": "QA-ret-192",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "QA",
+          "line_id": "QA-L1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "QA"
+      }
+    ],
+    "expected": {
+      "order_id": "QA",
+      "status": "partially_shipped"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp06-status-cancel-partial",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-193",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-194",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-195",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-196",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "C1"
+      }
+    ],
+    "expected": {
+      "order_id": "C1",
+      "status": "cancelled_partial"
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp06-export-requires-refund",
+    "commitment_id": "I-EXPORT",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-197",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-198",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-199",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-200",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "C1"
+      }
+    ],
+    "expected": "{\"order\":\"C1\",\"status\":\"cancelled_partial\",\"total_cents\":7000,\"requires_refund\":true,\"lines\":[{\"line\":\"C1-L1\",\"amount_cents\":3000,\"shipped\":true},{\"line\":\"C1-L2\",\"amount_cents\":4000}]}",
+    "held_out": false
+  },
+  {
+    "check_id": "cp06-reimport-cancel-partial",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-201",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-202",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-203",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-204",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "C1"
+      }
+    ],
+    "expected": {
+      "order_id": "C1",
+      "status": "cancelled_partial",
+      "total_cents": 7000,
+      "requires_refund": true,
+      "lines": [
+        {
+          "line_id": "C1-L1",
+          "amount_cents": 3000,
+          "shipped": true
+        },
+        {
+          "line_id": "C1-L2",
+          "amount_cents": 4000
+        }
+      ]
+    },
+    "held_out": false
+  },
+  {
+    "check_id": "cp06-digest-cancel-partial",
+    "commitment_id": "I-DIGEST",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C2-create-205",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2",
+          "lines": [
+            {
+              "line_id": "C2-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "C2-pay-206",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2"
+        },
+        {
+          "event_id": "C2-ship-207",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2",
+          "line_id": "C2-L1"
+        },
+        {
+          "event_id": "C2-cancel-208",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2"
+        },
+        {
+          "event_id": "C3-create-209",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C3",
+          "lines": [
+            {
+              "line_id": "C3-L1",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "C3-cancel-210",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C3"
+        },
+        {
+          "event_id": "C4-create-211",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C4",
+          "lines": [
+            {
+              "line_id": "C4-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "C4-pay-212",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C4"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "cancelled",
+        "count": 1,
+        "total_cents": 1000
+      },
+      {
+        "status": "cancelled_partial",
+        "count": 1,
+        "total_cents": 2000
+      }
+    ],
+    "held_out": true
+  },
+  {
+    "check_id": "cp06-status-cancel-clean",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C5-create-213",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C5",
+          "lines": [
+            {
+              "line_id": "C5-L1",
+              "amount_cents": 2500
+            }
+          ]
+        },
+        {
+          "event_id": "C5-pay-214",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C5"
+        },
+        {
+          "event_id": "C5-cancel-215",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C5"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "C5"
+      }
+    ],
+    "expected": {
+      "order_id": "C5",
+      "status": "cancelled"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp06-cancel-fully-shipped",
+    "commitment_id": "I-STATUS",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C6-create-216",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C6",
+          "lines": [
+            {
+              "line_id": "C6-L1",
+              "amount_cents": 1000
+            },
+            {
+              "line_id": "C6-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "C6-pay-217",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C6"
+        },
+        {
+          "event_id": "C6-ship-218",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C6",
+          "line_id": "C6-L1"
+        },
+        {
+          "event_id": "C6-ship-219",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C6",
+          "line_id": "C6-L2"
+        },
+        {
+          "event_id": "C6-cancel-220",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C6"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "C6"
+      }
+    ],
+    "expected": {
+      "order_id": "C6",
+      "status": "cancelled_partial"
+    },
+    "held_out": true
+  },
+  {
+    "check_id": "cp06-reimport-refund-flag",
+    "commitment_id": "I-ROUNDTRIP",
+    "checkpoint_introduced": "6",
+    "entry_module": "src/dispatch.ts",
+    "export": "evaluate",
+    "args": [
+      [
+        {
+          "event_id": "C7-create-221",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C7",
+          "lines": [
+            {
+              "line_id": "C7-L1",
+              "amount_cents": 8000
+            },
+            {
+              "line_id": "C7-L2",
+              "amount_cents": 500
+            }
+          ]
+        },
+        {
+          "event_id": "C7-pay-222",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C7"
+        },
+        {
+          "event_id": "C7-ship-223",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C7",
+          "line_id": "C7-L2"
+        },
+        {
+          "event_id": "C7-cancel-224",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C7"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "C7"
+      }
+    ],
+    "expected": {
+      "order_id": "C7",
+      "status": "cancelled_partial",
+      "total_cents": 8500,
+      "requires_refund": true,
+      "lines": [
+        {
+          "line_id": "C7-L1",
+          "amount_cents": 8000
+        },
+        {
+          "line_id": "C7-L2",
+          "amount_cents": 500,
+          "shipped": true
+        }
+      ]
+    },
+    "held_out": true
+  }
+]

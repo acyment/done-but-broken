@@ -1,0 +1,27 @@
+{
+  "schema_version": "e1-task-package-v0",
+  "task_id": "e1-dispatch-mini",
+  "task_version": "e1-dispatch-mini-v0",
+  "virtual_now": "2026-01-01T00:00:00.000Z",
+  "checkpoints": ["1", "2", "3", "4", "5", "6"],
+  "template_workspace": "template-workspace",
+  "readme_path": "template-workspace/README.md",
+  "visible_specs": {
+    "1": "visible-specs/CP01.md",
+    "2": "visible-specs/CP02.md",
+    "3": "visible-specs/CP03.md",
+    "4": "visible-specs/CP04.md",
+    "5": "visible-specs/CP05.md",
+    "6": "visible-specs/CP06.md"
+  },
+  "feedback_assets": "feedback-assets/manifest.json",
+  "workflow": "openspec",
+  "workflow_changes": {
+    "1": "cp01-order-notes",
+    "2": "cp02-digest-revenue",
+    "3": "cp03-line-returns",
+    "4": "cp04-partial-shipments",
+    "5": "cp05-partial-returns",
+    "6": "cp06-cancel-after-shipment"
+  }
+}

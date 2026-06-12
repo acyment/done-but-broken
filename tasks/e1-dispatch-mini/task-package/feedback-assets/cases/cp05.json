@@ -1,0 +1,222 @@
+[
+  {
+    "check_id": "cp05-status-partial-return",
+    "args": [
+      [
+        {
+          "event_id": "Q1-create-142",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "lines": [
+            {
+              "line_id": "Q1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "Q1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "Q1-pay-143",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1"
+        },
+        {
+          "event_id": "Q1-ship-144",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        },
+        {
+          "event_id": "Q1-ship-145",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L2"
+        },
+        {
+          "event_id": "Q1-ret-146",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "Q1"
+      }
+    ],
+    "expected": {
+      "order_id": "Q1",
+      "status": "partially_returned"
+    }
+  },
+  {
+    "check_id": "cp05-reimport-partial-return",
+    "args": [
+      [
+        {
+          "event_id": "Q1-create-147",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "lines": [
+            {
+              "line_id": "Q1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "Q1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "Q1-pay-148",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1"
+        },
+        {
+          "event_id": "Q1-ship-149",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        },
+        {
+          "event_id": "Q1-ship-150",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L2"
+        },
+        {
+          "event_id": "Q1-ret-151",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q1",
+          "line_id": "Q1-L1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "Q1"
+      }
+    ],
+    "expected": {
+      "order_id": "Q1",
+      "status": "partially_returned",
+      "total_cents": 7000,
+      "lines": [
+        {
+          "line_id": "Q1-L1",
+          "amount_cents": 3000,
+          "shipped": true,
+          "returned": true
+        },
+        {
+          "line_id": "Q1-L2",
+          "amount_cents": 4000,
+          "shipped": true
+        }
+      ]
+    }
+  },
+  {
+    "check_id": "cp05-digest-partial-return",
+    "args": [
+      [
+        {
+          "event_id": "Q2-create-152",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "lines": [
+            {
+              "line_id": "Q2-L1",
+              "amount_cents": 2000
+            },
+            {
+              "line_id": "Q2-L2",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "Q2-pay-153",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2"
+        },
+        {
+          "event_id": "Q2-ship-154",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "line_id": "Q2-L1"
+        },
+        {
+          "event_id": "Q2-ship-155",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "line_id": "Q2-L2"
+        },
+        {
+          "event_id": "Q2-ret-156",
+          "type": "line_returned",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q2",
+          "line_id": "Q2-L1"
+        },
+        {
+          "event_id": "Q3-create-157",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q3",
+          "lines": [
+            {
+              "line_id": "Q3-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "Q3-pay-158",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q3"
+        },
+        {
+          "event_id": "Q3-ship-159",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "Q3",
+          "line_id": "Q3-L1"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "shipped",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "partially_returned",
+        "count": 1,
+        "total_cents": 4000
+      }
+    ]
+  }
+]
