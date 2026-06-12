@@ -1,0 +1,231 @@
+[
+  {
+    "check_id": "cp12-status-cancelled-owing",
+    "args": [
+      [
+        {
+          "event_id": "CO1-create-572",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1",
+          "lines": [
+            {
+              "line_id": "CO1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "CO1-L2",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "CO1-ppay-573",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1",
+          "amount_cents": 3000
+        },
+        {
+          "event_id": "CO1-cancel-574",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "CO1"
+      }
+    ],
+    "expected": {
+      "order_id": "CO1",
+      "status": "cancelled_owing"
+    }
+  },
+  {
+    "check_id": "cp12-export-cancelled-owing",
+    "args": [
+      [
+        {
+          "event_id": "CO1-create-575",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1",
+          "lines": [
+            {
+              "line_id": "CO1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "CO1-L2",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "CO1-ppay-576",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1",
+          "amount_cents": 3000
+        },
+        {
+          "event_id": "CO1-cancel-577",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "CO1"
+      }
+    ],
+    "expected": "{\"order\":\"CO1\",\"status\":\"cancelled_owing\",\"total_cents\":10000,\"outstanding_owing\":true,\"lines\":[{\"line\":\"CO1-L1\",\"amount_cents\":5000},{\"line\":\"CO1-L2\",\"amount_cents\":5000}]}"
+  },
+  {
+    "check_id": "cp12-reimport-cancelled-owing",
+    "args": [
+      [
+        {
+          "event_id": "CO1-create-578",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1",
+          "lines": [
+            {
+              "line_id": "CO1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "CO1-L2",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "CO1-ppay-579",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1",
+          "amount_cents": 3000
+        },
+        {
+          "event_id": "CO1-cancel-580",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "CO1"
+      }
+    ],
+    "expected": {
+      "order_id": "CO1",
+      "status": "cancelled_owing",
+      "total_cents": 10000,
+      "outstanding_owing": true,
+      "lines": [
+        {
+          "line_id": "CO1-L1",
+          "amount_cents": 5000
+        },
+        {
+          "line_id": "CO1-L2",
+          "amount_cents": 5000
+        }
+      ]
+    }
+  },
+  {
+    "check_id": "cp12-digest-cancelled-owing",
+    "args": [
+      [
+        {
+          "event_id": "CO2-create-581",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO2",
+          "lines": [
+            {
+              "line_id": "CO2-L1",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "CO2-ppay-582",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO2",
+          "amount_cents": 1500
+        },
+        {
+          "event_id": "CO2-cancel-583",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO2"
+        },
+        {
+          "event_id": "CO3-create-584",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO3",
+          "lines": [
+            {
+              "line_id": "CO3-L1",
+              "amount_cents": 3000
+            }
+          ]
+        },
+        {
+          "event_id": "CO3-cancel-585",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO3"
+        },
+        {
+          "event_id": "CO4-create-586",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO4",
+          "lines": [
+            {
+              "line_id": "CO4-L1",
+              "amount_cents": 6000
+            }
+          ]
+        },
+        {
+          "event_id": "CO4-pay-587",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "CO4"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 6000
+      },
+      {
+        "status": "cancelled",
+        "count": 1,
+        "total_cents": 3000
+      },
+      {
+        "status": "cancelled_owing",
+        "count": 1,
+        "total_cents": 4000
+      }
+    ]
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "check_id": "cp02-digest-single-bucket",
+    "args": [
+      [
+        {
+          "event_id": "D1-create-38",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D1",
+          "lines": [
+            {
+              "line_id": "D1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "D1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "D1-pay-39",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D1"
+        },
+        {
+          "event_id": "D2-create-40",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D2",
+          "lines": [
+            {
+              "line_id": "D2-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "D2-pay-41",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D2"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 2,
+        "total_cents": 12000
+      }
+    ]
+  },
+  {
+    "check_id": "cp02-digest-two-buckets",
+    "args": [
+      [
+        {
+          "event_id": "D3-create-42",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D3",
+          "lines": [
+            {
+              "line_id": "D3-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "D4-create-43",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D4",
+          "lines": [
+            {
+              "line_id": "D4-L1",
+              "amount_cents": 7000
+            }
+          ]
+        },
+        {
+          "event_id": "D4-pay-44",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "D4"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "awaiting_payment",
+        "count": 1,
+        "total_cents": 2000
+      },
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 7000
+      }
+    ]
+  }
+]

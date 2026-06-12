@@ -1,0 +1,69 @@
+[
+  {
+    "check_id": "cp11-receivables-awaiting",
+    "args": [
+      [
+        {
+          "event_id": "RV1-create-536",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RV1",
+          "lines": [
+            {
+              "line_id": "RV1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "RV1-L2",
+              "amount_cents": 3000
+            }
+          ]
+        }
+      ],
+      {
+        "kind": "receivables_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "awaiting_payment",
+        "outstanding_cents": 8000
+      }
+    ]
+  },
+  {
+    "check_id": "cp11-receivables-partially-paid",
+    "args": [
+      [
+        {
+          "event_id": "RV2-create-537",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RV2",
+          "lines": [
+            {
+              "line_id": "RV2-L1",
+              "amount_cents": 10000
+            }
+          ]
+        },
+        {
+          "event_id": "RV2-ppay-538",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "RV2",
+          "amount_cents": 4000
+        }
+      ],
+      {
+        "kind": "receivables_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "partially_paid",
+        "outstanding_cents": 6000
+      }
+    ]
+  }
+]

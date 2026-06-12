@@ -1,0 +1,256 @@
+[
+  {
+    "check_id": "cp08-status-cancel-partial",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-305",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-306",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-307",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-308",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "C1"
+      }
+    ],
+    "expected": {
+      "order_id": "C1",
+      "status": "cancelled_partial"
+    }
+  },
+  {
+    "check_id": "cp08-export-requires-refund",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-309",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-310",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-311",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-312",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "C1"
+      }
+    ],
+    "expected": "{\"order\":\"C1\",\"status\":\"cancelled_partial\",\"total_cents\":7000,\"requires_refund\":true,\"lines\":[{\"line\":\"C1-L1\",\"amount_cents\":3000,\"shipped\":true},{\"line\":\"C1-L2\",\"amount_cents\":4000}]}"
+  },
+  {
+    "check_id": "cp08-reimport-cancel-partial",
+    "args": [
+      [
+        {
+          "event_id": "C1-create-313",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "lines": [
+            {
+              "line_id": "C1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "C1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "C1-pay-314",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        },
+        {
+          "event_id": "C1-ship-315",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1",
+          "line_id": "C1-L1"
+        },
+        {
+          "event_id": "C1-cancel-316",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C1"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "C1"
+      }
+    ],
+    "expected": {
+      "order_id": "C1",
+      "status": "cancelled_partial",
+      "total_cents": 7000,
+      "requires_refund": true,
+      "lines": [
+        {
+          "line_id": "C1-L1",
+          "amount_cents": 3000,
+          "shipped": true
+        },
+        {
+          "line_id": "C1-L2",
+          "amount_cents": 4000
+        }
+      ]
+    }
+  },
+  {
+    "check_id": "cp08-digest-cancel-partial",
+    "args": [
+      [
+        {
+          "event_id": "C2-create-317",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2",
+          "lines": [
+            {
+              "line_id": "C2-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "C2-pay-318",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2"
+        },
+        {
+          "event_id": "C2-ship-319",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2",
+          "line_id": "C2-L1"
+        },
+        {
+          "event_id": "C2-cancel-320",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C2"
+        },
+        {
+          "event_id": "C3-create-321",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C3",
+          "lines": [
+            {
+              "line_id": "C3-L1",
+              "amount_cents": 1000
+            }
+          ]
+        },
+        {
+          "event_id": "C3-cancel-322",
+          "type": "order_cancelled",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C3"
+        },
+        {
+          "event_id": "C4-create-323",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C4",
+          "lines": [
+            {
+              "line_id": "C4-L1",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "C4-pay-324",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "C4"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 5000
+      },
+      {
+        "status": "cancelled",
+        "count": 1,
+        "total_cents": 1000
+      },
+      {
+        "status": "cancelled_partial",
+        "count": 1,
+        "total_cents": 2000
+      }
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "schema_version": "e1-task-package-v0",
+  "task_id": "e1-dispatch",
+  "task_version": "e1-dispatch-v1",
+  "virtual_now": "2026-01-01T00:00:00.000Z",
+  "checkpoints": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+  "template_workspace": "template-workspace",
+  "readme_path": "template-workspace/README.md",
+  "visible_specs": {
+    "1": "visible-specs/CP01.md",
+    "2": "visible-specs/CP02.md",
+    "3": "visible-specs/CP03.md",
+    "4": "visible-specs/CP04.md",
+    "5": "visible-specs/CP05.md",
+    "6": "visible-specs/CP06.md",
+    "7": "visible-specs/CP07.md",
+    "8": "visible-specs/CP08.md",
+    "9": "visible-specs/CP09.md",
+    "10": "visible-specs/CP10.md",
+    "11": "visible-specs/CP11.md",
+    "12": "visible-specs/CP12.md"
+  },
+  "feedback_assets": "feedback-assets/manifest.json",
+  "workflow": "openspec",
+  "workflow_changes": {
+    "1": "cp01-order-notes",
+    "2": "cp02-digest-revenue",
+    "3": "cp03-line-returns",
+    "4": "cp04-partial-shipments",
+    "5": "cp05-shipment-metadata",
+    "6": "cp06-partial-returns",
+    "7": "cp07-partial-payments",
+    "8": "cp08-cancel-after-shipment",
+    "9": "cp09-refunds",
+    "10": "cp10-closed-status",
+    "11": "cp11-receivables-digest",
+    "12": "cp12-cancelled-owing"
+  }
+}

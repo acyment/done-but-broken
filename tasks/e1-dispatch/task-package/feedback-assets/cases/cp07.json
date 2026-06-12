@@ -1,0 +1,183 @@
+[
+  {
+    "check_id": "cp07-status-partially-paid",
+    "args": [
+      [
+        {
+          "event_id": "PP1-create-273",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP1",
+          "lines": [
+            {
+              "line_id": "PP1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "PP1-L2",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "PP1-ppay-274",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "PP1"
+      }
+    ],
+    "expected": {
+      "order_id": "PP1",
+      "status": "partially_paid"
+    }
+  },
+  {
+    "check_id": "cp07-export-partially-paid",
+    "args": [
+      [
+        {
+          "event_id": "PP1-create-275",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP1",
+          "lines": [
+            {
+              "line_id": "PP1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "PP1-L2",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "PP1-ppay-276",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "PP1"
+      }
+    ],
+    "expected": "{\"order\":\"PP1\",\"status\":\"partially_paid\",\"total_cents\":10000,\"lines\":[{\"line\":\"PP1-L1\",\"amount_cents\":5000},{\"line\":\"PP1-L2\",\"amount_cents\":5000}]}"
+  },
+  {
+    "check_id": "cp07-reimport-partially-paid",
+    "args": [
+      [
+        {
+          "event_id": "PP1-create-277",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP1",
+          "lines": [
+            {
+              "line_id": "PP1-L1",
+              "amount_cents": 5000
+            },
+            {
+              "line_id": "PP1-L2",
+              "amount_cents": 5000
+            }
+          ]
+        },
+        {
+          "event_id": "PP1-ppay-278",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP1",
+          "amount_cents": 3000
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "PP1"
+      }
+    ],
+    "expected": {
+      "order_id": "PP1",
+      "status": "partially_paid",
+      "total_cents": 10000,
+      "lines": [
+        {
+          "line_id": "PP1-L1",
+          "amount_cents": 5000
+        },
+        {
+          "line_id": "PP1-L2",
+          "amount_cents": 5000
+        }
+      ]
+    }
+  },
+  {
+    "check_id": "cp07-digest-partially-paid",
+    "args": [
+      [
+        {
+          "event_id": "PP2-create-279",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP2",
+          "lines": [
+            {
+              "line_id": "PP2-L1",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "PP2-ppay-280",
+          "type": "partial_payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP2",
+          "amount_cents": 1000
+        },
+        {
+          "event_id": "PP3-create-281",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP3",
+          "lines": [
+            {
+              "line_id": "PP3-L1",
+              "amount_cents": 6000
+            }
+          ]
+        },
+        {
+          "event_id": "PP3-pay-282",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "PP3"
+        }
+      ],
+      {
+        "kind": "status_digest"
+      }
+    ],
+    "expected": [
+      {
+        "status": "partially_paid",
+        "count": 1,
+        "total_cents": 4000
+      },
+      {
+        "status": "processing",
+        "count": 1,
+        "total_cents": 6000
+      }
+    ]
+  }
+]

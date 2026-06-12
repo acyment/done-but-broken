@@ -1,0 +1,178 @@
+[
+  {
+    "check_id": "cp01-status-processing",
+    "args": [
+      [
+        {
+          "event_id": "O1-create-1",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O1",
+          "lines": [
+            {
+              "line_id": "O1-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O1-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O1-pay-2",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O1"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O1"
+      }
+    ],
+    "expected": {
+      "order_id": "O1",
+      "status": "processing"
+    }
+  },
+  {
+    "check_id": "cp01-export-note",
+    "args": [
+      [
+        {
+          "event_id": "O5-create-10",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "lines": [
+            {
+              "line_id": "O5-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O5-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O5-pay-11",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5"
+        },
+        {
+          "event_id": "O5-note-12",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "note": "gift wrap"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "O5"
+      }
+    ],
+    "expected": "{\"order\":\"O5\",\"status\":\"processing\",\"total_cents\":7000,\"lines\":[{\"line\":\"O5-L1\",\"amount_cents\":3000},{\"line\":\"O5-L2\",\"amount_cents\":4000}],\"notes\":[\"gift wrap\"]}"
+  },
+  {
+    "check_id": "cp01-reimport-note",
+    "args": [
+      [
+        {
+          "event_id": "O5-create-13",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "lines": [
+            {
+              "line_id": "O5-L1",
+              "amount_cents": 3000
+            },
+            {
+              "line_id": "O5-L2",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "O5-pay-14",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5"
+        },
+        {
+          "event_id": "O5-note-15",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O5",
+          "note": "gift wrap"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "O5"
+      }
+    ],
+    "expected": {
+      "order_id": "O5",
+      "status": "processing",
+      "total_cents": 7000,
+      "lines": [
+        {
+          "line_id": "O5-L1",
+          "amount_cents": 3000
+        },
+        {
+          "line_id": "O5-L2",
+          "amount_cents": 4000
+        }
+      ],
+      "notes": [
+        "gift wrap"
+      ]
+    }
+  },
+  {
+    "check_id": "cp01-note-keeps-status",
+    "args": [
+      [
+        {
+          "event_id": "O6-create-16",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O6",
+          "lines": [
+            {
+              "line_id": "O6-L1",
+              "amount_cents": 2000
+            }
+          ]
+        },
+        {
+          "event_id": "O6-pay-17",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O6"
+        },
+        {
+          "event_id": "O6-note-18",
+          "type": "note_added",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "O6",
+          "note": "leave at door"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "O6"
+      }
+    ],
+    "expected": {
+      "order_id": "O6",
+      "status": "processing"
+    }
+  }
+]

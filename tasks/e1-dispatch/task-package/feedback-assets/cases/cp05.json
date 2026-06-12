@@ -1,0 +1,139 @@
+[
+  {
+    "check_id": "cp05-status-unaffected-by-carrier",
+    "args": [
+      [
+        {
+          "event_id": "M4-create-168",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M4",
+          "lines": [
+            {
+              "line_id": "M4-L1",
+              "amount_cents": 6000
+            },
+            {
+              "line_id": "M4-L2",
+              "amount_cents": 7000
+            }
+          ]
+        },
+        {
+          "event_id": "M4-pay-169",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M4"
+        },
+        {
+          "event_id": "M4-ship-170",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M4",
+          "line_id": "M4-L1",
+          "carrier": "DHL",
+          "tracking": "DHL123"
+        }
+      ],
+      {
+        "kind": "order_status",
+        "order_id": "M4"
+      }
+    ],
+    "expected": {
+      "order_id": "M4",
+      "status": "partially_shipped"
+    }
+  },
+  {
+    "check_id": "cp05-export-with-carrier",
+    "args": [
+      [
+        {
+          "event_id": "M1-create-171",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M1",
+          "lines": [
+            {
+              "line_id": "M1-L1",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "M1-pay-172",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M1"
+        },
+        {
+          "event_id": "M1-ship-173",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M1",
+          "line_id": "M1-L1",
+          "carrier": "FedEx",
+          "tracking": "TRACK001"
+        }
+      ],
+      {
+        "kind": "export_order",
+        "order_id": "M1"
+      }
+    ],
+    "expected": "{\"order\":\"M1\",\"status\":\"shipped\",\"total_cents\":4000,\"lines\":[{\"line\":\"M1-L1\",\"amount_cents\":4000,\"shipped\":true,\"carrier\":\"FedEx\",\"tracking\":\"TRACK001\"}]}"
+  },
+  {
+    "check_id": "cp05-reimport-with-carrier",
+    "args": [
+      [
+        {
+          "event_id": "M1-create-174",
+          "type": "order_created",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M1",
+          "lines": [
+            {
+              "line_id": "M1-L1",
+              "amount_cents": 4000
+            }
+          ]
+        },
+        {
+          "event_id": "M1-pay-175",
+          "type": "payment_received",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M1"
+        },
+        {
+          "event_id": "M1-ship-176",
+          "type": "line_shipped",
+          "at": "2026-01-01T00:00:00.000Z",
+          "order_id": "M1",
+          "line_id": "M1-L1",
+          "carrier": "FedEx",
+          "tracking": "TRACK001"
+        }
+      ],
+      {
+        "kind": "reimport_order",
+        "order_id": "M1"
+      }
+    ],
+    "expected": {
+      "order_id": "M1",
+      "status": "shipped",
+      "total_cents": 4000,
+      "lines": [
+        {
+          "line_id": "M1-L1",
+          "amount_cents": 4000,
+          "shipped": true,
+          "carrier": "FedEx",
+          "tracking": "TRACK001"
+        }
+      ]
+    }
+  }
+]
