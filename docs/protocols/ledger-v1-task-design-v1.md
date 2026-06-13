@@ -1,7 +1,17 @@
 # e1-ledger-v1 Task Design (v1) — Double-Entry General Ledger, Interaction-Regression Mechanism
 
-Date: 2026-06-13. **Status: precommitted design boundary, before any task code.** Successor to the
-closed billing domain. This is a NEW task family in a NEW domain (`e1-ledger`), never pooled with
+Date: 2026-06-13. **Status: CRITIQUE-FLAGGED — do not build without redesign.** A five-model
+red-team round (2026-06-13, `ledger-v1-task-hardness-redteam-PROMPT.md`) converged that this design
+is most likely a *fifth clean ceiling or a convention-contaminated non-finding* (P ≈ 60–85%), for
+**structural** reasons, not tunable ones: (1) stripping literal expecteds doesn't stop the control
+arm self-verifying via golden-master/characterization testing of the old primitive; (2) the
+anti-shim identity-equivalence gate can't distinguish a correct refactor from a delegation shim, so
+the regression surface is never forced; (3) the ledger domain's contestable conventions make
+"regressions" unfair and would manufacture a treatment>control gap that measures convention-reading,
+not feedback. Deeper finding: *unambiguous + fair ⇒ self-verifiable by a careful frontier model ⇒
+no fair feedback win via refactoring/preservation tasks.* See
+[[frontier-feedback-structural-ceiling]]. This boundary is retained as honest record; building it as
+written is not recommended. Successor to the closed billing domain. This is a NEW task family in a NEW domain (`e1-ledger`), never pooled with
 billing/dispatch/subscription/inventory/payroll/pricing/role-permissions runs. Operates under the
 precommitted gates doc (`e1-first-evidence-task-design-gates-v0.md`: 5–10 files, 12–18
 checkpoints, partial seed, hidden reference, naive-agent proof) and the sealed OpenSpec profile +
