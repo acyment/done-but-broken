@@ -13,6 +13,18 @@
 | Spend | $0.740 (cap $15.00) |
 | Reached | CP01–CP07 complete; **died 0 turns into CP08** |
 
+## CORRECTION (2026-06-13): this run was redundant and should not have been fired
+
+The billing-v3 Stage 1 question was **already cleanly answered on 2026-06-11** by
+`e1-billing-v3-qwen37max-context-probe-v1-seed-a-20260611-001` (AUC 0.9628, zero
+on-graph regressions, `valid=true`, criterion-3 PASS). That run was a **clean ceiling**;
+it activated the third-ceiling closure rule and closed the billing domain
+(`AGENTS.md`). This 2026-06-13 run was fired without checking for the prior completed
+probe — it was unnecessary, and its provider-timeout death is moot: the Stage 1 verdict
+was not "inconclusive," it was a clean ceiling two days earlier. Do not treat this run
+as requiring a replacement. Recorded honestly as an operator/agent error (redundant
+re-execution; $0.74 spent for no information).
+
 ## Why it is invalid
 
 CP08 terminated `{"classification":"provider_error","reason":"provider retries
@@ -51,6 +63,9 @@ earlier cases) only confirms the expected baseline: a strong model maintains fro
 behavior it is **not required to touch** — the same billing-v2 observation the v3
 design was built to defeat. Whether the forced rewrites break the spine is untested.
 
-**Mechanism validation is therefore inconclusive and a replacement seed-a run is
-required** before the Stage 1 ceiling/regression verdict can be read, or before the
-DeepSeek V4 Pro probe is justified on the cheap-validation-first logic.
+**[SUPERSEDED by the correction above.]** This run reached only CP07, before the
+forced-rewrite checkpoints. But the 2026-06-11 run completed all 18 checkpoints and
+returned a clean ceiling (0.9628, zero regressions), so the Stage 1 verdict is **not**
+inconclusive and **no replacement is required**. The 2026-06-11 result also empirically
+confirms the five-critique finding: the hash-spine/forced-rewrite design does not induce
+regressions in a strong context arm — i.e., it produces a frontier null, as predicted.
