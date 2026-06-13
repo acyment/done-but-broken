@@ -84,11 +84,12 @@
 - A run may be classified as causal feedback-use evidence only if feedback ran and had a possible path to influence a later model turn.
 - One-turn runs where feedback cannot influence a later turn are difficulty calibration only.
 
-## Current Priorities (2026-06-10, status updated same day)
+## Current Priorities (2026-06-10; updated 2026-06-12)
 
 - P0 — E1 to evidence grade: all local Step 0 items are DONE as of 2026-06-10 (real workspace-snapshot injection, sealed cache-breakpoint conversation layout, publication-grade `e1:inspect` replay/tamper/classification, wall-time capture + `e1:stats`, end-to-end scripted shakedown, 10×-green two-environment stability gate — see `docs/progress-log.md` and `docs/protocols/e1-step0-*-record-v0.md`). REMAINING, operator-authorized spend: re-run cheap-model no-op check + CartCalc calibration ×2 + one frontier context run under the new prompt-template hash (~$0.05–0.20), then cost projection via `e1:stats`, then seal base constants v1.0. Pre-snapshot-fix calibration bundles are a dead compatibility boundary for sealing purposes.
 - P1 — OpenSpec workflow profile `e1-openspec-workflow-v0`: built and shakedown-passed 2026-06-10 (pinned CLI, telemetry neutralized, characterization tests, harness archive step, survival ledger, fresh-mount scenario parity, CartCalc-scale fixture proving the silent MODIFIED-replace scenario drop). REMAINING before seal: `e1:inspect` replay support for the archive step between checkpoints; then optional operator-authorized cheap-model calibration of the OpenSpec fixture.
 - P2 — First E1 evidence task: design gates precommitted in `docs/protocols/e1-first-evidence-task-design-gates-v0.md`. Billing v2 was built, probed, and closed as a frontier context ceiling under two models (Sonnet 4.6 probe v2; Qwen 3.7 Max probe v4, evidence-grade, AUC 0.9361, zero regressions, early-stop — run cards in `docs/run-cards/`). Successor design boundary precommitted 2026-06-11: `docs/protocols/billing-v3-task-design-v1.md` (`e1-billing-v3` — seeded replay-hash spine from CP01, forced structural rewrites of frozen-invariant files, naive proof strengthened to ≥4 regressions across ≥3 frozen files, third-ceiling closure rule). Built 2026-06-11 (`tasks/e1-billing-v3/`, gates all green incl. the strengthened 5-mechanism naive proof, forced-touch and spine-threat audits; full suite 367/367). NEXT: seal `e1-billing-v3-commitments-v1.md` + a Stage 1 probe plan; frontier difficulty probe and evidence matrix remain operator-authorized gates, with the third-ceiling closure rule in force.
+- P2 (continued, 2026-06-12) — Frontier-hardness successor: DeepSeek V4 Pro ceilinged the `e1-dispatch-v1` context arm (calibration, AUC 0.9768, mean 8.0 turns/checkpoint — run card `docs/run-cards/e1-dispatch-deepseek-v4-pro-context-stage1-seed-a-20260612-001.md`); brute-force turn investment rediscovers the 4 scattered sites without feedback, with never-passes clustered exactly at the budget_exhausted checkpoints. Dispatch-v1 stays open for Qwen-tier Stage 2 evidence (domain not closed: 1 of 3 ceiling seeds). Decision: design a new non-pooled task family `e1-fulfillment-v1` against the frontier tier — see the "Next Frontier Task Family" section below, the draft design boundary `docs/protocols/e1-fulfillment-task-design-v1.md`, and the research synthesis `docs/research/executable-feedback-frontier-hardness-synthesis-v1.md`.
 - All provider runs remain operator-authorized only, with precommitted classification, profile, budget, and metrics.
 
 ## P0 - Freeze Path-Survival-Primary Protocol
@@ -181,6 +182,33 @@ Checkpoint sequence:
 - `I07` shipment consumes committed stock and later cancellation does not restore it.
 - `I08` restock fills backorders FIFO by full reservation.
 - `I09` sellable returns restore inventory; damaged returns do not.
+
+## Next Frontier Task Family (design phase, 2026-06-12): e1-fulfillment-v1
+
+Goal: a sealed task where high-investment frontier models (DeepSeek V4 Pro tier) do
+not ceiling in the context arm, by combining wider independent obligations (9
+classes), registry-scoped quantification, cross-checkpoint poison chains, and
+turn-economy pressure — under strict content parity (treatment stays executability
+alone; the content-asymmetric "decoy" lever was rejected, see the research synthesis).
+References: draft design boundary `docs/protocols/e1-fulfillment-task-design-v1.md`;
+research synthesis `docs/research/executable-feedback-frontier-hardness-synthesis-v1.md`.
+
+Incremental path (in order; each item a separate commit-sized increment):
+
+1. DONE 2026-06-12 — research synthesis doc committed (`docs/research/executable-feedback-frontier-hardness-synthesis-v1.md`).
+2. DONE 2026-06-12 — task design boundary committed (`docs/protocols/e1-fulfillment-task-design-v1.md`).
+3. DONE 2026-06-12 — design review pass against `docs/protocols/e1-first-evidence-task-design-gates-v0.md`: three amendments (OpenSpec canonicalizable-prose constraint; predeclared frontier-probe interpretation rule, ceiling-defeat vs structural failure; M5 registry authority stated in the seed spec-of-record as a behavioral requirement). Design doc frozen; structural changes require a v2 before sealing.
+4. Build reference `src/` final state + seed workspace (10 files, ops channel seeded inactive).
+5. Build oracle package: `scenarios.ts`, partition-ledger lint (incl. the journal-replay rule), case generator, ~170–190 cases (hard cap 190), `site-map.json`.
+6. Stage snapshots (k = 4, 8, 12) + `test/e1-fulfillment.test.ts` gates 1–12 (incl. the new turn-cost, sequential-poisoning, parity/per-site-coverage, and site-map-integrity gates) — all green locally.
+7. Visible-spec generator + OpenSpec template state; parity audit green.
+8. Secondary-metrics descriptives (dispersion covariate, site recall, pass-to-pass precision, redirected-investment ratio) in `src/result-summary.ts` + new `src/site-metrics.ts`; sealed `result-schema-v1` untouched.
+9. Seal `e1-fulfillment-v1-commitments-v1.md` (hashes incl. `site-map.json`).
+10. Author Stage 1 plan v1: DeepSeek V4 Pro (direct route) as the primary Stage 1 model, Qwen 3.7 Max as comparison context; gates G1 (AUC ≤ 0.92), G2 (≥1 correction CP < 0.75), G3 (never-pass or flip > 0); third-ceiling closure rule. All runs remain operator-authorized.
+
+Optional (separately operator-authorized, ~$0.50, `calibration`): `e1-dispatch-v1`
+DeepSeek V4 Pro Stage 1 seeds B/C, to formally establish or refute the dispatch
+ceiling for that model under the sealed three-seed rule.
 
 ## P0 - Evidence Hygiene / Provider Validity
 
@@ -304,7 +332,7 @@ Write or update tests before implementing each validity-critical change:
 ## Do-Not-Do-Next
 
 - Do not add more `role-permissions-calibration` checkpoints as the next move.
-- Do not add new arms or aliases.
+- Do not add new arms or aliases. In particular, do not add the three-condition mechanism-decomposition design (self-test arm / static which-cases-failing hint arm) documented in `docs/research/executable-feedback-frontier-hardness-synthesis-v1.md` unless its full unlock condition is met: a frontier null on the e1-fulfillment two-arm result, a documented revision of this guardrail at a dated boundary, a separate sealed protocol profile, and explicit operator authorization.
 - Do not compare spec formats between arms. The shared-environment OpenSpec workflow under `e1-openspec-workflow-v0` (same scenario content both arms, executable feedback as the only causal variable) is in scope and is not a spec-format comparison.
 - Do not tune hidden oracle or visible feedback after seeing arm-level outcomes.
 - Do not pool pre-patch and post-patch runs.
