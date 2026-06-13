@@ -70,14 +70,22 @@ runs, and E2 results are **never pooled** with E1's two arms, nor across substra
 - **Calibration control:** SWE-bench Verified (mostly single-file). Predeclared prediction: **null
   feedback delta** for frontier models — replicates the E1 finding on a standard benchmark and
   validates the harness. A non-null here is a harness red flag.
-- **Primary brownfield:** a contamination-resistant, Docker-reproducible, multi-file benchmark —
-  **SWE-bench Pro** and/or **SWE-bench Live** (decision below). Both carry F2P+P2P suites and dedicated
-  containers; Live is fresher/larger-repo but issue-level; Pro is explicitly multi-file/long-horizon.
-- **Stress (secondary):** SWE-EVO (release-scale evolution, ~21 files/874 tests) and/or RefactorBench
-  (multi-file refactor) — small-n, used as stress tests, not primary statistics.
-- **Open decision (for the critique round):** primary = Pro vs Live vs both. Recommendation: pilot on
-  **Live-Lite (300)** for speed + freshness, validate on a size-stratified split; use Pro for external
-  validity. Verified always as the calibration arm.
+- **Primary brownfield: SWE-bench Live, post-cutoff slice (RESOLVED by two independent deep-research
+  reports, 2026-06-13).** Filtered to instances created after the model training cutoff (≥ ~Apr 2025
+  for current frontier models), large repos (~400+ files). Ranked #1 on the gating dimensions
+  (contamination resistance + brownfield scale + determinism), with the lowest build effort (harness
+  + Docker images exist). Pro is #2 (best contamination resistance via private repos, but its human
+  task-augmentation "specifies everything needed to pass the suite," which **erodes the hidden-oracle
+  signal** for this study; sanitize its future-git-history mining loophole) — use as external-validity
+  confirmation if access permits. Verified = calibration-only (predict null).
+- **The candidate ("popular OSS + hide its own suite") is NOT the default** — both reports judge it
+  near-worst for *detecting* the effect: training familiarity biases toward a **false null** (the
+  model recalls the behavior, so the hidden suite adds no information). Done rigorously (post-cutoff
+  tasks, sanitized snapshot, regression-risk filtering, hardened oracle) it *converges on Live*. Good
+  instinct, wrong instantiation.
+- **Stress (secondary):** SWE-EVO (release-scale evolution, ~21 files/874 tests) — natural
+  regression-risk generator, use as external-validity set; RefactorBench is a poor fit (refactors have
+  low regression risk; repos heavily memorized) — diagnostic only.
 
 ## Metrics (three families, predeclared)
 
@@ -89,17 +97,35 @@ runs, and E2 results are **never pooled** with E1's two arms, nor across substra
 - **Primary metric + MCID:** paired feedback delta on the regression metric, MCID predeclared (start
   +0.05 absolute zero-regression-rate; finalize in the sealed plan). Group-sequential, multi-run.
 
-## Methodology / rigor (from the reports)
+## Methodology / rigor (RESOLVED from two deep-research reports, 2026-06-13)
 
-- **Determinism:** Docker isolation; filter flaky tasks (FeatBench-Verified style — keep only tasks
-  where the gold patch resolves consistently); pin deps; freeze environments.
-- **Oracle hardening:** strengthen suites against weak-validator inflation (SWE-ABS/PatchDiff show
-  7.8–29.6% of "plausible" patches are actually wrong); both arms use identical hardened F2P+P2P.
+- **Contamination control (the single most likely study-killer — both reports):** post-cutoff tasks
+  only; **memorization probes as a first-class covariate** — run issue-only file-path identification +
+  function-body reproduction per task/model, report the memorization rate, and analyze effect
+  heterogeneity by it (exclude or down-weight high-memorization tasks). SWE-Bench Illusion: 76%
+  file-id from issue alone on Verified vs ~53% novel; up to 35% 5-gram overlap.
+- **Adversarial snapshot sanitization:** strip future commits/remotes/branches/tags/reflog; block
+  network. Agents have provably exploited `git log --all` for future commits in both SWE-bench and
+  Pro's OSS set — assume you must sanitize; do not trust upstream images.
+- **Regression-risk filter (mandatory; pre-register before any run):** keep only tasks with ≥2–3
+  non-test files modified, non-trivial P2P, and modified code covered by ≥5 existing tests / high
+  call-graph coupling. ~15–25% of instances survive → target **50–80 tasks**.
+- **Oracle = full developer suite, hardened (not raw, not synthesized):** online feedback to
+  `treatment` = a fast hidden *subset* (tests covering modified paths); offline evaluation = **full
+  suite + PatchDiff/UTBoost differential testing**. Score on **PatchDiff-verified correctness, not raw
+  suite-pass** — PatchDiff: 7.8% of plausible patches fail the full suite, 29.6% diverge, ~11% wrong;
+  UTBoost: 345 wrongly-passed (40.9% Lite, 24.4% Verified). The ~30% weak-oracle gap is exactly where
+  feedback should help.
+- **Determinism:** Docker per instance; flaky detection (N=10 baseline runs, exclude inconsistent);
+  pin deps; freeze environments.
 - **Equalize compute budget across arms** (running the oracle consumes turns/tokens — a first-order
   confound; equalize or report budget-normalized).
-- **Nondeterminism:** 3–5 runs per instance per cell; report pass@1 and pass@majority with stats.
-- **Sealing/replay:** seal a repo *snapshot* + task set + hardened oracle (not an evolving repo);
-  record trajectories for replay and for the agent-behavior metrics.
+- **Power:** **N≥5 runs per task per cell, paired per-task analysis.** Illustrative: 60 tasks × 2 arms
+  × 5 runs × 3 models ≈ 1,800 runs (~$900–3,600), >80% power for a 15-pt effect at σ≈0.2.
+- **Pre-registration:** filter criteria, models, N, and primary outcome (PatchDiff-verified
+  correctness) registered before any run.
+- **Sealing/replay:** seal the sanitized repo snapshot + task set + hardened oracle; record full
+  trajectories for replay and the agent-behavior metrics.
 
 ## Predeclared confounds + mitigations
 
