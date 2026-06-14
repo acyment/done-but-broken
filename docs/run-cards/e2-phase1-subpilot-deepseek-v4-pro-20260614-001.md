@@ -36,10 +36,19 @@
 
 **Not evidence — N=1 run per arm.** Zero statistical power; a 1-vs-0 regression difference is at the
 noise floor (per the pilot-critique's own math) and is fully attributable to agent nondeterminism /
-a different patch on a single run. It is **hypothesis-generating only**. The self-verification-gap
-column is omitted from the results table because `declared_done` is currently approximated `True`
-(a known fidelity gap), so the gap signal here is confounded; the **regression** difference is the
-meaningful (but underpowered) observation.
+a different patch on a single run. It is **hypothesis-generating only**.
+
+## Fidelity refinement + correction (2026-06-14, harness @ `4c578a4`)
+
+`declared_done` is now captured for real from the conversation status (`FINISHED` ⟺ the agent called
+the built-in `finish` tool), replacing the earlier `True` approximation; `self_verification_passed =
+declared_done`, so the self-verification gap = oracle-would-fail AND the agent declared done = genuine
+false confidence. A validation re-run (control, MechanicalSoup) confirmed **`declared_done=True`,
+`resolved=False` → `self_verification_gap=True`**: the agent *called finish believing it was done*
+yet had not fixed the bug — a **real** false-confidence gap, not an approximation artifact. (That
+re-run scored `p2p_regr=0` vs the original run's `1` — the expected single-run nondeterminism; the
+self-verification **gap** held across both runs and is the more stable signal here, though still N≈2
+and not evidence.)
 
 ## What it motivates
 
