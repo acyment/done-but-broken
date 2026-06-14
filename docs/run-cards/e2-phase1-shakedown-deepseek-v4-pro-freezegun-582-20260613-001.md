@@ -22,6 +22,17 @@ In 6 bounded iterations, DeepSeek V4 Pro read the issue, located `freezegun/api.
 | P2P regressions | **0** |
 | Self-verification gap | **False** |
 
+## Treatment-arm validation (run_tests executable-feedback mechanism, 2026-06-14)
+
+A second real DeepSeek V4 Pro run exercised the **treatment** arm
+(`examples/real_run_deepseek_treatment.py`): the agent had `file_editor` + the container-backed
+**`run_tests`** tool. It edited the source and called `run_tests` ~4 times — each call took the
+agent's current host working-tree diff, applied it in a fresh sanitized container, ran the hidden
+acceptance subset there, and returned per-check pass/fail ("Acceptance checks: 5/5 passed") — then
+finished. Final patch scored in-container: **resolved=True, 0 P2P regressions**. This validates the
+executable-feedback mechanism (the causal variable) end-to-end with a real frontier model. Both
+arms are now functional: `control` = `file_editor`; `treatment` = `file_editor` + `run_tests`.
+
 ## What it establishes (and what it does NOT)
 
 **Establishes (calibration only):** the full E2 loop runs end-to-end with a real frontier model —
