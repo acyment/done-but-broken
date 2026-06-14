@@ -14,6 +14,7 @@ authorization and a spend cap.
 | Phase-1.5 sealed plan (`docs/protocols/e2-phase1-5-plan-v1.md`) | `307445e91a4d240b14fb6974c7a49ea5b940f22e859d39148e6a133399198dd5` |
 | Provenance contract (`docs/protocols/e2-provenance-schema-v1.json`) | `a606c968505ff80e1b7c8c62358d337cf68d595c4d24ad78a99f7a57697075d7` |
 | Frozen candidate pool (`docs/protocols/e2-phase1-5-candidate-pool-v1.json`) | `706626ddaeec18821c45b0700860b44fe868f0eeebe392efe4bceff931dfd973` |
+| Addendum A — GATE-B contamination screen (`docs/protocols/e2-phase1-pilot-commitments-v1-addendum-a.md`) | `b2c2a627d92812159257cdfc74f7e1c3a539f0ef3f676460db90a21dccacfac1` |
 
 ## Harness
 
@@ -59,5 +60,7 @@ authorization and a spend cap.
 ## Status
 
 Pre-registered and sealed. The harness is built and validated end-to-end (both arms, real DeepSeek
-V4 Pro). What remains is execution under authorization: Phase 1 (assemble the flake-certified,
-contamination-screened set from the pool → seal the addendum) then Phase 1.5 (the powered read).
+V4 Pro). **GATE-B contamination screen complete and sealed (Addendum A, 2026-06-14):** 39 of 40 pool
+tasks pass; zero verbatim memorization (positive control 1.0, pool ≤0.229); one precautionary
+exclusion. What remains is execution under authorization: GATE-A flake-certify the screened set →
+seal Addendum B (final task list) → Phase 1.5 (the powered read).
