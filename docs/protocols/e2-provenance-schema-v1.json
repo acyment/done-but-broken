@@ -1,0 +1,52 @@
+{
+  "schema_id": "e2-provenance-schema-v1",
+  "purpose": "Shared, language-agnostic provenance contract so the E2 Python/Docker harness (repo hit-sdd-bench-e2) emits run artifacts inspectable under the same discipline as E1 (Bun/TS, this repo). Mirror, do not import.",
+  "hashing": {
+    "algorithm": "SHA-256, hex lowercase",
+    "text_or_bytes": "hash_text(v) = sha256(utf8_bytes(v)).hex(); a str and its utf8 bytes hash identically",
+    "file": "hash_file(p) = hash_text(file_bytes(p))",
+    "directory": {
+      "collect": "recurse the directory collecting file paths; SKIP directories named '.git' or 'node_modules'",
+      "key": "each file keyed by its POSIX relative path to the root (forward slashes)",
+      "value": "sha256 of the file bytes",
+      "order": "entries inserted in ascending sorted relative-path order (code-point sort; ASCII paths == code-unit order, matching JS .toSorted())",
+      "canonicalization": "hash = hash_text(JSON.stringify(files)) where the JSON is COMPACT (no spaces; separators ',' and ':'), insertion-ordered, raw unicode (ensure_ascii=false). Python: json.dumps(files, separators=(',',':'), ensure_ascii=False)",
+      "reference_impl_ts": "hit-sdd-bench/src/snapshot.ts hashDirectory",
+      "reference_impl_py": "hit-sdd-bench-e2 src/hit_sdd_e2/provenance/hashing.py hash_directory"
+    },
+    "golden_vectors": {
+      "_note": "Regenerate from src/snapshot.ts if canonicalization ever changes; pinned in hit-sdd-bench-e2/tests/test_hashing_roundtrip.py",
+      "hash_text('hello')": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+      "hash_text('')": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_directory(fixtures/sample {a.txt:'alpha\\n', sub/b.txt:'beta\\n'})": "4a735c59d1dc64c27761380014ea5c87e448d750c80608171590d9fa8d74ce71"
+    }
+  },
+  "run_classifications": ["calibration", "difficulty_probe", "causal_pilot", "diagnostic_invalid"],
+  "run_record_fields": {
+    "_status": "DRAFT — pinned as components land (M5). Mirrors hit-sdd-bench result-schema-v1 + summary.md run-card.",
+    "required": [
+      "schema_version",
+      "run_id",
+      "substrate (e.g. swe-bench-live)",
+      "instance_id",
+      "model_route",
+      "arm (control|treatment)",
+      "context_factor (retrieved|curated-full)",
+      "run_classification",
+      "sanitized_snapshot_hash",
+      "container_image_id",
+      "patch_hash",
+      "self_verification_gap (oracle_would_fail AND agent_declared_done; primary, unit=task-run)",
+      "task_success (secondary)",
+      "p2p_regression_count (tertiary, logged not gated)",
+      "validity_flags",
+      "valid (replay-valid: re-run patch in clean container reproduces recorded hashes)"
+    ]
+  },
+  "phase1_gate_outputs": {
+    "_note": "Phase 1 decides go/no-go on A/B only; C-equivalent data is MEASURED not gated.",
+    "gate_a_feasibility": "all tasks run end-to-end + replay-valid; patch-induced flake upper-bound <=5% over >=60 runs/task",
+    "gate_b_contamination": "memorization probe per task below the 95th-percentile of a post-cutoff negative-control null; replenish to a clean target count",
+    "measurements_for_phase_1_5": ["self_verification_gap_rate", "p_c_estimate (control-side regression base rate)"]
+  }
+}
