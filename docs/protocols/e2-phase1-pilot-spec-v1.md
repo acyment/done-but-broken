@@ -1,149 +1,153 @@
-# E2 Phase-1 Pilot Spec (v1) — Brownfield Acceptance-Feedback Ablation, thin go/no-go slice
+# E2 Phase-1 Pilot Spec (v1) — Brownfield Acceptance-Feedback Ablation
 
 Date: 2026-06-13. **Status: precommitted pilot spec, before any harness build or run.** Phase 1 of the
-E2 program (`docs/protocols/e2-brownfield-acceptance-ablation-design-v1.md`). Docs-only; this document
-authorizes no build and no runs. The pilot itself requires a separate sealed commitments doc
-(`e2-phase1-pilot-commitments-v1.md`) and explicit operator authorization.
+E2 program (`docs/protocols/e2-brownfield-acceptance-ablation-design-v1.md`). Docs-only; authorizes no
+build and no runs (both operator-gated behind a sealed commitments doc).
+
+> **REVISED 2026-06-13 after a four-model decision-validity critique.** The original combined pilot
+> put a causal "H0 read" (GATE C) on n=10. The critique converged (with matching power math) that
+> GATE C was structurally invalid: under a *real, substantial* effect (p_control≈0.08, p_treat≈0.02)
+> it fires only ~4% of the time → **~96% false NO-GO**, while any residual test flake manufactures
+> **false GOs** via unspecified-test multiplicity (~0.79 at f=0.1 over ~20 covering tests). Root cause:
+> **GATE C had no null model**, so its firing was governed by flake, not by the treatment effect; and
+> the primary signal (shipped P2P regressions) is a ~0-base-rate event at this scale. **Fix applied
+> here:** split into **Phase 1** (A/B feasibility + contamination — the actual gate, which n≈10 *can*
+> decide) and **Phase 1.5** (a separately-powered, regression-enriched effect read); demote the H0
+> read from a gate to a base-rate *measurement*; change the primary effect signal to the
+> **self-verification gap**. Git preserves the pre-revision version.
 
 ## Why a pilot before the program
 
-The E2 design questions are settled by research; the remaining unknowns are empirical and only a build
-answers them. Rather than commit to the full ~1,800-run program, this pilot is a ~10-task thin slice
-that is the program's **first go/no-go gate**. It answers three questions cheaply:
-1. Can we build and run the two-arm Docker harness reproducibly on real SWE-bench Live instances?
-2. Can we measure and control contamination (the single most likely study-killer)?
-3. Early read on **H0**: at multi-file scale, does the `control` arm actually introduce regressions the
-   `treatment` arm avoids/catches — or do frontier agents self-verify their way to parity anyway?
+The E2 design is settled by research; the remaining unknowns are empirical. Rather than commit to the
+full program, this pilot is a thin slice that answers what n≈10 *can* answer — is the harness
+reproducible, and is contamination measurable/controllable — and *measures* (does not gate on) the
+base rates needed to correctly power the effect read. A pilot's legitimate job is to break the
+assumptions that would invalidate the program (broken harness, invalid replay, uncontrollable
+contamination); estimating a rare-event effect is a categorically different job that needs its own
+powered phase.
 
-If H0 holds even here, we reconsider the whole program before spending. If `control` is clearly worse,
-we proceed to the full design with confidence.
+---
 
-## Scope (deliberately minimal — what this pilot is and is NOT)
+## Phase 1 — the gate (A/B only; this is what decides go/no-go)
 
-| In scope | Deferred to later phase |
-| --- | --- |
-| Factor F only: `control` (no oracle exec) vs `treatment` (can exec hidden acceptance oracle) | Factor C (context provision) 2×2 — full causal pilot |
-| `retrieved` context only | `curated-full` context cell |
-| ~10 tasks | Full 50–80 regression-risk-filtered set |
-| 1 frontier model — **DeepSeek V4 Pro** (endpoint in `.env`) | Multi-model (Claude-class, GPT-5-class) |
-| N=5 runs/arm/task (~100 runs) | Full power run |
-| Primary signal: **P2P regression count (pass→fail)** | PatchDiff/UTBoost differential testing |
+**Scope:** replenish-screen until **10–12 clean usable tasks** (do not "tolerate 2/10 contaminated" —
+replace flagged/flaky tasks until the target count is clean); **1 frontier model**; **2 arms**
+(`control` = no hidden-oracle tool; `treatment` = has it), `retrieved` context only. Agent runs:
+**2–3/arm/task** suffice for harness/logging smoke (5 only if you also want nondeterminism
+diagnostics). The expensive LLM cost here is small; the determinism work below is cheap suite re-runs.
 
-**Operator-adjustable choices (recommended defaults):** model = DeepSeek V4 Pro (1); PatchDiff deferred;
-agent scaffold = OpenHands (SWE-bench Live's reference; verify vs SWE-agent before building).
+- **GATE A — Feasibility.** All tasks run end-to-end in Docker; every run produces replay-valid
+  artifacts (hashes verify; no missing/schema-error artifacts). **Flake certified properly:** "≤5%
+  over N=10" is unmeasurable (0/10 only bounds true flake at ≤~26%, rule of three) and screens the
+  wrong distribution. Instead, run each task's suite **≥60 times under BOTH arms' patches** (not just
+  the base commit) to certify *patch-induced* per-test flake; require an exact upper bound ≤5% (≈0
+  failures in 60), and quarantine/label any flaky test out of the oracle. *Fail → fix infra.*
+- **GATE B — Contamination controllable.** Memorization probes (issue-only file-path id; function-body
+  overlap) with thresholds **calibrated against negative controls** — set each at the 95th percentile
+  of a genuine-post-cutoff null (same probe on tasks the model demonstrably cannot have seen), not the
+  guessed >60% / >25%. Prefer a loss/perplexity or canary-quiz probe over n-gram overlap (n-gram rides
+  on code boilerplate). Replenish tasks until the target count falls below threshold. *Fail →
+  substrate/filter rethink.*
+- **Decision:** **GO** to Phase 1.5 iff A and B pass. **Do NOT issue a NO-GO from absent regressions** —
+  `control ≈ treatment` at this scale is indistinguishable from underpowered and must not be read as
+  "self-verification survives at scale."
+- **Measure (do not gate):** per `control` run, the **self-verification gap** (§Primary signal) and a
+  first estimate of the control-side regression base rate `p_c`. These size Phase 1.5.
 
-## Predeclared go/no-go gates (no reinterpretation after results)
+---
 
-- **GATE A — Feasibility.** The harness runs all 10 tasks end-to-end in Docker, reproducibly: per-task
-  flaky rate (over N=10 baseline runs, §Determinism) ≤ **5%**, and every run produces replay-valid
-  artifacts (hashes verify, no missing/schema-error artifacts). *Fail → fix infra before any scaling.*
-- **GATE B — Contamination controllable.** Memorization probes (§Memorization) produce a usable
-  per-task signal, and ≥ **8 of 10** tasks fall below the predeclared memorization-exclusion threshold
-  while remaining post-cutoff. *Fail → substrate/filter rethink (the candidate substrate is biased
-  toward a false null).*
-- **GATE C — H0 early read.** Over the tasks passing A+B, compare per-arm regression behavior.
-  - `treatment` shows **materially fewer** P2P regressions than `control` (predeclare: ≥1 task where
-    `control` regresses an existing P2P test that `treatment` does not, replicated across ≥3 of 5 runs)
-    ⇒ **GO**: the brownfield feedback effect is plausibly real → proceed to the full program.
-  - `control ≈ treatment` (both ~zero regressions, or no replicated gap) ⇒ **early H0-holds signal**:
-    frontier self-verification survives at this scale → reconsider the program / escalate task scale
-    before spending.
-  This pilot is directional, not powered for a significance claim; GATE C informs the GO decision, it
-  does not constitute evidence.
+## Phase 1.5 — powered effect read (only if Phase 1 passes; separately sealed + authorized)
 
-## Task selection (reproducible, pre-registered)
+- **Primary signal — the self-verification gap (not shipped P2P regressions).** Per `control` run:
+  *(the hidden oracle would fail) AND (the agent's own verification passed / it declared done)*. This
+  is the mechanistic quantity the experiment is about, occurs far more often than a shipped P2P
+  regression, and is objective (scored against the golden oracle). **Unit = task-run** (a single bug
+  fails many tests; model test counts as overdispersed secondary data, not independent observations).
+  Secondary = task-success delta (different construct — resolution, where the ceiling bites — keep
+  secondary). Tertiary = shipped P2P regression count (logged, not gated).
+- **Regression enrichment (highest-leverage change).** Filtering for "≥5 covering tests" does NOT move
+  the base rate. Engineer `p_c ≈ 0.3–0.4` by construction: seeded/mutation-style regressions or
+  historically-regressing tasks (changes known to have caused a regression), plus ≥1 **canary** task
+  with a known injected regression to prove the harness detects a regression when one exists.
+- **Sizing:** **n ≈ 20–40** enriched tasks, **N ≈ 10/arm** (N=5 leaves the most-extreme observable
+  split 5/0 at p=0.004, but 3/0 at p=0.083 — below the noise floor; N≈10 gives headroom, e.g.
+  6/10-vs-0/10 ≈ 0.0054).
+- **Criterion (with a null model + error budget).** Per task, a one-sided permutation/Fisher test on
+  the paired arm outcomes; family-wise correction across tasks; pre-registered total error budget
+  (GO requires k significant tasks where P(k | arm-independent-flake null) ≤ 0.05). A result may not be
+  driven by a single unreproduced flaky task — replay must confirm the same failure on the same
+  artifact in clean containers.
+- **Asymmetric single-model rule.** 1 model is acceptable, but: a **positive may GO; a single-model
+  null may NOT NO-GO** (a one-model null is inconclusive — the verdict is confounded by that model's
+  self-verification disposition). Choose the model **adversarially to your own NO-GO**: the *lowest*
+  spontaneous self-verifier available, because a null there is the most informative null and a positive
+  most cleanly demonstrates the mechanism. (A strong self-verifier guarantees a null → false NO-GO.)
+  If C-grade evidence is wanted, bracket with ≥2 models of differing self-verification strength.
 
-Source: **SWE-bench Live** (post-2024, monthly-updated, Docker per instance).
-1. **Post-cutoff filter:** keep only instances whose issue+PR postdate DeepSeek V4 Pro's training
-   cutoff (use the latest available Live slice; record the cutoff date used).
-2. **Regression-risk filter (all must hold):**
-   - gold patch modifies **≥ 2 non-test source files**;
-   - modified code paths are covered by **≥ 5 existing tests** (coverage analysis on the base image);
-   - **non-trivial P2P** set (the instance carries existing pass-to-pass tests over the modified area);
-   - high call-graph coupling (modified symbols called by ≥ 2 other modules) — heuristic, recorded.
-3. **Repo scale:** prefer instances from repos ≥ 400 files (brownfield).
-4. Rank survivors by regression-risk heuristics; take the top **10**. Freeze the exact 10 task IDs +
-   the filter parameters in the commitments doc **before any run**.
+---
 
 ## Harness shape (build-ready)
 
 - **Base:** fork SWE-bench Live's evaluation harness (Docker image per instance, F2P+P2P runner,
   time-machine dependency pinning). Agent scaffold: **OpenHands** (Live's validated setup) — verify it
-  exposes tool-config so the feedback channel can be toggled; fall back to SWE-agent if not.
-- **Feedback channel = a toggleable tool.** `treatment` is given a `run_tests` tool that executes the
-  **fast hidden subset** (tests covering the modified paths) and returns **per-scenario pass/fail**
-  (acceptance/reproduction-flavored, no expected values, no full-suite dump). `control` does not have
-  this tool — it may still write and run its OWN tests via the normal shell, but cannot invoke the
-  hidden oracle. This is the only difference between arms.
-- **Adversarial snapshot sanitization (mandatory):** before the agent sees the repo, strip future
-  commits, remotes, branches, tags, and reflog; block network. Agents have provably exploited
-  `git log --all` to read future/fix commits in both SWE-bench and Pro's OSS set — do not trust
-  upstream images; sanitize and verify no `git show <fix>` path exists.
-- **Compute-budget equalization:** equalize turn/token budget across arms (running the oracle consumes
-  budget); record per-run budget for budget-normalized reporting.
-- **Artifact capture (mirror the provenance discipline, not the code):** capture, per run, the
-  sanitized repo snapshot hash, container image ID, the agent trajectory, the produced patch, the
-  online-feedback calls (count + results), and the final full-suite + P2P results. Validate hashes on
-  replay. Mirror the concepts in `src/provenance.ts` (`RunCompatibilityProfile`, `ReplayPlan`,
-  `RUN_VALIDITY_FLAGS`); extend validity scopes/phases for container concerns (image-pull timeout,
-  OOM). E2 builds this fresh — the current repo is entirely in-process (no Docker/subprocess-for-repo
-  code to reuse).
+  exposes tool-config for the feedback toggle; fall back to SWE-agent.
+- **Feedback channel = a toggleable tool.** `treatment` gets a `run_tests` tool executing the **fast
+  hidden subset** (tests covering the modified paths) returning **per-scenario pass/fail**
+  (acceptance/reproduction-flavored; no expected values, no full-suite dump). `control` lacks it (it
+  may still run its OWN tests via the shell). Only difference between arms.
+- **Capture the agent's own verification state.** To compute the self-verification gap, log when the
+  agent runs its own tests, what it concluded, and when it declares done — then score that final state
+  against the golden oracle offline.
+- **Adversarial snapshot sanitization (mandatory):** strip future commits/remotes/branches/tags/reflog;
+  block network. Agents have exploited `git log --all` for future/fix commits in SWE-bench and Pro's
+  OSS set — sanitize and verify no `git show <fix>` path exists.
+- **Compute-budget equalization** across arms (running the oracle consumes budget); record per-run
+  budget for budget-normalized reporting.
+- **Artifact capture (mirror provenance discipline, not code):** per run — sanitized snapshot hash,
+  container image ID, agent trajectory + self-verification state, the patch, feedback-tool calls, full
+  + subset test results. Validate hashes on replay. Mirror `src/provenance.ts` concepts
+  (`RunCompatibilityProfile`, `ReplayPlan`, `RUN_VALIDITY_FLAGS`); extend validity scopes/phases for
+  container concerns. Built fresh — repo is in-process today.
 
-## Memorization-probe procedure (contamination covariate)
+## Memorization-probe procedure (Phase 1 GATE B input)
 
-Run per task (and per model), before/independent of the ablation:
-- **Issue-only file-path identification:** give the model the issue text only (no repo); measure
-  top-k accuracy at naming the gold-patch files. Predeclared flag: > **60%** ⇒ high memorization.
-- **Function-body reproduction:** give a signature + its file; measure consecutive 5-gram overlap with
-  the real body. Predeclared flag: > **25%** ⇒ high memorization.
-Report the memorization rate per task as a covariate; exclude tasks exceeding both thresholds from
-GATE C (they bias toward the null). Method anchors: *The SWE-Bench Illusion* (76% file-id from issue
-alone on Verified vs ~53% novel).
+Per task/model, before the ablation: issue-only file-path identification + a loss/canary memorization
+probe (preferred over n-gram). **Thresholds set as the 95th percentile of a genuine-post-cutoff
+negative-control distribution**, not fixed guesses. Report the memorization score per task as a
+covariate; replace tasks above threshold.
 
-## Oracle
+## Determinism shakedown (Phase 1 GATE A input)
 
-- **Latent surface:** the project's full developer test suite (the real, strong regression oracle).
-- **Online feedback (treatment only):** a **fast hidden subset** = tests covering the modified paths
-  (identified by coverage analysis), to keep feedback latency manageable.
-- **Primary pilot signal:** **P2P regression count** — existing tests passing at baseline that fail
-  after the agent's patch. Also record F2P resolve rate and full-suite pass.
-- **Deferred:** PatchDiff/UTBoost differential testing (the "passes the suite ≠ correct" hardening,
-  ~30% of plausible patches still wrong) is a Phase-2 oracle upgrade; note as stretch, not required for
-  the GATE C directional read.
+Run each selected instance's suite **≥60 times under both arms' patches** (cheap — no LLM); exclude
+tests with inconsistent results from the subset and the oracle; certify the exact patch-induced-flake
+upper bound ≤5%.
 
-## Determinism shakedown
+## Classification, pre-registration, budget
 
-Before any ablation run, execute each selected instance's suite **N=10 times** on the base commit;
-mark tests with inconsistent results as flaky and exclude them from both the online subset and the P2P
-oracle. Feeds GATE A's flaky-rate criterion.
-
-## Metrics, classification, budget
-
-- **Metrics:** feasibility (end-to-end success + flaky rate), contamination (memorization
-  distribution), early-H0 (per-arm P2P regression count, and — from trajectories — whether `control`'s
-  own self-tests would have caught the regression). All stratified by task.
-- **Classification:** the feasibility/determinism portion is `calibration`; the H0 read is
-  `difficulty_probe`. Neither is causal evidence (`causal_pilot` is the full program, later).
+- **Classification:** Phase 1 is `calibration` (harness/determinism) + `difficulty_probe` (contamination
+  controllability + base-rate measurement). Phase 1.5 is a separately-classified effect read; neither
+  is `causal_pilot`-grade evidence (the full program is).
 - **Pre-registration:** seal `e2-phase1-pilot-commitments-v1.md` (commit-then-reveal SHA-256 of: this
-  spec, the frozen 10 task IDs + filter params, the memorization/flaky thresholds, the sanitized
-  snapshot manifest, the harness commit) before running. Mirror the
-  `docs/protocols/e1-billing-v2-commitments-v4.md` + `…-stage1-plan-v4.md` pattern.
-- **Budget:** ~10 tasks × 2 arms × 5 runs = ~100 runs (1 model). DeepSeek V4 Pro is cheap
-  (~$0.26/run-class on prior E1 work; brownfield trajectories are longer — budget a small per-run cap
-  and an overall pilot cap in the commitments doc). All runs operator-authorized.
+  spec, the frozen clean task list, the negative-control-calibrated thresholds, the flake/sanitization
+  manifests, the harness commit) before running. Phase 1.5 gets its own sealed commitments doc with the
+  enrichment set, N, the permutation-test criterion, and the error budget — fixed before any 1.5 run.
+- **Budget:** Phase 1 LLM cost is small (~10 tasks × 2 arms × ~3 runs ≈ 60 agent runs; the ≥60 suite
+  re-runs are non-LLM). Phase 1.5 ≈ 20–40 tasks × 2 arms × 10 runs ≈ 400–800 agent runs (1 model).
+  Both operator-authorized with per-run + overall caps in the commitments docs.
 
 ## Reuse vs build-new
 
 - **Reuse (discipline, not code):** run-card layout (`docs/run-cards/`); classification + validity
-  concepts (`src/provenance.ts`); commitments/sealed-plan pre-registration pattern
+  concepts (`src/provenance.ts`); commitments/sealed-plan pattern
   (`docs/protocols/e1-billing-v2-commitments-v4.md`, `…-stage1-plan-v4.md`); evidence recording
   (`docs/public-evidence-status.md`, `docs/progress-log.md`).
-- **Build new:** Docker runner + agent scaffold fork, the toggleable `run_tests` feedback tool, the
-  snapshot-sanitization wrapper, the memorization probe, the flaky-detection loop, container-aware
-  artifact capture/replay. None of this exists in-repo today.
+- **Build new:** Docker runner + agent-scaffold fork, the toggleable `run_tests` tool, self-verification
+  state capture, snapshot sanitization, the (calibrated) memorization probe, the ≥60-run patch-induced
+  flake loop, the permutation-test analysis, container-aware artifact capture/replay.
 
 ## What this pilot explicitly does NOT establish
 
 A `causal_pilot`-grade result, any public claim, the context (coverage-vs-reasoning) separation, the
-PatchDiff-hardened correctness metric, or multi-model generality. Those are Phases 2–4 of the program
-boundary. The pilot's only job is the A/B/C go/no-go.
+PatchDiff-hardened correctness metric, or multi-model generality. Phase 1 decides only harness
+feasibility + contamination controllability and *measures* base rates; Phase 1.5 produces a powered
+early effect read under an explicit null model, not a program-level conclusion.
