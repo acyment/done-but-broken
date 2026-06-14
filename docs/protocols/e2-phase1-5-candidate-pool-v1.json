@@ -1,0 +1,328 @@
+{
+ "schema": "e2-phase1-5-candidate-pool-v1",
+ "cutoff": "2025-04-30",
+ "selection": "post-cutoff AND regression-risk(>=2 non-test files, P2P>0); sorted by (non_test_files,P2P) desc; <=3 per repo; top 40",
+ "count": 40,
+ "instances": [
+  {
+   "instance_id": "beetbox__beets-5890",
+   "repo": "beetbox/beets",
+   "created_at": "2025-07-21",
+   "non_test_files": 90,
+   "P2P": 1725,
+   "F2P": 1
+  },
+  {
+   "instance_id": "mlco2__codecarbon-831",
+   "repo": "mlco2/codecarbon",
+   "created_at": "2025-05-01",
+   "non_test_files": 23,
+   "P2P": 112,
+   "F2P": 1
+  },
+  {
+   "instance_id": "Pyomo__pyomo-3633",
+   "repo": "Pyomo/pyomo",
+   "created_at": "2025-06-16",
+   "non_test_files": 12,
+   "P2P": 8059,
+   "F2P": 1
+  },
+  {
+   "instance_id": "koxudaxi__datamodel-code-generator-2408",
+   "repo": "koxudaxi/datamodel-code-generator",
+   "created_at": "2025-05-31",
+   "non_test_files": 12,
+   "P2P": 668,
+   "F2P": 11
+  },
+  {
+   "instance_id": "jlowin__fastmcp-434",
+   "repo": "jlowin/fastmcp",
+   "created_at": "2025-05-13",
+   "non_test_files": 11,
+   "P2P": 825,
+   "F2P": 27
+  },
+  {
+   "instance_id": "pyinfra-dev__pyinfra-1413",
+   "repo": "pyinfra-dev/pyinfra",
+   "created_at": "2025-08-06",
+   "non_test_files": 10,
+   "P2P": 1208,
+   "F2P": 8
+  },
+  {
+   "instance_id": "vacanza__holidays-2751",
+   "repo": "vacanza/holidays",
+   "created_at": "2025-07-24",
+   "non_test_files": 8,
+   "P2P": 5112,
+   "F2P": 4
+  },
+  {
+   "instance_id": "beetbox__beets-5789",
+   "repo": "beetbox/beets",
+   "created_at": "2025-05-18",
+   "non_test_files": 8,
+   "P2P": 1834,
+   "F2P": 3
+  },
+  {
+   "instance_id": "vacanza__holidays-2750",
+   "repo": "vacanza/holidays",
+   "created_at": "2025-07-24",
+   "non_test_files": 7,
+   "P2P": 5130,
+   "F2P": 1
+  },
+  {
+   "instance_id": "falconry__falcon-2498",
+   "repo": "falconry/falcon",
+   "created_at": "2025-07-22",
+   "non_test_files": 7,
+   "P2P": 3719,
+   "F2P": 3
+  },
+  {
+   "instance_id": "pybamm-team__PyBaMM-5129",
+   "repo": "pybamm-team/PyBaMM",
+   "created_at": "2025-07-21",
+   "non_test_files": 7,
+   "P2P": 1842,
+   "F2P": 6
+  },
+  {
+   "instance_id": "mesonbuild__meson-14698",
+   "repo": "mesonbuild/meson",
+   "created_at": "2025-06-10",
+   "non_test_files": 7,
+   "P2P": 476,
+   "F2P": 9
+  },
+  {
+   "instance_id": "pymodbus-dev__pymodbus-2665",
+   "repo": "pymodbus-dev/pymodbus",
+   "created_at": "2025-05-09",
+   "non_test_files": 6,
+   "P2P": 1569,
+   "F2P": 1
+  },
+  {
+   "instance_id": "matplotlib__matplotlib-30359",
+   "repo": "matplotlib/matplotlib",
+   "created_at": "2025-07-25",
+   "non_test_files": 5,
+   "P2P": 8084,
+   "F2P": 1
+  },
+  {
+   "instance_id": "pybamm-team__PyBaMM-5122",
+   "repo": "pybamm-team/PyBaMM",
+   "created_at": "2025-07-17",
+   "non_test_files": 5,
+   "P2P": 2136,
+   "F2P": 3
+  },
+  {
+   "instance_id": "jlowin__fastmcp-455",
+   "repo": "jlowin/fastmcp",
+   "created_at": "2025-05-15",
+   "non_test_files": 5,
+   "P2P": 869,
+   "F2P": 15
+  },
+  {
+   "instance_id": "koxudaxi__datamodel-code-generator-2461",
+   "repo": "koxudaxi/datamodel-code-generator",
+   "created_at": "2025-08-02",
+   "non_test_files": 5,
+   "P2P": 709,
+   "F2P": 3
+  },
+  {
+   "instance_id": "a2aproject__a2a-python-443",
+   "repo": "a2aproject/a2a-python",
+   "created_at": "2025-08-28",
+   "non_test_files": 5,
+   "P2P": 641,
+   "F2P": 25
+  },
+  {
+   "instance_id": "fonttools__fonttools-3874",
+   "repo": "fonttools/fonttools",
+   "created_at": "2025-06-26",
+   "non_test_files": 4,
+   "P2P": 4429,
+   "F2P": 3
+  },
+  {
+   "instance_id": "freqtrade__freqtrade-11974",
+   "repo": "freqtrade/freqtrade",
+   "created_at": "2025-07-12",
+   "non_test_files": 4,
+   "P2P": 3947,
+   "F2P": 2
+  },
+  {
+   "instance_id": "falconry__falcon-2477",
+   "repo": "falconry/falcon",
+   "created_at": "2025-07-09",
+   "non_test_files": 4,
+   "P2P": 3709,
+   "F2P": 4
+  },
+  {
+   "instance_id": "iterative__dvc-10856",
+   "repo": "iterative/dvc",
+   "created_at": "2025-08-28",
+   "non_test_files": 4,
+   "P2P": 2995,
+   "F2P": 3
+  },
+  {
+   "instance_id": "BerriAI__litellm-12281",
+   "repo": "BerriAI/litellm",
+   "created_at": "2025-07-03",
+   "non_test_files": 4,
+   "P2P": 1829,
+   "F2P": 12
+  },
+  {
+   "instance_id": "sdv-dev__SDV-2523",
+   "repo": "sdv-dev/SDV",
+   "created_at": "2025-05-14",
+   "non_test_files": 4,
+   "P2P": 1236,
+   "F2P": 4
+  },
+  {
+   "instance_id": "pyinfra-dev__pyinfra-1409",
+   "repo": "pyinfra-dev/pyinfra",
+   "created_at": "2025-08-05",
+   "non_test_files": 4,
+   "P2P": 1201,
+   "F2P": 4
+  },
+  {
+   "instance_id": "celery__kombu-2300",
+   "repo": "celery/kombu",
+   "created_at": "2025-05-16",
+   "non_test_files": 4,
+   "P2P": 1041,
+   "F2P": 45
+  },
+  {
+   "instance_id": "sissbruecker__linkding-1114",
+   "repo": "sissbruecker/linkding",
+   "created_at": "2025-07-01",
+   "non_test_files": 4,
+   "P2P": 884,
+   "F2P": 2
+  },
+  {
+   "instance_id": "openai__openai-agents-python-1601",
+   "repo": "openai/openai-agents-python",
+   "created_at": "2025-08-28",
+   "non_test_files": 4,
+   "P2P": 664,
+   "F2P": 1
+  },
+  {
+   "instance_id": "stanfordnlp__dspy-8607",
+   "repo": "stanfordnlp/dspy",
+   "created_at": "2025-08-07",
+   "non_test_files": 4,
+   "P2P": 392,
+   "F2P": 14
+  },
+  {
+   "instance_id": "django-json-api__django-rest-framework-json-api-1283",
+   "repo": "django-json-api/django-rest-framework-json-api",
+   "created_at": "2025-07-14",
+   "non_test_files": 4,
+   "P2P": 383,
+   "F2P": 4
+  },
+  {
+   "instance_id": "pypa__twine-1249",
+   "repo": "pypa/twine",
+   "created_at": "2025-06-06",
+   "non_test_files": 4,
+   "P2P": 220,
+   "F2P": 6
+  },
+  {
+   "instance_id": "run-llama__llama_deploy-500",
+   "repo": "run-llama/llama_deploy",
+   "created_at": "2025-05-14",
+   "non_test_files": 4,
+   "P2P": 208,
+   "F2P": 5
+  },
+  {
+   "instance_id": "astronomer__dag-factory-519",
+   "repo": "astronomer/dag-factory",
+   "created_at": "2025-07-29",
+   "non_test_files": 4,
+   "P2P": 181,
+   "F2P": 2
+  },
+  {
+   "instance_id": "MDAnalysis__mdanalysis-5066",
+   "repo": "MDAnalysis/mdanalysis",
+   "created_at": "2025-06-15",
+   "non_test_files": 3,
+   "P2P": 20496,
+   "F2P": 5
+  },
+  {
+   "instance_id": "albumentations-team__albumentations-2552",
+   "repo": "albumentations-team/albumentations",
+   "created_at": "2025-06-08",
+   "non_test_files": 3,
+   "P2P": 8992,
+   "F2P": 9
+  },
+  {
+   "instance_id": "matplotlib__matplotlib-30198",
+   "repo": "matplotlib/matplotlib",
+   "created_at": "2025-06-21",
+   "non_test_files": 3,
+   "P2P": 8103,
+   "F2P": 1
+  },
+  {
+   "instance_id": "streamlink__streamlink-6544",
+   "repo": "streamlink/streamlink",
+   "created_at": "2025-05-29",
+   "non_test_files": 3,
+   "P2P": 6034,
+   "F2P": 42
+  },
+  {
+   "instance_id": "fonttools__fonttools-3907",
+   "repo": "fonttools/fonttools",
+   "created_at": "2025-08-18",
+   "non_test_files": 3,
+   "P2P": 4496,
+   "F2P": 2
+  },
+  {
+   "instance_id": "conan-io__conan-18334",
+   "repo": "conan-io/conan",
+   "created_at": "2025-05-21",
+   "non_test_files": 3,
+   "P2P": 4481,
+   "F2P": 1
+  },
+  {
+   "instance_id": "falconry__falcon-2459",
+   "repo": "falconry/falcon",
+   "created_at": "2025-06-05",
+   "non_test_files": 3,
+   "P2P": 3632,
+   "F2P": 5
+  }
+ ]
+}
