@@ -1,0 +1,366 @@
+{
+ "schema": "e2-phase1-5-candidate-pool-v2",
+ "cutoff": "2025-04-30",
+ "selection": "post-cutoff AND regression-risk(>=2 non-test files, F2P>=1) AND cert-feasible suite (100<=P2P<=1500); exclude GATE-A-confirmed network/dirty repos and known-contaminated ids; <=2 per repo; sorted pre-validated-then-suite-size asc",
+ "excluded_dirty_repos": [
+  "a2aproject/a2a-python",
+  "beetbox/beets",
+  "jlowin/fastmcp",
+  "mesonbuild/meson",
+  "openai/openai-agents-python",
+  "pybamm-team/PyBaMM",
+  "pymodbus-dev/pymodbus",
+  "run-llama/llama_deploy",
+  "sdv-dev/SDV",
+  "sissbruecker/linkding",
+  "stanfordnlp/dspy"
+ ],
+ "excluded_contaminated_ids": [
+  "MechanicalSoup__MechanicalSoup-455",
+  "astronomer__dag-factory-519"
+ ],
+ "pre_validated_from_v1": [
+  "celery__kombu-2300",
+  "django-json-api__django-rest-framework-json-api-1283",
+  "koxudaxi__datamodel-code-generator-2408",
+  "koxudaxi__datamodel-code-generator-2461",
+  "mlco2__codecarbon-831",
+  "pypa__twine-1249"
+ ],
+ "count": 37,
+ "instances": [
+  {
+   "instance_id": "mlco2__codecarbon-831",
+   "repo": "mlco2/codecarbon",
+   "created_at": "2025-05-01",
+   "non_test_files": 23,
+   "P2P": 112,
+   "F2P": 1,
+   "pre_validated": true
+  },
+  {
+   "instance_id": "pypa__twine-1249",
+   "repo": "pypa/twine",
+   "created_at": "2025-06-06",
+   "non_test_files": 4,
+   "P2P": 220,
+   "F2P": 6,
+   "pre_validated": true
+  },
+  {
+   "instance_id": "django-json-api__django-rest-framework-json-api-1283",
+   "repo": "django-json-api/django-rest-framework-json-api",
+   "created_at": "2025-07-14",
+   "non_test_files": 4,
+   "P2P": 383,
+   "F2P": 4,
+   "pre_validated": true
+  },
+  {
+   "instance_id": "koxudaxi__datamodel-code-generator-2408",
+   "repo": "koxudaxi/datamodel-code-generator",
+   "created_at": "2025-05-31",
+   "non_test_files": 12,
+   "P2P": 668,
+   "F2P": 11,
+   "pre_validated": true
+  },
+  {
+   "instance_id": "koxudaxi__datamodel-code-generator-2461",
+   "repo": "koxudaxi/datamodel-code-generator",
+   "created_at": "2025-08-02",
+   "non_test_files": 5,
+   "P2P": 709,
+   "F2P": 3,
+   "pre_validated": true
+  },
+  {
+   "instance_id": "celery__kombu-2300",
+   "repo": "celery/kombu",
+   "created_at": "2025-05-16",
+   "non_test_files": 4,
+   "P2P": 1041,
+   "F2P": 45,
+   "pre_validated": true
+  },
+  {
+   "instance_id": "microsoft__graphrag-1944",
+   "repo": "microsoft/graphrag",
+   "created_at": "2025-05-21",
+   "non_test_files": 2,
+   "P2P": 114,
+   "F2P": 2,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "mlco2__codecarbon-853",
+   "repo": "mlco2/codecarbon",
+   "created_at": "2025-06-02",
+   "non_test_files": 3,
+   "P2P": 119,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "spulec__freezegun-582",
+   "repo": "spulec/freezegun",
+   "created_at": "2025-08-09",
+   "non_test_files": 2,
+   "P2P": 137,
+   "F2P": 5,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "Archmonger__django-dbbackup-606",
+   "repo": "Archmonger/django-dbbackup",
+   "created_at": "2025-08-19",
+   "non_test_files": 3,
+   "P2P": 222,
+   "F2P": 3,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "Lightning-AI__LitServe-577",
+   "repo": "Lightning-AI/LitServe",
+   "created_at": "2025-07-10",
+   "non_test_files": 3,
+   "P2P": 274,
+   "F2P": 2,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "django-guardian__django-guardian-899",
+   "repo": "django-guardian/django-guardian",
+   "created_at": "2025-08-29",
+   "non_test_files": 2,
+   "P2P": 293,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "casbin__pycasbin-392",
+   "repo": "casbin/pycasbin",
+   "created_at": "2025-08-06",
+   "non_test_files": 3,
+   "P2P": 298,
+   "F2P": 2,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "octodns__octodns-1298",
+   "repo": "octodns/octodns",
+   "created_at": "2025-08-25",
+   "non_test_files": 2,
+   "P2P": 361,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "django-json-api__django-rest-framework-json-api-1301",
+   "repo": "django-json-api/django-rest-framework-json-api",
+   "created_at": "2025-08-20",
+   "non_test_files": 3,
+   "P2P": 375,
+   "F2P": 3,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "psf__black-4684",
+   "repo": "psf/black",
+   "created_at": "2025-06-05",
+   "non_test_files": 2,
+   "P2P": 433,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "psf__black-4670",
+   "repo": "psf/black",
+   "created_at": "2025-05-29",
+   "non_test_files": 2,
+   "P2P": 439,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "typeddjango__django-stubs-2748",
+   "repo": "typeddjango/django-stubs",
+   "created_at": "2025-07-17",
+   "non_test_files": 2,
+   "P2P": 459,
+   "F2P": 2,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "llamastack__llama-stack-2979",
+   "repo": "llamastack/llama-stack",
+   "created_at": "2025-07-31",
+   "non_test_files": 2,
+   "P2P": 596,
+   "F2P": 3,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "pypa__cibuildwheel-2458",
+   "repo": "pypa/cibuildwheel",
+   "created_at": "2025-06-09",
+   "non_test_files": 2,
+   "P2P": 608,
+   "F2P": 7,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "patroni__patroni-3373",
+   "repo": "patroni/patroni",
+   "created_at": "2025-06-04",
+   "non_test_files": 2,
+   "P2P": 656,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "PyPSA__PyPSA-1325",
+   "repo": "PyPSA/PyPSA",
+   "created_at": "2025-08-12",
+   "non_test_files": 2,
+   "P2P": 687,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "patroni__patroni-3370",
+   "repo": "patroni/patroni",
+   "created_at": "2025-06-03",
+   "non_test_files": 2,
+   "P2P": 700,
+   "F2P": 5,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "authlib__authlib-800",
+   "repo": "authlib/authlib",
+   "created_at": "2025-08-22",
+   "non_test_files": 3,
+   "P2P": 736,
+   "F2P": 3,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "spesmilo__electrum-10067",
+   "repo": "spesmilo/electrum",
+   "created_at": "2025-07-21",
+   "non_test_files": 3,
+   "P2P": 816,
+   "F2P": 14,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "spesmilo__electrum-10172",
+   "repo": "spesmilo/electrum",
+   "created_at": "2025-08-23",
+   "non_test_files": 2,
+   "P2P": 854,
+   "F2P": 3,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "slackapi__python-slack-sdk-1703",
+   "repo": "slackapi/python-slack-sdk",
+   "created_at": "2025-06-17",
+   "non_test_files": 3,
+   "P2P": 862,
+   "F2P": 2,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "sooperset__mcp-atlassian-531",
+   "repo": "sooperset/mcp-atlassian",
+   "created_at": "2025-06-18",
+   "non_test_files": 2,
+   "P2P": 947,
+   "F2P": 3,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "IBM__mcp-context-forge-562",
+   "repo": "IBM/mcp-context-forge",
+   "created_at": "2025-07-21",
+   "non_test_files": 2,
+   "P2P": 1041,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "pyinfra-dev__pyinfra-1409",
+   "repo": "pyinfra-dev/pyinfra",
+   "created_at": "2025-08-05",
+   "non_test_files": 4,
+   "P2P": 1201,
+   "F2P": 4,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "pyinfra-dev__pyinfra-1413",
+   "repo": "pyinfra-dev/pyinfra",
+   "created_at": "2025-08-06",
+   "non_test_files": 10,
+   "P2P": 1208,
+   "F2P": 8,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "ipython__ipython-14966",
+   "repo": "ipython/ipython",
+   "created_at": "2025-08-20",
+   "non_test_files": 2,
+   "P2P": 1281,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "python-attrs__attrs-1448",
+   "repo": "python-attrs/attrs",
+   "created_at": "2025-07-27",
+   "non_test_files": 3,
+   "P2P": 1325,
+   "F2P": 4,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "ipython__ipython-14943",
+   "repo": "ipython/ipython",
+   "created_at": "2025-07-19",
+   "non_test_files": 2,
+   "P2P": 1365,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "conan-io__conan-18333",
+   "repo": "conan-io/conan",
+   "created_at": "2025-05-20",
+   "non_test_files": 3,
+   "P2P": 1371,
+   "F2P": 2,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "dpkp__kafka-python-2608",
+   "repo": "dpkp/kafka-python",
+   "created_at": "2025-05-01",
+   "non_test_files": 2,
+   "P2P": 1461,
+   "F2P": 1,
+   "pre_validated": false
+  },
+  {
+   "instance_id": "aws-cloudformation__cfn-lint-4137",
+   "repo": "aws-cloudformation/cfn-lint",
+   "created_at": "2025-05-08",
+   "non_test_files": 2,
+   "P2P": 1498,
+   "F2P": 1,
+   "pre_validated": false
+  }
+ ]
+}
