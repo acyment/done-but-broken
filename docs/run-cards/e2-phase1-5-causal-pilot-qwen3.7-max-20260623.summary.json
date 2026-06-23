@@ -1,0 +1,416 @@
+{
+ "run_id": "e2-phase1-5-causal-pilot-qwen3.7-max",
+ "model_route": "openai/qwen3.7-max",
+ "artifact": "e2-phase1-5-causal-pilot-qwen3.7-max.json",
+ "artifact_sha256": "6484243829a5ee36f07dc44c7529807ced312a0f2a39b746fd804fafa4e2ce62",
+ "n_records": 260,
+ "n_errored": 17,
+ "excluded_tasks": [
+  "psf__black-4684"
+ ],
+ "scopes": {
+  "analysis_all_valid": {
+   "verdict": "candidate_frontier_positive",
+   "n_hits": 6,
+   "n_tasks": 12,
+   "family_wise_null_p": 1.110778964404297e-05,
+   "alpha": 0.05,
+   "mcid": 0.2,
+   "pooled": {
+    "control": {
+     "gap": 52,
+     "resolve": 44,
+     "n": 120,
+     "gap_rate": 0.4333,
+     "resolve_rate": 0.3667
+    },
+    "treatment": {
+     "gap": 0,
+     "resolve": 41,
+     "n": 119,
+     "gap_rate": 0.0,
+     "resolve_rate": 0.3445
+    }
+   },
+   "per_task": {
+    "casbin__pycasbin-392": {
+     "control": {
+      "gap": 2,
+      "resolve": 8,
+      "n": 10,
+      "gap_rate": 0.2,
+      "resolve_rate": 0.8
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 8,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.8
+     }
+    },
+    "celery__kombu-2300": {
+     "control": {
+      "gap": 9,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.9,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "django-guardian__django-guardian-899": {
+     "control": {
+      "gap": 2,
+      "resolve": 8,
+      "n": 10,
+      "gap_rate": 0.2,
+      "resolve_rate": 0.8
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 4,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.4
+     }
+    },
+    "django-json-api__django-rest-framework-json-api-1283": {
+     "control": {
+      "gap": 4,
+      "resolve": 6,
+      "n": 10,
+      "gap_rate": 0.4,
+      "resolve_rate": 0.6
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    },
+    "dpkp__kafka-python-2608": {
+     "control": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 9,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.9
+     }
+    },
+    "koxudaxi__datamodel-code-generator-2408": {
+     "control": {
+      "gap": 6,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.6,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "koxudaxi__datamodel-code-generator-2461": {
+     "control": {
+      "gap": 3,
+      "resolve": 1,
+      "n": 10,
+      "gap_rate": 0.3,
+      "resolve_rate": 0.1
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 9,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "mlco2__codecarbon-831": {
+     "control": {
+      "gap": 10,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "psf__black-4670": {
+     "control": {
+      "gap": 1,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.1,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "pypa__twine-1249": {
+     "control": {
+      "gap": 9,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.9,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "python-attrs__attrs-1448": {
+     "control": {
+      "gap": 6,
+      "resolve": 1,
+      "n": 10,
+      "gap_rate": 0.6,
+      "resolve_rate": 0.1
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "spulec__freezegun-582": {
+     "control": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    }
+   },
+   "significant_tasks": [
+    "celery__kombu-2300",
+    "django-json-api__django-rest-framework-json-api-1283",
+    "koxudaxi__datamodel-code-generator-2408",
+    "mlco2__codecarbon-831",
+    "pypa__twine-1249",
+    "python-attrs__attrs-1448"
+   ]
+  },
+  "analysis_n9": {
+   "verdict": "candidate_frontier_positive",
+   "n_hits": 5,
+   "n_tasks": 9,
+   "family_wise_null_p": 3.322220703125e-05,
+   "alpha": 0.05,
+   "mcid": 0.2,
+   "pooled": {
+    "control": {
+     "gap": 45,
+     "resolve": 33,
+     "n": 90,
+     "gap_rate": 0.5,
+     "resolve_rate": 0.3667
+    },
+    "treatment": {
+     "gap": 0,
+     "resolve": 32,
+     "n": 89,
+     "gap_rate": 0.0,
+     "resolve_rate": 0.3596
+    }
+   },
+   "per_task": {
+    "casbin__pycasbin-392": {
+     "control": {
+      "gap": 2,
+      "resolve": 8,
+      "n": 10,
+      "gap_rate": 0.2,
+      "resolve_rate": 0.8
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 8,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.8
+     }
+    },
+    "celery__kombu-2300": {
+     "control": {
+      "gap": 9,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.9,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "django-guardian__django-guardian-899": {
+     "control": {
+      "gap": 2,
+      "resolve": 8,
+      "n": 10,
+      "gap_rate": 0.2,
+      "resolve_rate": 0.8
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 4,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.4
+     }
+    },
+    "django-json-api__django-rest-framework-json-api-1283": {
+     "control": {
+      "gap": 4,
+      "resolve": 6,
+      "n": 10,
+      "gap_rate": 0.4,
+      "resolve_rate": 0.6
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    },
+    "koxudaxi__datamodel-code-generator-2408": {
+     "control": {
+      "gap": 6,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.6,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "koxudaxi__datamodel-code-generator-2461": {
+     "control": {
+      "gap": 3,
+      "resolve": 1,
+      "n": 10,
+      "gap_rate": 0.3,
+      "resolve_rate": 0.1
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 9,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "mlco2__codecarbon-831": {
+     "control": {
+      "gap": 10,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "pypa__twine-1249": {
+     "control": {
+      "gap": 9,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.9,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "spulec__freezegun-582": {
+     "control": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    }
+   },
+   "significant_tasks": [
+    "celery__kombu-2300",
+    "django-json-api__django-rest-framework-json-api-1283",
+    "koxudaxi__datamodel-code-generator-2408",
+    "mlco2__codecarbon-831",
+    "pypa__twine-1249"
+   ]
+  }
+ }
+}

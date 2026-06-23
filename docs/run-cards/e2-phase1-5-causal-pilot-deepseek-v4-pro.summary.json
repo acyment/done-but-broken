@@ -1,0 +1,191 @@
+{
+ "run_id": "e2-phase1-5-causal-pilot-deepseek-v4-pro",
+ "model_route": "deepseek-v4-pro",
+ "artifact": "e2-phase1-5-causal-pilot-deepseek-v4-pro.json",
+ "artifact_sha256": "009b00e8c5b92b7a2f91d0a16d33847de13a1e6560daea8b24b1d6ceb6e61632",
+ "n_records": 180,
+ "n_errored": 1,
+ "excluded_tasks": [],
+ "scopes": {
+  "analysis": {
+   "verdict": "candidate_frontier_positive",
+   "n_hits": 8,
+   "n_tasks": 9,
+   "family_wise_null_p": 3.3593750000000016e-10,
+   "alpha": 0.05,
+   "mcid": 0.2,
+   "pooled": {
+    "control": {
+     "gap": 70,
+     "resolve": 17,
+     "n": 89,
+     "gap_rate": 0.7865,
+     "resolve_rate": 0.191
+    },
+    "treatment": {
+     "gap": 12,
+     "resolve": 34,
+     "n": 90,
+     "gap_rate": 0.1333,
+     "resolve_rate": 0.3778
+    }
+   },
+   "per_task": {
+    "casbin__pycasbin-392": {
+     "control": {
+      "gap": 5,
+      "resolve": 5,
+      "n": 10,
+      "gap_rate": 0.5,
+      "resolve_rate": 0.5
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    },
+    "celery__kombu-2300": {
+     "control": {
+      "gap": 10,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 5,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.5,
+      "resolve_rate": 0.0
+     }
+    },
+    "django-guardian__django-guardian-899": {
+     "control": {
+      "gap": 10,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 1,
+      "resolve": 3,
+      "n": 10,
+      "gap_rate": 0.1,
+      "resolve_rate": 0.3
+     }
+    },
+    "django-json-api__django-rest-framework-json-api-1283": {
+     "control": {
+      "gap": 7,
+      "resolve": 2,
+      "n": 10,
+      "gap_rate": 0.7,
+      "resolve_rate": 0.2
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    },
+    "koxudaxi__datamodel-code-generator-2408": {
+     "control": {
+      "gap": 9,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.9,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "koxudaxi__datamodel-code-generator-2461": {
+     "control": {
+      "gap": 9,
+      "resolve": 0,
+      "n": 9,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 1,
+      "resolve": 1,
+      "n": 10,
+      "gap_rate": 0.1,
+      "resolve_rate": 0.1
+     }
+    },
+    "mlco2__codecarbon-831": {
+     "control": {
+      "gap": 10,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 5,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.5,
+      "resolve_rate": 0.0
+     }
+    },
+    "pypa__twine-1249": {
+     "control": {
+      "gap": 10,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 1.0,
+      "resolve_rate": 0.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 0,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 0.0
+     }
+    },
+    "spulec__freezegun-582": {
+     "control": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     },
+     "treatment": {
+      "gap": 0,
+      "resolve": 10,
+      "n": 10,
+      "gap_rate": 0.0,
+      "resolve_rate": 1.0
+     }
+    }
+   },
+   "significant_tasks": [
+    "casbin__pycasbin-392",
+    "celery__kombu-2300",
+    "django-guardian__django-guardian-899",
+    "django-json-api__django-rest-framework-json-api-1283",
+    "koxudaxi__datamodel-code-generator-2408",
+    "koxudaxi__datamodel-code-generator-2461",
+    "mlco2__codecarbon-831",
+    "pypa__twine-1249"
+   ]
+  }
+ }
+}
