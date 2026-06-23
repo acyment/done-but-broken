@@ -151,7 +151,7 @@ This is, concretely, evidence for the **executable-feedback core** of Harnessed 
 
 ## Appendix A — Reproducibility & provenance
 
-- Code and data: `[URL — released on publication]` (`done-but-broken-harness` + `done-but-broken` scientific record).
+- Code and data: https://github.com/acyment/done-but-broken (scientific record) + https://github.com/acyment/done-but-broken-harness (harness). Raw run artifacts are attached as release assets and referenced by SHA-256.
 - Harness: `done-but-broken-harness` (import package `hit_sdd_e2`) @ `f9fc5fa` (+ per-model route wiring) (Python/Docker; OpenHands agent; SWE-bench Live substrate). Scientific record repo: `done-but-broken`.
 - Pre-registration: `e2-phase1-pilot-commitments-v1.md` + Addendum B (sealed 13-task certified list); analysis plan `e2-phase1-5-plan-v1.md`; **Addendum C** (sealed second-model replication: Qwen 3.7 Max route, gates, criterion). Classification: `causal_pilot`.
 - Result artifacts (causal pilots):
