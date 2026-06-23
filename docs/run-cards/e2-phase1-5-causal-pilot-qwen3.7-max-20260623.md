@@ -14,7 +14,7 @@ ablation, pre-registered in `e2-phase1-pilot-commitments-v1-addendum-c.md`. **Ou
 | Arms | `control` = file_editor · `treatment` = file_editor + container-backed `run_tests` (only difference) |
 | N | 10 runs/arm/task; 260 rollouts total |
 | `max_output_tokens` | 16000 (reasoning-model headroom; both arms) |
-| Harness | `hit-sdd-bench-e2` @ `f9fc5fa` + qwen-route wiring (`run_phase1_5.py` route registry, `E2_MODEL=qwen`) |
+| Harness | `hit-sdd-bench-e2` @ `f9fc5fa` + qwen-route wiring (`run_phase1_5.py` route registry, `E2_MODEL=qwen`). Now public as **`done-but-broken-harness`** (`hit-sdd-bench-e2` is the historical name). |
 | Artifact | `e2-phase1-5-causal-pilot-qwen3.7-max.json` (SHA-256 `6484243829a5ee36f07dc44c7529807ced312a0f2a39b746fd804fafa4e2ce62`) |
 | Gates | GATE-A flake-cert carried from Addendum B; GATE-B contamination re-screened for qwen — CLEAN 13/13 (`e2-qwen3.7-max-contam-screen-n13-20260620-001.json`, SHA `070d18cf…`) |
 | Run dates | 2026-06-20 → 2026-06-23 |

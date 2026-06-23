@@ -18,8 +18,8 @@ python examples/emit_run_summary.py <artifact>.json \
   -o ~/dev/hit-sdd-bench/docs/run-cards/<run-id>.summary.json
 ```
 
-Committed so far: `e2-phase1-5-causal-pilot-deepseek-v4-pro.summary.json`,
-`e2-phase1-5-causal-pilot-qwen3.7-max-20260623.summary.json`.
+Committed so far: `e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001.summary.json`,
+`e2-phase1-5-causal-pilot-qwen3.7-max-20260623.summary.json` (each named to match its run-card).
 
 ## Tier 2 — Full raw artifact (preserved out-of-tree; the audit trail)
 

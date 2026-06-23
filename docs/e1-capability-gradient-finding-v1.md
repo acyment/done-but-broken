@@ -6,6 +6,12 @@ makes **no generalized (Level 5) claim**. It is a *convergent qualitative patter
 bounded runs — **not a pooled effect size**; the runs below are never pooled across task, model,
 provider profile, protocol, or classification (see Compatibility Boundaries).
 
+> **Update (2026-06-23):** the successor **E2 brownfield** program has since produced results —
+> executable acceptance feedback reduces frontier *confident-wrong shipping* at brownfield scale
+> (candidate → replicated across two lineages; see the proto-paper and `public-evidence-status.md`).
+> E2 *refines* this E1 finding by regime (small fully-specified ⇒ feedback redundant; brownfield ⇒
+> beneficial); it does not change the E1 conclusions below.
+
 ## The finding, in one sentence
 
 Executable, BDD-style spec feedback helps an AI coding agent **exactly to the extent that the agent

@@ -123,11 +123,13 @@ Do not pool across these boundaries:
 
 The repo can currently make Level 4 task/model/profile-specific causal pilot claims:
 
+- **E2 brownfield acceptance feedback — candidate → replicated across two independent lineages**
+  (DeepSeek 79%→13%; Qwen 50%→0%), bounded to this task family/substrate/scaffold/budget. *Current headline.*
+- positive executable/example-bearing spec contrast on pricing v0; positive content-controlled run-loop
+  result on pricing content-controlled (cheap/weak-model, small single-file task)
 - flat primary results on the easier subscription/inventory tasks
-- positive executable/example-bearing spec contrast on pricing v0
-- positive content-controlled run-loop result on pricing content-controlled
 
-It can also make Level 3 difficulty/ceiling claims that frontier-grade models ceiling the tested well-specified single-file pricing and payroll tasks under the listed boundaries. The repo is not allowed to make a Level 5 generalized claim because the evidence set is small, intentionally bounded, and single-model on the positive pricing results.
+It can also make Level 3 difficulty/ceiling claims that frontier-grade models ceiling the tested well-specified single-file pricing and payroll tasks under the listed boundaries. The repo is **not** allowed to make a Level 5 generalized claim: the E2 result is two-lineage but single-substrate/scaffold/budget, the positive pricing results are single-model, and nothing is pooled across boundaries.
 
 ## Recommended Public Wording
 

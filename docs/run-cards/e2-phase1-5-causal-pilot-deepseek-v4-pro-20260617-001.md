@@ -14,7 +14,7 @@
 | Program | E2 brownfield acceptance-feedback ablation — Phase-1.5 powered causal read |
 | Classification | **`causal_pilot`** — the actual causal evidence (single model → CANDIDATE, not validated) |
 | Model / route | `deepseek-v4-pro` (litellm openai-compatible, `api.deepseek.com`) |
-| Harness | `hit-sdd-bench-e2` @ `f9fc5fa` |
+| Harness | `hit-sdd-bench-e2` @ `f9fc5fa`. Now public as **`done-but-broken-harness`** (`hit-sdd-bench-e2` is the historical name). |
 | Commitments | `e2-phase1-pilot-commitments-v1.md` + Addendum B (flake-certified task list) |
 | Result JSON SHA-256 | `009b00e8c5b92b7a2f91d0a16d33847de13a1e6560daea8b24b1d6ceb6e61632` |
 

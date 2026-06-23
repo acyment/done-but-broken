@@ -46,7 +46,7 @@ The causal variable is whether the same semantic spec can be used as automated f
 
 The OpenSpec workflow is permitted as a shared task-environment property under the named protocol profile `e1-openspec-workflow-v0`: both arms work inside the same OpenSpec-initialized workspace, both arms maintain spec deltas, and the harness runs the pinned `openspec` archive step identically in both arms at checkpoint transitions. This is not a spec-format comparison between arms — both arms see the same scenario content, and the causal variable remains executable-feedback availability. Runs under `e1-openspec-workflow-v0` form their own compatibility boundary and are never pooled with base-profile runs. This scoping was decided before any OpenSpec-profile run existed (guardrail revision of 2026-06-10).
 
-The sibling repo at `../hit-sdd-bench.old` is read-only salvage material. Active runtime code must not import modules from it by relative path.
+The archived sibling repository is read-only salvage material. Active runtime code must not import modules from it by relative path.
 
 ## Scientific Protocol Guardrails
 
@@ -159,7 +159,7 @@ Concrete examples:
 - Before changing packet rendering, write or update a test proving both conditions receive the same visible semantic spec text.
 - Before adding feedback assets, write or update a test proving only `feedback_capable_spec` gets a runnable command and paths.
 - Before changing checkpoint execution, write or update a test proving checkpoint `I02` starts from the post-`I01` workspace for the same condition.
-- Before copying any useful evaluator behavior from `../hit-sdd-bench.old`, write characterization tests that pin the behavior, then copy the smallest useful code and simplify behind those tests.
+- Before copying any useful evaluator behavior from the archived sibling repository, write characterization tests that pin the behavior, then copy the smallest useful code and simplify behind those tests.
 
 Strict TDD is not required for:
 
