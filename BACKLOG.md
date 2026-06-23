@@ -307,6 +307,28 @@ as an infrastructure-killed partial. Run cards in `docs/run-cards/`.
 
 These are later because the current bottleneck is bringing E1 to evidence grade plus public-legible evidence artifacts.
 
+### E2 budget-sensitivity follow-up (design drafted 2026-06-21, NOT authorized)
+
+- Design: `docs/protocols/e2-budget-sensitivity-design-v1.md` (DESIGN DRAFT — no run, new compatibility boundary).
+- Motivation: qwen replication showed at budget=60 treatment eliminated the gap on `guardian-899` (2→0) but resolved fewer (8→4) — `run_tests` consumes turns, so budget moderates whether feedback is diagnostic (gap↓) or generative (resolve↑).
+- Manipulates **budget × arm** (budget equal across arms at each level — inviolable); primary = resolve-delta trend across budget levels; secondary = gap stability. qwen 3.7 max; k≈4–6 solvable budget-binding tasks.
+- Gated: do NOT run until the n=13 qwen replication completes + is reported, the task subset is sealed from its resolve/gap profile, and operator authorizes with a spend cap. Does not touch the running pilot (frozen at 60).
+
+### E2 Protocol v2 — large-repo navigation-equalized (design drafted 2026-06-21, NOT authorized)
+
+- Design: `docs/protocols/e2-protocol-v2-large-repo-navparity-design-v1.md` (DESIGN DRAFT — no run, new compatibility boundary).
+- Goal: clean test of the hypothesis that executable feedback helps **most on large repos**. Give **both arms** a read-only `CodeBrowser` (ripgrep-style search + tree-sitter symbol index; NOT LSP, NOT python-ast; exclude test files; pristine frozen index) so control can navigate without execution → only difference stays `run_tests`.
+- Scope: the 4 large repos (black-4684/4670, attrs-1448, kafka-2608), **both** DeepSeek and qwen, N=10 → 160 rollouts. Separate stratum; never pooled with v1; combine via mixed-effects design×treatment interaction.
+- Records the two-directional-confound decision: named checks = primary construct, anonymized-checks variant = robustness secondary.
+- Gated: after the qwen replication is reported; needs CodeBrowser build + leak-guard validation + sealed commitments + authorization + spend cap.
+
+### E2 confoundability metric — predict where agents confidently fail (design drafted 2026-06-21, NOT authorized)
+
+- Design: `docs/protocols/e2-confoundability-metric-design-v1.md` (DESIGN DRAFT — no run, new compatibility boundary).
+- Goal: build + validate a static, answer-independent **confoundability score** `C(task)` predicting the self-verification-gap rate for a class of strong self-verifiers — fills a real literature gap (property→gap link is unmeasured). Subsumes task-enrichment (rank by predicted gap).
+- Method: features (non-locality, edit-to-failure distance, weak-oracle/coverage, scale, spec-completeness) → label gap on a **screener ensemble held out from the model the score is applied to** (non-circular) → fit predictor → **prospective held-out-task calibration**. Uses the strengthened oracle (held-out P2P + reproduction + mutation) for truer labels.
+- Cost: the expensive one (100–300 tasks × 2–3 screeners × N). **Feasibility-pilot-gated** (~30–40 tasks first; abort if no signal). A null is a valid, publishable result.
+
 ## Test-First Backlog
 
 Write or update tests before implementing each validity-critical change:
