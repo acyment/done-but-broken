@@ -46,7 +46,8 @@ answers — *before* it declares a task done, and seeing whether that reduces co
 - **The proto-paper (read this first):**
   [`docs/papers/e2-executable-feedback-protopaper-v1.md`](docs/papers/e2-executable-feedback-protopaper-v1.md)
   — full method, results, and limitations, for both researchers and engineering leaders.
-- **The evidence, replayable:**
+- **The evidence** (run-cards + machine-readable summaries are committed *here*; the full raw run
+  artifacts live in the companion `done-but-broken-harness` repo, referenced by SHA):
   - Qwen run-card → [`docs/run-cards/e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md`](docs/run-cards/e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md)
   - DeepSeek run-card → [`docs/run-cards/e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001.md`](docs/run-cards/e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001.md)
   - Machine-readable summaries (per-task rates + verdict + artifact SHA) sit next to each run-card as `*.summary.json`.
@@ -101,8 +102,10 @@ not HIT-SDD). A few load-bearing rules (full version in [`AGENTS.md`](AGENTS.md)
   `diagnostic_invalid` — and only clean `causal_pilot` runs back causal claims.
 - **Pre-registration:** the analysis plan, primary metric, and task list are frozen *before* a causal
   run (see the commitments docs in `docs/protocols/`).
-- **Replay-valid where possible:** results carry SHA-256 hashes and the cited artifacts are tracked so
-  the hashes resolve.
+- **Replay-valid where possible:** results carry SHA-256 hashes; summaries are committed here and the
+  SHA-cited raw artifacts are tracked in the companion harness repo, so the hashes resolve once both
+  repos are public. (Where determinism rests on the N=60 flake certification rather than patch
+  re-scoring, we say so — patch *text* wasn't retained for the pilots.)
 - **Bounded language on purpose.** This is a **candidate → replicated across two lineages** finding,
   *not* a general "frontier agents" law. We prefer "preliminary / bounded / under this model+budget"
   to "proved / solved / benchmark shows."
@@ -160,7 +163,10 @@ Inspect/validate a completed run (checks the replay plan, declared artifacts, an
 bun run inspect:run --run-manifest runs/sample-local/run.json
 ```
 
-Real single-shot / bounded feedback-loop adapters call a provider directly; see the commands and
+The older bounded feedback-loop adapter is **calibration-only**: it gates writes to feedback-asset
+paths but does not harden the workspace against tampering (e.g. `package.json`/config) the way the
+E1 L0 harness does — don't treat it as a sandboxed eval runner. Real single-shot / bounded
+feedback-loop adapters call a provider directly; see the commands and
 metric-interpretation notes in [`docs/`](docs/) and [`AGENTS.md`](AGENTS.md). Tooling: **Bun** for
 JS/TS, **uv** for any Python. Real provider/model runs are operator-authorized only.
 

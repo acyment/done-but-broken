@@ -1,5 +1,12 @@
 # Run Card: e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001
 
+> **Update (2026-06-23):** the "single model → CANDIDATE, second model pending" framing below has been
+> **satisfied** — the pre-registered second-lineage replication ran on **Qwen 3.7 Max** (n=9: gap
+> 50%→0%, 5/9 significant, family-wise *p*≈3×10⁻⁵), so the effect is now **candidate → replicated
+> across two independent lineages** (still bounded). See
+> `e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md` and Addendum C. This card is preserved as the
+> original DeepSeek record.
+
 | Field | Value |
 | --- | --- |
 | Run ID | `e2-phase1-5-causal-pilot-deepseek-v4-pro` |
