@@ -17,6 +17,7 @@ authorization and a spend cap.
 | Addendum A — GATE-B contamination screen (`docs/protocols/e2-phase1-pilot-commitments-v1-addendum-a.md`) | `b2c2a627d92812159257cdfc74f7e1c3a539f0ef3f676460db90a21dccacfac1` |
 | Pool v2 supersession (`docs/protocols/e2-phase1-5-candidate-pool-v2-supersession-v1.md`) | `96be2835…` (pool JSON); see doc for full hash |
 | Addendum B — final flake-certified task list (`docs/protocols/e2-phase1-pilot-commitments-v1-addendum-b.md`) | `71c9c62960c8c72c60c0ba1cdb4a12fd3cb116cda34b7abdbf9723e785318f55` |
+| Addendum C — second-model replication, qwen 3.7 max (`docs/protocols/e2-phase1-pilot-commitments-v1-addendum-c.md`) | `8f92eb28782e5aee8e9d277192223523f685c150864b76d4de2e7c2a2cabb0ff` |
 
 ## Harness
 
