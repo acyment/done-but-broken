@@ -2471,12 +2471,6 @@ function validateOptionalBooleanField(value: unknown, field: string, errors: str
   }
 }
 
-function requireStringWhenPresent(value: unknown, field: string, trigger: string, errors: string[]) {
-  if (typeof value !== "string" || value.length === 0) {
-    errors.push(`${field} must be a non-empty string when ${trigger} is present`);
-  }
-}
-
 function requireStringArray(value: unknown, field: string, errors: string[]) {
   if (!Array.isArray(value) || !value.every((item) => typeof item === "string")) {
     errors.push(`${field} must be an array of strings`);

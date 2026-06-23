@@ -1053,12 +1053,6 @@ async function readJson<T>(path: string): Promise<T> {
   return JSON.parse(await readFile(path, "utf8")) as T;
 }
 
-function assertString(value: unknown, field: string): asserts value is string {
-  if (typeof value !== "string" || value.length === 0) {
-    throw new Error(`${field} must be a non-empty string`);
-  }
-}
-
 function collectStringError(value: unknown, field: string, errors: string[]) {
   if (typeof value !== "string" || value.length === 0) {
     errors.push(`${field} must be a non-empty string`);

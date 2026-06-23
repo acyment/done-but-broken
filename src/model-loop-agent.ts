@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { dirname, isAbsolute, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 import {
   DEFAULT_OPENROUTER_REQUEST_TIMEOUT_MS,
@@ -9,21 +9,21 @@ import {
   classifyOpenRouterError,
   type FetchLike
 } from "./openrouter-agent";
+import {
+  isRecord,
+  parseJson,
+  renderWorkspaceContext,
+  requestHeaders,
+  stripJsonFence,
+  toWorkspacePath,
+  type WorkspaceContext
+} from "./agent-shared";
 import type { RunValidityDetail, RunValidityFlag } from "./provenance";
 import type { AgentAdapter, AgentRunInput, AgentRunResult, AgentTranscriptEvent } from "./runner";
 
 const execFileAsync = promisify(execFile);
 const DEFAULT_MAX_WORKSPACE_BYTES = 256_000;
 const DEFAULT_FEEDBACK_OUTPUT_BYTES = 12_000;
-const SKIPPED_WORKSPACE_ENTRIES = new Set([
-  ".DS_Store",
-  ".git",
-  ".turbo",
-  "coverage",
-  "dist",
-  "node_modules",
-  "runs"
-]);
 
 export const DEFAULT_MODEL_LOOP_POLICY = {
   max_model_turns: 3,
@@ -122,13 +122,6 @@ export type OpenAiCompatibleFeedbackLoopAgentOptions = {
   maxProviderRetries?: number;
   requestTimeoutMs?: number;
   fetch?: FetchLike;
-};
-
-type WorkspaceContext = {
-  text: string;
-  truncated: boolean;
-  bytes: number;
-  file_count: number;
 };
 
 export function createModelLoopAgent(options: ModelLoopAgentOptions): AgentAdapter {
@@ -920,62 +913,6 @@ function isPublicFeedbackLine(line: string, workspacePath: string): boolean {
   return absolutePaths.every((path) => path.startsWith(workspacePath) || path.startsWith("<workspace>"));
 }
 
-async function renderWorkspaceContext(workspacePath: string, maxBytes: number): Promise<WorkspaceContext> {
-  const root = resolve(workspacePath);
-  const files = await listWorkspaceFiles(root);
-  const chunks: string[] = [];
-  let bytes = 0;
-  let truncated = false;
-
-  for (const file of files) {
-    const absolutePath = resolve(root, file);
-    const content = await readFile(absolutePath, "utf8").catch(() => undefined);
-
-    if (content === undefined || content.includes("\u0000")) {
-      continue;
-    }
-
-    const chunk = [`file: ${file}`, "```", content.trimEnd(), "```", ""].join("\n");
-    const chunkBytes = Buffer.byteLength(chunk);
-
-    if (bytes + chunkBytes > maxBytes) {
-      truncated = true;
-      break;
-    }
-
-    chunks.push(chunk);
-    bytes += chunkBytes;
-  }
-
-  return {
-    text: chunks.join("\n").trimEnd(),
-    truncated,
-    bytes,
-    file_count: files.length
-  };
-}
-
-async function listWorkspaceFiles(root: string, current = root): Promise<string[]> {
-  const entries = await readdir(current, { withFileTypes: true });
-  const files: string[] = [];
-
-  for (const entry of entries) {
-    if (SKIPPED_WORKSPACE_ENTRIES.has(entry.name)) {
-      continue;
-    }
-
-    const absolutePath = resolve(current, entry.name);
-
-    if (entry.isDirectory()) {
-      files.push(...(await listWorkspaceFiles(root, absolutePath)));
-    } else if (entry.isFile()) {
-      files.push(toWorkspacePath(relative(root, absolutePath)));
-    }
-  }
-
-  return files.sort();
-}
-
 function parseModelResult(content: string): ModelLoopResponse {
   const result = parseJson(stripJsonFence(content), "Model loop JSON");
 
@@ -1088,27 +1025,6 @@ function workspaceDestination(workspacePath: string, relativePath: string): stri
   return destination;
 }
 
-function requestHeaders(input: {
-  apiKey: string;
-  appTitle?: string;
-  siteUrl?: string;
-}): Record<string, string> {
-  const headers: Record<string, string> = {
-    Authorization: `Bearer ${input.apiKey}`,
-    "Content-Type": "application/json"
-  };
-
-  if (input.appTitle) {
-    headers["X-Title"] = input.appTitle;
-  }
-
-  if (input.siteUrl) {
-    headers["HTTP-Referer"] = input.siteUrl;
-  }
-
-  return headers;
-}
-
 function extractMessageContent(payload: unknown): string {
   if (!isRecord(payload) || !Array.isArray(payload.choices)) {
     throw new Error("OpenRouter response must include a choices array.");
@@ -1153,27 +1069,3 @@ function splitCommand(command: string): string[] {
   return command.match(/"[^"]+"|'[^']+'|\S+/g)?.map((part) => part.replace(/^['"]|['"]$/g, "")) ?? [];
 }
 
-function stripJsonFence(content: string): string {
-  const trimmed = content.trim();
-  const match = /^```(?:json)?\s*([\s\S]*?)\s*```$/i.exec(trimmed);
-
-  return match ? match[1].trim() : trimmed;
-}
-
-function parseJson(content: string, label: string): unknown {
-  try {
-    return JSON.parse(content);
-  } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
-
-    throw new Error(`${label} could not be parsed as JSON: ${detail}`);
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, any> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function toWorkspacePath(path: string): string {
-  return path.replace(/\\/g, "/").split(sep).join("/");
-}
