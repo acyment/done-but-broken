@@ -153,4 +153,19 @@ Real single-shot / bounded feedback-loop adapters call a provider directly; see 
 metric-interpretation notes in [`docs/`](docs/) and [`AGENTS.md`](AGENTS.md). Tooling: **Bun** for
 JS/TS, **uv** for any Python. Real provider/model runs are operator-authorized only.
 
+## License
+
+© 2026 Alan Cyment. **Dual-licensed:**
+
+- **Code** (the framework/harness) — **MIT** ([`LICENSE`](LICENSE)).
+- **Docs, papers, run-cards, and evidence** (everything under `docs/`, plus this README's prose) —
+  **CC BY 4.0** ([`LICENSE-docs`](LICENSE-docs)). Please **share, quote, and cite the findings and the
+  proto-paper freely — just credit Alan Cyment.**
+
+Third-party material — the SWE-bench Live substrate, the evaluation images and the open-source
+repositories they contain, and run-artifacts that embed upstream code/model outputs — keeps its own
+upstream license; see [`NOTICE`](NOTICE).
+
+---
+
 *Working drafts for discussion, not peer-reviewed. All results explicitly preliminary and bounded.*

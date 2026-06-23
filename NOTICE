@@ -1,0 +1,21 @@
+hit-sdd-bench — scientific record for the HIT-SDD / executable-acceptance-feedback experiments
+Copyright (c) 2026 Alan Cyment
+
+Original work in this repository is dual-licensed:
+  - Source code            -> MIT License        (see LICENSE)
+  - Documentation/evidence -> CC BY 4.0           (see LICENSE-docs)
+
+THIRD-PARTY MATERIAL — NOT covered by the licenses above; retains its upstream license:
+
+  - SWE-bench Live (the task substrate) and SWE-bench tooling — their respective licenses.
+  - The Docker evaluation images and the open-source repositories they contain
+    (e.g. psf/black, celery/kombu, pypa/twine, koxudaxi/datamodel-code-generator, …) —
+    their respective upstream licenses (various, including GPL).
+  - Run-output artifacts that may embed model outputs and/or short code excerpts from those
+    upstream repositories — such excerpts remain under their origin licenses and appear here only
+    as scientific evidence (quotation).
+  - Model providers and agent tooling (DeepSeek, Alibaba Qwen, OpenAI Codex, Anthropic Claude
+    Code, OpenHands) — their respective licenses / terms of use.
+
+The MIT and CC BY 4.0 grants apply ONLY to the original work authored by Alan Cyment in this
+repository, not to any third-party material referenced or embedded above.
