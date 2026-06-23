@@ -75,7 +75,7 @@ bun run e1 -- \
   --cap=2.00 \
   --classification=causal_pilot \
   --model=qwen3.7-max \
-  --endpoint=https://ws-5dm04o3gxwrj8eud.eu-central-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions \
+  --endpoint=$MODEL_LOOP_ENDPOINT \
   --api-key-env=DASHSCOPE_API_KEY \
   --route-id=dashscope-compatible-chat-completions \
   --protocol-document-hash=564073531177564cd59ae6607d99783fd38f8b5b18088f0aec07b74a84d1a22c \

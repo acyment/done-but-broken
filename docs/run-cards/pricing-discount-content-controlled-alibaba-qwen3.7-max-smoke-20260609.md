@@ -13,7 +13,7 @@ Status: A1-style smoke only, run on the direct Alibaba/Qwen path after the OpenR
 - Provider profile ID:
 
 ```text
-openai-compatible-loop-v1-modelqwen3.7-max-routealibaba-qwen-chat-completions-https-ws-5dm04o3gxwrj8eud.eu-central-1.maas.aliyuncs.com-compatible-mode-v1-chat-completions-parseropenai-compatible-response-parser-v1-requestopenai-compatible-chat-request-max-tokens-v1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1
+openai-compatible-loop-v1-modelqwen3.7-max-routealibaba-qwen-chat-completions-parseropenai-compatible-response-parser-v1-requestopenai-compatible-chat-request-max-tokens-v1-retrypolicyprovider-retry-timeout-rate-malformed-v1-looppolicymodel-loop-feedback-continues-after-feedback-v1-timeout120000-output4000-workspace64000-feedback4000-temp0.2-retry1
 ```
 
 This Alibaba/Qwen direct-path provider profile is a distinct, non-pooled boundary. It is not the OpenRouter profile used by the Mistral demos.

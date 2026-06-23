@@ -48,7 +48,7 @@ cd ~/dev/hit-sdd-bench-e2
 E2_AUTHORIZE_PHASE15=1 \
 E2_MODEL=qwen \
 DASHSCOPE_API_KEY=sk-... \
-MODEL_LOOP_ENDPOINT=https://ws-5dm04o3gxwrj8eud.eu-central-1.maas.aliyuncs.com/compatible-mode/v1/chat/completions \
+MODEL_LOOP_ENDPOINT=https://<your-dashscope-maas-endpoint>/compatible-mode/v1/chat/completions \
   uv run --extra agent --extra data python examples/run_phase1_5.py \
     --n 10 --agent-cc 4 --score-cc 1 --score-timeout 600
 ```
