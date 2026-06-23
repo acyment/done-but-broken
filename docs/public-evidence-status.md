@@ -6,18 +6,48 @@ For the compact cross-run table, see `docs/public-evidence-matrix.md`. For the p
 
 ## Current Claim
 
-Current evidence is not generalized validation that executable feedback works across tasks or models. It does support one bounded, replayable industry story: executable BDD-style feedback made a cheap/weak model materially more reliable on a sealed pricing-lifecycle task, while frontier-grade models ceilinged well-specified single-file tasks from the shared spec alone.
+The current **headline is the E2 brownfield result**: executable **acceptance feedback** reduces a
+frontier coding agent's *confidently-wrong shipping* — it declares a task done while the hidden
+acceptance tests would fail — on real, post-cutoff brownfield bugs (SWE-bench Live). It is a
+**candidate finding, now replicated across two independent model lineages**, and **bounded** to this
+task family / substrate / scaffold / budget (classification `causal_pilot`; not a Level-5 claim):
 
-- `pricing-discount-demo-v1` showed that executable, example-bearing BDD-style specs beat prose-only specs on a sealed pricing task: mean regression-free AUC delta `+0.4444`, positive in `3/3`, mean final-pass delta `+0.5926`.
-- Artifact review found that this v0 result bundled runnability with interface/worked-example disclosure. The prose-only arm did not receive concrete event API examples and often guessed the wrong interface.
-- `pricing-discount-content-controlled-demo-v1` removed that confound by giving both arms the same event API and worked examples. The executable run-loop still helped: mean AUC delta `+0.1852`, positive in `3/3`, mean final-pass delta `+0.2222`, no provider flags, complete feedback opportunity.
-- Strong-model ceiling checks now cover two well-specified tasks:
-  - pricing content-controlled: `anthropic/claude-sonnet-4.6` and `qwen3.7-max` solved both arms 9/9.
-  - payroll skeleton-seed: `anthropic/claude-sonnet-4.6` solved both arms 18/18 on an 18-checkpoint task with YTD caps, phase-outs, base divergences, garnishments, and recomputation rules.
+- **DeepSeek V4 Pro** (n=9): self-verification gap **79% → 13%**, fix rate ~doubled 19% → 38%; 8/9
+  tasks significant, family-wise null *p* ≈ 3×10⁻¹⁰.
+- **Qwen 3.7 Max** (n=9, second-lineage replication): gap **50% → 0%** (resolve ~flat — diagnostic
+  here); 5/9 tasks significant, *p* ≈ 3×10⁻⁵.
+- Production CLIs (**Codex GPT-5.5**, **Claude Code Opus 4.8**) show the same failure mode on the hard
+  tasks (~67–73%) — `calibration` corroboration, **not** a controlled arm.
 
-Bounded public claim: under the sealed pricing task/budget, executable, runnable specs gave a cheap/weak agent (`mistral-small`) much more reliable implementation of an evolving spec — partly by clarifying the contract, partly via the run-loop itself — while frontier models implemented the pricing and payroll spec-shaped tasks from the shared spec alone. The headline is **cheap/weak-model viability**, not a feedback benefit for already-ceilinging frontier models.
+We measured executable **acceptance feedback** (running pre-existing acceptance tests), **not** full
+HIT-SDD / authored specs — see the proto-paper.
 
-The earlier subscription and inventory pilots were clean but mostly flat/easy. They are important calibration context and should not be hidden, but they are not the headline.
+This **refines, not contradicts**, the earlier E1 finding — it is a *regime* split:
+
+- **Small, fully-specified tasks (E1):** frontier models self-verify well enough that executable
+  feedback is **redundant** (they ceiling from the spec alone, zero on-graph regressions).
+- **Brownfield scale beyond self-verification (E2):** the same feedback **near-eliminates**
+  confident-wrong shipping (above).
+
+So the honest one-liner is: **no** frontier benefit on small fully-specified tasks; a **bounded,
+candidate→replicated** frontier benefit at brownfield scale.
+
+### Prior bounded story (still valid, different boundary)
+
+On a sealed single-file **pricing** task, executable BDD-style feedback made a **cheap/weak** model
+materially more reliable; frontier models ceilinged the well-specified pricing/payroll tasks from the
+shared spec alone. Detail:
+
+- `pricing-discount-demo-v1`: executable example-bearing specs beat prose-only — mean AUC delta
+  `+0.4444`, `3/3`, final-pass `+0.5926` (but v0 bundled runnability with interface/worked-example
+  disclosure).
+- `pricing-discount-content-controlled-demo-v1` removed that confound (same event API + examples both
+  arms); the run-loop still helped: mean AUC delta `+0.1852`, `3/3`, final-pass `+0.2222`, no flags.
+- Strong-model ceilings: pricing content-controlled — Sonnet 4.6 and Qwen 3.7 Max both 9/9 both arms;
+  payroll skeleton-seed — Sonnet 4.6 18/18 both arms.
+
+The earlier subscription and inventory pilots were clean but mostly flat/easy — calibration context,
+not headline, not hidden.
 
 ## Current Status
 
@@ -29,7 +59,9 @@ The earlier subscription and inventory pilots were clean but mostly flat/easy. T
 | Pricing v0 executable-spec contrast | 3 clean Mistral causal pilots under `path-survival-primary-v1`: mean AUC delta `+0.4444`, mean final-pass delta `+0.5926`. Caveat: interface/worked examples were also disclosed through runnable specs. | Level 4 positive condition-contrast claim |
 | Pricing content-controlled run-loop | 3 clean Mistral causal pilots under `path-survival-primary-v1`: both arms received identical event API and worked examples; mean AUC delta `+0.1852`, mean final-pass delta `+0.2222`, positive AUC direction `3/3`. | Level 4 preliminary run-loop causal pilot claim |
 | Strong-model ceiling checks | Pricing content-controlled ceilinged under Sonnet 4.6 and Qwen 3.7 Max; payroll skeleton-seed ceilinged under Sonnet 4.6 at 18/18 in both arms. | Level 3 difficulty/diagnostic ceiling evidence |
-| Generalized benchmark claim | Not allowed. | No Level 5 claim |
+| E2 brownfield acceptance feedback (DeepSeek V4 Pro) | n=9 `causal_pilot`: self-verification gap 79%→13%, fix rate 19%→38%, 8/9 tasks significant, family-wise *p*≈3×10⁻¹⁰. | Level 4 candidate frontier-positive |
+| E2 brownfield acceptance feedback (Qwen 3.7 Max) | n=9 `causal_pilot`, second independent lineage: gap 50%→0%, 5/9 significant, *p*≈3×10⁻⁵. | Level 4 replicated (bounded) |
+| Generalized benchmark claim | Not allowed (single substrate/scaffold/budget). | No Level 5 claim |
 
 ## Clean Causal Runs
 
@@ -40,6 +72,8 @@ The earlier subscription and inventory pilots were clean but mostly flat/easy. T
 | `docs/run-cards/inventory-reservations-causal-pilot-20260605-001.md` | `inventory-reservations-lifecycle-v0` | Mistral structured-output retry profile | Flat final-pass and AUC result: both arms 9/9. |
 | `docs/run-cards/pricing-discount-demo-v1-mistral-20260608.md` | `pricing-discount-lifecycle-v0` | Mistral structured-output retry profile | Positive executable/example-bearing spec contrast; not isolated run-loop evidence. |
 | `docs/run-cards/pricing-discount-content-controlled-demo-v1-mistral-20260608.md` | `pricing-discount-lifecycle-content-controlled-v1` | Mistral structured-output retry profile | Positive run-loop result after interface and worked-example parity. |
+| `docs/run-cards/e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001.md` | E2 brownfield (SWE-bench Live, n=9) | DeepSeek V4 Pro / OpenHands | Candidate frontier-positive: self-verification gap 79%→13% (8/9 significant). |
+| `docs/run-cards/e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md` | E2 brownfield (SWE-bench Live, n=9) | Qwen 3.7 Max / OpenHands | Second-lineage replication: gap 50%→0% (5/9 significant). |
 
 Clean causal pilots are task/model/profile-specific. They should not be pooled into a generalized claim.
 
@@ -92,7 +126,7 @@ The harder payroll skeleton-seed A2 check reached the same conclusion on a diffe
 
 This payroll run is clean Level 3 difficulty evidence, not causal evidence. It blocks causal pilots on that boundary because the context-only arm already ceilinged the task.
 
-So the bounded public claim is **cheap/weak-model viability**: executable, runnable specs let a cheaper agent achieve much more reliable implementation of an evolving spec, where frontier models already ceiling the well-specified single-file tasks tested here. We do not claim a feedback benefit for frontier models.
+So on **this boundary** (small, well-specified single-file tasks) the bounded claim is **cheap/weak-model viability**: executable, runnable specs let a cheaper agent implement an evolving spec much more reliably, where frontier models already ceiling. *This "no frontier benefit" statement is specific to small fully-specified tasks* — the separate **E2 brownfield** program found a bounded, candidate→replicated frontier benefit at scale (see Current Claim).
 
 ## Compatibility Boundary
 
@@ -114,7 +148,7 @@ Do not pool:
 | Level 1: calibration claim | Yes | Subscription, inventory, and pricing task packages and feedback/oracle plumbing work locally. |
 | Level 2: provider reliability claim | Yes, for clean profiles used here | The external provider path completed cleanly under the listed sealed profiles. |
 | Level 3: difficulty claim | Yes, for clean difficulty probes | Difficulty probes describe task/model/budget solvability only; they are not causal evidence. |
-| Level 4: causal pilot claim | Yes, bounded | Subscription/inventory were flat/easy. Pricing v0 showed executable/example-bearing specs beat prose-only specs. Pricing content-controlled showed a smaller but clean run-loop benefit after content parity. |
+| Level 4: causal pilot claim | Yes, bounded | E2 brownfield: executable acceptance feedback cut confident-wrong shipping (DeepSeek 79%→13%; Qwen 50%→0%, second-lineage replication) — candidate→replicated, bounded. Pricing v0/content-controlled: cheap-model run-loop benefit on a small task. Subscription/inventory flat/easy. |
 | Level 5: generalized claim | No | The repo is not currently allowed to make generalized claims. |
 
 ## Known Invalid Or Non-Primary Runs

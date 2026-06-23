@@ -2,9 +2,20 @@
 
 This matrix is for public communication hygiene. It summarizes clean, replay-valid evidence without pooling incompatible task, model, provider-profile, protocol, or run-classification boundaries.
 
-## Headline Pricing Evidence
+## Headline: E2 brownfield (executable acceptance feedback)
 
-The current positive evidence is a two-step pricing decomposition under `mistralai/mistral-small-2603`, `path-survival-primary-v1`, and a 2-turn / 1-feedback budget.
+The current headline is the E2 brownfield two-arm ablation (SWE-bench Live; OpenHands; the `run_tests` tool is the only difference). **Candidate → replicated across two independent model lineages**; bounded (single substrate/scaffold/budget); never pooled with the pricing/E1 boundaries below. We measured executable *acceptance feedback*, not full HIT-SDD / authored specs.
+
+| Boundary (model) | Primary metric | Result | Significance | Classification |
+| --- | --- | --- | --- | --- |
+| DeepSeek V4 Pro, n=9 | self-verification gap (control → treatment) | 79% → 13% (fix rate 19% → 38%) | 8/9 tasks, family-wise *p* ≈ 3×10⁻¹⁰ | `causal_pilot`, candidate frontier-positive |
+| Qwen 3.7 Max, n=9 | self-verification gap | 50% → 0% (resolve ~flat) | 5/9 tasks, *p* ≈ 3×10⁻⁵ | `causal_pilot`, replicated (bounded) |
+
+Corroboration (`calibration`, **not** a controlled arm): Codex GPT-5.5 and Claude Code Opus 4.8 show the same done-but-broken failure on the hard tasks (~67–73%). Run-cards: `docs/run-cards/e2-phase1-5-causal-pilot-*.md`.
+
+## Prior: pricing cheap/weak-model evidence
+
+A different boundary (cheap-model viability on a small single-file task; **not pooled** with E2): a two-step pricing decomposition under `mistralai/mistral-small-2603`, `path-survival-primary-v1`, and a 2-turn / 1-feedback budget.
 
 | Boundary | What was controlled | Mean AUC delta | Direction | Mean final delta | Public interpretation |
 | --- | --- | ---: | --- | ---: | --- |
