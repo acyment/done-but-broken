@@ -40,6 +40,11 @@ A DOI'd archive (e.g. Zenodo) is added at publication for citeable permanence.
 ## Current state & prerequisite (honest)
 
 - **Tier 1 is live** (summaries committed).
+- **Interim Tier-2-in-tree:** because no remote/release target exists yet, the specific raw artifacts
+  **cited by SHA in sealed docs** (the qwen GATE-B contamination screen + the Codex/Claude gap probes)
+  are committed **directly into `hit-sdd-bench-e2`** so the cited hashes resolve. This is a pragmatic
+  exception to "raw outputs out of tree"; migrate them to release assets and drop them from the tree
+  once a remote is stood up. Uncited/superseded run-outputs stay untracked.
 - **Tier 2 is not yet executable: neither repo has a git remote.** Until the repos are pushed to a
   remote, the full artifacts (and the repos themselves) live only on the operator's machine, so the
   cited SHAs currently resolve only to **local** files. Standing up a remote is **gated by the

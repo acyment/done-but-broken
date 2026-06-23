@@ -158,7 +158,7 @@ This is, concretely, evidence for **Harnessed Iterative Spec-Driven Development*
   - DeepSeek V4 Pro: `e2-phase1-5-causal-pilot-deepseek-v4-pro.json`, SHA-256 `009b00e8c5b92b7a2f91d0a16d33847de13a1e6560daea8b24b1d6ceb6e61632`.
   - Qwen 3.7 Max: `e2-phase1-5-causal-pilot-qwen3.7-max.json`, SHA-256 `6484243829a5ee36f07dc44c7529807ced312a0f2a39b746fd804fafa4e2ce62`; run-card `docs/run-cards/e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md`.
 - Per-model contamination screens (GATE-B): DeepSeek and `e2-qwen3.7-max-contam-screen-n13-20260620-001.json` (SHA `070d18cf…`, clean 13/13).
-- Corroboration artifacts (`calibration`, §5): `e2-codex-gap-probe-20260617-001.json` (Codex `gpt-5.5` / `xhigh`), `e2-claude-gap-probe-20260617-001.json` (Claude Code `opus[1m]`); 5 runs/task on the 3 hard tasks, single-condition — *not* the controlled ablation.
+- Corroboration artifacts (`calibration`, §5): `e2-codex-gap-probe-20260617-001.json` (Codex `gpt-5.5` / `xhigh`, SHA `7cd6a50f9628…`), `e2-claude-gap-probe-20260617-001.json` (Claude Code `opus[1m]`, SHA `8aa27c7923b3…`); 5 runs/task on the 3 hard tasks, single-condition — *not* the controlled ablation.
 - Gates: contamination screen, feasibility, and N=60 flake certification each recorded as dated run-cards.
 - Sanitization: git history stripped to base commit; `--network none` at run time; dependencies pre-baked at build time so suites run offline.
 
