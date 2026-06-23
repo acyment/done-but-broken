@@ -1,167 +1,156 @@
-# HIT SDD Bench
+# HIT-SDD Bench
 
-This is a clean experiment repo for a long-horizon agent-coding benchmark.
+### Do AI coding agents ship broken code while saying *"done"* — and does making them run the spec fix it?
 
-The research question is narrow:
+Welcome 👋 This repo is the **scientific record** for a small, carefully-run line of experiments on
+agentic coding. If you're a curious visitor, you're in the right place — start with the short version
+below, then follow the links.
 
-> Do specs that can be used as automated feedback reduce long-run regressions and behavioral drift in agentic coding compared with equivalent specs used only as durable context?
+**HIT-SDD = Harnessed Iterative Spec-Driven Development**: the idea that an agent should run an
+*executable* definition of "done" (its acceptance spec) **on every iteration of its own loop**, as its
+stopping condition — not just read a spec as prose. This repo asks whether that measurably helps.
 
-The initial pilot has exactly two arms:
+---
 
-- `context_only_spec`
-- `feedback_capable_spec`
+## The short version
 
-Both arms receive semantically equivalent visible spec content. The only causal variable is whether that same semantic spec can also be used as automated feedback during the agent run.
+- **The problem.** Coding agents routinely declare a task *done* while the change still fails its
+  acceptance tests — they ship broken work *confidently*. On real codebases that's the reliability
+  problem teams actually hit: a loud failure gets caught, a confident one gets reviewed and merged.
+- **The experiment.** We change exactly **one** thing about an otherwise-identical frontier coding
+  agent: whether it can **run the hidden acceptance tests** (without seeing the expected answers)
+  before declaring done. Same agent, same task, same repo, same budget — only that one tool differs.
+- **The result, now on two independent models.** Letting the agent run the spec **near-eliminates
+  confidently-wrong shipping** on real, post-cutoff brownfield bugs (SWE-bench Live):
 
-## Current Scope
+  | Model (independent lineages) | "done but actually broken" | also fixes more? | significance |
+  | --- | --- | --- | --- |
+  | **DeepSeek V4 Pro** | **79% → 13%** | yes — fix rate ~doubled (19% → 38%) | 8/9 tasks, family-wise *p* ≈ 3×10⁻¹⁰ |
+  | **Qwen 3.7 Max** (replication) | **50% → 0%** | flat (37% → 36%) — purely *diagnostic* here | 5/9 tasks, family-wise *p* ≈ 3×10⁻⁵ |
 
-This repo intentionally contains only a small framework skeleton:
+- **It's not one model's quirk.** The production tools developers use today — **OpenAI Codex
+  (GPT-5.5)** and **Anthropic Claude Code (Opus 4.8)** — show the *same* confident-but-broken shipping
+  on the hard tasks (~67–73%), **even though they already run their own tests.** Running *your own*
+  tests isn't the same as running the *acceptance contract*.
+- **The honest caveat (please read §"How honest is this").** This is **preliminary, bounded**
+  evidence — two models, one task family, one scaffold. It is a strong reason to *pilot* an
+  execution-gated agent loop and measure your own "done-but-broken" rate — **not** a settled benchmark.
 
-- canonical semantic spec records
-- two-condition packet rendering
-- executable-feedback gating
-- a continuing-workspace runner skeleton
-- workspace snapshot hashes
-- on-disk task package loading
-- run and checkpoint provenance hashes
-- run classification, provider execution profile hashes, clean primary evidence eligibility, and provider/network validity details
-- protocol profile IDs for metric compatibility boundaries
-- prompt packet and feedback asset tamper checks
-- per-checkpoint agent result records
-- optional hidden oracle result capture
-- `result-schema-v1` with final-checkpoint pass rate, regression count, checkpoint-level regression-free success, and regression-free AUC
-- a fake agent used by tests
-- a direct OpenRouter agent adapter for real single-shot model runs
-- a bounded OpenRouter feedback-loop adapter for real model turns with visible feedback in the feedback arm
-- task-specific hidden oracles for `tasks/sample-cart` and `tasks/role-permissions-calibration`
-- a small pilot CLI with fake, OpenRouter, and OpenRouter feedback-loop adapter modes
+## 📄 Start here
 
-It does not contain a general benchmark platform, legacy condition names, OpenSpec/BDD/HIT-SDD arms, or multi-agent protocols. The OpenSpec workflow may appear only as a shared task-environment property under protocol profile `e1-openspec-workflow-v0` — both arms in the same OpenSpec workspace, with executable feedback availability as the only causal variable — never as a condition ID or an arm-vs-arm spec-format comparison.
+- **The proto-paper (read this first):**
+  [`docs/papers/e2-executable-feedback-protopaper-v1.md`](docs/papers/e2-executable-feedback-protopaper-v1.md)
+  — the full method, results, and limitations, written for both researchers and engineering leaders.
+- **The evidence, replayable:**
+  - Qwen run-card → [`docs/run-cards/e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md`](docs/run-cards/e2-phase1-5-causal-pilot-qwen3.7-max-20260623.md)
+  - DeepSeek run-card → [`docs/run-cards/e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001.md`](docs/run-cards/e2-phase1-5-causal-pilot-deepseek-v4-pro-20260617-001.md)
+  - Machine-readable summaries (per-task rates + verdict + artifact SHA) live next to each run-card as `*.summary.json`.
+- **The honest ledger:** [`docs/public-evidence-status.md`](docs/public-evidence-status.md) and
+  [`docs/public-evidence-matrix.md`](docs/public-evidence-matrix.md) — every run with its
+  classification and validity flags.
 
-## Task Package
+## What "HIT-SDD" means here
 
-The first minimal package is in `tasks/sample-cart/`:
+The thing we're testing is **executable acceptance feedback wired into the agent's loop**: the agent
+runs the hidden acceptance subset, sees pass/fail per check (never the expected values), and keeps
+going until it's satisfied. That's the operational core of behaviour-/spec-driven development — the
+spec as the agent's *stopping condition*, executed, not documentation it reads.
 
-- `task.json` defines checkpoints, workspace paths, and public contract text.
-- `canonical-spec.json` is the neutral semantic spec source shared by both arms.
-- `feedback-assets/` stores source files that are copied only for `feedback_capable_spec`.
-- `hidden-oracle/` is outside the template workspace and is not rendered into agent-visible packets.
+> Note on naming: "HIT-SDD" / BDD / OpenSpec are **narrative framing**, never an experimental
+> condition or arm. In every run the manipulated variable is simply *"can the agent execute the
+> acceptance oracle."*
 
-The sample task currently has three checkpoints: `I01`, `I02`, and `I03`. `I03` adds an item-name visibility commitment that can expose drift while preserving the same two-arm protocol.
+## How the work is structured
 
-The harder calibration package is in `tasks/role-permissions-calibration/`. It has seven checkpoints, `I01` through `I07`, over a stable `canAccessProject` API. The task starts from an owner-edit-only implementation and adds org admin edit, viewer read-only, suspension, explicit deny precedence, cross-org denial, and temporary project grant commitments. Feedback assets accumulate as a regression pack for `feedback_capable_spec`; hidden oracle cases use separate private combinations.
+This is a two-repo project:
 
-The next primary task draft is in `tasks/subscription-entitlements-lifecycle/`. It is a sealed semantic-spec draft for `subscription-entitlements-lifecycle-v0` with checkpoints `I01` through `I09` over subscription state transitions, temporal access, billing history, idempotency, suspension, downgrade, refund, and chargeback behavior. It includes a visible/hidden coverage manifest, fake-agent validation plan, local acceptance criteria, sealed analysis plan, visible feedback assets, reference template workspace, and executable hidden oracle.
+- **`hit-sdd-bench` (this repo) — the scientific record.** Design docs, pre-registered commitments,
+  run-cards, evidence ledgers, the proto-paper, and the older E1 framework skeleton. It is the source
+  of truth for *what every run means*.
+- **`hit-sdd-bench-e2` (companion repo) — the harness.** The Python/Docker harness that actually runs
+  the E2 experiment (SWE-bench Live substrate, OpenHands agent, the toggleable `run_tests` tool, the
+  flake-certification + contamination screens, the scorer, the permutation analysis).
 
-The runner writes replay-oriented records under `runs/<run_id>/`, including `run.json` and per-checkpoint manifests with prompt packet and feedback asset hashes. `run.json` and checkpoint manifests have schema validators in the provenance module, including checkpoint-entry field checks, condition checkpoint sequence checks against the top-level checkpoint list, checkpoint hash and agent-status consistency between `run.json` and checkpoint manifests, agent status, distinct snapshot file declarations under the checkpoint artifact directory, hidden-oracle result path/hash declaration symmetry under the checkpoint artifact directory, and duplicate-entry checks before replay or artifact verification.
+Helpful map of this repo:
 
-When a hidden oracle adapter is supplied, the runner also writes per-checkpoint `hidden-oracle-result.json` files and a run-level `result.json`. Hidden oracle files stay outside the template workspace and are not rendered into agent-visible prompt packets.
+```
+docs/
+  papers/        ← the proto-paper
+  protocols/     ← program design, pre-registered commitments, analysis plans, future-study designs
+  run-cards/     ← one replayable card per run (+ machine-readable summaries)
+  public-evidence-*.md   ← the honest ledger of every run + classification
+AGENTS.md        ← the evidence-discipline rules we hold ourselves to
+tasks/, src/, test/      ← the earlier E1 framework skeleton (see below)
+```
 
-`result-schema-v1` records are rendered into `summary.md`, a compact Markdown summary of pass rates, regressions, checkpoint survival, feedback-minus-context delta, and regression-free AUC delta. `run.json` records both result and summary paths and hashes.
+## How honest is this? (the discipline)
 
-Generated manifests include `protocol_profile_id`. The default profile is `final-checkpoint-primary-v1`, preserving the historical final-pass-primary interpretation. Future internal validation runs may use `path-survival-primary-v1`, where `regression_free_auc` is the protocol primary metric and final checkpoint pass rate remains reported as secondary.
+We try hard not to overclaim. A few load-bearing rules (full version in
+[`AGENTS.md`](AGENTS.md)):
 
-## Fake Pilot CLI
+- **Every run is classified** — `calibration`, `difficulty_probe`, `causal_pilot`, or
+  `diagnostic_invalid` — and only clean `causal_pilot` runs back causal claims.
+- **Pre-registration:** the analysis plan, primary metric, and task list are frozen *before* a causal
+  run (see the commitments docs in `docs/protocols/`).
+- **Replay-valid where possible:** results carry SHA-256 hashes; the cited artifacts are tracked so the
+  hashes resolve. (Where we lean on the N=60 flake certification for determinism instead of patch
+  re-scoring, we say so.)
+- **Bounded language on purpose.** This result is a **candidate → replicated across two lineages**
+  finding — *not* a general "frontier agents" law. We prefer "preliminary / bounded / under this
+  model+budget" to "proved / solved / benchmark shows."
 
-Run the sample task end to end with the fake agent:
+Where the claim is bounded today: single language (Python) brownfield repos, one agent scaffold, one
+effort budget; the contrast is *execution vs. no-execution* (not vs. the agent writing its own tests);
+n = 9 of 13 certified tasks (the four largest repos carry a navigation confound and are reported
+separately). See the proto-paper §7.
+
+## What's next (pre-registered, not yet run)
+
+Three follow-up studies are designed and gated in `docs/protocols/`:
+
+- **Budget sensitivity** — does the benefit shift from *diagnostic* to *generative* as the agent gets
+  more iterations? ([`e2-budget-sensitivity-design-v1.md`](docs/protocols/e2-budget-sensitivity-design-v1.md))
+- **Large-repo, navigation-equalized (Protocol v2)** — does the effect hold (or grow) on big
+  codebases once both arms can navigate? ([`e2-protocol-v2-large-repo-navparity-design-v1.md`](docs/protocols/e2-protocol-v2-large-repo-navparity-design-v1.md))
+- **A "confoundability" metric** — can we *predict, before any attempt,* where an agent will
+  confidently ship broken code? ([`e2-confoundability-metric-design-v1.md`](docs/protocols/e2-confoundability-metric-design-v1.md))
+
+If your team has wired (or wants to wire) an executable definition of "done" into an agent loop, the
+proto-paper's closing section explains how to compare notes.
+
+## Background: the E1 capability-gradient finding
+
+Before the brownfield work, an earlier line (E1) found that on **small, fully-specified** refactoring
+tasks, frontier models **self-verify well enough that executable feedback is redundant** — the benefit
+concentrated at the mid-tier / un-self-verifiable end. That standalone result motivated the move to
+brownfield scale. See [`docs/e1-capability-gradient-finding-v1.md`](docs/e1-capability-gradient-finding-v1.md).
+
+---
+
+## The E1 framework skeleton (code in this repo)
+
+This repo also contains the original small two-arm framework (TypeScript/Bun) used for the E1 line: a
+two-condition packet renderer, executable-feedback gating, a continuing-workspace runner with
+provenance/replay hashing, `result-schema-v1` (final-pass rate, regression count, regression-free
+AUC), task packages under `tasks/`, and a fake-agent + direct-provider adapters. It is a focused
+skeleton, **not** a general benchmark platform.
+
+Run the sample task end-to-end with the fake agent (no provider calls):
 
 ```sh
+bun install
+bun test
 bun run pilot:fake --task tasks/sample-cart --runs-root runs --run-id sample-local
 ```
 
-This loads the task package, runs both pilot conditions, applies the `sample-cart` hidden oracle, and writes replayable artifacts under `runs/sample-local/`.
-
-The CLI output includes the run manifest, result record, summary path, and final feedback-minus-context delta.
-
-To generate a deliberately non-perfect sample-cart run:
-
-```sh
-bun run pilot:fake --task tasks/sample-cart --runs-root runs --run-id sample-failing --fake-agent-mode context-i03-item-name-drift
-```
-
-Run the seven-checkpoint role-permissions calibration task with the fake agent:
-
-```sh
-bun run pilot:fake --task tasks/role-permissions-calibration --runs-root runs --run-id role-permissions-local
-```
-
-Run the subscription lifecycle task through local fake provenance validation and hidden-oracle scoring without provider calls:
-
-```sh
-bun run pilot:fake --task tasks/subscription-entitlements-lifecycle --runs-root runs --run-id subscription-local
-```
-
-## Real Agent Adapters
-
-The real adapters call OpenRouter directly through its chat completions API. They default to `deepseek/deepseek-v4-flash` and can be changed with `OPENROUTER_MODEL` or `--openrouter-model`.
-
-`--agent openrouter` is the original single-shot file-write adapter. It is useful for smoke-testing real model connectivity, but it is not the executable-feedback experiment path because the model does not see feedback during its work.
-
-```sh
-OPENROUTER_API_KEY=sk-or-... bun run pilot:run --task tasks/sample-cart --runs-root runs --run-id sample-openrouter --agent openrouter
-```
-
-`--agent openrouter-loop` is the bounded feedback-loop adapter. Its default policy is `max_model_turns=3` and `max_feedback_runs=2`. In `feedback_capable_spec`, the loop runs the rendered visible feedback command between model turns and feeds a public-safe feedback summary back to the model. In `context_only_spec`, it uses the same visible semantic spec text for self-review and does not expose executable feedback output.
-
-```sh
-OPENROUTER_API_KEY=sk-or-... bun run pilot:run --task tasks/role-permissions-calibration --runs-root runs --run-id role-permissions-openrouter-loop --agent openrouter-loop --max-model-turns 3 --max-feedback-runs 2
-```
-
-OpenRouter request settings are recorded as a provider execution profile. `--request-timeout-ms`, `--max-output-tokens`, and `--temperature` are compatibility boundaries and must not be pooled across different profile hashes.
-
-`--protocol-profile-id path-survival-primary-v1` selects the future path-survival primary metric profile for local or explicitly authorized runs. Do not use it for provider/model experiments until the protocol and run matrix are reviewed and approved.
-
-Both adapters send the rendered packet plus a bounded text snapshot of the current workspace and expect a JSON response containing full file contents to write. Returned paths must be relative and stay inside the condition workspace. Model writes to executable feedback assets are rejected before any workspace writes are applied.
-
-Provider/API/timeout/quota/network failures are validity-flagged. Timeout details include failure phase, whether feedback had run, whether a model response was received, whether code changed, retry count, and whether the next checkpoint carried the workspace forward because no usable provider action was available. Validity-flagged provider runs are not clean primary evidence.
-
-No real network request is made by automated tests. OpenRouter tests use mocked fetch implementations, including the loop tests:
-
-```sh
-bun test test/model-loop-agent.test.ts
-```
-
-Direct OpenRouter is the first implementation because it fits the existing `AgentAdapter` contract and keeps provenance simple. An opencode CLI bridge is deferred until the benchmark needs a full tool-using coding-agent session with opencode auth/config/session handling.
-
-To inspect and validate a completed run:
+Inspect/validate a completed run (checks the replay plan, declared artifacts, and hashes):
 
 ```sh
 bun run inspect:run --run-manifest runs/sample-local/run.json
 ```
 
-Both CLIs support `--help`. The inspection command validates the run manifest, replay plan, declared artifact paths, and artifact hashes, then prints the result and summary paths. Invalid runs exit non-zero and include `valid=false` plus `error=` or `mismatch=` lines.
+Real single-shot / bounded feedback-loop adapters call a provider directly; see the commands and the
+metric-interpretation notes in [`docs/`](docs/) and [`AGENTS.md`](AGENTS.md). Tooling: **Bun** for
+JS/TS, **uv** for any Python. Real provider/model runs are operator-authorized only.
 
-`verifyRunArtifacts` also checks the task package hash and canonical spec hash recorded in `run.json` against the current on-disk task package, requires result and summary declarations to be present together with valid path/hash fields, verifies that `result.json` run metadata matches `run.json`, catches agent-result schema/status drift against checkpoint manifests, enforces causal feedback-use evidence for feedback-capable causal pilots, validates checkpoint-level provider-failure workspace carry-forward, validates agent notes, validates hidden-oracle status, notes, non-empty checks, check details, and check fields, confirms workspace snapshot records match manifest snapshot hashes, uses declared workspace snapshot and hidden-oracle result paths, and reports invalid checkpoint manifests as schema errors before dependent artifact reads. Feedback-capable causal pilots must show a persisted `model_turn -> feedback_run -> model_turn` transcript sequence before counting as causal feedback-use evidence. Hidden-oracle status must be `failed` whenever any check fails. `validateRunResultRecord` recomputes the primary metric and regression-free AUC from evaluations so forged metric fields are rejected and validates evaluation and oracle check fields.
-
-## Metric Interpretation
-
-Pass rate and regression count answer different questions.
-
-Pass rate measures behavior at the final checkpoint. It is the number of passing checks at the final checkpoint divided by the number of active final-checkpoint checks.
-
-Regression count measures commitments that passed earlier for the same condition and failed later. A newly introduced failing commitment lowers pass rate, but it is not counted as a regression until it has passed in an earlier checkpoint and then fails later.
-
-Checkpoint `regression_free_success` is recorded in `result.json` and summarized in `summary.md`. It is true when all hidden-oracle checks active at that checkpoint pass, so it can drive a cumulative behavior-survival line across checkpoints.
-
-`regression_free_auc` is the mean checkpoint-level `regression_free_success` score per condition. It summarizes how much of the checkpoint sequence survived without a failing hidden-oracle checkpoint.
-
-Under the default historical profile, the primary comparison is the final-checkpoint pass-rate delta:
-
-```text
-feedback_capable_spec pass rate - context_only_spec pass rate
-```
-
-Under `path-survival-primary-v1`, the protocol primary comparison is `regression_free_auc` delta. Existing clean pilots were not designed with this profile as primary; their AUC values remain retrospective secondary observations unless a future compatibility decision says otherwise.
-
-## Commands
-
-Use Bun for JavaScript and TypeScript work:
-
-```sh
-bun install
-bun test
-```
-
-Python is not used in the initial skeleton. If Python is added later, it must be managed with `uv`.
-
-Charts and old benchmark behavior are intentionally out of scope for the current fake-pilot skeleton.
+*Working drafts for discussion, not peer-reviewed. All results explicitly preliminary and bounded.*
