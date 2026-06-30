@@ -74,10 +74,12 @@ Pinned before any authoring; hashed into the pilot's provenance.
 The smallest subset of the full authored-spec harness the pilot needs. Anything beyond this is deferred
 to the (separately authorized) full build.
 
-- **Black-box scenario→step compiler** — public-API binding is sufficient for both pilot tasks
+- **Black-box scenario→step compiler** — the deterministic OpenSpec→`.feature` generator plus
+  `pytest-bdd` step definitions; public-API binding is sufficient for both pilot tasks
   (library calls); the CLI-subprocess binding path may be stubbed/deferred (see §3 caveat). Drives the
   repo **only** through its public surface; no internal/private imports.
-- **`run_spec` runnable experimenter-side, gold/no-op only** — executes the compiled authored checks in
+- **`run_spec` runnable experimenter-side, gold/no-op only** — executes the compiled authored checks
+  (`pytest-bdd` scenarios collected under pytest) in
   the sanitized container against (a) the gold patch and (b) a synthetic no-op patch. Returns named
   check + pass/fail only; **no** expected values, gold, or gold-test text. This is the same plumbing the
   full study's `run_spec` will use, exercised here without the agent in the loop. **No arm rollouts.**
@@ -106,7 +108,9 @@ pinned prompts, and the Gherkin authoring skill are versioned + hashed.
 
 ## 6. Per-gate acceptance criteria (per pilot task)
 
-Explicit pass/fail. A task is **eligible** iff it clears all six.
+Explicit pass/fail. The first five are **per-task eligibility** gates; **`run_spec` leak-tightness is a
+harness-wide precondition** (verified once in §4, identical for every task, not task-specific). A task is
+**eligible** iff it clears all five per-task gates, with the leak-tightness precondition holding.
 
 | Gate | Pass criterion | Fail action |
 | --- | --- | --- |
@@ -115,15 +119,21 @@ Explicit pass/fail. A task is **eligible** iff it clears all six.
 | **Non-triviality** | A synthetic no-op patch **fails** ≥1 authored check (the spec discriminates) | Spec is tautological at the prose level → rewrite |
 | **Tautology audit** | Each step definition: (1) contains an assertion on the public-surface call's return/state; (2) the assertion references the specific value/condition in the scenario's THEN (not `is not None`, not a constant); (3) running against the gold patch actually reaches+evaluates the assertion | Rewrite the step under blindness; re-audit |
 | **Flake-cert (authored checks)** | Authored checks ≤5% patch-induced flake over N=60 on the gold patch; flaky checks quarantined | Quarantine flaky check; if too few remain, treat as observability fail |
-| **`run_spec` leak-tightness** | `run_spec` output contains no expected values, no gold, no gold-test text; canary scan clean | Fix schema before any further use |
+| **`run_spec` leak-tightness** *(harness-wide precondition, not per-task)* | `run_spec` output contains no expected values, no gold, no gold-test text; canary scan clean | Fix schema before any further use |
 
 ## 7. Joint gate-survival table (A5 — primary output)
 
-The pilot's primary reported artifact. Per task, pass/fail across all gates → a single eligible/
-ineligible verdict (Addendum A §A5). Two rows here; the **same template scales to the full n=9 pass**
-(step 4), where the row count and `n_eligible` feed the A3 floor.
+The pilot's primary reported artifact. Per task, pass/fail across the **five per-task eligibility gates**
+→ a single eligible/ineligible verdict (Addendum A §A5). Two rows here; the **same template scales to the
+full n=9 pass** (step 4), where the row count and `n_eligible` feed the A3 floor.
 
-| task | observability | gold-passes-spec | non-triviality | tautology | flake-cert | leak-tight | **verdict** |
+> **Harness-wide precondition (verified once, §4, not a per-task column):** `run_spec` leak-tightness
+> clean. **Blindness attestation (`blind?`, per task, from the §10 authoring transcripts):** every
+> authoring role + all step definitions produced blind to the gold patch and gold tests; any leak-budget
+> bits spent during gold-passes-spec / tautology revision are logged. A failed attestation invalidates
+> the spec (re-author), so it gates eligibility alongside the five gates.
+
+| task | observability | gold-passes-spec | non-triviality | tautology | flake-cert | blind? | **verdict** |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `mlco2__codecarbon-831` | … | … | … | … | … | … | **eligible / ineligible** |
 | `celery__kombu-2300` | … | … | … | … | … | … | **eligible / ineligible** |
@@ -150,6 +160,9 @@ The pilot returns exactly:
    spec for at least one hard task end-to-end.
 2. **Per-task eligibility** — the two verdicts from §7.
 3. **Sealed A2 thresholds** — the two numbers from §8.
+4. **Blindness attestation** — per-task confirmation (from the §10 authoring transcripts) that every
+   authoring role and all step definitions were produced blind to the gold patch and gold tests, with any
+   leak-budget bits (gold-passes-spec / tautology revisions) logged.
 
 It explicitly does **not** produce `n_eligible` over all 9 (that comes from the full authoring pass,
 step 4, and feeds the A3 floor). Honest extrapolation rule:
@@ -169,7 +182,8 @@ The pilot emits, as hashed artifacts:
   survival table and §9 verdict (run-card / summary conventions per existing `e2-phase1-5-*` cards).
 - The **per-task authoring transcripts** (GLM 5.2 roles, all blind), pinned prompts, Gherkin authoring
   skill.
-- The **compiled authored checks** + the **four gate scripts** and their per-task verdicts (incl. the
+- The **OpenSpec→`.feature` generator**, the **compiled authored checks** (generated `.feature` +
+  `pytest-bdd` step definitions), and the **four gate scripts** and their per-task verdicts (incl. the
   tautology-audit script + verdicts).
 - The **GLM-5.2 authoring-pipeline config** (route, params, pinned prompts).
 - The **A2 threshold values**.

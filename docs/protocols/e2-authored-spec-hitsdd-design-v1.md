@@ -30,11 +30,13 @@ This experiment tests exactly that contrast: plain SDD (spec as prose) vs HIT-SD
 feedback). It is part of a broader initiative to test whether structured technical practices, when
 scaffolded by automation, improve agent coding outcomes — the harness is the product.
 
-**Why Gherkin.** We use the Gherkin scenario format (WHEN/THEN) for specs because its existing
-compilation ecosystem — step-definition runners, parameterized bindings, off-the-shelf test frameworks —
-solves the spec→executable-check problem with mature tooling. The harness builds on this standard, not a
-custom spec language. Gherkin is a format choice, not a methodological commitment to any named practice;
-the word "BDD" does not appear in agent-facing materials or experimental conditions.
+**Why Gherkin.** We use the Gherkin scenario format (WHEN/THEN) for specs because a mature, off-the-shelf
+runner (`pytest-bdd`) **executes** the scenarios directly: each scenario binds to a step definition and
+runs as an ordinary pytest item, so the harness reuses the existing `run_tests` plumbing rather than a
+custom spec language or runner. Off-the-shelf tooling handles *execution*; the per-repo **step
+definitions that bind each scenario to the repo's public surface are the authoring labor** (§"Spec
+authoring"). Gherkin is a format choice, not a methodological commitment to any named practice; the word
+"BDD" does not appear in agent-facing materials or experimental conditions.
 
 **What the experiment does not test.** The experiment does not test whether authoring a spec helps
 (both arms receive one), nor does it test agent-authored specs (specs are experimenter-authored to
@@ -125,7 +127,10 @@ cannot and need not see). Only real misses count against spec fidelity.
 
 **Format: OpenSpec.** Specs are authored as **OpenSpec change proposals** — the industry-standard
 SDD format — not homegrown criteria. Each requirement carries mandatory Gherkin-style WHEN/THEN
-scenarios; each scenario compiles to one named acceptance check. Using a recognized methodology is the
+scenarios; each scenario compiles to one named acceptance check. **Execution path (single source of
+truth):** the OpenSpec proposal is the canonical, sealed artifact; a deterministic generator emits a
+`.feature` file from it (a hashed build product, never hand-maintained, so the two cannot drift), and
+`pytest-bdd` runs each scenario as a pytest item. Using a recognized methodology is the
 study's main credibility lever (it is what licenses the eventual "spec-driven" claim) and it constrains
 experimenter degrees of freedom in how specs are shaped. OpenSpec format is **identical across both
 arms** — it is the shared artifact, never a between-arms variable (CLAUDE.md). The OpenSpec *CLI /
@@ -137,8 +142,11 @@ and `run_spec` is the sole between-arms delta.
 Rationale: (1) acceptance specs assert *observable behavior*, not internal state; (2) it collapses leak
 risk to near-zero, because black-box steps are derived from behavior described in the issue and need no
 sight of the gold patch's internals; (3) black-box step definitions are reusable across tasks. Gherkin
-gives the *skeleton* for free (one scenario → one test); the **step-definition binding to each repo's
-public surface is the authoring labor**, and it is subject to the same blindness as the prose.
+gives the *skeleton* for free (one scenario → one `pytest-bdd` step-bound test); the **step-definition
+binding to each repo's public surface is the authoring labor** — `@given/@when/@then` steps that drive
+the public API/HTTP/CLI and assert — and it is subject to the same blindness as the prose. Because the
+step decorators must match the scenario's WHEN/THEN text, scenario↔assertion alignment is structurally
+enforced (this is what the tautology audit checks).
 
 **Mandatory blindness:** author the OpenSpec proposal **and** its black-box step definitions from the
 **issue text + read-only repo public surface only** — **blind to the gold patch and to the gold tests.**
@@ -256,16 +264,17 @@ verdicts, gold cross-check, usage/cost, analysis record). The **sealed authored 
 
 - **Spec-authoring harness (new):** blind authoring pipeline (requirements role + QA review role +
   observability check + Gherkin authoring skill; pinned prompts, all blind to gold) → `openspec
-  validate` → human audit; **black-box** scenario→step-definition compiler (drives public API/HTTP/CLI
-  only), black-box-observability eligibility check, gold-passes-spec + non-triviality gates,
+  validate` → human audit; **black-box** scenario→step compiler — a deterministic OpenSpec→`.feature`
+  generator plus `pytest-bdd` step definitions that drive public API/HTTP/CLI only —
+  black-box-observability eligibility check, gold-passes-spec + non-triviality gates,
   **tautology audit** (structural check that each step definition genuinely exercises the behavior
   described in its scenario, run against the gold patch), N=60 flake cert for authored checks; hash +
-  seal the spec, the authoring prompts, the Gherkin authoring skill, the tautology audit script and
-  verdicts, and the full authoring transcript.
-- **`run_spec` tool (treatment only):** runs compiled black-box authored checks in-container, returns
-  named-check pass/fail only; built outside the container, mounted read-only; schema cannot leak
-  expected values / gold / gold tests. (Mirrors the existing `run_tests` plumbing with the authored
-  checks as target.)
+  seal the spec, the OpenSpec→`.feature` generator, the authoring prompts, the Gherkin authoring skill,
+  the tautology audit script and verdicts, and the full authoring transcript.
+- **`run_spec` tool (treatment only):** runs the compiled black-box authored checks (`pytest-bdd`
+  scenarios collected as pytest items) in-container, returns named-check pass/fail only; built outside
+  the container, mounted read-only; schema cannot leak expected values / gold / gold tests. (Mirrors the
+  existing `run_tests` plumbing — pytest-bdd runs under pytest — with the authored checks as target.)
 - **Scoring:** run the authored spec experimenter-side on each final patch (primary); run gold
   experimenter-side too for the fidelity cross-check (secondary).
 - **Per-record tagging** so this never pools with prior runs.

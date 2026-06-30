@@ -110,8 +110,10 @@ measures them as a checklist. The decision-relevant quantity is their **joint** 
 gates are correlated (A3).
 
 **Commitment.** The offline pilot's **primary reported output** is the **joint gate-survival table**
-over the n=9: for each task, pass/fail on {black-box observability, gold-passes-spec, non-triviality,
-flake-cert} and the **single eligible/ineligible verdict**, yielding `n_eligible`. The pilot also fixes
+over the n=9: for each task, pass/fail on the five per-task eligibility gates {black-box observability,
+gold-passes-spec, non-triviality, **tautology audit**, flake-cert} and the **single eligible/ineligible
+verdict**, yielding `n_eligible`. (`run_spec` leak-tightness is a **harness-wide precondition** verified
+once, not a per-task column — offline pilot protocol §6.) The pilot also fixes
 the **numeric fidelity / real-miss thresholds** used by A2. The pilot report is the input to the A3
 floor decision and to seal; it is itself a sealed artifact (classification: pilot/feasibility, not
 causal).
