@@ -26,7 +26,7 @@ answers — *before* it declares a task done, and seeing whether that reduces co
   agent: whether it can **run the hidden acceptance tests** before declaring done. Same agent, same
   task, same repo, same budget — only that one tool differs.
 - **The result, now on two independent models.** Letting the agent run the acceptance contract
-  **near-eliminates confidently-wrong shipping** on real, post-cutoff brownfield bugs (SWE-bench Live):
+  **sharply reduces confidently-wrong shipping** on real, post-cutoff brownfield bugs (SWE-bench Live):
 
   | Model (independent lineages) | "done but actually broken" | also fixes more? | significance |
   | --- | --- | --- | --- |
@@ -38,8 +38,12 @@ answers — *before* it declares a task done, and seeing whether that reduces co
   on the hard tasks (~67–73%), **even though they already run their own tests.** Running *your own*
   tests isn't the same as running the *acceptance contract*.
 - **The honest caveat (please read §"How honest is this").** This is **preliminary, bounded**
-  evidence — two models, one task family, one scaffold. A strong reason to *pilot* an execution-gated
-  agent loop and measure your own "done-but-broken" rate — **not** a settled benchmark.
+  evidence — two models, one task family, one scaffold. Two bounds to hold up front: the control arm
+  **cannot run anything at all**, so this is *acceptance-execution vs. no-execution* — **not** vs. an
+  agent running its own tests (a fairer, harder baseline we have not yet run); and the two headline
+  runs are **not patch-replay-valid** (patch text + full traces weren't retained — a harness gap since
+  fixed). A strong reason to *pilot* an execution-gated agent loop and measure your own
+  "done-but-broken" rate — **not** a settled benchmark.
 
 ## 📄 Start here
 
