@@ -137,6 +137,37 @@ Using the gold patch as a **measurement** instrument (experimenter-side only; ne
 5. **Pre-register** estimands, the named-vs-anonymized choice, and the gold-recall conditioning before
    running.
 
+## Reporting/provenance upgrade from the LLM empirical-guidelines audit
+
+Audit note (2026-06-24): comparing E2 against the LLM-in-SE empirical reporting guidance
+(`arXiv:2508.15503`) found that the completed Protocol v1 pilots are strong on pre-registration,
+classification, contamination/flake gates, bounded claims, and model/config reporting, but are not
+session-trace complete. They preserved per-run outcomes, per-test results, usage, artifact hashes, and
+the final patch hash; the pilot run-cards already disclose that patch text was not retained for
+patch-level replay. Full OpenHands conversation traces, exact rendered prompts, and complete runtime
+tool-call logs were not preserved as first-class artifacts.
+
+Protocol v2 and any later E2 evidence-grade run therefore require a **trace-complete artifact bundle**
+before the run can be called replay/reporting complete:
+
+- Exact prompt artifacts: prompt template, per-run rendered user prompt, OpenHands/scaffold version,
+  any system/developer prompt text exposed by the scaffold, and model route/config (`model`, endpoint,
+  temperature, timeout, retries, max output, reasoning mode).
+- Complete tool catalog by arm: tool names, schemas/descriptions, and arm availability for
+  `file_editor`, `CodeBrowser`, and `run_tests`; record the named-check vs anonymized-check variant.
+- Runtime trace: ordered conversation/messages, tool calls, tool arguments, tool results, feedback-tool
+  calls, agent termination status, and any agent plan object the scaffold exposes.
+- Replay artifacts: final patch **text** as well as hash, sanitized snapshot/container image IDs, scored
+  test outcomes, quarantines, validity flags, usage/cost per rollout, and the analysis record.
+- Storage convention: raw bundles live in the harness artifact release; this scientific-record repo
+  keeps run-cards, summaries, hashes, and links. If privacy/proprietary constraints ever prevent full
+  trace release, publish a redaction manifest plus representative trace examples and downgrade the
+  reproducibility claim accordingly.
+
+This is a prospective reporting requirement, not a retroactive validity change for Protocol v1. The
+completed pilots remain bounded `causal_pilot` evidence as documented; future runs should close the
+session-trace/prompt-reporting gap before making stronger reproducibility claims.
+
 ## Cost (honest)
 
 160 rollouts on the **heaviest** repos (slow, reasoning-token-heavy for qwen; large image pulls), plus
@@ -150,9 +181,12 @@ adds another arm-set.
   outside the container and mounted read-only; schema cannot return runtime/diagnostic output.
 - Test-file exclusion + pristine-snapshot index builder + file manifest allowlist.
 - New protocol-profile id; per-record tagging (`design=v2`, `nav_aid=codebrowser`) so v1/v2 never pool.
-- Reuse the existing oracle/scoring/provenance/`usage` capture unchanged (shared core; no fork).
+- Reuse the existing oracle/scoring/`usage` capture, but extend provenance with the trace-complete
+  artifact bundle above (full rendered prompt, tool catalog, ordered tool/runtime trace, final patch
+  text, and image/snapshot identifiers). This is required for future evidence-grade Protocol v2 runs.
 - Protocol tests: read-only/no-exec guarantee, test-file exclusion, frozen-index (no edit re-index),
-  tool-symmetry across arms, canary-absence.
+  tool-symmetry across arms, canary-absence, and artifact completeness checks for prompt/tool/trace
+  capture.
 
 ## Sequencing / gating
 
