@@ -48,6 +48,11 @@ count is therefore a free knob on effect size, controlled by the experimenter.
 
 ## A2. Null-interpretation decision rule (predeclared; a null is a first-class outcome)
 
+> **SUPERSEDED by Addendum B (detection-only reframe, 2026-06-30).** The study is now positive-only: a
+> null is reported as inconclusive/underpowered, not classified, so this rule and its sealed
+> fidelity/real-miss thresholds are retired. Retained below for historical record only; do **not** seal
+> or apply it. Spec fidelity survives as descriptive context only (Addendum B §B2).
+
 **Risk.** Because the control is now genuinely strong (it reads a crisp authored spec), a **null is a
 live outcome**, not a remote one. A null is ambiguous between two readings, and that ambiguity must be
 resolved by predeclared numbers, not post-hoc judgement:
@@ -72,6 +77,11 @@ pilot, A5). A null is reported with its reading attached; we do **not** decide t
 the gap.
 
 ## A3. Minimum-n floor (predeclared; protects against a thin pool)
+
+> **AMENDED by Addendum B (detection-only reframe, 2026-06-30).** The `causal_pilot`/`difficulty_probe`
+> split below was tied to a family-wise *null* claim we no longer make. Under positive-only scope the
+> floor governs only how much weight a **positive** carries (Addendum B §B9). A null is inconclusive at
+> any n.
 
 **Risk.** Three eligibility gates — **black-box observability**, **gold-passes-spec**, and
 **non-triviality** — plus black-box bindings, must **all** clear for a task to enter. They are

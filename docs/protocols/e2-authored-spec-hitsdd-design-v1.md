@@ -12,8 +12,14 @@ Date: 2026-06-29. Program: E2 (`e2-brownfield-acceptance-ablation-design-v1.md`)
 
 > **Read with:** `e2-authored-spec-hitsdd-design-v1-addendum-a-hardening-v1.md` — pre-seal hardening
 > (scenario-granularity convention, predeclared null-interpretation rule, minimum-n floor,
-> non-participant spec-author, joint-gate-survival pilot output). This base design's decisions stand;
-> the addendum layers sealable commitments on top before the offline pilot.
+> non-participant spec-author, joint-gate-survival pilot output); **and**
+> `e2-authored-spec-hitsdd-design-v1-addendum-b-detection-only-reframe-v1.md` — the **detection-only
+> reframe (2026-06-30)** that narrows the study to **positive-only** scope (product evidence): it
+> **retires A2** (the null-interpretation rule + thresholds), amends A3, adds the `gap_gold`
+> teaching-to-the-test guard, construct-neutral framing + bug/feature stratification, and tool-use
+> logging. **Where this base design or Addendum A treats a null as a first-class/win-either-way outcome,
+> Addendum B governs:** a null is now reported as inconclusive, not as valid H0. This base design's
+> oracle-construction decisions stand; the addenda layer commitments on top before the offline pilot.
 
 ## Rationale
 

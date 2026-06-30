@@ -4,8 +4,9 @@ Status: **PROTOCOL DRAFT — not authorized, not run, not sealed. No provider/Do
 document.** It specifies the offline pilot that gates the authored-spec study; it authorizes no build
 and no run (both operator-gated behind the eventual sealed commitments doc).
 
-Date: 2026-06-29. Program: E2 authored-spec / HIT-SDD (`e2-authored-spec-hitsdd-design-v1.md`, read with
-`e2-authored-spec-hitsdd-design-v1-addendum-a-hardening-v1.md`). Boundary: **`E2 / authored-spec /
+Date: 2026-06-29 (detection-only edits 2026-06-30). Program: E2 authored-spec / HIT-SDD
+(`e2-authored-spec-hitsdd-design-v1.md`, read with `e2-authored-spec-hitsdd-design-v1-addendum-a-hardening-v1.md`
+and `e2-authored-spec-hitsdd-design-v1-addendum-b-detection-only-reframe-v1.md`). Boundary: **`E2 / authored-spec /
 HIT-SDD v1`** — never pooled with the prior executable-feedback pilots (DeepSeek n=9, Qwen n=9/n=13),
 Protocol v2, budget-sensitivity, or E1.
 
@@ -18,16 +19,18 @@ Classification when executed: **`calibration`** (feasibility + gate validation).
 
 The authored-spec study is fully designed (base design) and hardened (Addendum A, commitments A1–A5),
 but no executable pilot procedure exists. This offline pilot is the gate that must pass **before** the
-study is sealed and authorized. It decides three things and nothing else:
+study is sealed and authorized. It decides two things and nothing else:
 
 1. **Does the pipeline work end-to-end** — can the blind black-box authoring → compile → gate sequence
    produce, for a hard task, an authored spec that clears every objective gate?
-2. **What are A2's numeric thresholds** — the pilot fixes the spec-fidelity and real-miss thresholds the
-   null-interpretation rule (Addendum A §A2) will use, so they are set on data, sealed, and not chosen
-   post-hoc.
-3. **Is the approach feasible enough to author all n=9** — if the two hardest-to-observe tasks clear the
+2. **Is the approach feasible enough to author all n=9** — if the two hardest-to-observe tasks clear the
    gates, the full authoring pass is licensed; if they fail observability, task selection / black-box
    scope is revisited before authoring the rest.
+
+> **Detection-only scope (Addendum B, 2026-06-30):** the study is now positive-only, so the pilot
+> **no longer sets or seals A2 thresholds** — that step (§8) and the corresponding exit-verdict item are
+> retired. Spec fidelity is recorded descriptively only. The pilot's job is pipeline-validation +
+> feasibility, nothing more.
 
 The pilot runs authored specs **only against the gold patch and a synthetic no-op patch** — never
 against agent output. It therefore requires **zero agent rollouts and zero provider calls for the
@@ -44,7 +47,7 @@ decisions onto it. Steps 0–3 are this pilot. Steps 4–5 are downstream and li
 | **0** | Fix the pre-pilot decisions on paper (no build): granularity convention, author model, pilot task pair | A1, A4 (+ §3 below) |
 | **1** | Build the **minimum pilot harness slice** (§4) — compiler + `run_spec` against gold/no-op only + 4 gate scripts + flake-cert of authored checks | — |
 | **2** | Author + audit the **two** pilot specs under blindness (§5); run the gates (§6) | — |
-| **3** | Emit the **joint gate-survival table** (§7); set + seal the **A2 thresholds** (§8); record the **exit verdict** (§9) | A5, A2 |
+| **3** | Emit the **joint gate-survival table** (§7); record the **exit verdict** (§9). *(A2 threshold-setting retired — Addendum B)* | A5 |
 | 4 (later) | Full authoring pass over all n=9 → joint survival over 9 → apply the **A3 minimum-n floor** → classify (`causal_pilot` / `difficulty_probe` / don't-run) | A3 |
 | 5 (later) | Seal commitments + operator authorization + spend cap → DeepSeek run → (gated) Qwen replication | base §Sequencing |
 
@@ -138,19 +141,16 @@ full n=9 pass** (step 4), where the row count and `n_eligible` feed the A3 floor
 | `mlco2__codecarbon-831` | … | … | … | … | … | … | **eligible / ineligible** |
 | `celery__kombu-2300` | … | … | … | … | … | … | **eligible / ineligible** |
 
-## 8. A2 threshold-setting procedure
+## 8. Spec fidelity — descriptive only (A2 threshold-setting retired)
 
-The pilot fixes the numeric thresholds the null-interpretation rule (Addendum A §A2) will seal:
+> **Retired by Addendum B (detection-only reframe).** The study is positive-only; there is no null to
+> classify, so no fidelity/real-miss **thresholds** are set or sealed.
 
-- For each pilot task's final patch set (here: the gold patch, and optionally a small set of synthetic
-  near-miss patches), compare the **authored-spec verdict vs the SWE-bench gold verdict** and classify
-  each disagreement as a **real miss** (behavior genuinely not captured at the public surface) vs a
-  **granularity/level mismatch** (gold asserts on internals the public-surface spec cannot and need not
-  see) — base design §"Read fidelity carefully under black-box".
-- From these observations, set: (a) the **spec-fidelity threshold** (minimum authored-vs-gold agreement,
-  real-misses only, for "high fidelity") and (b) the **real-miss-rate threshold** above which a future
-  null is read as oracle failure rather than valid H0.
-- These two numbers are **sealed before any rollout**; they are not revisited after seeing arm gaps.
+For descriptive context only, the pilot may still record — **without** deriving any sealed threshold —
+the **authored-spec verdict vs SWE-bench gold verdict** on each pilot task's gold patch, classifying any
+disagreement as a **real miss** (behavior genuinely not captured at the public surface) vs a
+**granularity/level mismatch** (gold asserts on internals the public-surface spec need not see; base
+design §"Read fidelity carefully under black-box"). This is reportage, not a gate.
 
 ## 9. Exit verdict
 
@@ -159,10 +159,11 @@ The pilot returns exactly:
 1. **Pipeline works: yes/no** — did the blind authoring → compile → gate sequence produce a clearing
    spec for at least one hard task end-to-end.
 2. **Per-task eligibility** — the two verdicts from §7.
-3. **Sealed A2 thresholds** — the two numbers from §8.
-4. **Blindness attestation** — per-task confirmation (from the §10 authoring transcripts) that every
+3. **Blindness attestation** — per-task confirmation (from the §10 authoring transcripts) that every
    authoring role and all step definitions were produced blind to the gold patch and gold tests, with any
    leak-budget bits (gold-passes-spec / tautology revisions) logged.
+
+*(The former item "sealed A2 thresholds" is retired — Addendum B, detection-only.)*
 
 It explicitly does **not** produce `n_eligible` over all 9 (that comes from the full authoring pass,
 step 4, and feeds the A3 floor). Honest extrapolation rule:
@@ -186,7 +187,6 @@ The pilot emits, as hashed artifacts:
   `pytest-bdd` step definitions), and the **four gate scripts** and their per-task verdicts (incl. the
   tautology-audit script + verdicts).
 - The **GLM-5.2 authoring-pipeline config** (route, params, pinned prompts).
-- The **A2 threshold values**.
 
 All linked by SHA-256 into the eventual commitments doc at seal time (Addendum A §"Seal checklist
 delta").
