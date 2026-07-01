@@ -62,11 +62,35 @@ base-validation loop.
 - `authored_spec/surface.py` — `introspect_public_api` (auto surface from real signatures). `28810eb`.
 - `authored_spec/authoring.py` — QA restraint clause `28810eb`; DEV isolation clause `cdf6b3e`.
 - `authored_spec/pilot.py` — `flake_n=None` deterministic-screen mode. `28810eb`.
+- `authored_spec/base_validation.py` + `execution.diagnose_authored_spec` — author-time base-validation
+  loop (red-first self-correction, blind). `d370570`.
 - Screen bundles: `runs/authored-spec-screen*/` (git-ignored).
+
+## Addendum — base-validation loop is ASYMMETRIC (bug vs feature)
+The loop was built and run on pycasbin. Result: it declared the draft "healthy" after one base pass, yet the
+spec still failed on gold. Root cause is fundamental, not a bug:
+- The loop runs the draft against the **base** (unfixed) code. For a **feature-ADDITION** task the new API
+  is **absent at base**, so a scenario calling `add_grouping_policies_ex(...)` fails on base with
+  `AttributeError` **at the call site** — it never reaches the assertion. The loop correctly reads that as
+  "red-first, feature missing" and stops. But the author's *real* mistake was downstream and **gold-only**:
+  it asserted `('alice','new_role1','domain1') in get_grouping_policy()` — a **tuple**, while casbin returns
+  **lists** — which can only fail once the method exists (on gold). Base can't see it; gold is off-limits.
+- **Therefore: base-validation closes the fidelity gap for BUG / behavior-change tasks (target code exists at
+  base, so wrong calls/assertions surface) but NOT for feature-ADDITION tasks (the new API is absent at base,
+  masking every fidelity error behind an AttributeError until gold).**
+- Sharpened task-selection implication (resolves the earlier tension): the sweet spot is a **behavior-change
+  bug fix with a public-surface-observable, in-container-reproducible symptom** — it gets BOTH observability
+  AND base-validation. codecarbon was base-validatable but not observable (env-specific); pycasbin was
+  observable but not base-validatable (new API). Pure feature-additions need the issue to fully specify the
+  new API, or best-of-N + human audit, or exclusion.
+- Also observed: authoring **variance** — different blind runs of the same task produce different-quality
+  specs (some scenarios pass gold, some do not); a single draft is not a stable signal.
 
 ## Status
 Calibration finding, no causal claim. **Do NOT proceed to seal the main study on the current task set.** The
-method is validated as *capable*; the next work is (1) the author-time base-validation loop, (2) a
-feature-observable, environment-accessible task pool, then (3) re-measure the A3 eligibility yield. Note the
-QA/DEV prompt changes **supersede** the offline-pilot v1 seal's author inputs — that seal stays immutable at
-harness `31e6450` for the codecarbon/kombu run; any future study run takes a fresh seal.
+method is validated as *capable* (blind, gold-passing, discriminating checks emerge repeatedly), and the
+author-time base-validation loop is built — but its bug/feature asymmetry reframes the next step: **select
+observable, in-container-reproducible BEHAVIOR-CHANGE tasks** (where both observability and base-validation
+hold), then re-measure the A3 eligibility yield with best-of-N authoring + human audit. Note the QA/DEV
+prompt changes **supersede** the offline-pilot v1 seal's author inputs — that seal stays immutable at harness
+`31e6450` for the codecarbon/kombu run; any future study run takes a fresh seal.
