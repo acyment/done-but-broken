@@ -132,11 +132,13 @@ cannot and need not see). Only real misses count against spec fidelity.
 ## Spec authoring — the new artifact (decided)
 
 **Format: OpenSpec.** Specs are authored as **OpenSpec change proposals** — the industry-standard
-SDD format — not homegrown criteria. Each requirement carries mandatory Gherkin-style WHEN/THEN
-scenarios; each scenario compiles to one named acceptance check. **Execution path (single source of
-truth):** the OpenSpec proposal is the canonical, sealed artifact; a deterministic generator emits a
-`.feature` file from it (a hashed build product, never hand-maintained, so the two cannot drift), and
-`pytest-bdd` runs each scenario as a pytest item. Using a recognized methodology is the
+SDD format — not homegrown criteria. Each requirement carries mandatory **"almost-Gherkin"** scenarios
+(`#### Scenario:` with `- **WHEN**` / `- **THEN**` bolded bullets — Gherkin-*style*, not a valid
+`.feature`); each scenario compiles to one named acceptance check. **Execution path — see the authoritative
+record `e2-authored-spec-oracle-pipeline-v1.md`:** the OpenSpec proposal is the **canonical, sealed**
+artifact; a **just-in-time OpenSpec→Gherkin converter** derives the real `.feature` at execution time (the
+`.feature` is reproducible from the sealed OpenSpec + pinned converter, **not** a separately-maintained
+file), and **pytest-bdd** runs each scenario. Using a recognized methodology is the
 study's main credibility lever (it is what licenses the eventual "spec-driven" claim) and it constrains
 experimenter degrees of freedom in how specs are shaped. OpenSpec format is **identical across both
 arms** — it is the shared artifact, never a between-arms variable (CLAUDE.md). The OpenSpec *CLI /
