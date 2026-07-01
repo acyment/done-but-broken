@@ -13,6 +13,11 @@ Protocol v2, budget-sensitivity, or E1.
 Classification when executed: **`calibration`** (feasibility + gate validation). This is **not**
 `causal_pilot`-grade evidence and produces no public claim.
 
+> **To run (ops):** the driver is `examples/run_authored_spec_pilot.py` in the harness repo
+> (`done-but-broken-harness`); follow `docs/authored-spec-offline-pilot-runbook.md` there (prerequisites,
+> blindness/no-tuning hard rules, smoke→full commands, agent handoff prompt). This protocol is the *what/why*;
+> the runbook is the *how to run*. Still operator-gated.
+
 ---
 
 ## 1. Purpose & gating role
