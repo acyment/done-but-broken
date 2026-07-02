@@ -6,6 +6,11 @@ access to both repositories, to pressure-test the redesigned experiment (executa
 Supersedes the GitHub-issue / gold-matching substrate; see the offline-pilot findings doc + Addendum C for
 why. Paste everything in the fenced block below.
 
+**Update (2026-07-02):** the fierce-critique on this prompt landed a verdict — *don't run the full design;
+run a cheap staged probe first*. The redesigned experiment below is now **Stage-1 material**; the immediate
+next step is the **Stage-0 probe** (`e2-executable-spec-stage0-probe-protocol-v1.md`) governed by a
+pre-registered **decision rule** (`e2-executable-spec-decision-rule-v1.md`).
+
 ```
 You are helping design a rigorous experiment, and you have our codebase available. Inspect it first, then
 engage with the open problems at the end. Ground every suggestion in what actually exists — don't reason

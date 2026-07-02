@@ -5,6 +5,12 @@ evidence, **no public claim**, **zero agent-under-test rollouts** (every spec wa
 and no-op patches). Read with the design (`e2-authored-spec-hitsdd-design-v1.md` + Addenda A/B), the
 offline-pilot protocol, and the sealed-commitments doc (`...-sealed-commitments-v1.md`).
 
+**Sequel (2026-07-02):** this authored-spec-vs-gold line was superseded (a fierce external review
+recommended a cheaper staged probe). Next step is the **Stage-0 probe**
+(`e2-executable-spec-stage0-probe-protocol-v1.md`) + its pre-registered **decision rule**
+(`e2-executable-spec-decision-rule-v1.md`), which reuse this harness but grade on the authored spec with gold
+as a secondary cross-check.
+
 ## Bottom line
 **The harness is sound and the authored-spec method works.** With accurate author inputs, GLM-5.2 authored
 **blind, gold-passing, discriminating** executable acceptance checks (passes on the fixed/gold code, fails
