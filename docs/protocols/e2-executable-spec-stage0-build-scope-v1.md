@@ -21,7 +21,10 @@ anything today. To make Stage-0's control able to **self-test**, it needs a shel
   anticipates (`openhands_agent.py:11-14`), but a much bigger build. **Deferred to Stage 1** unless the
   Stage-0 fairness risk is judged unacceptable up front.
 
-Everything below assumes **(i)**.
+**DECIDED (2026-07-02): option (i) with measured escalation.** Build the container-backed `bash` now; the
+W7 mechanism decomposition watches whether the clunky shell suppresses the control's self-testing (e.g.
+control rarely runs tests, or gives up after slow commands). Escalate to option (ii) only if that confound
+actually shows. Everything below assumes **(i)**.
 
 ## Cross-cutting fix (do first — it blocks the control entirely)
 **Untracked files are invisible to `git diff`.** The exec tools and the final patch all capture changes via
