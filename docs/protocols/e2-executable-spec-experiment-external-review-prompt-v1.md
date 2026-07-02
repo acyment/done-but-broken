@@ -9,7 +9,9 @@ why. Paste everything in the fenced block below.
 ```
 You are helping design a rigorous experiment, and you have our codebase available. Inspect it first, then
 engage with the open problems at the end. Ground every suggestion in what actually exists — don't reason
-purely in the abstract, and don't just restate our setup back to us.
+purely in the abstract, and don't just restate our setup back to us. Most important: if the whole design is
+misconceived, say so plainly — we want a teardown, not encouragement (see the FINAL section, which overrides
+the rest).
 
 ## You have our repositories — use them before answering
 - Harness repo (GitHub: acyment/done-but-broken-harness; local: hit-sdd-bench-e2) — the working code.
@@ -154,6 +156,27 @@ most for the treatment — is its advantage real building, or better gaming?
 9. Steelman the skeptic who says the cheat-judge just reintroduces the subjectivity/hidden-oracle problem
    we were trying to avoid — then answer them, or concede.
 
-Respect the hard constraints in every suggestion. Keep proposals runnable with a few model families and
-tens of tasks, not thousands.
+Respect the hard constraints in every suggestion (except in the FINAL section below, where you may attack
+them). Keep proposals runnable with a few model families and tens of tasks, not thousands.
+
+## FINAL AND OVERRIDING — is this worth running at all? (fierce critique invited, and it may be warranted)
+We have iterated on this design for a long time and have absorbed our own assumptions. We want an outside
+teardown, not validation. This section overrides the rest: you have full permission to conclude the
+experiment is misconceived and should NOT be run, and to attack even the "hard constraints." Do not be
+constructive for its own sake — if it's flawed, say kill it, and say why.
+- Attack the premise. Is "an executable acceptance spec beats the same spec read-only" a real, non-obvious,
+  decision-relevant question — or is the answer already known / trivially yes / hopelessly confounded, such
+  that no result changes what a rational person would build?
+- Attack interpretability. Is there ANY outcome (positive, null, or mixed) a hostile senior engineer would
+  accept rather than explain away? If both a positive and a null are dismissible, the experiment is theater
+  — say so.
+- Attack the constraints. Do our self-imposed rules (sole authored oracle, no hidden tests, no gold-matching,
+  black-box only, brownfield only) paint us into a corner where the experiment cannot measure the thing the
+  product decision actually rests on? Which constraint should we break, and what does breaking it buy?
+- Attack the confounds we've waved away: spec quality dominates the outcome; the control can just self-test;
+  brownfield noise swamps the effect; the cheat-judge is irreducibly subjective; small N; task selection bias.
+- The bottom line we want, stated plainly: what is the single most likely reason this entire effort is
+  wasted, how large is that risk, and — if you were spending our money — would you (a) run this, (b) run a
+  cheaper/different experiment (specify it), or (c) skip experimentation and just ship the product and learn
+  from real usage? Pick one and defend it.
 ```
