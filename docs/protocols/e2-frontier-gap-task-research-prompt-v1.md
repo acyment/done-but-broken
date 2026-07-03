@@ -1,6 +1,10 @@
 # Research prompt: what kinds of coding tasks make a top AI model confidently wrong?
 
-**Status**: research prompt, v1 (2026-07-03). Handed to external thinking agents; the operator picks
+> **SUPERSEDED (2026-07-03)** by `e2-frontier-gap-task-research-prompt-v2.md`, which splits this
+> into a two-stage pipeline: Prompt A (deep-research evidence dossier) feeding Prompt B (thinking-
+> model taxonomy/selection). Do not run this v1 prompt; kept as history.
+
+**Status**: research prompt, v1 (2026-07-03), superseded. Handed to external thinking agents; the operator picks
 the models/chatbots. Results feed Stage-0 task-pool re-selection. This document is self-contained —
 the agent reading it needs no access to our code or prior documents.
 
