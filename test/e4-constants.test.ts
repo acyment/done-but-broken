@@ -25,6 +25,7 @@ function validDraft(): E4SealedConstants {
       meter_version: null
     },
     op_mix: null,
+    phrasing_pools: null,
     executor: null,
     protocol_text: null,
     budgets: null,
@@ -43,6 +44,15 @@ function validDraft(): E4SealedConstants {
 describe("E4 constants validate and hash under their own lineage", () => {
   test("the on-disk v0 draft validates", () => {
     expect(() => validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")))).not.toThrow();
+  });
+
+  test("[M1] the on-disk draft carries M1's sealed op_mix and phrasing_pools (v0.1)", () => {
+    const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
+
+    expect(constants.version).toBe("0.1");
+    expect(constants.op_mix).not.toBeNull();
+    expect(constants.phrasing_pools?.pool_ids.length).toBeGreaterThan(0);
+    expect(constants.compatibility_boundary.substrate_version).not.toBeNull();
   });
 
   test("loadE4Constants validates and hashes the draft; the hash is stable across loads", async () => {
@@ -126,6 +136,36 @@ describe("E4 constants validate and hash under their own lineage", () => {
           meter_version: "v1"
         }
       })
+    ).not.toThrow();
+  });
+
+  test("[M1] rejects op_mix that is present but incomplete", () => {
+    expect(() =>
+      validateE4Constants({ ...validDraft(), op_mix: { weights: { drift_opportunity: 0.5 } } })
+    ).toThrow(/op_mix must be null or a fully-populated/);
+  });
+
+  test("[M1] accepts a fully-populated op_mix seal", () => {
+    expect(() =>
+      validateE4Constants({
+        ...validDraft(),
+        op_mix: {
+          weights: { drift_opportunity: 0.5, additive: 0.4, behavior_preserving: 0.1 },
+          min_behavior_preserving_tasks: 1
+        }
+      })
+    ).not.toThrow();
+  });
+
+  test("[M1] rejects phrasing_pools that are present but malformed", () => {
+    expect(() =>
+      validateE4Constants({ ...validDraft(), phrasing_pools: { pool_ids: [1, 2] } })
+    ).toThrow(/phrasing_pools must be null or a fully-populated/);
+  });
+
+  test("[M1] accepts a fully-populated phrasing_pools seal", () => {
+    expect(() =>
+      validateE4Constants({ ...validDraft(), phrasing_pools: { pool_ids: ["add-entity-v1"] } })
     ).not.toThrow();
   });
 

@@ -32,11 +32,25 @@ export type E4MeterRules = {
   convention_aggregation_min_items: number | null; // sealed M2 [R2: R2-1]
 };
 
+// Sealed at M1: the drawn-sequence proportions AND the structural (not just probabilistic)
+// >=1 behavior_preserving guarantee draw.ts enforces regardless of the weights.
+export type E4OpMixSeal = {
+  weights: { drift_opportunity: number; additive: number; behavior_preserving: number };
+  min_behavior_preserving_tasks: number;
+};
+
+// Sealed at M1: a one-word phrasing edit changes what an agent reads, so pool identifiers are
+// sealed the same way protocol_text surfaces are (§4) — this is the substrate's own text surface.
+export type E4PhrasingPools = {
+  pool_ids: string[];
+};
+
 export type E4SealedConstants = {
   schema: "e4-sealed-constants";
   version: string; // "0", "0.1", "0.2" … draft; non-budget frozen M6, budgets M6.5
   compatibility_boundary: E4CompatibilityBoundary;
-  op_mix: Record<string, unknown> | null; // sealed M1
+  op_mix: E4OpMixSeal | null; // sealed M1
+  phrasing_pools: E4PhrasingPools | null; // sealed M1
   executor: Record<string, unknown> | null; // sealed M3
   protocol_text: Record<string, unknown> | null; // sealed M3/M4
   budgets: E4Budgets | null; // slots M4, values frozen M6.5
@@ -52,6 +66,7 @@ const TOP_LEVEL_KEYS = [
   "version",
   "compatibility_boundary",
   "op_mix",
+  "phrasing_pools",
   "executor",
   "protocol_text",
   "budgets",
@@ -110,10 +125,18 @@ export function validateE4Constants(raw: unknown): E4SealedConstants {
 
   validateCompatibilityBoundary(constants.compatibility_boundary);
 
-  for (const key of ["op_mix", "executor", "protocol_text", "feedback", "snapshot"] as const) {
+  for (const key of ["executor", "protocol_text", "feedback", "snapshot"] as const) {
     if (!isRecordOrNull(constants[key])) {
       throw new E4ConstantsValidationError(`${key} must be an object or null until its owning milestone seals it`);
     }
+  }
+
+  if (constants.op_mix !== null && !isValidOpMixSeal(constants.op_mix)) {
+    throw new E4ConstantsValidationError("op_mix must be null or a fully-populated E4OpMixSeal object");
+  }
+
+  if (constants.phrasing_pools !== null && !isValidPhrasingPools(constants.phrasing_pools)) {
+    throw new E4ConstantsValidationError("phrasing_pools must be null or a fully-populated E4PhrasingPools object");
   }
 
   if (constants.budgets !== null && !isValidBudgets(constants.budgets)) {
@@ -143,6 +166,23 @@ function validateCompatibilityBoundary(boundary: unknown): asserts boundary is E
       throw new E4ConstantsValidationError(`compatibility_boundary.${key} must be a string or null`);
     }
   }
+}
+
+function isValidOpMixSeal(value: unknown): value is E4OpMixSeal {
+  if (!isRecord(value) || !isRecord(value.weights)) {
+    return false;
+  }
+
+  const weights = value.weights;
+  const weightsValid = (["drift_opportunity", "additive", "behavior_preserving"] as const).every(
+    (key) => typeof weights[key] === "number" && (weights[key] as number) >= 0
+  );
+
+  return weightsValid && isPositiveInteger(value.min_behavior_preserving_tasks);
+}
+
+function isValidPhrasingPools(value: unknown): value is E4PhrasingPools {
+  return isRecord(value) && Array.isArray(value.pool_ids) && value.pool_ids.every((id) => typeof id === "string");
 }
 
 function isValidBudgets(value: unknown): value is E4Budgets {

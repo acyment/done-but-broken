@@ -1,13 +1,33 @@
 {
   "schema": "e4-sealed-constants",
-  "version": "0",
+  "version": "0.1",
   "compatibility_boundary": {
-    "substrate_config_id": null,
+    "substrate_config_id": "procedural-rest-v1-default",
     "substrate_kind": "procedural-rest-v1",
-    "substrate_version": null,
+    "substrate_version": "procedural-rest-v1.0",
     "meter_version": null
   },
-  "op_mix": null,
+  "op_mix": {
+    "weights": { "drift_opportunity": 0.5, "additive": 0.4, "behavior_preserving": 0.1 },
+    "min_behavior_preserving_tasks": 1
+  },
+  "phrasing_pools": {
+    "pool_ids": [
+      "add-endpoint-v1",
+      "add-entity-v1",
+      "add-field-v1",
+      "add-relationship-v1",
+      "add-validation-rule-v1",
+      "delete-entity-v1",
+      "delete-field-v1",
+      "modify-convention-v1",
+      "modify-endpoint-v1",
+      "noop-maintenance-v1",
+      "rename-entity-v1",
+      "rename-field-v1",
+      "retype-field-v1"
+    ]
+  },
   "executor": null,
   "protocol_text": null,
   "budgets": null,
