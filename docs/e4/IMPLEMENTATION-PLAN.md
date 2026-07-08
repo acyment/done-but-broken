@@ -36,6 +36,31 @@ pre-pilot step (operator decision 2026-07-08) that precedes the budget freeze; *
 formula (§3.1); **S-6** registry-bypass exercised live pre-pilot (M6); **S-7/S-8** go/no-go criteria
 (a) and (c) tightened for falsifiability (§5). Consider-items C-1–C-4 folded as noted.
 
+**Revision R2 (2026-07-08, complete: all ten backlog items).** Five independent second-round reviews
+of R1 were adjudicated into `docs/e4/R2-BACKLOG.md` (which also records the rejected review claims);
+this revision applies all ten items, marked `[R2: …]` at the point of change:
+**R2-1** — drift incidence redefined as discrepancy-**episode onsets** on stable
+`semantic_item_uid`s (rename-lineage merging, reappearance = new episode, sealed convention
+aggregation) (§3.1, M0/M1/M2, §4, §6); **R2-2** — H5's reportable taxes switch to **attempted-task**
+denominators, with pass rates reported alongside and the per-oracle-passing-task ratio surviving
+only as a guarded secondary, "undefined at pilot scale" when a passing set is empty (§3.1, §6);
+**R2-3** — the behavior-preserving affirmation's hidden-oracle condition (R1's "meter spec-side delta
+== 0") is **removed** from the Arm-H gate — it leaked ground truth into the treatment arm and made H2
+partially harness-enforced (§3.3, M3, §6); **R2-4** — M6.5 is rescoped to a **full-length (6-task)
+Arm-H calibration sequence** with a spend-refusal halt rule (§2 M6.5, §6); **R2-5** — the
+executor-error/agent-broken boundary is **operationalized** as a closed infra enumeration with an
+agent-caused default, a clean-workspace reproducibility tie-breaker, and a `classification_rationale`
+audit field (§2 M0/M3, §3.2); **R2-6** — go/no-go criterion (c2) is pinned **binary-per-task on both
+sides** (§5); **R2-7** — a third executable pilot outcome **`inconclusive_uninterpretable`** with
+sealed triggers, so a broken pilot is never reported as a measured null (§5.1, §4, M6, M7); **R2-8**
+— Arm-H usage is **decomposed into three named components** (spec-authoring / gate-protocol-
+interaction / oracle-feedback tokens) with an H5 protocol-overhead sensitivity line (§3.1); **R2-9**
+— six small verified pins: onset-scan window (already covered by R2-1, no change needed), replay =
+recorded-event reconstruction (M5), noticing-probe sequencing (§3.1), run-count wording (§5, M7, §7),
+§5(b) prose/predicate match, and a conventions-scope comms note (§8); **R2-10** — non-gating substrate
+difficulty diagnostics (op-type shares, IR-items-per-op, NL-opacity proxy) feeding an extended §5(a)
+diagnostic and a §8 v2 line (§2 M1, §5, §8).
+
 ---
 
 ## 1. Sequencing logic and conventions
@@ -79,13 +104,18 @@ before the pilot (M7)**; intermediate milestones that seal a new parameter bump 
 `src/e4/constants.ts` (the `e4-sealed-constants` validator + hash, mirroring the E1 sealing
 convention but a separate lineage); `docs/protocols/e4-sealed-constants-v0.json` (draft, §4);
 `src/e4/manifest.ts` (the `E4RunManifest` / `E4TaskRecord` types + a JSON-schema validator, all
-§2.5 fields); `src/e4/arm-policy.ts` (the three `E4ArmPolicy` objects + `validateE4RuntimeArmParity`,
+§2.5 fields; `[R2: R2-5]` every `executor_error` variant of `E4TaskRecord` requires a
+`classification_rationale` string field, so the closed-infra-enumeration boundary (§2 M3, §3.2) is
+post-hoc auditable); `src/e4/arm-policy.ts` (the three `E4ArmPolicy` objects + `validateE4RuntimeArmParity`,
 following the `validateE1RuntimeArmParity` precedent); a stub `src/e4/result-schema.ts` that will
 recompute each H's number from task records (self-checking `result-schema-v1` pattern), wired but
 computing over fixtures only. This is the milestone that turns the lint non-vacuous.
-`[R1-B2]` the result-schema stub pins **drift velocity as a flow** — count of distinct `item_id`s
-*first observed* per drift opportunity, not a sum of whole-surface per-task counts (§3.1); the
-terminal whole-surface count is a separate field ("drift burden at T_N"). `[R1-S6]` the M0 type set
+`[R1-B2]` `[R2: R2-1]` the result-schema stub pins **drift velocity as a flow of discrepancy
+episodes** — episodes keyed `(semantic_item_uid, direction)` with onset-transition semantics
+(reappearance after resolution = new episode), rename-lineage merging, and the sealed
+convention-aggregation rule (§3.1) — never a count of rendered-name `item_id`s and not a sum of
+whole-surface per-task counts; the terminal whole-surface item-level count is a separate field
+("drift burden at T_N"). `[R1-S6]` the M0 type set
 **pins `E4ExecutorEvidence`** (consumed by the meter's registry-bypass rule) so M2 tests against a
 canned instance of the real type, never an M2-invented shape.
 
@@ -120,21 +150,35 @@ untouched. Successor baseline grows by the M0 test count (reported at gate).
 
 ### M1 — Substrate v1 generator (architecture §4; Feature 1)
 
-**(a) Scope.** `src/e4/substrate/` — `ir.ts` (typed schema IR incl. the conventions ground truth),
+**(a) Scope.** `src/e4/substrate/` — `ir.ts` (typed schema IR incl. the conventions ground truth;
+`[R2: R2-1]` **every item kind — entity, field, endpoint, convention — carries a stable
+`semantic_item_uid`** that survives renames, extending the stable-ID property the architecture
+already gives conventions items to the whole IR),
 `prng.ts` (pure splitmix/mulberry-class, seeded by `substrate_seed`, **no `Math.random` anywhere**),
-`ops.ts` (the change-op action space as pure IR→IR functions, incl. `modify convention`),
+`ops.ts` (the change-op action space as pure IR→IR functions, incl. `modify convention`;
+`[R2: R2-1]` rename ops **preserve** the UID, delete-then-recreate **allocates a new one**, and the
+generator **emits its rename-lineage map** — old rendered id → new rendered id → UID, per task — as
+part of the substrate output: it executes the op, so the mapping is free, and the meter consumes it
+for identity resolution),
 `draw.ts` (seeded sequence draw under `op_mix`, computes `opportunity_labels`, guarantees ≥1
 `behavior_preserving` step), `render.ts` (deterministic NL renderer — business-natural, never names
 spec files or testing practice), `testgen.ts` (programmatic black-box `E4HttpTest` delta + cumulative
 sets, no LLM), and the `E4SubstrateProvider` implementation (`substrate_kind: "procedural-rest-v1"`)
 emitting the T0 workspace (ADR-001 scaffold + `specs/openapi.json` + `specs/CONVENTIONS.md`
 verified-in-sync + workspace README carrying the CONVENTIONS grammar verbatim, Gate-1 pin).
+`[R2: R2-10]` The generator additionally emits a per-sequence **difficulty diagnostic block**
+(emit-and-report only, non-gating): op-type shares (drift / additive / behavior-preserving / rename /
+convention), average IR items touched per op, and a crude **NL-opacity proxy** — whether the NL
+rendering names the changed item verbatim vs. paraphrases it, derivable from `render.ts`'s already-
+seeded-and-recorded phrasing-pool choice.
 
 **(b) Acceptance criteria.** Architecture Feature 1, verbatim: byte-identical on same seed
 (separate processes); different seeds differ within the same compatibility boundary; every task
 carries ≥1 opportunity label with ≥1 `behavior_preserving` and every already-specified-surface
 modification labeled `drift_opportunity`; **T0 is in-sync** (the meter — stubbed here, real in M2 —
-finds zero discrepancies at T0; M1 asserts the generator's own in-sync self-check).
+finds zero discrepancies at T0; M1 asserts the generator's own in-sync self-check). `[R2: R2-1]`
+Plus: the rename-lineage map is emitted deterministically (byte-identical on same seed) and covers
+every rename op the drawn sequence contains.
 
 **(c) E1-protection.** Full triad + lint (`src/e4/substrate/*` must import nothing forbidden).
 **(d) Constants-lineage.** Seals the substrate parameters the pilot pins — `op_mix` policy, the ≥1
@@ -153,10 +197,17 @@ kind); the **registry-bypass reconciliation rule** (Gate-1 change 1 — executor
 `extraction_failed`; `meter_version` stamping. Plus the **known-drift fixture**
 (`test/fixtures/e4/known-drift/` with `expected-discrepancies.json`) covering every
 (kind × class × direction) cell **including the registry-bypass cell**, and its clean **twin**.
+`[R2: R2-1]` The fixture additionally carries four **identity-semantics rows** with pinned expected
+episode counts: a **missed rename** (expected: ONE episode — the stale-claim/coverage-gap pair
+merges via the lineage map), a **delete-then-re-add** (fresh UID ⇒ episodes distinct from the
+deleted item's), a **fix-then-regress** (expected: TWO episodes — reappearance is a new onset), and
+a **cross-cutting convention change** (expected: one aggregated episode, with the item-level count
+preserved inside drift burden).
 
 **(b) Acceptance criteria.** Architecture Feature 2, verbatim — the five scenarios: **zero false
 negatives** on the known-drift fixture (every expected discrepancy reported with matching kind /
-class / direction / item_id); **zero false positives** on the twin; **registry bypass reconciled,
+class / direction / `semantic_item_uid` `[R2: R2-1]`, and the four identity-semantics rows
+resolving to their pinned episode counts); **zero false positives** on the twin; **registry bypass reconciled,
 not missed**; **broken surface dump fails closed** (records `extraction_failed=true`, no crash);
 **meter version stamped and frozen** (== the manifest boundary's `meter_version`).
 
@@ -181,18 +232,38 @@ mechanism** (resolved in §3.3 — reuses existing machinery, no new claim-gramm
 `[R1-B1]` **executor-classification boundary, pinned here:** a server that fails to become ready
 because of *workspace/agent code* is scored as a task failure (`oracle.cumulative_pass = 0` for that
 task; the sequence continues; it feeds the floor rule §3.2 and stays in agent-behavior accounting).
-`executor_error` is reserved strictly for *harness/infrastructure* faults (port-bind failure,
-executor crash, transport fault) — those abort the sequence and are excluded from taxes. The M3
-executor implements this split and it is reflected in the termination taxonomy; the architecture doc
-(ADR-006 §2.2 taxonomy) is updated at M3 per the "update the doc if reality diverged" rule.
+`executor_error` is reserved strictly for *harness/infrastructure* faults — those abort the sequence
+and are excluded from taxes. `[R2: R2-5]` **Operationalized as a closed infra enumeration with an
+agent-caused default:** `executor_error` iff the failure matches one of {workspace-process spawn
+failure occurring *before* agent code runs, harness port-allocation/bind failure, executor internal
+crash, OS-level transport fault} — **every other readiness failure defaults to
+agent/workspace-caused** (scored `oracle.cumulative_pass = 0`, sequence continues). This default
+direction is deliberate and the inverse is rejected (see `docs/e4/R2-BACKLOG.md` "Adjudicated out"):
+defaulting ambiguous failures to `executor_error` would re-open the original R1-B1 hole, letting an
+agent's own infinite loop present as a readiness timeout and be silently excluded from taxes and the
+floor rule. Induction argument: T0 boots by the generator's own self-check (M1) and M6 proves the
+full pipeline end-to-end on a fake agent, so a task-k readiness failure on an app that was previously
+booting is agent-authored unless it matches the closed infra list above. **Tie-breaker for ambiguous
+presentations:** the **clean-workspace reproducibility test** — if the failure reproduces on a
+pristine (pre-agent) workspace under the same executor, it is infra; otherwise agent-caused. Every
+`executor_error` record carries a required `classification_rationale` string (M0 type, M5 manifest)
+so a post-hoc audit can reclassify if the boundary was misapplied. The M3 executor implements this
+split and it is reflected in the termination taxonomy; the architecture doc (ADR-006 §2.2 taxonomy)
+is updated at M3 per the "update the doc if reality diverged" rule.
 
 **(b) Acceptance criteria.** Architecture Feature 3, verbatim — implementation blocked until custody
 passes; red check must be red (green-delta ⇒ `gate_anomaly_green_red_check`); **done over red is
 refused** (`refused_done_over_red` increments, failing results injected, loop continues); done over
 green accepted (`enforcement_outcome=accepted`); behavior-preserving tasks skip the red check
-(custody still runs, affirmation per §3.3); arms 0/M never gate (`false_confidence.event` derived
+(custody still runs, affirmation per §3.3); `[R2: R2-3]` the gate — affirmation included —
+consults **no meter or ground-truth state at any point** (the Gate-1 tautology defense is a testable
+property of `gate.ts`, not just a design statement); arms 0/M never gate (`false_confidence.event` derived
 post-hoc as done ∧ hidden-oracle-fail). Plus ADR-006 determinism: same executor, same corpus, byte-
-stable verdicts across runs on a fixed workspace.
+stable verdicts across runs on a fixed workspace. `[R2: R2-5]` Plus **five named
+executor-classification fixtures**: a broken `package.json` (⇒ agent-caused), a server compile error
+(⇒ agent-caused), an infinite startup loop presenting as a readiness timeout (⇒ **must** classify
+agent-caused — the case the closed enumeration exists to prevent misclassifying), a port-bind failure
+(⇒ infra, `executor_error`), and an executor crash (⇒ infra, `executor_error`).
 
 **(c) E1-protection.** Full triad + lint. Note: the executor uses the L0 verification channel and
 `src/e4/oracle-executor.ts` only — it must **not** import `runner.ts` or any legacy/closed-world
@@ -238,12 +309,20 @@ of these changes results, so they are sealed and protocol-tested (§4 `protocol_
 ### M5 — Manifest emission, replay-validity inspector, redaction, result schema (Feature 5)
 
 **(a) Scope.** Full `E4RunManifest` writer (every §2.5 field, `usage.by_phase` + `gate_executor`
-Gate-1 change 4); `bin/e4-inspect.ts` — the E4 inspector that recomputes `chain_replay_valid` the way
-`inspectE1Bundle` replays E1 bundles (substrate byte-regeneration from `substrate_seed` + per-task
-turn replay over the snapshot chain, across resume seams); executor-artifact retention verification
-(oracle verdicts recomputable from retained artifacts alone); secrets fail-closed on emission
-(`e1-redaction` reuse); and the finished `src/e4/result-schema.ts` recomputing each H's reportable
-number from task records.
+Gate-1 change 4; `[R2: R2-8]` `usage.by_phase` carries the three named Arm-H sub-fields —
+spec-authoring / gate-protocol-interaction / oracle-feedback tokens — plus the per-arm
+prompt-overhead-tokens diagnostic, §3.1 H5; `[R2: R2-5]` every `executor_error` task record carries
+a required `classification_rationale` string); `bin/e4-inspect.ts` — the E4 inspector that
+recomputes `chain_replay_valid` the way `inspectE1Bundle` replays E1 bundles (substrate
+byte-regeneration from `substrate_seed` + per-task turn replay over the snapshot chain, across
+resume seams — `[R2: R2-9b]` reconstructing each snapshot-k hash from snapshot k−1 plus the
+retained turn/tool event logs alone; **no provider call is ever made** during replay, matching the
+`inspectE1Bundle` precedent); executor-artifact retention verification (oracle verdicts recomputable
+from retained artifacts alone); secrets fail-closed on emission (`e1-redaction` reuse); and the
+finished `src/e4/result-schema.ts` recomputing each H's reportable number from task records.
+`[R2: R2-9b]` The retained artifact bundle must carry everything replay needs: file writes, command
+invocations, stdout/stderr, exit codes, gate/oracle artifacts, and the exact task/protocol text —
+replay is recorded-event reconstruction, never model re-execution.
 
 **(b) Acceptance criteria.** Architecture Feature 5, verbatim — manifest sufficient to reproduce
 (validates against `e4-run-manifest`, all §2.5 fields, one record per task); replay-validity is a
@@ -283,7 +362,8 @@ Scenario: One command runs a full 3-arm sequence with no spend
 
 Scenario: The go/no-go checks execute against emitted manifests
   When `bun run bin/e4-gonogo.ts <runRoot>` runs on the fake-run manifests
-  Then it computes each of the three predicates (§5) and exits 0/non-0 deterministically
+  Then it computes the three predicates (§5) and the §5.1 interpretability triggers   # [R2: R2-7]
+  And deterministically emits one of go | no-go | inconclusive_uninterpretable (exit 0/1/2)
 
 Scenario: Crash-resume works end-to-end
   Given a fake run interrupted after task 2
@@ -308,25 +388,43 @@ after this point without a new gate.
 
 ---
 
-### M6.5 — Budget micro-calibration (**required** pre-pilot step; spend-gated; `[R1-S3]`)
+### M6.5 — Budget calibration: full-length Arm-H sequence (**required** pre-pilot step; spend-gated; `[R1-S3]` `[R2: R2-4]`)
 
-**(a) Scope.** The smallest run that puts the sealed budget values under real-model pressure before
-they freeze: **1 arm × 1 seed × 2–3 tasks** on the Devstral-class model, `run_classification:
+**(a) Scope.** `[R2: R2-4]` The calibration arm is **Arm H**, run full-length: **one full-length
+Arm-H sequence — 6 tasks × 1 seed** — on the Devstral-class model, `run_classification:
 calibration`, **excluded from all evidence** (estate precedent: calibration runs are non-evidence).
-Its sole purpose is to observe the model's actual turn/token appetite against this idiosyncratic
-block-grammar turn protocol and confirm — or correct — the provisional `turns_per_task` /
-`token_budget` / `spend_cap_usd`. If the observed appetite fits the provisional budgets, they freeze
-unchanged; if not, they are adjusted **once** and frozen. This directly de-risks the pilot's biggest
-silent-confound: budgets so tight that agents hit walls artificially and manufacture a false floor
-collapse (§3.2).
+Rationale: Arm H upper-bounds every arm's budget appetite (it is the only arm carrying spec-phase +
+gate-protocol + oracle-feedback costs on top of implementation), and only a full-length run samples
+the late-sequence regime (tasks 4–6: larger surface, longer files) that H4 is specifically about — a
+≤3-task run structurally cannot. Marginal cost is single dollars against a tens-of-dollars pilot.
+**Optional** (may run alongside, same classification): a 1-task Arm-0 sanity run. Its sole purpose is
+to observe the model's actual turn/token appetite against this idiosyncratic block-grammar turn
+protocol and confirm — or correct — the provisional `turns_per_task` / `token_budget` /
+`spend_cap_usd`. If the observed appetite fits the provisional budgets, they freeze unchanged; if
+not, they are adjusted **once** and frozen. This directly de-risks the pilot's biggest silent-
+confound: budgets so tight that agents hit walls artificially and manufacture a false floor collapse
+(§3.2). **Budgets remain one shared set across all arms** (the M0 arm-parity invariant is never
+relaxed — per-arm budgets are rejected, see `docs/e4/R2-BACKLOG.md` "Adjudicated out"); Arms 0 and M
+being comparatively slack under a budget ratified from Arm-H's heavier appetite is acknowledged here
+as **intentional and harmless** — slack cannot manufacture a false failure, tightness can.
+
+`[R2: R2-4]` **Spend-refusal rule:** if M6.5 authorization is declined, the program **halts cleanly
+after M6** with status `"pilot not authorized — budgets unfrozen"`. There is no partial freeze and no
+fallback to fake-agent-derived (M6) budget values — budgets are only ever frozen from real-model
+observation.
 
 **(b) Acceptance criteria.**
 ```gherkin
-Scenario: Budget calibration is non-evidence and bounded
-  Given a calibration run of 1 arm × 1 seed × ≤3 tasks
+Scenario: Budget calibration is a full-length Arm-H sequence, non-evidence and bounded
+  Given a calibration run of one full-length Arm-H sequence (6 tasks × 1 seed)
   Then its manifest carries run_classification="calibration"
   And it is excluded from every result-schema and go/no-go computation
   And it emits observed turns/tokens per task sufficient to ratify or correct the budgets
+
+Scenario: Declined authorization halts cleanly, never freezes a fallback budget
+  Given the operator declines M6.5 authorization
+  Then the program halts after M6 with status "pilot not authorized — budgets unfrozen"
+  And no budget field is frozen from M6's fake-agent observations
 
 Scenario: Budgets freeze after calibration
   When the calibration completes and budgets are ratified (or adjusted once)
@@ -347,15 +445,17 @@ final and immutable without a new gate.
 
 ### M7 — PILOT (final milestone; requires explicit spend authorization)
 
-**(a) Scope.** The brief §11 pilot: **1 substrate config × 6 tasks × 3 arms × 2 seeds = 36
-sequential runs** on a **Devstral-class model** (order-of-magnitude: a weekend, tens of dollars).
-Runs from a single seeded command (`bin/e4.ts`), emits per-task telemetry + a machine-readable,
+**(a) Scope.** The brief §11 pilot: `[R2: R2-9d]` **1 substrate config × 6 arm-sequences (3 arms ×
+2 seeds) × 6 tasks = 36 task-runs** on a **Devstral-class model** (order-of-magnitude: a weekend,
+tens of dollars). Runs from a single seeded command (`bin/e4.ts`), emits per-task telemetry + a machine-readable,
 replay-valid manifest per run. Then: the go/no-go executable checks (§5) and the pre-registered
 analysis (§3), including the floor-effect blocking rule at its pinned threshold.
 
 **(b) Acceptance criteria.** The pilot go/no-go, as executable checks (§5): (a) H1 signal — Arm 0
 measurably drifts; (b) meter clean — zero false negatives on the known-drift fixture at the frozen
 meter version (a build precondition, re-asserted); (c) separation — something separates the arms.
+`[R2: R2-7]` The §5.1 interpretability triggers run first: a go or no-go verdict is claimable only
+if none fired; otherwise the pilot outcome is `inconclusive_uninterpretable`.
 Plus the definition-of-done gates from the prompt: E1 still 383/383-or-successor green; the manifest
 is replay-valid; the meter version is stamped in every manifest.
 
@@ -382,7 +482,7 @@ manifest's `compatibility_boundary`. This is the milestone that produces the fir
 | M4 | Runner, arm wiring, turn adapter, snapshot/resume | 2 | → v0.4 | Feature 4 green |
 | M5 | Manifest, replay inspector, redaction, result schema | 1 | schema_version | Feature 5 green |
 | M6 | Dry-run integration (fake provider, no spend) | 1 | freezes v0 **non-budget** | end-to-end green |
-| M6.5 | Budget micro-calibration (spend-gated, **required**) | 0.5 + short run | **completes v0 freeze** (budgets) | budgets ratified |
+| M6.5 | Budget calibration: full-length Arm-H sequence (spend-gated, **required**) `[R2: R2-4]` | 0.5 + full-sequence run | **completes v0 freeze** (budgets) | budgets ratified |
 | M7 | **PILOT** (spend-gated) | 1 + run time | consumes v0 | go/no-go verdict |
 
 Total ≈ **9.5–11.5 agent-sessions** to a go/no-go verdict, of which only M6.5 and M7 spend money
@@ -398,13 +498,26 @@ Total ≈ **9.5–11.5 agent-sessions** to a go/no-go verdict, of which only M6.
 one reportable number per hypothesis — the `result-schema-v1` self-checking pattern (the manifest and
 the recomputation must agree, or emission fails):
 
-- **H1** (Arm 0 drifts): `[R1-B2]` drift velocity is a **flow** — count of **distinct `item_id`s
-  first observed** as a discrepancy (i.e. new drift *incidence*), summed over tasks labeled
-  `drift_opportunity` ÷ count(`drift_opportunity` tasks), per arm. This is *not* the sum of the
-  meter's whole-surface per-task counts, which double-counts a persistent discrepancy once per
-  remaining task and makes the headline sensitive to *when* drift happens rather than *how much*. The
-  cumulative whole-surface count at the last task is reported separately as **drift burden at T_N**.
-  H1 = Arm-0 drift velocity ≫ 0.
+- **H1** (Arm 0 drifts): `[R1-B2]` `[R2: R2-1]` drift velocity is a **flow of discrepancy
+  episodes**. *Identity:* every IR item (entity, field, endpoint, convention) carries a **stable
+  `semantic_item_uid`** (M1) that persists across renames; the meter keys discrepancies by UID via
+  the generator-emitted **rename-lineage map**, never by rendered name — so the stale-claim +
+  coverage-gap pair a missed rename produces resolves to the **same** UID and counts **once**, and
+  a true delete-then-recreate allocates a fresh UID. *Unit:* an **episode**, keyed
+  `(semantic_item_uid, direction)`, **onsets** at task k when that key is discrepant at k and was
+  not at k−1 (T0 is non-discrepant everywhere, by the generator's in-sync guarantee), ends when it
+  stops being discrepant, and a reappearance after resolution is a **new episode** — so
+  fix-then-re-break counts twice and stays distinguishable from drift-once-and-ignore. The
+  episode's class/kind composition (contradiction / coverage_gap / stale_claim × kind) is recorded
+  as attributes and feeds the §5(a) class-composition diagnostic. *Convention aggregation:*
+  ≥ `convention_aggregation_min_items` items (sealed, §4) sharing the same convention-class
+  discrepancy onsetting at the same task collapse to **one** episode (item-level counts remain in
+  drift burden), so one cross-cutting convention op cannot inflate velocity by its fan-out. The
+  onset scan runs over **all** tasks; only the denominator is restricted: **velocity = episode
+  onsets anywhere in the sequence ÷ count(`drift_opportunity` tasks)**, per arm. This is *not* the
+  sum of the meter's whole-surface per-task counts, which double-counts a persistent discrepancy
+  once per remaining task; the cumulative whole-surface **item-level** count at the last task is
+  reported separately as **drift burden at T_N**. H1 = Arm-0 drift velocity ≫ 0.
 - **H2** (Arm H ≈ 0): Arm-H drift velocity (flow, as above), both directions (`spec_vs_truth`,
   `code_vs_truth`). `[R1-C1]` "≈ 0" is **descriptive** at pilot scale (report the raw number); an
   equivalence band is set in the full-run pre-registration, not here.
@@ -418,15 +531,41 @@ the recomputation must agree, or emission fails):
   chain (stale spec → wasted turns → exhaustion → regression, brief §4) is *not* computable at n=2
   and is a full-run pre-registration item.
 - **H5** (freshness tax < drift tax): `[R1-S5]` both taxes pinned in **one commensurable unit —
-  tokens per oracle-passing task**. **Freshness tax** = (Arm-H `usage.by_phase.spec` tokens +
-  `usage.gate_executor` tokens) ÷ (Arm-H oracle-passing tasks). **Drift tax** = (Arm-0 total tokens ÷
-  Arm-0 passing tasks) − (Arm-H implementation-phase tokens ÷ Arm-H passing tasks) — i.e. Arm-0's
-  per-success cost above the irreducible implementation cost that Arm H's implementation phase
-  reveals. H5 = freshness tax < drift tax. Both are direct manifest reads (Gate-1 change 4), never
-  turn-record archaeology.
+  tokens**. `[R2: R2-2]` **Primary (reportable) H5** uses **attempted tasks** as the denominator on
+  both sides — the uniform 6 per sequence, paired across arms (`status == "aborted"` records stay
+  excluded per the ADR-005 pin, which then reduces the denominator identically in both arms of a
+  pair). **Freshness tax** = (Arm-H `usage.by_phase.spec` tokens + `usage.gate_executor` tokens) ÷
+  attempted tasks. **Drift tax** = (Arm-0 total tokens ÷ attempted tasks) − (Arm-H
+  implementation-phase tokens ÷ attempted tasks) — i.e. Arm-0's per-task cost above the irreducible
+  implementation cost that Arm H's implementation phase reveals. H5 = freshness tax < drift tax.
+  **Pass rates are reported alongside both taxes, always** — cost and success are two numbers, never
+  blended into one denominator. **Guarded secondary:** the per-oracle-passing-task efficiency ratio
+  (the R1 formulation) survives only as a secondary diagnostic, and is **undefined at pilot scale**
+  whenever either arm's oracle-passing task set is empty — reported as the literal string
+  "undefined at pilot scale", never `0`, never a negative artifact of an empty denominator (this is
+  the same zero-denominator handling §5.1's advisory flag (v) references). Matched-task-intersection
+  (both arms' passing sets restricted to their intersection) may optionally be noted as an
+  exploratory view for the full run; it is not part of the pilot's reportable H5.
+
+  `[R2: R2-8]` **Arm-H usage decomposition.** Arm H receives more than enforcement pressure — gate-
+  protocol text, red/green oracle feedback, and refusal feedback are folded into the same
+  `usage.by_phase.spec` / `usage.gate_executor` totals above, so a comparison phrased as "the cost of
+  keeping specs fresh" can silently include a protocol-parsing/tutoring tax. `usage.by_phase` gains
+  three named, directly-read sub-fields (Gate-1 change 4 — manifest reads, never turn-record
+  archaeology): **spec-authoring tokens** (the agent's own spec edits), **gate-protocol-interaction
+  tokens** (handshake, refusals, custody exchanges), and **oracle-feedback tokens** (red/green result
+  payloads). The manifest additionally reports **prompt-overhead tokens per arm** (the sealed
+  `protocol_text` surface length, §4) as a diagnostic. **Sensitivity line:** the freshness tax is
+  computed twice — with and without the gate-protocol-interaction component — and if the H5 verdict
+  (freshness tax < drift tax) flips between the two, H5 is reported as **"sensitive to protocol
+  overhead"**, not as a clean verdict.
 - **Noticing probe** (always on): per-task `noticing_probe_answer`, reported, never fed back.
   `[R1-C3]` its usage is classified as a **separate arm-uniform line** and excluded from both taxes
   (net-zero across arms, but accounted explicitly rather than blended into implementation usage).
+  `[R2: R2-9c]` The probe fires strictly **after** task closure and the task snapshot, inside that
+  task's conversation — which is then discarded (M4: fresh conversation per task) — so the answer can
+  never leak into any subsequent task's state. This matches the architecture's fixed sequencing
+  (`oracle → meter → probe`, `E4-ARCHITECTURE.md:132`); M4's turn-adapter scope implements this order.
 
 Aborted partial-task usage is **infrastructure-classified and excluded** from both the freshness-tax
 and drift-tax computations (ADR-005 Gate-1 pin, resolved: the result schema filters
@@ -447,7 +586,11 @@ definition** (ratified at this Phase-2 gate):
 >
 > `[R1-B1]` A server the *agent* broke registers on the oracle prong (its `cumulative_pass` is 0),
 > not as `executor_error` — the M3 classification boundary guarantees agent-caused failure is scored,
-> not silently excluded as infrastructure.
+> not silently excluded as infrastructure. `[R2: R2-5]` The boundary is a **closed infra
+> enumeration** (workspace-process spawn failure before agent code runs, harness port-bind failure,
+> executor internal crash, OS-level transport fault) with every other readiness failure — including
+> an agent-induced infinite startup loop presenting as a timeout — defaulting to agent-caused, tied
+> off by the clean-workspace-reproducibility test on ambiguous presentations (§2 M3).
 >
 > `[R1-S1ii]` **The rule is evaluated per arm.** H4 is the conjunction "Arm 0 declines *and* Arm H
 > stays flat," so *either* leg collapsing confounds it: **H4 is blocked as floor-confounded if any
@@ -474,25 +617,41 @@ existing machinery. **Resolution:**
 > **affirmation via the existing verification channel** — no new token, no phantom file required:
 > the harness records `behavior_preserving_affirmed = true` when **all** of
 > (i) the spec artifacts parse cleanly (OpenAPI JSON parses; CONVENTIONS matches the grammar),
-> (ii) they are byte-identical to task-start,
-> (iii) they remain in-sync with the pre-task ground-truth IR (meter spec-side delta == 0), and
-> (iv) the agent invoked the designated sealed verification command (the smoke command) at least once
-> during the spec phase.
+> (ii) they are byte-identical to task-start, and
+> (iii) the agent invoked the designated sealed verification command (the smoke command) at least
+> once during the spec phase.
+>
+> `[R2: R2-3]` The affirmation deliberately consults **no meter or ground-truth state**. R1 carried
+> a further condition ("meter spec-side delta == 0" against the pre-task ground-truth IR) — removed
+> at R2 as a gate-review blocking finding: it smuggled the hidden oracle into the Arm-H gate. With
+> it, an Arm-H agent that drifted at task k−1 and met a behavior-preserving task k would have had
+> its affirmation refused *because of hidden ground truth* — learning its spec was stale (an
+> undeclared oracle→treatment information channel) and being pushed to repair it — making Arm-H
+> spec freshness partially harness-enforced rather than an outcome, and violating the Gate-1
+> tautology defense ("the gate enforces custody and sequencing, not spec accuracy"). Inherited
+> staleness therefore never blocks the affirmation; the post-task meter scores it exactly as on any
+> other task.
 >
 > This reuses only the L0 verification channel + the existing custody hashing; the block grammar is
 > untouched. The red check is **skipped** (`skipped_behavior_preserving`), consistent with ADR-003.
 > Rejected alternative — a "designated affirmation file no-op replacement" (also grammar-free) — is
-> recorded as the fallback if (iv) proves awkward in Phase 3; the verification-command shape is
+> recorded as the fallback if (iii) proves awkward in Phase 3; the verification-command shape is
 > primary because it adds no artifact the meter would then have to special-case.
 
-A behavior-preserving task that fails (i)–(iii) — e.g. the agent edited the spec anyway and desynced
-it — is **not** affirmed; it falls through to the ordinary custody path and any resulting desync is
-scored as Arm-H drift (which keeps H2 falsifiable — the affirmation cannot launder drift, since the
-meter runs post-task regardless of the affirmation).
+`[R2: R2-3]` An agent that **edited** the spec on a behavior-preserving task fails (ii) and falls
+through to the ordinary custody path (spec changed + parses); an agent that changed nothing affirms
+via (i)–(iii) and proceeds **regardless of inherited staleness** — with the meter condition removed
+there is no deadlock path: a do-nothing agent can always exit the spec phase through the handshake.
+H2 stays falsifiable without the gate ever reading ground truth, because the meter runs post-task
+regardless of the affirmation: desync **introduced** on the task registers as a new episode onset
+(§3.1), and desync **retained** from earlier tasks remains the same open episode, counted at its
+original onset and standing in drift burden. The affirmation can neither launder drift (it never
+suppresses the meter) nor reveal it (it never reads the meter).
 
-`[R1-S4]` Condition (iv) is a **protocol handshake, not a signal** — its only job is to require a
-*deliberate act* to exit the spec phase (conditions (i)–(iii) are all trivially true at task start
-with zero agent action, so without (iv) the phase machine would transition on inaction). Because it
+`[R1-S4]` Condition (iii) is a **protocol handshake, not a signal** — its only job is to require a
+*deliberate act* to exit the spec phase (conditions (i)–(ii) are trivially true at task start
+with zero agent action `[R2: R2-3]`, so without (iii) the phase machine would transition on
+inaction). Because it
 is a handshake, the affirmation shape **must appear verbatim in Arm-H's sealed protocol text** (§4
 `protocol_text`, sealed at M3): an undocumented exit makes Arm-H agents stall hunting for it, and
 those confusion turns land in the freshness tax as a fake H5 penalty. If Phase 3 finds the
@@ -529,7 +688,11 @@ the **shape** is fixed now:
   "budgets": { "turns_per_task": …, "verifications_per_task": …, "token_budget": …, "spend_cap_usd": … }, // M4 slots, values frozen M6.5
   "feedback": { "smoke_command": "…", "retry_policy": "…(arm-independent)…" },                // M4
   "snapshot": { "cadence": "sequence_start + every_accepted_task_close" },                    // M4
-  "floor_effect": { "task_index_max": 3, "consecutive_zero_tasks": 2, "per_arm": true }        // §3.2, this gate
+  "floor_effect": { "task_index_max": 3, "consecutive_zero_tasks": 2, "per_arm": true },       // §3.2, this gate
+  "meter_rules": { "convention_aggregation_min_items": … },                                    // [R2: R2-1] M2
+  "interpretability": { "min_replay_valid_paired_seeds": 2,                                    // [R2: R2-7] §5.1, this gate
+                        "extraction_failed_max_fraction": 0.10,
+                        "arm_h_spec_stall_max_fraction": 0.50 }
 }
 ```
 
@@ -547,8 +710,9 @@ this.
 
 ## 5. Pilot definition + go/no-go as executable checks
 
-**Pilot (brief §11):** 1 substrate config × 6 tasks × 3 arms × 2 seeds = **36 sequential runs**,
-Devstral-class model, single seeded command, per-task telemetry + replay-valid manifest per run.
+**Pilot (brief §11):** `[R2: R2-9d]` 1 substrate config × **6 arm-sequences (3 arms × 2 seeds) of 6
+tasks = 36 task-runs**, Devstral-class model, single seeded command, per-task telemetry + replay-valid
+manifest per run.
 `substrate_seed` provides the 2 replicates within one compatibility boundary; `pairing_label` binds
 the three arms of each paired draw.
 
@@ -556,16 +720,59 @@ the three arms of each paired draw.
 
 | # | Brief §11 criterion | Executable predicate over manifests |
 | --- | --- | --- |
-| (a) | Arm 0 measurably drifts (H1 signal **exists**) | `[R1-S8]` `result-schema` Arm-0 drift **velocity (flow, §3.1) `> 0` on ≥1 seed** — *any* discrepancy class counts (coverage-gap-only drift is real drift). The **class composition is recorded as a mandatory diagnostic** feeding full-run `op_mix` tuning and external comms, but does not gate: the gate tests whether the phenomenon exists, not whether the headline is maximally sharp |
-| (b) | Meter clean, zero false negatives | the M2 known-drift-fixture test passes at the **frozen** `meter_version` (build precondition, re-asserted in CI before launch) |
-| (c) | Something separates the arms | `[R1-S7]` ≥1 of these **each empirically falsifiable** disjuncts: **(c1)** Arm-0 drift velocity `>` Arm-H drift velocity (at n=2, a **heuristic screen** — no interval/CI claims); **(c2)** Arm-0/M false-confidence **propensity** (`done ∧ oracle-fail` rate) `>` Arm-H's **refusal propensity** (`refused_done_over_red` per task) — compared as the *same* underlying event family (ADR-003's `enforcement_outcome: accepted\|refused`), **not** terminal accepted-event counts (which would make Arm H ≈ 0 by construction and the disjunct decorative); **(c3)** Arm-M spec-side freshness `>` Arm-0 (H3 leak signature) |
+| (a) | Arm 0 measurably drifts (H1 signal **exists**) | `[R1-S8]` `result-schema` Arm-0 drift **velocity (flow, §3.1) `> 0` on ≥1 seed** — *any* discrepancy class counts (coverage-gap-only drift is real drift). The **class composition is recorded as a mandatory diagnostic** feeding full-run `op_mix` tuning and external comms, but does not gate: the gate tests whether the phenomenon exists, not whether the headline is maximally sharp. `[R2: R2-10]` The diagnostic is **extended with op-type attribution** (which channels/op-types — drift / additive / behavior-preserving / rename / convention — produced the observed episodes), using M1's difficulty diagnostic block, so a "drift came only from trivial bookkeeping" reading is checkable in the pilot report, not deniable |
+| (b) | `[R2: R2-9e]` Meter clean, zero false negatives on the known-drift fixture **and zero false positives on its clean twin** | the M2 known-drift-fixture test passes at the **frozen** `meter_version` (build precondition, re-asserted in CI before launch) |
+| (c) | Something separates the arms | `[R1-S7]` ≥1 of these **each empirically falsifiable** disjuncts: **(c1)** Arm-0 drift velocity `>` Arm-H drift velocity (at n=2, a **heuristic screen** — no interval/CI claims); `[R2: R2-6]` **(c2)** Arm-0/M false-confidence rate `>` Arm-H refusal rate, **both sides binary
+per task** — "≥1 unearned done attempt during the task" (Arms 0/M: a `done` accepted while the
+hidden oracle fails; Arm H: ≥1 `refused_done_over_red` event), compared as rates over attempted
+tasks — same underlying event family (ADR-003's `enforcement_outcome: accepted\|refused`), no
+decorative-by-construction disjunct. Total refusal counts (which can reach the ≈3 retry budget per
+task) are retained as a reported diagnostic, never part of the predicate — the mismatched per-task
+ranges of the R1 formulation inflated Arm-H's side and biased (c2) toward not firing; **(c3)** Arm-M spec-side freshness `>` Arm-0 (H3 leak signature) |
 
-`bin/e4-gonogo.ts` exits 0 only if (a) ∧ (b) ∧ (c) hold; otherwise it prints which predicate failed.
+`[R2: R2-7]` `bin/e4-gonogo.ts` is **three-valued**: exit 0 = **go** ((a) ∧ (b) ∧ (c) hold and no
+§5.1 trigger fired); exit 1 = **no-go** (a predicate failed and no §5.1 trigger fired — it prints
+which predicate); exit 2 = **`inconclusive_uninterpretable`** (a §5.1 trigger fired — it prints
+which trigger; the predicates are still printed for diagnosis but carry no claim).
 `[R1-S7]` every disjunct of (c) must be a comparison that *could* come out either way on the data —
 no disjunct that is true by the gate's construction counts. The per-arm floor-effect block (§3.2)
 runs first: if H4 is blocked, criterion (c) is evaluated on the remaining hypotheses (it never
 depends on H4 alone). **Meaning of a no-go:** the *instrument* is sound but the *signal* is absent at
-pilot scale — a scientific result to report, not a build failure.
+pilot scale — a scientific result to report, not a build failure. `[R2: R2-7]` A no-go may be
+**claimed only when no §5.1 interpretability trigger fired**; otherwise the pilot outcome is
+`inconclusive_uninterpretable` — neither a go nor a reportable null.
+
+### 5.1 Pilot outcome classes — `inconclusive_uninterpretable` `[R2: R2-7]`
+
+Go and no-go are joined by a third executable outcome, so a pilot that *broke* is never reported as
+a pilot that *measured*. **Hard triggers** — each machine-checkable from the emitted manifests
+alone; any one fires the class and the tool names it:
+
+1. **Insufficient valid data:** fewer than `min_replay_valid_paired_seeds` (= 2, sealed §4)
+   complete, replay-valid paired seeds per arm survive exclusions (`executor_error` aborts, replay
+   failures). At pilot scale (2 seeds) this means **any** excluded paired seed fires the trigger.
+2. **Substrate not validated:** **all arms** record drift velocity == 0. Pre-committed
+   interpretation: "the substrate failed to induce measurable drift — H1 *untested*", **not** a
+   clean scientific null — at pilot scale a universal zero cannot distinguish "agents maintain
+   specs" from "the procedural tasks map too cleanly to spec edits". (If *any* arm records
+   velocity > 0, the instrument + substrate demonstrably can produce drift, so an Arm-0 zero beside
+   a drifting sibling arm is a real H1 null: criterion (a) then fails as an ordinary no-go and this
+   trigger does not fire.) Heavier substrate redesign (ambiguous/implicit ops) stays out of v1
+   per §8.
+3. **Instrument degraded:** `extraction_failed == true` on more than
+   `extraction_failed_max_fraction` (= 0.10, sealed §4) of non-aborted task records.
+4. **Arm-H protocol confusion:** Arm H fails to exit the spec phase (budget exhausted while still
+   spec-phase-gated) on ≥ `arm_h_spec_stall_max_fraction` (= 0.50, sealed §4) of its attempted
+   tasks — the gate *text*, not drift economics, dominated the arm, confounding the freshness tax.
+
+**Advisory flags** — named in the pilot report, never fire the class: (v) an arm records zero
+oracle-passing tasks, leaving any per-passing-task H5 quantity undefined (reported as "undefined at
+pilot scale" per §3.1's zero-denominator handling, never coerced to a number); (vi) high seed
+variance (max/min Arm-0 velocity ratio across seeds > 3) — recommend more seeds in the full-run
+pre-registration.
+
+The thresholds are pre-registered at this gate and sealed in `e4-sealed-constants` (§4
+`interpretability`), changeable only at a gate, never after data.
 
 ---
 
@@ -573,15 +780,15 @@ pilot scale — a scientific result to report, not a build failure.
 
 | Pin (source) | Resolution | Where enforced |
 | --- | --- | --- |
-| No-change affirmation mechanism (Gate-1 2c, ADR-003) | Affirmation via existing verification channel, no new grammar token (§3.3) | `src/e4/gate.ts` (M3) |
+| No-change affirmation mechanism (Gate-1 2c, ADR-003) | Affirmation = parse + byte-identical + sealed-command handshake, no new grammar token; `[R2: R2-3]` the gate consults no meter/ground-truth state (R1's meter-delta condition removed as a hidden-oracle leak) (§3.3) | `src/e4/gate.ts` (M3) |
 | Aborted-usage excluded from taxes (ADR-005 Gate-1 pin) | `result-schema` filters `status=="aborted"` from all tax num/denom (§3.1) | `src/e4/result-schema.ts` (M5) |
 | Floor-collapse numeric threshold (Gate-1) | `task_index ≤ 3` ∧ 2 consecutive zero-cumulative tasks; any Arm-0 collapse blocks H4 (§3.2) | pre-registered analysis + `bin/e4-gonogo.ts` |
 | CONVENTIONS grammar verbatim in T0 README; JSON/YAML window closes at meter freeze (Gate-1, ADR-004) | T0 workspace README carries the grammar verbatim (M1); format reversibility ends when `meter_version` freezes (M2) | M1 / M2 |
 | **B-1** executor/agent-broken-server boundary (R1) | Agent-caused readiness failure → `cumulative_pass=0` (task failure, scored, feeds floor rule); `executor_error` = harness/infra only (aborts, excluded) | `src/e4/oracle-executor.ts` (M3), §3.2 |
-| **B-2** velocity is a flow not a stock (R1) | Velocity = distinct `item_id`s first observed per opportunity; whole-surface terminal count = "drift burden at T_N" | `result-schema.ts` (M0 stub → M5), §3.1/§5 |
+| **B-2** velocity is a flow not a stock (R1; identity/episode semantics pinned at R2 `[R2: R2-1]`) | Velocity = discrepancy-episode **onsets** per opportunity task; episodes keyed `(semantic_item_uid, direction)`, onset-transition + rename-lineage merge + sealed convention aggregation; whole-surface terminal count = "drift burden at T_N" | `result-schema.ts` (M0 stub → M5), substrate UIDs + lineage map (M1), fixture identity rows (M2), §3.1/§5 |
 | **S-2/S-4** sealed text surfaces (R1) | `protocol_text` block: block grammar, Arm-M instruction, Arm-H gate protocol + affirmation handshake, noticing prompt | constants v0 (M3/M4), §4 |
-| **S-3** budget calibration before freeze (R1) | Spend-gated M6.5 micro-calibration ratifies budgets; non-budget freezes M6, budgets M6.5 (**required pre-pilot step**, operator decision 2026-07-08) | M6/M6.5, §4 |
-| **S-5** commensurable H5 taxes (R1) | Both taxes in tokens per oracle-passing task; drift tax = Arm-0 per-success cost minus Arm-H implementation-phase per-success cost | `result-schema.ts`, §3.1 |
+| **S-3** budget calibration before freeze (R1; rescoped at R2 `[R2: R2-4]`) | Spend-gated M6.5 = one full-length (6-task) Arm-H calibration sequence ratifies budgets, shared across all arms (parity preserved); non-budget freezes M6, budgets M6.5 (**required pre-pilot step**, operator decision 2026-07-08); declined authorization halts cleanly after M6, no partial freeze | M6/M6.5, §4 |
+| **S-5** commensurable H5 taxes (R1; denominator fixed at R2 `[R2: R2-2]`) | Both taxes in tokens **per attempted task** (primary, reportable); pass rates reported alongside; per-oracle-passing-task ratio survives only as a guarded secondary, "undefined at pilot scale" when either arm's passing set is empty. Drift tax = Arm-0 per-task cost (attempted-task basis) minus Arm-H implementation-phase cost (attempted-task basis) | `result-schema.ts`, §3.1 |
 | **S-1** per-arm symmetric floor rule (R1) | Floor rule evaluated per arm (blocks H4 if either leg's arm collapses); smoke prong symmetric with oracle prong | §3.2, `bin/e4-gonogo.ts` |
 
 ---
@@ -601,8 +808,9 @@ calibration is mid-flight — the latest artifacts are `runs/e3-calibration/e3-c
 gold-leak fix; the committed N=5 calibration remains spend-gated and its predeclared prediction commit
 is the last blocker. E3 uses **frontier V4 Pro** through the Python/uv/Docker harness.
 
-**E4 pilot footprint (M7):** 36 sequential runs, **Devstral-class** (mid/cheap tier), ~a weekend,
-tens of dollars, entirely in-process TypeScript/bun (no Docker, no `-e2` runtime).
+**E4 pilot footprint (M7):** `[R2: R2-9d]` 6 arm-sequences (3 arms × 2 seeds) of 6 tasks = 36
+task-runs, **Devstral-class** (mid/cheap tier), ~a weekend, tens of dollars, entirely in-process
+TypeScript/bun (no Docker, no `-e2` runtime).
 
 | Dimension | E3 (R2 calibration) | E4 (pilot) | Contention? |
 | --- | --- | --- | --- |
@@ -640,6 +848,13 @@ the same budget window. Nothing in Phases 0–2 constrained this decision, per b
   data shows the one-shot limitation dominating Arm-H drift (ADR-003 2b); never a mid-experiment
   change.
 - **Leaderboard / standing service, UI, multi-agent** — explicitly out (brief §12).
+- `[R2: R2-9f]` **Soft/qualitative conventions** (naming taste, layering style) — v1's conventions
+  channel measures **grammar-constrained, machine-checkable conventions only** (ADR-004); no external
+  claim may imply broader conventions coverage.
+- `[R2: R2-10]` **Implicit/ambiguous drift ops** (semantic-inference tasks) — a v2 `op_mix` lever,
+  informed by the pilot's difficulty diagnostics (§2 M1, §5(a)); substrate redesign stays out of v1
+  (the pilot-scale answer to the construct-validity concern is §5.1(2)'s pre-committed
+  zero-drift interpretation).
 
 ---
 
