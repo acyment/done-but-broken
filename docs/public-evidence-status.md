@@ -187,8 +187,14 @@ Avoid:
 
 ## Next Public Step
 
-Package the current experiment phase as complete around the bounded cheap/weak-model viability claim. The strong-model ceiling has now been probed on pricing (Sonnet and Qwen, both arms 9/9; one Gemini provider-flagged) and on a denser payroll skeleton-seed task (Sonnet, both arms 18/18). The remaining substantive research branch would be a separate scale-axis program — for example, multi-file existing-codebase work where invariants are scattered beyond a single self-contained spec — not simply adding more single-file rules or spending on a bigger ceiling model.
+Package the completed E2 acceptance-feedback phase as a bounded, two-lineage result: executable
+acceptance feedback reduces single-task false-confidence shipping under this substrate/scaffold/budget,
+but the result is not a generalized benchmark claim and not full HIT-SDD.
 
-That scale-axis program is now active as the E1 frontier path (turn-based, full-file-replacement, multi-file protocol; see `docs/protocols/e1-frontier-consolidated-protocol-v0.md`). As part of starting it, the predeclared `path-survival-primary-v1` Stage 1 validation matrix (subscription + inventory) was **superseded before execution** on 2026-06-10 — zero Stage 1 runs occurred, so no completed run is reinterpreted (`docs/protocols/path-survival-primary-v1-validation-matrix-supersession-v1.md`). All evidence and classifications on this page are unchanged by that supersession.
-
-**Update (2026-06-13):** the E1 frontier path has produced its bounded result, synthesized in `docs/e1-capability-gradient-finding-v1.md` — the **self-verification gradient**: executable spec feedback helped where the agent could not self-verify the task (cheap-model pricing causal pilot `+0.1852`; Qwen `e1-dispatch-v1` causal pilot `+0.1464`) and was redundant where a strong model could (four task families, three frontier-grade models, ceiling with zero on-graph regressions; mechanism directly observed — a context-arm model wrote the hidden oracle's own edge-case test `cp17-trace-equal-tie` unprompted). It is a convergent qualitative pattern across non-pooled boundaries, not a Level 5 claim. The active successor is the E2 brownfield acceptance-feedback program (`docs/protocols/e2-brownfield-acceptance-ablation-design-v1.md`), testing whether feedback re-matters for frontier models at a scale that exceeds their self-verification.
+**Update (2026-07-04):** the immediate next research move is now the E3 sequential brownfield
+regression program, drafted in
+`docs/protocols/e3-brownfield-regression-after-several-changes-design-v1.md`. The goal is to measure
+true regressions after several carried-forward changes in the same real repo, then, only after
+control-only calibration shows the metric fires, test whether official executable feedback improves
+regression-free episode survival. This is a new compatibility boundary and will not be pooled with E2,
+E1, authored-spec Stage 0, or the earlier pricing/subscription/inventory results.

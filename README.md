@@ -12,8 +12,10 @@ answers — *before* it declares a task done, and seeing whether that reduces co
 > **Where this is heading (not yet tested).** The north star is **HIT-SDD — Harnessed Iterative
 > Spec-Driven Development**: agents driving work from an *authored* executable spec (e.g.
 > OpenSpec/Gherkin scenarios) run on every loop as the definition of done. What's below is early
-> evidence for the *executable-feedback mechanism* HIT-SDD relies on — **not** the full practice. The
-> authored-spec / OpenSpec-Gherkin study is the pre-registered next step (see "What's next").
+> evidence for the *executable-feedback mechanism* HIT-SDD relies on — **not** the full practice. After
+> the latest results, the immediate research step is shifting to a stricter operational question:
+> whether executable feedback reduces **regressions after several sequential changes in the same
+> brownfield repo** (see "What's next").
 
 ---
 
@@ -119,13 +121,17 @@ contrast is *execution vs. no-execution* (not vs. the agent writing its own test
 certified tasks (the four largest repos carry a navigation confound, reported separately). See the
 proto-paper §7.
 
-## What's next (pre-registered, not yet run)
+## What's next (drafted, not yet run)
 
-Designed and gated in `docs/protocols/`:
+Drafted or gated in `docs/protocols/`:
 
-- **Full HIT-SDD (authored specs, OpenSpec/Gherkin)** — the actual spec-driven study this work is
-  early evidence for: does an agent driving development from an *authored* executable spec ship less
-  broken code? (the next-program direction)
+- **Sequential brownfield regression measurement** — the immediate pivot after the latest results:
+  measure whether agents introduce true regressions after several changes in the same real repo, then
+  test whether official executable feedback reduces that regression accumulation.
+  ([`e3-brownfield-regression-after-several-changes-design-v1.md`](docs/protocols/e3-brownfield-regression-after-several-changes-design-v1.md))
+- **Full HIT-SDD (authored specs, OpenSpec/Gherkin)** — still the north-star product study, but no
+  longer the next immediate causal run after the authored-spec calibration exposed oracle-authoring
+  fidelity as the bottleneck.
 - **Budget sensitivity** — does the benefit shift from *diagnostic* to *generative* with more
   iterations? ([`e2-budget-sensitivity-design-v1.md`](docs/protocols/e2-budget-sensitivity-design-v1.md))
 - **Large-repo, navigation-equalized (Protocol v2)** — does the effect hold/grow on big codebases once
