@@ -1,0 +1,29 @@
+{
+  "schema": "e4-sealed-constants",
+  "version": "0",
+  "compatibility_boundary": {
+    "substrate_config_id": null,
+    "substrate_kind": "procedural-rest-v1",
+    "substrate_version": null,
+    "meter_version": null
+  },
+  "op_mix": null,
+  "executor": null,
+  "protocol_text": null,
+  "budgets": null,
+  "feedback": null,
+  "snapshot": null,
+  "floor_effect": {
+    "task_index_max": 3,
+    "consecutive_zero_tasks": 2,
+    "per_arm": true
+  },
+  "meter_rules": {
+    "convention_aggregation_min_items": null
+  },
+  "interpretability": {
+    "min_replay_valid_paired_seeds": 2,
+    "extraction_failed_max_fraction": 0.1,
+    "arm_h_spec_stall_max_fraction": 0.5
+  }
+}

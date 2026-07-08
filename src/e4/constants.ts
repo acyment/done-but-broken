@@ -1,0 +1,234 @@
+// e4-sealed-constants validator + hash (IMPLEMENTATION-PLAN.md M0, §4). Own lineage, own schema,
+// own validator — ADR-007. This module never validates or reads the E1 seal document;
+// test/e4-no-legacy-imports.test.ts enforces that the E1 constants module is never imported
+// anywhere under src/e4/.
+//
+// The v0 draft is filled in across M0–M6.5 (each milestone seals the parameters it introduces);
+// this validator accepts a partially-drafted document — sections owned by a later milestone are
+// `null` until that milestone seals them — but pins exact values already ratified at THIS gate
+// (§3.2 floor_effect, §5.1 interpretability, R2-7).
+import type { E4Budgets } from "./types";
+
+export type E4CompatibilityBoundary = {
+  substrate_config_id: string | null; // sealed M1
+  substrate_kind: "procedural-rest-v1";
+  substrate_version: string | null; // sealed M1
+  meter_version: string | null; // sealed M2
+};
+
+export type E4FloorEffect = {
+  task_index_max: number;
+  consecutive_zero_tasks: number;
+  per_arm: boolean;
+};
+
+export type E4Interpretability = {
+  min_replay_valid_paired_seeds: number;
+  extraction_failed_max_fraction: number;
+  arm_h_spec_stall_max_fraction: number;
+};
+
+export type E4MeterRules = {
+  convention_aggregation_min_items: number | null; // sealed M2 [R2: R2-1]
+};
+
+export type E4SealedConstants = {
+  schema: "e4-sealed-constants";
+  version: string; // "0", "0.1", "0.2" … draft; non-budget frozen M6, budgets M6.5
+  compatibility_boundary: E4CompatibilityBoundary;
+  op_mix: Record<string, unknown> | null; // sealed M1
+  executor: Record<string, unknown> | null; // sealed M3
+  protocol_text: Record<string, unknown> | null; // sealed M3/M4
+  budgets: E4Budgets | null; // slots M4, values frozen M6.5
+  feedback: Record<string, unknown> | null; // sealed M4
+  snapshot: Record<string, unknown> | null; // sealed M4
+  floor_effect: E4FloorEffect; // pinned §3.2, this gate
+  meter_rules: E4MeterRules;
+  interpretability: E4Interpretability; // pinned §5.1, this gate [R2: R2-7]
+};
+
+const TOP_LEVEL_KEYS = [
+  "schema",
+  "version",
+  "compatibility_boundary",
+  "op_mix",
+  "executor",
+  "protocol_text",
+  "budgets",
+  "feedback",
+  "snapshot",
+  "floor_effect",
+  "meter_rules",
+  "interpretability"
+] as const;
+
+export class E4ConstantsValidationError extends Error {
+  constructor(message: string) {
+    super(`[e4-sealed-constants] ${message}`);
+    this.name = "E4ConstantsValidationError";
+  }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isRecordOrNull(value: unknown): value is Record<string, unknown> | null {
+  return value === null || isRecord(value);
+}
+
+function isPositiveInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
+}
+
+export function validateE4Constants(raw: unknown): E4SealedConstants {
+  if (!isRecord(raw)) {
+    throw new E4ConstantsValidationError("root must be a JSON object");
+  }
+
+  for (const key of TOP_LEVEL_KEYS) {
+    if (!(key in raw)) {
+      throw new E4ConstantsValidationError(`missing required key: ${key}`);
+    }
+  }
+
+  for (const key of Object.keys(raw)) {
+    if (!(TOP_LEVEL_KEYS as readonly string[]).includes(key)) {
+      throw new E4ConstantsValidationError(`unknown top-level key: ${key}`);
+    }
+  }
+
+  const constants = raw as unknown as E4SealedConstants;
+
+  if (constants.schema !== "e4-sealed-constants") {
+    throw new E4ConstantsValidationError(`schema mismatch: ${String(constants.schema)}`);
+  }
+
+  if (!/^0(\.\d+)?$/.test(constants.version)) {
+    throw new E4ConstantsValidationError("version must be a draft-v0 string (0, 0.1, 0.2, …)");
+  }
+
+  validateCompatibilityBoundary(constants.compatibility_boundary);
+
+  for (const key of ["op_mix", "executor", "protocol_text", "feedback", "snapshot"] as const) {
+    if (!isRecordOrNull(constants[key])) {
+      throw new E4ConstantsValidationError(`${key} must be an object or null until its owning milestone seals it`);
+    }
+  }
+
+  if (constants.budgets !== null && !isValidBudgets(constants.budgets)) {
+    throw new E4ConstantsValidationError("budgets must be null or a fully-populated E4Budgets object");
+  }
+
+  validateFloorEffect(constants.floor_effect);
+  validateMeterRules(constants.meter_rules);
+  validateInterpretability(constants.interpretability);
+
+  return constants;
+}
+
+function validateCompatibilityBoundary(boundary: unknown): asserts boundary is E4CompatibilityBoundary {
+  if (!isRecord(boundary)) {
+    throw new E4ConstantsValidationError("compatibility_boundary must be an object");
+  }
+
+  if (boundary.substrate_kind !== "procedural-rest-v1") {
+    throw new E4ConstantsValidationError("compatibility_boundary.substrate_kind must be procedural-rest-v1");
+  }
+
+  for (const key of ["substrate_config_id", "substrate_version", "meter_version"] as const) {
+    const value = boundary[key];
+
+    if (value !== null && typeof value !== "string") {
+      throw new E4ConstantsValidationError(`compatibility_boundary.${key} must be a string or null`);
+    }
+  }
+}
+
+function isValidBudgets(value: unknown): value is E4Budgets {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    isPositiveInteger(value.turns_per_task) &&
+    isPositiveInteger(value.verifications_per_task) &&
+    isPositiveInteger(value.token_budget) &&
+    typeof value.spend_cap_usd === "number" &&
+    value.spend_cap_usd > 0
+  );
+}
+
+function validateFloorEffect(floorEffect: unknown): asserts floorEffect is E4FloorEffect {
+  if (!isRecord(floorEffect)) {
+    throw new E4ConstantsValidationError("floor_effect must be an object");
+  }
+
+  // §3.2's pinned numeric definition — ratified at this gate, not deferred to a later milestone.
+  if (
+    floorEffect.task_index_max !== 3 ||
+    floorEffect.consecutive_zero_tasks !== 2 ||
+    floorEffect.per_arm !== true
+  ) {
+    throw new E4ConstantsValidationError(
+      "floor_effect must match the §3.2 pin: task_index_max=3, consecutive_zero_tasks=2, per_arm=true"
+    );
+  }
+}
+
+function validateMeterRules(meterRules: unknown): asserts meterRules is E4MeterRules {
+  if (!isRecord(meterRules)) {
+    throw new E4ConstantsValidationError("meter_rules must be an object");
+  }
+
+  const value = meterRules.convention_aggregation_min_items;
+
+  if (value !== null && !isPositiveInteger(value)) {
+    throw new E4ConstantsValidationError(
+      "meter_rules.convention_aggregation_min_items must be null or a positive integer"
+    );
+  }
+}
+
+function validateInterpretability(interpretability: unknown): asserts interpretability is E4Interpretability {
+  if (!isRecord(interpretability)) {
+    throw new E4ConstantsValidationError("interpretability must be an object");
+  }
+
+  // §5.1's pinned thresholds ([R2: R2-7]) — ratified at this gate.
+  if (
+    interpretability.min_replay_valid_paired_seeds !== 2 ||
+    interpretability.extraction_failed_max_fraction !== 0.1 ||
+    interpretability.arm_h_spec_stall_max_fraction !== 0.5
+  ) {
+    throw new E4ConstantsValidationError(
+      "interpretability must match the §5.1 pin: min_replay_valid_paired_seeds=2, " +
+        "extraction_failed_max_fraction=0.10, arm_h_spec_stall_max_fraction=0.50"
+    );
+  }
+}
+
+export function hashE4ConstantsBytes(bytes: ArrayBuffer | Uint8Array): string {
+  return new Bun.CryptoHasher("sha256").update(bytes).digest("hex");
+}
+
+export async function loadE4Constants(path: string): Promise<{ constants: E4SealedConstants; hash: string }> {
+  const file = Bun.file(path);
+
+  if (!(await file.exists())) {
+    throw new E4ConstantsValidationError(`constants file not found: ${path}`);
+  }
+
+  const bytes = await file.arrayBuffer();
+  const hash = hashE4ConstantsBytes(bytes);
+
+  let raw: unknown;
+
+  try {
+    raw = JSON.parse(new TextDecoder().decode(bytes));
+  } catch (error) {
+    throw new E4ConstantsValidationError(`constants file is not valid JSON: ${String(error)}`);
+  }
+
+  return { constants: validateE4Constants(raw), hash };
+}
