@@ -62,6 +62,22 @@ export type E4ExecutorSeal = {
 // noticing strings); once the block is non-null, arm_h_gate_protocol must be present.
 export type E4ProtocolText = Record<string, string>;
 
+// Sealed at M4 (plan §4 `feedback` block): the one agent-invokable verification command (identical
+// across arms — brief §8 load-bearing) and the arm-independent provider retry policy.
+export type E4FeedbackSeal = {
+  smoke_command: string;
+  retry_policy: string;
+};
+
+// Sealed at M4 (ADR-005): the snapshot cadence, verbatim from the plan's §4 shape. "accepted task
+// close" = a task close that keeps the sequence going (manifest status "complete": done,
+// agent_stalled, budget_exhausted) — aborted tasks never anchor the replay chain.
+export const E4_SNAPSHOT_CADENCE = "sequence_start + every_accepted_task_close" as const;
+
+export type E4SnapshotSeal = {
+  cadence: typeof E4_SNAPSHOT_CADENCE;
+};
+
 export type E4SealedConstants = {
   schema: "e4-sealed-constants";
   version: string; // "0", "0.1", "0.2" … draft; non-budget frozen M6, budgets M6.5
@@ -70,9 +86,9 @@ export type E4SealedConstants = {
   phrasing_pools: E4PhrasingPools | null; // sealed M1
   executor: E4ExecutorSeal | null; // sealed M3
   protocol_text: E4ProtocolText | null; // sealed M3/M4
-  budgets: E4Budgets | null; // slots M4, values frozen M6.5
-  feedback: Record<string, unknown> | null; // sealed M4
-  snapshot: Record<string, unknown> | null; // sealed M4
+  budgets: E4Budgets | null; // slots M4 (values provisional until M6.5 freezes them)
+  feedback: E4FeedbackSeal | null; // sealed M4
+  snapshot: E4SnapshotSeal | null; // sealed M4
   floor_effect: E4FloorEffect; // pinned §3.2, this gate
   meter_rules: E4MeterRules;
   interpretability: E4Interpretability; // pinned §5.1, this gate [R2: R2-7]
@@ -146,6 +162,18 @@ export function validateE4Constants(raw: unknown): E4SealedConstants {
     if (!isRecordOrNull(constants[key])) {
       throw new E4ConstantsValidationError(`${key} must be an object or null until its owning milestone seals it`);
     }
+  }
+
+  if (constants.feedback !== null && !isValidFeedbackSeal(constants.feedback)) {
+    throw new E4ConstantsValidationError(
+      "feedback must be null or { smoke_command, retry_policy } with non-empty strings (M4 seal)"
+    );
+  }
+
+  if (constants.snapshot !== null && constants.snapshot.cadence !== E4_SNAPSHOT_CADENCE) {
+    throw new E4ConstantsValidationError(
+      `snapshot must be null or { cadence: "${E4_SNAPSHOT_CADENCE}" } (ADR-005, sealed M4)`
+    );
   }
 
   if (constants.executor !== null && !isValidExecutorSeal(constants.executor)) {
@@ -239,10 +267,31 @@ function validateProtocolText(value: unknown): asserts value is E4ProtocolText {
   if (typeof value.arm_h_gate_protocol !== "string" || value.arm_h_gate_protocol.length === 0) {
     throw new E4ConstantsValidationError("protocol_text.arm_h_gate_protocol is required once protocol_text is sealed (M3)");
   }
+
+  // M4 seals the remaining condition-rendering surfaces as one unit ([R1-S2]): the presence of any
+  // one M4 key requires all four, so a draft can be pre-M4 (gate protocol only) or post-M4, never
+  // half-sealed.
+  const M4_KEYS = ["block_grammar_id", "turn_protocol_id", "arm_m_standing_instruction", "noticing_probe_prompt"];
+
+  if (M4_KEYS.some((key) => key in value) && !M4_KEYS.every((key) => typeof value[key] === "string" && value[key].length > 0)) {
+    throw new E4ConstantsValidationError(
+      `protocol_text must seal all of ${M4_KEYS.join(", ")} together once any is present (M4 seal)`
+    );
+  }
 }
 
 function isValidPhrasingPools(value: unknown): value is E4PhrasingPools {
   return isRecord(value) && Array.isArray(value.pool_ids) && value.pool_ids.every((id) => typeof id === "string");
+}
+
+function isValidFeedbackSeal(value: unknown): value is E4FeedbackSeal {
+  return (
+    isRecord(value) &&
+    typeof value.smoke_command === "string" &&
+    value.smoke_command.length > 0 &&
+    typeof value.retry_policy === "string" &&
+    value.retry_policy.length > 0
+  );
 }
 
 function isValidBudgets(value: unknown): value is E4Budgets {

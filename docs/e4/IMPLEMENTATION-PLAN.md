@@ -327,6 +327,47 @@ of these changes results, so they are sealed and protocol-tested (§4 `protocol_
 > **Budget caveat (see M6.5):** the token/turn/spend-cap *values* sealed here are provisional until
 > the M6.5 micro-calibration; only their *schema slots* are load-bearing at M4.
 
+**M4 implementation notes (recorded divergences/pins, Phase 3):**
+
+1. **Noticing-probe sequencing follows [R2: R2-9c], superseding the architecture §2.2 diagram's
+   order.** Task close = hidden oracle → meter → **snapshot** → probe (the diagram at
+   `E4-ARCHITECTURE.md:132` draws the probe before the snapshot; R2-9c is the later ruling — the
+   probe fires after the task snapshot, inside the task conversation, which is then discarded).
+   Probe usage is the [R1-C3] separate arm-uniform line: excluded from `usage.by_phase` (and both
+   taxes), retained per task in `records/<arm>/task-<k>/probe.json`, and folded into sequence
+   `usage_totals` so spend accounting and the cap stay truthful.
+2. **Stall rule sealed under the turn-protocol id.** `agent_stalled` = 3 consecutive no-op turns
+   (zero valid protocol blocks); the §4 budgets shape has no stall slot, so the constant
+   (`E4_STALL_NO_OP_TURN_LIMIT`) is part of `e4-turn-protocol-v1`'s sequencing semantics,
+   protocol-tested. Stalled tasks are COMPLETE closes (the sequence continues), like
+   budget_exhausted.
+3. **`E4GateEvents.red_check` widened to nullable**, realizing the M3 `gate.summary()` note: a task
+   that never leaves the spec phase has no red check; `phase_at_termination === "spec"`
+   disambiguates.
+4. **L1 parser consumed structurally.** `e1-l1-parser` is data-driven from a constants object
+   (ADR-007), but importing the `E1SealedConstants` TYPE would resolve into the forbidden
+   `e1-l1-constants` module — so `turns.ts` satisfies the constructor with a cast carrying exactly
+   the fields the parser reads. The E4 grammar tokens are byte-identical to E1's, are the code twin
+   of `protocol_text.block_grammar_id`, and are protocol-tested against the sealed file.
+5. **Write application is E4-owned.** `e1-harness.applyFullFileReplacementEntries` hard-codes E1's
+   closed world (`specs/` read-only) while E4 needs `specs/` writable in every arm; writes flow
+   through `applyE4Replacements`, which routes Arm-H paths through the normative
+   `gate.evaluateWriteAccess` (the M3 arm-policy note's requirement). Terminal-turn feedback is
+   computed and recorded in `turns.jsonl` but never delivered — the conversation ends with the
+   task.
+6. **Replay-validity at the M4 boundary:** `substrate_regeneration_ok` is computed live (generated
+   T0 files byte-compared against the sequence-start snapshot, re-checked on resume);
+   `per_task_replay_ok`/`chain_replay_valid` stay conservatively `[]`/`false` until the M5
+   inspector recomputes them from retained turn records.
+7. **Resume details:** the snapshot anchor is hash-verified BEFORE any side effect (a tampered
+   snapshot fails the resume with partial records still in place); arms the crashed run never
+   reached have no manifest and start fresh; a provider that throws is a classified
+   `provider_error` abort under the sealed retry policy — only unclassified harness errors
+   propagate as crashes.
+8. **Hidden oracle runs at close in ALL arms uniformly** — for Arm H this re-runs the same engine
+   the gate's green check just ran (uniformity chosen over economy; `usage.gate_executor` keeps the
+   gate's runs separately attributed).
+
 ---
 
 ### M5 — Manifest emission, replay-validity inspector, redaction, result schema (Feature 5)

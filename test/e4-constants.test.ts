@@ -61,10 +61,9 @@ describe("E4 constants validate and hash under their own lineage", () => {
     expect(constants.meter_rules.convention_aggregation_min_items).not.toBeNull();
   });
 
-  test("[M3] the on-disk draft carries the sealed executor determinism parameters (v0.3)", () => {
+  test("[M3] the on-disk draft carries the sealed executor determinism parameters (sealed v0.3)", () => {
     const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
 
-    expect(constants.version).toBe("0.3");
     expect(constants.executor).not.toBeNull();
     expect(constants.executor?.fixed_order).toBe(true);
     expect(constants.executor?.port).toBe(0);
@@ -109,6 +108,55 @@ describe("E4 constants validate and hash under their own lineage", () => {
       /executor must be null or a fully-populated/
     );
     expect(() => validateE4Constants({ ...validDraft(), executor: sealed })).not.toThrow();
+  });
+
+  test("[M4] the on-disk draft (v0.4) seals budgets slots, feedback, snapshot cadence, and the remaining protocol_text surfaces", () => {
+    const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
+
+    expect(constants.version).toBe("0.4");
+    // Budget SLOTS are load-bearing at M4; the values stay provisional until M6.5 freezes them.
+    expect(constants.budgets).not.toBeNull();
+    expect(constants.budgets?.turns_per_task).toBeGreaterThan(0);
+    expect(constants.budgets?.verifications_per_task).toBeGreaterThan(0);
+    expect(constants.budgets?.token_budget).toBeGreaterThan(0);
+    expect(constants.budgets?.spend_cap_usd).toBeGreaterThan(0);
+    expect(constants.feedback?.smoke_command).toBe("bun run smoke");
+    expect(constants.feedback?.retry_policy.length).toBeGreaterThan(0);
+    expect(constants.snapshot?.cadence).toBe("sequence_start + every_accepted_task_close");
+    // [R1-S2] the four M4 text surfaces, sealed together.
+    expect(constants.protocol_text?.block_grammar_id).toBe("e4-block-grammar-v1");
+    expect(constants.protocol_text?.turn_protocol_id).toBe("e4-turn-protocol-v1");
+    expect(constants.protocol_text?.arm_m_standing_instruction).toContain("specs/openapi.json");
+    expect(constants.protocol_text?.arm_m_standing_instruction).toContain("specs/CONVENTIONS.md");
+    // The noticing probe carries the brief §4 question verbatim.
+    expect(constants.protocol_text?.noticing_probe_prompt).toContain(
+      "was anything in the provided spec/context files inaccurate?"
+    );
+  });
+
+  test("[M4] rejects a half-sealed M4 protocol_text block", () => {
+    expect(() =>
+      validateE4Constants({
+        ...validDraft(),
+        protocol_text: { arm_h_gate_protocol: "gate text", block_grammar_id: "e4-block-grammar-v1" }
+      })
+    ).toThrow(/must seal all of/);
+  });
+
+  test("[M4] rejects feedback/snapshot seals that are present but malformed", () => {
+    expect(() => validateE4Constants({ ...validDraft(), feedback: { smoke_command: "bun run smoke" } })).toThrow(
+      /feedback must be null or/
+    );
+    expect(() => validateE4Constants({ ...validDraft(), snapshot: { cadence: "whenever" } })).toThrow(
+      /snapshot must be null or/
+    );
+    expect(() =>
+      validateE4Constants({
+        ...validDraft(),
+        feedback: { smoke_command: "bun run smoke", retry_policy: "policy" },
+        snapshot: { cadence: "sequence_start + every_accepted_task_close" }
+      })
+    ).not.toThrow();
   });
 
   test("[M3] rejects protocol_text without arm_h_gate_protocol or with non-string surfaces", () => {

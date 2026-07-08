@@ -24,7 +24,9 @@ export type E4CompatibilityBoundaryRef = {
 
 export type E4GateEvents = {
   custody_failures: number;
-  red_check: "red" | "green_anomaly" | "skipped_behavior_preserving";
+  // null only when the task never left the spec phase (budget exhaustion in spec phase — the M3
+  // gate.summary() note anticipated this; phase_at_termination === "spec" disambiguates).
+  red_check: "red" | "green_anomaly" | "skipped_behavior_preserving" | null;
   refused_done_over_red: number;
 };
 
