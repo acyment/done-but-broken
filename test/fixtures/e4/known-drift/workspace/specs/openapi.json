@@ -1,0 +1,176 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "E4 generated app",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/categories": {
+      "post": {
+        "operationId": "createCategory",
+        "summary": "create Category",
+        "tags": [
+          "Category"
+        ],
+        "x-e4-entity": "Category",
+        "x-e4-kind": "create"
+      },
+      "get": {
+        "operationId": "listCategory",
+        "summary": "list Category",
+        "tags": [
+          "Category"
+        ],
+        "x-e4-entity": "Category",
+        "x-e4-kind": "list"
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "operationId": "readCategory",
+        "summary": "read Category",
+        "tags": [
+          "Category"
+        ],
+        "x-e4-entity": "Category",
+        "x-e4-kind": "read"
+      },
+      "put": {
+        "operationId": "updateCategory",
+        "summary": "update Category",
+        "tags": [
+          "Category"
+        ],
+        "x-e4-entity": "Category",
+        "x-e4-kind": "update"
+      },
+      "delete": {
+        "operationId": "deleteCategory",
+        "summary": "delete Category",
+        "tags": [
+          "Category"
+        ],
+        "x-e4-entity": "Category",
+        "x-e4-kind": "delete"
+      }
+    },
+    "/categories/stats": {
+      "get": {
+        "operationId": "analyticsCategory",
+        "summary": "analytics Category",
+        "tags": [
+          "Category"
+        ],
+        "x-e4-entity": "Category",
+        "x-e4-kind": "analytics"
+      }
+    },
+    "/widgets": {
+      "post": {
+        "operationId": "createWidget",
+        "summary": "create Widget",
+        "tags": [
+          "Widget"
+        ],
+        "x-e4-entity": "Widget",
+        "x-e4-kind": "create"
+      },
+      "get": {
+        "operationId": "listWidget",
+        "summary": "list Widget",
+        "tags": [
+          "Widget"
+        ],
+        "x-e4-entity": "Widget",
+        "x-e4-kind": "list"
+      }
+    },
+    "/widgets/{id}": {
+      "get": {
+        "operationId": "readWidget",
+        "summary": "read Widget",
+        "tags": [
+          "Widget"
+        ],
+        "x-e4-entity": "Widget",
+        "x-e4-kind": "read"
+      },
+      "put": {
+        "operationId": "updateWidget",
+        "summary": "update Widget",
+        "tags": [
+          "Widget"
+        ],
+        "x-e4-entity": "Widget",
+        "x-e4-kind": "update"
+      },
+      "delete": {
+        "operationId": "deleteWidget",
+        "summary": "delete Widget",
+        "tags": [
+          "Widget"
+        ],
+        "x-e4-entity": "Widget",
+        "x-e4-kind": "delete"
+      }
+    },
+    "/widgets/stats": {
+      "get": {
+        "operationId": "analyticsWidget",
+        "summary": "analytics Widget",
+        "tags": [
+          "Widget"
+        ],
+        "x-e4-entity": "Widget",
+        "x-e4-kind": "analytics"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Widget": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "in_stock": {
+            "type": "boolean"
+          },
+          "category_id": {
+            "$ref": "#/components/schemas/Category"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "price",
+          "in_stock",
+          "category_id"
+        ]
+      }
+    }
+  }
+}

@@ -46,13 +46,20 @@ describe("E4 constants validate and hash under their own lineage", () => {
     expect(() => validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")))).not.toThrow();
   });
 
-  test("[M1] the on-disk draft carries M1's sealed op_mix and phrasing_pools (v0.1)", () => {
+  test("[M1] the on-disk draft carries M1's sealed op_mix and phrasing_pools", () => {
     const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
 
-    expect(constants.version).toBe("0.1");
     expect(constants.op_mix).not.toBeNull();
     expect(constants.phrasing_pools?.pool_ids.length).toBeGreaterThan(0);
     expect(constants.compatibility_boundary.substrate_version).not.toBeNull();
+  });
+
+  test("[M2] the on-disk draft carries M2's sealed meter_version and convention_aggregation_min_items (v0.2)", () => {
+    const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
+
+    expect(constants.version).toBe("0.2");
+    expect(constants.compatibility_boundary.meter_version).not.toBeNull();
+    expect(constants.meter_rules.convention_aggregation_min_items).not.toBeNull();
   });
 
   test("loadE4Constants validates and hashes the draft; the hash is stable across loads", async () => {

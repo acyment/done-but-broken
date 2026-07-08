@@ -1,11 +1,11 @@
 {
   "schema": "e4-sealed-constants",
-  "version": "0.1",
+  "version": "0.2",
   "compatibility_boundary": {
     "substrate_config_id": "procedural-rest-v1-default",
     "substrate_kind": "procedural-rest-v1",
     "substrate_version": "procedural-rest-v1.0",
-    "meter_version": null
+    "meter_version": "e4-drift-meter-v1"
   },
   "op_mix": {
     "weights": { "drift_opportunity": 0.5, "additive": 0.4, "behavior_preserving": 0.1 },
@@ -39,7 +39,7 @@
     "per_arm": true
   },
   "meter_rules": {
-    "convention_aggregation_min_items": null
+    "convention_aggregation_min_items": 3
   },
   "interpretability": {
     "min_replay_valid_paired_seeds": 2,

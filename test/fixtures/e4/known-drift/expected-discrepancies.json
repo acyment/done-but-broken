@@ -1,0 +1,85 @@
+{
+  "note": "Hand-derived from ground-truth-ir.json vs workspace/{specs/*,registry.ts,schema.ts}, independent of the meter's own output. test/e4-meter.test.ts asserts the meter reports exactly this set (zero false negatives, checked separately against the twin for zero false positives).",
+  "discrepancies": [
+    {
+      "kind": "endpoint",
+      "class": "contradiction",
+      "direction": "spec_vs_truth",
+      "item_id": "endpoint:Widget:update",
+      "semantic_item_uid": "uid-fx-endpoint-widget-update"
+    },
+    {
+      "kind": "endpoint",
+      "class": "stale_claim",
+      "direction": "spec_vs_truth",
+      "item_id": "endpoint:Category:delete",
+      "semantic_item_uid": "spec-only:endpoint:Category:delete"
+    },
+    {
+      "kind": "field",
+      "class": "contradiction",
+      "direction": "spec_vs_truth",
+      "item_id": "field:Widget.price",
+      "semantic_item_uid": "uid-fx-field-widget-price"
+    },
+    {
+      "kind": "field",
+      "class": "coverage_gap",
+      "direction": "spec_vs_truth",
+      "item_id": "field:Widget.available",
+      "semantic_item_uid": "uid-fx-field-widget-in-stock",
+      "note": "missed-rename row (1 of 2): shares a UID with the stale_claim below via rename-lineage.json — one episode, not two"
+    },
+    {
+      "kind": "field",
+      "class": "coverage_gap",
+      "direction": "spec_vs_truth",
+      "item_id": "field:Widget.notes",
+      "semantic_item_uid": "uid-fx-field-widget-notes",
+      "note": "delete-then-re-add row (re-add half): a fresh UID, distinct from the deleted category_id field's pseudo-UID below"
+    },
+    {
+      "kind": "field",
+      "class": "stale_claim",
+      "direction": "spec_vs_truth",
+      "item_id": "field:Widget.in_stock",
+      "semantic_item_uid": "uid-fx-field-widget-in-stock",
+      "note": "missed-rename row (2 of 2)"
+    },
+    {
+      "kind": "field",
+      "class": "stale_claim",
+      "direction": "spec_vs_truth",
+      "item_id": "field:Widget.category_id",
+      "semantic_item_uid": "spec-only:field:Widget.category_id",
+      "note": "delete-then-re-add row (delete half): a genuine delete, no rename-lineage entry, so the meter assigns a stable spec-only pseudo-UID"
+    },
+    {
+      "kind": "convention",
+      "class": "contradiction",
+      "direction": "spec_vs_truth",
+      "item_id": "convention:error-format",
+      "semantic_item_uid": "uid-fx-convention-error-format"
+    },
+    {
+      "kind": "convention",
+      "class": "coverage_gap",
+      "direction": "spec_vs_truth",
+      "item_id": "convention:structural-storage",
+      "semantic_item_uid": "uid-fx-convention-structural"
+    },
+    {
+      "kind": "convention",
+      "class": "contradiction",
+      "direction": "code_vs_truth",
+      "item_id": "endpoint:Category:analytics",
+      "semantic_item_uid": "uid-fx-endpoint-category-stats",
+      "note": "registry-bypass row: executor evidence shows this endpoint passing while the registry doesn't declare it, so it's attributed to the conventions channel, never a plain endpoint coverage_gap"
+    }
+  ],
+  "expected_registry_bypass": [{ "item_id": "endpoint:Category:analytics" }],
+  "expected_identity_semantics": {
+    "missed_rename_episode_count": 1,
+    "delete_then_readd_episode_count": 2
+  }
+}

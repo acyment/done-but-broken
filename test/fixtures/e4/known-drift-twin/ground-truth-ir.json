@@ -1,0 +1,174 @@
+{
+  "entities": [
+    {
+      "semantic_item_uid": "uid-fx-entity-category",
+      "name": "Category",
+      "fields": [
+        {
+          "semantic_item_uid": "uid-fx-field-category-id",
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "semantic_item_uid": "uid-fx-field-category-name",
+          "name": "name",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "semantic_item_uid": "uid-fx-entity-widget",
+      "name": "Widget",
+      "fields": [
+        {
+          "semantic_item_uid": "uid-fx-field-widget-id",
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "semantic_item_uid": "uid-fx-field-widget-name",
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "semantic_item_uid": "uid-fx-field-widget-price",
+          "name": "price",
+          "type": "decimal",
+          "required": true
+        },
+        {
+          "semantic_item_uid": "uid-fx-field-widget-in-stock",
+          "name": "available",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "semantic_item_uid": "uid-fx-field-widget-notes",
+          "name": "notes",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "endpoints": [
+    {
+      "semantic_item_uid": "uid-fx-endpoint-category-create",
+      "entity": "Category",
+      "kind": "create",
+      "method": "POST",
+      "path": "/categories"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-category-read",
+      "entity": "Category",
+      "kind": "read",
+      "method": "GET",
+      "path": "/categories/{id}"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-category-update",
+      "entity": "Category",
+      "kind": "update",
+      "method": "PUT",
+      "path": "/categories/{id}"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-category-list",
+      "entity": "Category",
+      "kind": "list",
+      "method": "GET",
+      "path": "/categories"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-category-stats",
+      "entity": "Category",
+      "kind": "analytics",
+      "method": "GET",
+      "path": "/categories/stats"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-widget-create",
+      "entity": "Widget",
+      "kind": "create",
+      "method": "POST",
+      "path": "/widgets"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-widget-read",
+      "entity": "Widget",
+      "kind": "read",
+      "method": "GET",
+      "path": "/widgets/{id}"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-widget-update",
+      "entity": "Widget",
+      "kind": "update",
+      "method": "PATCH",
+      "path": "/widgets/{id}"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-widget-delete",
+      "entity": "Widget",
+      "kind": "delete",
+      "method": "DELETE",
+      "path": "/widgets/{id}"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-widget-list",
+      "entity": "Widget",
+      "kind": "list",
+      "method": "GET",
+      "path": "/widgets"
+    },
+    {
+      "semantic_item_uid": "uid-fx-endpoint-widget-stats",
+      "entity": "Widget",
+      "kind": "analytics",
+      "method": "GET",
+      "path": "/widgets/stats"
+    }
+  ],
+  "validation_rules": [
+    {
+      "semantic_item_uid": "uid-fx-rule-widget-price-range",
+      "entity": "Widget",
+      "field": "price",
+      "kind": "range",
+      "detail": {
+        "min": 0
+      }
+    }
+  ],
+  "conventions": [
+    {
+      "semantic_item_uid": "uid-fx-convention-naming",
+      "convention_id": "naming-endpoints",
+      "kind": "naming",
+      "statement": "Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories)."
+    },
+    {
+      "semantic_item_uid": "uid-fx-convention-error-format",
+      "convention_id": "error-format",
+      "kind": "error_format",
+      "statement": "Error responses are JSON bodies of the shape { \"error\": { \"type\": string, \"detail\": string } }."
+    },
+    {
+      "semantic_item_uid": "uid-fx-convention-command",
+      "convention_id": "cmd-test",
+      "kind": "command",
+      "statement": "Run `bun run spec` to execute the acceptance test suite against a running server."
+    },
+    {
+      "semantic_item_uid": "uid-fx-convention-structural",
+      "convention_id": "structural-storage",
+      "kind": "structural",
+      "statement": "All persistent state access goes through src/storage.ts; no module reads or writes state directly."
+    }
+  ]
+}
