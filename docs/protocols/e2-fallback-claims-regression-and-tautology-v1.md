@@ -18,6 +18,7 @@ evidence; each names what would have to be run before any public statement.
 tests are systematically tautological — they encode the implementation, not the requirement."**
 
 ### Why this is the right first fallback
+
 - It is the MECHANISM behind the main wedge, not a competitor to it. If the wedge holds, this
   explains it; if the wedge collapses at the frontier, this claim survives (frontier models
   saturate small-task OUTCOMES while their self-tests remain observational — few assertions,
@@ -25,6 +26,7 @@ tests are systematically tautological — they encode the implementation, not th
 - It does not require the two-arm harness, powered task pools, or blind spec authoring.
 
 ### Evidence already in hand (2026-07-04)
+
 1. **Published**: tests generated from incorrect code wrongly pass that code ~34.8% of the time,
    47% worse fault detection (Huang et al., arXiv 2409.09464); LLM suites reach human-level
    coverage with ~4x worse fault detection (arXiv 2606.08588); frontier agents average ~5
@@ -40,6 +42,7 @@ tests are systematically tautological — they encode the implementation, not th
    Each such event is a measured tautology-in-the-wild.
 
 ### Re-entry path (in order, cheapest first)
+
 1. Zero-compute: mine existing calibration transcripts (bash_call_log) — classify control
    verification behavior (wrote tests? ran repo suite? print-only?) and cross those against
    sealed-spec verdicts. The flash run with gap=1/6 is the first candidate tautology event.
@@ -51,6 +54,7 @@ tests are systematically tautological — they encode the implementation, not th
    the rate for [mid-tier] is Y, for [frontier] Z." No treatment arm needed at all.
 
 ### Honest limits
+
 - It is a mechanism/diagnosis claim, not a product-outcome claim. It licenses "independent
   executable contracts address a real, measured failure mode" — not "HIT-SDD wins."
 - Fairness caveat: an agent may reasonably scope its tests narrower than the spec; a tautology
@@ -65,6 +69,7 @@ tests are systematically tautological — they encode the implementation, not th
 change accumulates silent breakage."**
 
 ### Why it is parked, with receipts
+
 - E1 ran this to ground on single-shot tasks: **~3% regression base rate on clean runs, zero
   confirmed true regressions** (`path-survival-discrimination-power` finding). You cannot show
   protection against something that almost never happens per single change.
@@ -75,6 +80,7 @@ change accumulates silent breakage."**
   (`frontier-feedback-structural-ceiling`).
 
 ### Why it is NOT dead — two structural advantages waiting
+
 1. **No blind authoring needed.** The regression oracle is the repo's own existing (pass-to-pass)
    test suite. The entire spec-authoring bottleneck that consumed Stage-0 (four failed frontier
    screens, the lawyer-gate tension) does not exist for this claim.
@@ -87,6 +93,7 @@ change accumulates silent breakage."**
    §2 M6) — sequences are where that channel compounds.
 
 ### Re-entry path
+
 1. Design first (no build): a multi-change sequential environment — one repo, an ordered backlog
    of 5–10 related changes (real merged-PR chains are a candidate source), both arms do the whole
    sequence; treatment's harness re-runs the accumulated executable spec each change; control has
@@ -101,6 +108,7 @@ change accumulates silent breakage."**
    budget pressure across a sequence).
 
 ### Honest limits
+
 - A new environment class = new validity review (task-sequence realism, order effects,
   budget-per-change fairness) before any evidence run.
 - The June structural critique applies until sequences demonstrably reopen the base rate: if
@@ -111,10 +119,10 @@ change accumulates silent breakage."**
 
 ## Relationship to the main wedge (decision map)
 
-| Main-wedge outcome | What these claims become |
-| --- | --- |
-| Wedge holds (mid-tier or broader) | B = the mechanism section of the same story; A = the follow-up program for the Iterative half |
-| Wedge collapses at frontier only | Lead with mid-tier wedge + B as mechanism; A unchanged |
+| Main-wedge outcome                                       | What these claims become                                                                                                                                  |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Wedge holds (mid-tier or broader)                        | B = the mechanism section of the same story; A = the follow-up program for the Iterative half                                                             |
+| Wedge collapses at frontier only                         | Lead with mid-tier wedge + B as mechanism; A unchanged                                                                                                    |
 | Wedge collapses everywhere (operator's stated intuition) | B becomes the primary near-term public claim (cheap, evidenced, survives saturation); A becomes the primary EXPERIMENTAL program (sequential environment) |
 
 Related memory: `frontier-feedback-structural-ceiling`, `path-survival-discrimination-power`,

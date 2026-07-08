@@ -12,6 +12,7 @@ weak items, and propose mechanisms the dossier never mentions. That preserves th
 mechanism-generation that unprimed critiques have historically delivered.
 
 ---
+
 ---
 
 ## PROMPT A — evidence dossier (for deep-research tools)
@@ -78,6 +79,7 @@ Do not build a taxonomy, do not rank task types, do not give recommendations —
 stage's job. Your dossier will be judged on regime discipline and citation accuracy.
 
 ---
+
 ---
 
 ## PROMPT B — mechanism taxonomy and task selection (for thinking models; paste dossiers below)
