@@ -138,6 +138,10 @@ export type E4TaskTermination =
   | "done" | "agent_stalled" | "budget_exhausted"        // agent-behavior classes (E1 taxonomy kept)
   | "invalid_integrity" | "provider_error"
   | "spend_cap_reached" | "executor_error";              // infrastructure classes
+// [M3, R1-B1/R2-5] executor_error is a CLOSED infra enumeration (spawn-before-agent-code failure,
+// harness port-allocation/bind failure, executor internal crash, OS transport fault) with a
+// required classification_rationale; every other readiness failure is agent/workspace-caused —
+// scored cumulative_pass=0, sequence continues, never an executor_error (see ADR-006 M3 update).
 
 export type E4TaskPhase = "spec" | "implementation";     // recorded on every termination/event
 

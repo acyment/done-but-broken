@@ -17,9 +17,13 @@ export interface E4ArmPolicy {
 const NO_RESTRICTIONS: E4WorkflowGuards = { extra_read_only_prefixes: [], extra_protected_directories: [] };
 
 // Arm H's ADR-003 phase writability: spec phase locks code out, implementation phase locks the
-// spec out. The paths mirror the substrate's own layout (ADR-001 scaffold + specs/ artifacts).
+// spec out. NOTE (M3): the generated workspace keeps app code at the ROOT (server.ts, schema.ts…),
+// not under src/, and prefix lists cannot express "everything except specs/" — so the NORMATIVE
+// write decision for Arm H is E4ArmHTaskGate.evaluateWriteAccess (src/e4/gate.ts, whitelist
+// semantics). The M4 runner must route every FILE-replacement path through the gate when
+// gate_enabled; this prefix skeleton remains only as the declared-channel shape for parity.
 const ARM_H_SPEC_PHASE_GUARDS: E4WorkflowGuards = {
-  extra_read_only_prefixes: ["src/"],
+  extra_read_only_prefixes: ["server.ts", "storage.ts", "registry.ts", "schema.ts", "seed.ts"],
   extra_protected_directories: []
 };
 const ARM_H_IMPLEMENTATION_PHASE_GUARDS: E4WorkflowGuards = {

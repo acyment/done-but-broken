@@ -54,12 +54,73 @@ describe("E4 constants validate and hash under their own lineage", () => {
     expect(constants.compatibility_boundary.substrate_version).not.toBeNull();
   });
 
-  test("[M2] the on-disk draft carries M2's sealed meter_version and convention_aggregation_min_items (v0.2)", () => {
+  test("[M2] the on-disk draft carries M2's sealed meter_version and convention_aggregation_min_items", () => {
     const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
 
-    expect(constants.version).toBe("0.2");
     expect(constants.compatibility_boundary.meter_version).not.toBeNull();
     expect(constants.meter_rules.convention_aggregation_min_items).not.toBeNull();
+  });
+
+  test("[M3] the on-disk draft carries the sealed executor determinism parameters (v0.3)", () => {
+    const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
+
+    expect(constants.version).toBe("0.3");
+    expect(constants.executor).not.toBeNull();
+    expect(constants.executor?.fixed_order).toBe(true);
+    expect(constants.executor?.port).toBe(0);
+    expect(constants.executor?.readiness_timeout_ms).toBeGreaterThan(0);
+    expect(constants.executor?.request_timeout_ms).toBeGreaterThan(0);
+  });
+
+  test("[M3] [R1-S2/S4] the sealed Arm-H gate protocol text carries the §3.3 affirmation handshake verbatim", () => {
+    const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
+    const protocol = constants.protocol_text?.arm_h_gate_protocol ?? "";
+
+    // The handshake must be documented, never latent: an undocumented spec-phase exit makes Arm-H
+    // agents stall hunting for it, and those turns land in the freshness tax as a fake H5 penalty.
+    expect(protocol).toContain("<<<DONE>>>");
+    expect(protocol).toContain("byte-for-byte unchanged");
+    expect(protocol).toContain("verification (smoke) command");
+    expect(protocol).toContain("at least once during the spec phase");
+    // Both phase contracts are described.
+    expect(protocol).toContain("SPEC PHASE");
+    expect(protocol).toContain("IMPLEMENTATION PHASE");
+    // And the Claim-B/B1 lever: refusal semantics are stated to the agent.
+    expect(protocol).toContain("refused");
+  });
+
+  test("[M3] rejects an executor seal that is present but incomplete or drifted", () => {
+    const sealed = {
+      readiness_timeout_ms: 10000,
+      request_timeout_ms: 5000,
+      readiness_poll_interval_ms: 25,
+      fixed_order: true,
+      port: 0,
+      retry_policy: "single-attempt-no-retry-arm-independent"
+    };
+
+    expect(() => validateE4Constants({ ...validDraft(), executor: { ...sealed, fixed_order: false } })).toThrow(
+      /executor must be null or a fully-populated/
+    );
+    expect(() => validateE4Constants({ ...validDraft(), executor: { ...sealed, port: 3000 } })).toThrow(
+      /executor must be null or a fully-populated/
+    );
+    expect(() => validateE4Constants({ ...validDraft(), executor: { readiness_timeout_ms: 10000 } })).toThrow(
+      /executor must be null or a fully-populated/
+    );
+    expect(() => validateE4Constants({ ...validDraft(), executor: sealed })).not.toThrow();
+  });
+
+  test("[M3] rejects protocol_text without arm_h_gate_protocol or with non-string surfaces", () => {
+    expect(() => validateE4Constants({ ...validDraft(), protocol_text: {} })).toThrow(
+      /arm_h_gate_protocol is required/
+    );
+    expect(() =>
+      validateE4Constants({ ...validDraft(), protocol_text: { arm_h_gate_protocol: "text", extra: 42 } })
+    ).toThrow(/must be a non-empty string/);
+    expect(() =>
+      validateE4Constants({ ...validDraft(), protocol_text: { arm_h_gate_protocol: "gate protocol text" } })
+    ).not.toThrow();
   });
 
   test("loadE4Constants validates and hashes the draft; the hash is stable across loads", async () => {

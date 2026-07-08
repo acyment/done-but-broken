@@ -274,6 +274,29 @@ protocol text**, including the §3.3 **affirmation handshake verbatim** — the 
 read how to exit the spec phase, or its confusion turns inflate the freshness tax as a fake H5
 penalty (see §4 `protocol_text`).
 
+**[M3 execution notes, 2026-07-08 — reality diverged in three places, recorded per the
+"update the doc if reality diverged" rule:]**
+
+1. **Broken-`package.json` fixture re-realized.** bun 1.3.x *tolerates* a malformed `package.json`
+   when running `bun server.ts` (parse warning, boot continues — verified empirically), so that
+   named presentation cannot produce a readiness failure on this runtime. The agent-caused
+   config-breakage fixture is realized as a **corrupted generated data file (`seed.ts`)** instead
+   (same classification class, same default direction), and bun's tolerance is itself pinned by a
+   test (`test/e4-oracle-executor.test.ts` "reality pin") so a runtime change resurfaces the
+   original fixture. The other four fixtures are implemented as named.
+2. **M1 latent bug caught by the executor's first real oracle run** (T0 had never been executed
+   against its own acceptance set before M3): the generated server validated required fields
+   against `validationRules` of kind `"required"`, which by design never exists (required-ness
+   lives on `field.required` only), so the T0 app accepted invalid creates while its generated
+   tests expected 400. Fixed in `scaffold.ts` (server reads `entitySchemas` field.required);
+   `substrate_version` bumped to `procedural-rest-v1.1` (pre-freeze draft, no runs existed).
+3. **Error-format assertions narrowed to what the spec pins.** M1's testgen asserted an *exact
+   example body* (fixed wording) for error-envelope tests; the convention statement only pins the
+   envelope **shape** `{ "error": { <k1>: string, <k2>: string } }`, and an agent cannot derive
+   message wording from any spec artifact — exact-wording assertions would be oracle overreach
+   producing false task-failures in every arm. `E4HttpExpectation` gains `error_envelope_keys`
+   (exact key structure + string leaf types); the executor evaluates it; no assertion on wording.
+
 ---
 
 ### M4 — Sequential runner, arm policy wiring, turn adapter, snapshot/resume (ADR-005; Feature 4)

@@ -170,7 +170,10 @@ describe("Arm policy objects (architecture §2.3)", () => {
     const implGuards = E4_ARM_POLICIES.e4_arm_h.phaseGuards("implementation");
 
     expect(specGuards).not.toEqual(implGuards);
-    expect(specGuards.extra_read_only_prefixes).toContain("src/");
+    // M3: workspace app code lives at the root (server.ts etc., not src/); the normative Arm-H
+    // write decision is gate.ts's evaluateWriteAccess — these prefixes are the declared shape.
+    expect(specGuards.extra_read_only_prefixes).toContain("server.ts");
+    expect(specGuards.extra_read_only_prefixes).toContain("schema.ts");
     expect(implGuards.extra_read_only_prefixes).toContain("specs/");
   });
 

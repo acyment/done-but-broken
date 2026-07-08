@@ -168,10 +168,14 @@ function matchRoute(method: string, pathname: string): { route: E4RouteDefinitio
   return null;
 }
 
+// Required-ness lives on the field schema (field.required) — validationRules never carries a
+// "required" kind (see schema.ts note), so this reads entitySchemas, the same source the spec's
+// \`required\` array is generated from.
 function firstMissingRequiredField(entityName: string, body: Record<string, unknown>): string | null {
-  for (const rule of validationRules) {
-    if (rule.entity === entityName && rule.kind === "required" && (body[rule.field] === undefined || body[rule.field] === null)) {
-      return rule.field;
+  const entity = entitySchemas.find((candidate) => candidate.name === entityName);
+  for (const field of entity?.fields ?? []) {
+    if (field.required && (body[field.name] === undefined || body[field.name] === null)) {
+      return field.name;
     }
   }
   return null;

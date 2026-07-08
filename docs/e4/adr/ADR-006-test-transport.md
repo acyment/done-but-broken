@@ -38,10 +38,17 @@ nondeterminism (ports, timing, server lifecycle) as a threat to replay-validity.
   whitespace-normalized) + status code + selected headers named by the test definition. Timing is
   never asserted.
 - **Timeouts:** readiness and per-request timeouts are sealed E4 constants (not tunables), so a
-  timeout is a classified infrastructure outcome, not silent flake. Executor-level failures
-  (server never ready, port bind failure) are recorded as `executor_error` — an infrastructure
-  class distinct from test failure, preserving the estate's agent-behavior vs infrastructure
-  separation (DISCOVERY §1.6).
+  timeout is a classified outcome, not silent flake. **[M3 update, per R1-B1/R2-5 — supersedes the
+  original blanket-`executor_error` wording of this bullet:]** `executor_error` is a **closed infra
+  enumeration**: {workspace-process spawn failure before agent code runs, harness
+  port-allocation/bind failure (incl. EADDRINUSE on the harness-allocated port), executor internal
+  crash, OS-level transport fault}, each carrying a required `classification_rationale`. **Every
+  other readiness failure defaults to agent/workspace-caused** — compile errors, corrupted
+  workspace files, and infinite startup loops presenting as readiness timeouts are returned as
+  `readiness_failed` (classification `agent_workspace`), scored `oracle.cumulative_pass = 0`, and
+  the sequence continues; they stay in agent-behavior accounting and feed the floor rule. This
+  preserves the estate's agent-behavior vs infrastructure separation (DISCOVERY §1.6) without
+  letting an agent's own broken server launder itself into infrastructure.
 - **Artifacts (injection 4, normative):** every executor run writes the full request/response
   transcript (method, path, headers-as-sent, body, status, body-as-received, canonicalized form)
   plus server stdout/stderr into the run bundle. Replay re-executes the suite against the

@@ -45,14 +45,31 @@ export type E4PhrasingPools = {
   pool_ids: string[];
 };
 
+// Sealed at M3 (ADR-006): the executor's determinism parameters. Timeouts are sealed constants so
+// a timeout is a classified outcome, never silent flake; the retry policy is arm-independent by
+// construction (one string, no per-arm variants).
+export type E4ExecutorSeal = {
+  readiness_timeout_ms: number;
+  request_timeout_ms: number;
+  readiness_poll_interval_ms: number;
+  fixed_order: true;
+  port: 0;
+  retry_policy: string;
+};
+
+// [R1-S2] Sealed condition-rendering TEXT surfaces. Keys accrete per owning milestone (M3 seals
+// arm_h_gate_protocol incl. the §3.3 affirmation handshake verbatim; M4 seals the grammar/arm-M/
+// noticing strings); once the block is non-null, arm_h_gate_protocol must be present.
+export type E4ProtocolText = Record<string, string>;
+
 export type E4SealedConstants = {
   schema: "e4-sealed-constants";
   version: string; // "0", "0.1", "0.2" … draft; non-budget frozen M6, budgets M6.5
   compatibility_boundary: E4CompatibilityBoundary;
   op_mix: E4OpMixSeal | null; // sealed M1
   phrasing_pools: E4PhrasingPools | null; // sealed M1
-  executor: Record<string, unknown> | null; // sealed M3
-  protocol_text: Record<string, unknown> | null; // sealed M3/M4
+  executor: E4ExecutorSeal | null; // sealed M3
+  protocol_text: E4ProtocolText | null; // sealed M3/M4
   budgets: E4Budgets | null; // slots M4, values frozen M6.5
   feedback: Record<string, unknown> | null; // sealed M4
   snapshot: Record<string, unknown> | null; // sealed M4
@@ -125,10 +142,20 @@ export function validateE4Constants(raw: unknown): E4SealedConstants {
 
   validateCompatibilityBoundary(constants.compatibility_boundary);
 
-  for (const key of ["executor", "protocol_text", "feedback", "snapshot"] as const) {
+  for (const key of ["feedback", "snapshot"] as const) {
     if (!isRecordOrNull(constants[key])) {
       throw new E4ConstantsValidationError(`${key} must be an object or null until its owning milestone seals it`);
     }
+  }
+
+  if (constants.executor !== null && !isValidExecutorSeal(constants.executor)) {
+    throw new E4ConstantsValidationError(
+      "executor must be null or a fully-populated E4ExecutorSeal (positive timeouts, fixed_order=true, port=0, retry_policy string)"
+    );
+  }
+
+  if (constants.protocol_text !== null) {
+    validateProtocolText(constants.protocol_text);
   }
 
   if (constants.op_mix !== null && !isValidOpMixSeal(constants.op_mix)) {
@@ -179,6 +206,39 @@ function isValidOpMixSeal(value: unknown): value is E4OpMixSeal {
   );
 
   return weightsValid && isPositiveInteger(value.min_behavior_preserving_tasks);
+}
+
+function isValidExecutorSeal(value: unknown): value is E4ExecutorSeal {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    isPositiveInteger(value.readiness_timeout_ms) &&
+    isPositiveInteger(value.request_timeout_ms) &&
+    isPositiveInteger(value.readiness_poll_interval_ms) &&
+    value.fixed_order === true &&
+    value.port === 0 &&
+    typeof value.retry_policy === "string" &&
+    value.retry_policy.length > 0
+  );
+}
+
+function validateProtocolText(value: unknown): asserts value is E4ProtocolText {
+  if (!isRecord(value)) {
+    throw new E4ConstantsValidationError("protocol_text must be an object or null until M3 seals it");
+  }
+
+  for (const [key, text] of Object.entries(value)) {
+    if (typeof text !== "string" || text.length === 0) {
+      throw new E4ConstantsValidationError(`protocol_text.${key} must be a non-empty string (sealed verbatim text surface)`);
+    }
+  }
+
+  // M3 seals the gate protocol first; any non-null protocol_text block without it is malformed.
+  if (typeof value.arm_h_gate_protocol !== "string" || value.arm_h_gate_protocol.length === 0) {
+    throw new E4ConstantsValidationError("protocol_text.arm_h_gate_protocol is required once protocol_text is sealed (M3)");
+  }
 }
 
 function isValidPhrasingPools(value: unknown): value is E4PhrasingPools {

@@ -22,6 +22,10 @@ export type E4HttpExpectation = {
   status: number;
   body?: unknown; // exact match, canonicalized (ADR-006); absent = not checked
   array_min_length?: number; // for list/filter assertions, where exact-body match would be brittle
+  // Error-format conventions assert the envelope SHAPE the convention statement actually pins —
+  // exactly { "error": { <key1>: string, <key2>: string } } — never message wording: an agent
+  // cannot derive exact wording from any spec artifact, so wording is not oracle-assertable.
+  error_envelope_keys?: [string, string];
   headers?: Record<string, string>;
 };
 
@@ -77,15 +81,13 @@ function defaultValueForField(ir: E4SchemaIR, field: E4EntityField, n: number): 
   return typeDefaults[field.type]();
 }
 
-const ERROR_FORMAT_SHAPES: Record<string, unknown> = {
-  'Error responses are JSON bodies of the shape { "error": { "code": string, "message": string } }.':
-    { error: { code: "not_found", message: "resource not found" } },
-  'Error responses are JSON bodies of the shape { "error": { "type": string, "detail": string } }.':
-    { error: { type: "not_found", detail: "resource not found" } }
+const ERROR_FORMAT_ENVELOPE_KEYS: Record<string, [string, string]> = {
+  'Error responses are JSON bodies of the shape { "error": { "code": string, "message": string } }.': ["code", "message"],
+  'Error responses are JSON bodies of the shape { "error": { "type": string, "detail": string } }.': ["type", "detail"]
 };
 
-function errorEnvelopeShape(statement: string): unknown | null {
-  return ERROR_FORMAT_SHAPES[statement] ?? null;
+function errorEnvelopeKeys(statement: string): [string, string] | null {
+  return ERROR_FORMAT_ENVELOPE_KEYS[statement] ?? null;
 }
 
 function endpointsFor(ir: E4SchemaIR, entity: E4Entity) {
@@ -100,7 +102,7 @@ function entityCrudTests(ir: E4SchemaIR, entity: E4Entity): E4HttpTest[] {
   const tests: E4HttpTest[] = [];
   const endpoints = endpointsFor(ir, entity);
   const errorFormatConvention = ir.conventions.find((convention) => convention.kind === "error_format");
-  const errorShape = errorFormatConvention ? errorEnvelopeShape(errorFormatConvention.statement) : null;
+  const envelopeKeys = errorFormatConvention ? errorEnvelopeKeys(errorFormatConvention.statement) : null;
 
   const create = endpoints.find((endpoint) => endpoint.kind === "create");
   if (create) {
@@ -125,13 +127,13 @@ function entityCrudTests(ir: E4SchemaIR, entity: E4Entity): E4HttpTest[] {
       expected: { status: 200, body: buildSeedRow(ir, entity, 1) }
     });
 
-    if (errorShape) {
+    if (envelopeKeys) {
       tests.push({
         test_id: `${entity.name}-read-missing`,
         description: `reading a nonexistent ${entity.name} reports the error envelope`,
         source_item_uid: read.semantic_item_uid,
         request: { method: read.method, path: pathWithId(read.path, `${entity.name.toLowerCase()}-does-not-exist`) },
-        expected: { status: 404, body: errorShape }
+        expected: { status: 404, error_envelope_keys: envelopeKeys }
       });
     }
   }
@@ -163,13 +165,13 @@ function entityCrudTests(ir: E4SchemaIR, entity: E4Entity): E4HttpTest[] {
     });
 
     const readAfterDelete = endpoints.find((endpoint) => endpoint.kind === "read");
-    if (readAfterDelete && errorShape) {
+    if (readAfterDelete && envelopeKeys) {
       tests.push({
         test_id: `${entity.name}-read-after-delete`,
         description: `a deleted ${entity.name} is gone`,
         source_item_uid: del.semantic_item_uid,
         request: { method: readAfterDelete.method, path: pathWithId(readAfterDelete.path, seedId(entity.name, 2)) },
-        expected: { status: 404, body: errorShape }
+        expected: { status: 404, error_envelope_keys: envelopeKeys }
       });
     }
   }
@@ -224,7 +226,7 @@ function requiredFieldTests(ir: E4SchemaIR, entity: E4Entity): E4HttpTest[] {
   }
 
   const errorFormatConvention = ir.conventions.find((convention) => convention.kind === "error_format");
-  const errorShape = errorFormatConvention ? errorEnvelopeShape(errorFormatConvention.statement) : null;
+  const envelopeKeys = errorFormatConvention ? errorEnvelopeKeys(errorFormatConvention.statement) : null;
 
   return entity.fields
     .filter((field) => field.required && field.name !== "id")
@@ -238,7 +240,7 @@ function requiredFieldTests(ir: E4SchemaIR, entity: E4Entity): E4HttpTest[] {
         description: `creating a ${entity.name} without ${field.name} is rejected`,
         source_item_uid: field.semantic_item_uid,
         request: { method: create.method, path: create.path, body: invalidRow },
-        expected: { status: 400, ...(errorShape ? { body: errorShape } : {}) }
+        expected: { status: 400, ...(envelopeKeys ? { error_envelope_keys: envelopeKeys } : {}) }
       };
     });
 }

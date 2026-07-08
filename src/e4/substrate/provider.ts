@@ -12,7 +12,10 @@ import type { E4ChangeOpKind } from "./ops";
 import type { E4OpportunityLabel } from "../types";
 
 export const SUBSTRATE_KIND = "procedural-rest-v1" as const;
-export const SUBSTRATE_VERSION = "procedural-rest-v1.0";
+// v1.1 (M3): T0 server required-field validation fixed to read entitySchemas' field.required —
+// the executor's first real oracle run against T0 caught the v1.0 server never rejecting missing
+// required fields (validationRules carries no "required" kind by design).
+export const SUBSTRATE_VERSION = "procedural-rest-v1.1";
 
 export type E4SubstrateConfig = {
   substrate_config_id: string;
