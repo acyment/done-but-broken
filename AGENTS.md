@@ -48,6 +48,49 @@ The OpenSpec workflow is permitted as a shared task-environment property under t
 
 The archived sibling repository is read-only salvage material. Active runtime code must not import modules from it by relative path.
 
+## E4 Experiment Boundary — Drift Velocity
+
+E4 ("HIT-SDD Bench — Drift Velocity") is a separate longitudinal program in this repo: one agent
+executes a seeded sequence of tasks on one evolving procedurally-generated codebase, one fork per arm,
+measuring how fast agent-maintained spec artifacts and code diverge ("drift velocity") and whether
+mechanical enforcement holds them together. E4 is governed by this section plus the shared
+scientific-discipline rules below; nothing in this section alters E1, E2, or E3.
+
+- E4 has exactly three condition IDs, valid only within the E4 boundary:
+  - `e4_arm_0` — control: spec artifacts present and in sync at T0; no instruction to maintain them.
+  - `e4_arm_m` — prompt-only discipline: identical to `e4_arm_0` plus a standing instruction to keep
+    spec artifacts current; no gate, no acceptance oracle.
+  - `e4_arm_h` — mechanically enforced gate + acceptance oracle (enforcement mechanics fixed by ADR
+    before any evidence-generating run).
+- The two-condition freeze above ("The active pilot has exactly two condition IDs") is the E1 pilot
+  freeze and remains in force for E1. E4 condition IDs never appear in E1 protocol code, and
+  `context_only_spec` / `feedback_capable_spec` never appear as E4 arms.
+- The strings HIT-SDD, OpenSpec, BDD, Gherkin, Three Amigos, and ordinary-test names remain banned as
+  condition IDs or arm names in E4 as everywhere else; E4 arms are referred to only as
+  `e4_arm_0` / `e4_arm_m` / `e4_arm_h` (short form: arms 0/M/H).
+- E4 runs are never pooled with E1, E2, or E3 runs, nor across E4 meter versions or constants
+  versions. The E4 compatibility boundary is (constants version, meter version, substrate config);
+  `substrate_seed` values are replicates *within* a boundary, aggregated per the pre-registered
+  analysis. Cross-config aggregation is permitted only as a pre-registered secondary analysis. Each
+  E4 run's manifest records its compatibility boundary.
+- E4 uses its own sealed-constants lineage (`e4-sealed-constants`, starting at a 0.x draft and sealed
+  before evidence-generating runs). The E1 seal
+  (`docs/protocols/e1-frontier-sealed-constants-v1.0.json`, v1.0.0) is never modified, and E1 must
+  remain runnable and reproduce its sealed behavior after every E4 change.
+- Adding the E4 arms is permitted only with the protocol tests the guardrails below already require:
+  condition rendering, feedback gating, budget fairness, compatibility, and result schema behavior —
+  extended for E4 with meter isolation (agents never see drift-meter output; the acceptance oracle is
+  never the meter) and gate-parity tests: identical task text, budgets, and retry policy across arms;
+  arms differ only through their declared policy channel (`e4_arm_m`: the standing spec-maintenance
+  instruction; `e4_arm_h`: gate + oracle feedback), each arm's declared delta pinned by an allowlist
+  parity validator (follow the `validateE1RuntimeArmParity` precedent).
+- Replay-validity rule (stricter than E1): every E4 run retains patch text, full traces, and all
+  artifacts needed to replay it. A run missing any of these is classified non-replay-valid and is
+  excluded from headline claims. No E4 headline may rest on a non-replay-valid run.
+- The sibling repo `hit-sdd-bench-e2` is frozen for E4 purposes: readable as reference, never
+  modified, never a runtime or path dependency of E4 code.
+- All E4 evidence-generating runs are operator-authorized, per the same rule as E1/E2/E3.
+
 ## Scientific Protocol Guardrails
 
 - The primary experiment is the two-arm comparison between `context_only_spec` and `feedback_capable_spec`.
@@ -136,6 +179,7 @@ Avoid wording:
 - `regression_free_auc` is primary only for runs whose manifest declares `protocol_profile_id=path-survival-primary-v1`; older runs may mention AUC only as retrospective secondary observations.
 - Do not run provider/model experiments unless explicitly authorized.
 - Do not change primary metrics after observing outcomes, and preserve compatibility boundaries for task, provider, budget, loop policy, protocol profile, and metric definition.
+- **E4 program opened (2026-07-08, Phase 0):** the drift-velocity program is designed under `docs/e4/` with its own experiment boundary (see "E4 Experiment Boundary — Drift Velocity" above), its own condition vocabulary (arms 0/M/H as `e4_arm_0`/`e4_arm_m`/`e4_arm_h`), its own sealed-constants lineage, and a strict replay-validity rule. E4 is never pooled with E1/E2/E3. The E1 "do not add new arms" guardrail is scoped to E1; E4 arms are recorded here.
 - Do not build a general benchmark platform yet.
 
 ## Smart TDD Policy
