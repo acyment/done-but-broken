@@ -1,91 +1,223 @@
-# E4 v2 proposal — OpenSpec workspace with executable scenarios (gate proposal, DRAFT)
+# E4 v2 design — OpenSpec workspace with executable scenarios
 
-**Status: PROPOSED — awaiting operator gate review. No implementation, no runs.**
-**Drafted 2026-07-09 during the qwen-plus pilot, at operator direction ("perhaps using openspec
-(which includes gherkin), so that we also tackle the sota sdd fwk part").**
+**Status: FULL DESIGN, awaiting operator gate review before any implementation milestone.**
+Drafted 2026-07-09 at operator direction; anti-cheat design frozen from the adjudicated
+deep-research backlog (`E4V2-ANTICHEAT-ADJUDICATION.md`, items A1–A10; rejections R1–R8 are
+recorded there and not re-litigated here). Supersedes the earlier proposal draft in this file.
 
 ## 1. Motivation (from the v1 pilots)
 
-The v1 instrument produced the finding that motivates this redesign: under enforcement, agents
-keep the *code* honest (false done-claims get refused; the oracle ends near-green) while the
-*spec artifacts still rot* — because the spec is prose, nothing ever executes it, and staleness
-is therefore invisible to every arm by design (the meter is hidden). Enforcement as built rejects
-lies about code; it cannot reject lies in documentation.
+The v1 program (M0–M7b) validated every instrument and produced the finding that motivates this
+redesign. In the qwen-plus pilot (verdict `go`, pre-registered): under enforcement the agent's
+*code* stayed honest (false done-claims refused; oracle end-states near-green on tasks within
+its ability) while its *spec drifted nearly as fast as the ungated arms'* (velocity 6.17 vs
+6.33) — because the spec is prose, nothing executes it, and the gate enforces custody (the spec
+changed) rather than truth (the spec is right). Meanwhile the purest observed cell — perfect
+24/24 code with drift burden 10 after one task — shows drift decoupled from failure, and the
+standing-instruction arm was behaviorally inert (point-identical trajectory to no-instruction).
 
-The fix is the original HIT-SDD thesis, which the estate has measured *around* but never tested
-directly: **make the spec itself executable**. A stale scenario then stops being silent
-documentation debt and becomes a red check.
+The fix is the HIT-SDD thesis the estate has measured around but never tested: **make the spec
+itself executable.** A stale scenario stops being silent documentation debt and becomes a red
+check.
 
 ## 2. The design in one paragraph
 
-Every arm works in the **same real OpenSpec workspace** (pinned CLI, real
-`openspec/specs/**` + `openspec/changes/**` layout, real validate/archive steps in the task
-protocol). The spec artifacts are OpenSpec requirement files whose `#### Scenario:` blocks are
-written in a **sealed, constrained WHEN/THEN grammar** that maps 1:1 onto a **fixed harness step
-library** (HTTP steps: request, status, body fields). In the ungated arms the scenarios are
-text. In the enforced arm, the gate **executes the agent's own scenarios** as its red/green
-check. The framework, the artifacts, the workflow, and the budgets are identical everywhere;
-*whether the spec runs* is the only difference. This follows the `e1-openspec-workflow-v0`
-governance shape exactly: OpenSpec as a shared task-environment property under a declared
-profile (working name `e4-openspec-workflow-v1`), never a condition, arm, or format comparison.
+Both arms work in the **same real OpenSpec workspace** (pinned CLI 1.4.1, real
+`openspec/specs/**` + `openspec/changes/**` layout, per-task propose→implement→archive cycle
+with the archive step run by the harness identically in both arms — profile
+`e4-openspec-workflow-v1`, following the blessed `e1-openspec-workflow-v0` shared-environment
+shape). The spec's `#### Scenario:` blocks are written in a **sealed WHEN/THEN grammar** whose
+steps map 1:1 onto a **harness-owned step-pattern table** (§5). In the **prose arm** the
+scenarios are never executed. In the **executed arm** they are the acceptance gate: new
+scenarios must fail before implementation (discriminating red, §6) and the full scenario set
+must pass to accept "done". The framework, artifacts, workflow, budgets, and provider are
+identical in both arms; *whether the spec runs* is the only difference. Hidden, harness-side and
+unchanged in both arms: the ground-truth suite (true correctness), the drift meter (spec
+freshness), and the new **scenario-strength instrument** (adversarial-implementation kill score,
+§7) — so gaming the executed gate is measured, never silently rewarded.
 
-## 3. What each existing piece becomes
+Operator decisions already taken: **two arms** (the instruction arm is dropped as observed
+inert) and **frontier model (deepseek-v4-pro)** for the evidence run, dry-run fake agent as the
+only shakedown, budgets re-ratified on that model at the calibration milestone.
+
+## 3. What each v1 piece becomes
 
 | v1 piece | v2 disposition |
 | --- | --- |
-| Spec artifacts (`specs/openapi.json`, `specs/CONVENTIONS.md`) | Replaced as the agent-facing spec by OpenSpec requirement files with scenario blocks; the typed ground-truth IR stays harness-side as the referee's source of truth |
-| Gate custody check (spec changed + parses) | Custody + `openspec validate` (pinned CLI) + scenario-grammar check |
-| Gate red/green (harness-generated tests) | **The agent's own scenarios, executed** via the sealed step interpreter (red before implementation, green to accept done) |
-| Hidden ground-truth oracle | **Kept unchanged as referee**: true correctness scoring + the anti-gaming guard (below) |
-| Drift meter | Re-pointed at scenario/requirement blocks: coverage of the true surface, stale claims, plus the known OpenSpec rot surface (archive replaces whole requirement blocks) |
-| Fake agent, snapshots, replay, budgets, verdict tool | Carry over with fixture updates |
+| Spec artifacts (`specs/openapi.json`, `specs/CONVENTIONS.md`) | Replaced as the agent-facing spec by OpenSpec requirement files with scenario blocks; typed ground-truth IR stays harness-side |
+| Gate custody (spec changed + parses) | Custody + `openspec validate` (new wiring through the existing generic CLI runner) + step-grammar check + static floors (A8) |
+| Gate red/green (harness tests) | The agent's own scenarios, executed per §5–§6 |
+| Hidden oracle | Unchanged referee, runs exactly once per task close (A9) |
+| Drift meter | Re-pointed at requirement/scenario blocks: coverage + staleness vs truth; MODIFIED-replace archive semantics become a first-class measured rot channel |
+| — (new) | Scenario-strength instrument: IR-generated adversarial bank + kill score (§7) |
+| Fake agent, snapshots, replay, budgets, manifest/inspector, verdict tool, live provider | Carry over; field additions only |
 
-## 4. Anti-gaming (the vacuous-spec problem)
+## 4. Workspace, CLI, and reuse decisions
 
-An agent under an executed-spec gate can pass trivially by writing weak scenarios. Defense, same
-shape the authored-spec study landed on: the hidden ground-truth checks still score true
-correctness, and the meter reports **scenario coverage vs the true surface** as a first-class
-number. Gaming does not break the gate; it shows up as a measured coverage gap — and
-"gated agents write thin specs" would itself be a reportable finding.
+- Real OpenSpec layout: spec-of-record at `openspec/specs/<capability>/spec.md`, change deltas
+  at `openspec/changes/<change-name>/`, archive to `openspec/changes/archive/`.
+- Pinned `@fission-ai/openspec@1.4.1` (already in devDependencies); binary resolved from
+  node_modules; sealed env (telemetry off, CI, no color). Known quirks already solved in
+  `src/e1-openspec-workflow.ts`: abort detected via output text + change-dir persistence (never
+  exit code), archive dirs renamed date-independently for replay.
+- **ADR-007 allowlist gate question (decide at review):** extend the import allowlist to
+  `e1-openspec-workflow.ts`/`e1-openspec-harness.ts` (largely generic per exploration) with a
+  thin E4-owned wrapper parameterizing the E1-bound pieces (constants loader, profile id,
+  snapshot roots) — recommended — versus a full port.
+- The archive step is run by the HARNESS at task close, identically in both arms (shared
+  environment discipline; drift through MODIFIED-replace is thereby measured, not arm-specific).
 
-## 5. Claim this design can earn (per the public-claim target)
+## 5. Scenario grammar and step-to-executable semantics (the sealed core)
 
-"In a real OpenSpec workflow, agents — including frontier ones — let scenarios rot unless the
-scenarios execute." Names a real framework, uses its real CLI and layout, one causal variable,
-CTO-legible. Model tier and problem-pool difficulty remain orthogonal knobs (frontier run and the
-pre-registered pool-escalation ladder in the claim-target memory).
+### 5.1 Scenario surface (what the agent writes)
 
-## 6. Estimated shape of the work (no commitment implied)
+OpenSpec requirement files containing `#### Scenario: <title>` blocks with bolded keyword
+bullets — exactly the shape the proven `openspec-gherkin-v1` converter parses:
 
-Two to three focused sessions, all no-spend until a new calibration gate: workspace generator for
-the OpenSpec layout + pinned CLI integration (quirks known: exit-0 abort, dated archive dirs),
-scenario grammar + step interpreter over the existing HTTP executor, meter re-pointing, fake-agent
-and fixture updates, then the usual staged path (dry run → calibration → pre-registered pilot).
+```markdown
+#### Scenario: Creating a widget returns the stored entity
+- **WHEN** I send a POST request to "/widgets" with body {"id": "w9", "name": "anvil", "price": 12.5}
+- **THEN** the response status is 201
+- **AND** the response field "name" equals "anvil"
+- **WHEN** I send a GET request to "/widgets/w9"
+- **THEN** the response status is 200
+- **AND** the response field "price" equals 12.5
+```
 
-## 6.5 Prior art in the estate (operator recall, verified 2026-07-09)
+### 5.2 Pipeline: text → executable verdict
 
-The harness repo already contains a **live, proven JIT OpenSpec→Gherkin converter**:
-`hit-sdd-bench-e2/src/hit_sdd_e2/authored_spec/openspec.py` (`CONVERTER_VERSION
-"openspec-gherkin-v1"`; commits `5e85e56` converter, `48ebfd9` genuine Gherkin + pytest-bdd
-proven live, `2ab6ad2` OpenSpec authoring + step bindings, `5e50865` converter version folded
-into the sealed spec hash). It parses `#### Scenario:` headers with bolded
-`- **WHEN**/**THEN**/**AND**` bullets and derives a real `.feature` deterministically — its
-docstring is this proposal's thesis: "OpenSpec stays canonical; Gherkin is its execution view."
+1. **Parse** (`e4-openspec-gherkin-v1`, TS port of the Python converter, byte-cross-tested on
+   shared fixtures; converter id sealed in constants and stamped in every manifest): extract
+   scenario blocks → ordered `(keyword, text)` steps; And/But bind to the preceding concrete
+   keyword. A `.feature` rendering is emitted into the workspace as a derived byproduct (never
+   hand-maintained; never parsed back).
+2. **Bind** (`e4-step-table-v1`, sealed): each step's text must FULLY match exactly one pattern
+   in the harness-owned step-pattern table (§5.3), yielding a typed step AST node. Any unmatched
+   step is a grammar violation → custody failure quoting the offending line. The table is
+   anchored-regex over fully-quoted literals; a fuzz test over the parser ships with the freeze
+   (A3).
+3. **Execute** (per scenario, hermetic — A4): spawn a FRESH workspace server process
+   (harness-allocated port, v1 executor's readiness/timeout/canonicalized-JSON machinery
+   reused); run the scenario's steps in order; kill the process. Scenarios run in fixed
+   (document) order for replay determinism; isolation, not randomization, removes
+   order-dependence. Verdicts and full request/response transcripts are byte-stable and retained
+   exactly as v1 executor artifacts are.
 
-Reuse plan: port the ~40-line parse/derive rules to this repo's TypeScript under the same
-pinned-version discipline (cross-tested against the Python original's fixtures); feed parsed
-steps directly into E4's existing HTTP executor (no pytest-bdd needed); optionally still emit
-`.feature` files into the workspace as a derived byproduct for legibility. The E2 authoring
-prompts for producing grammar-compliant scenarios are also reusable for the agent-facing
-protocol text.
+### 5.3 Step-pattern table v1 (sealed; the complete executable vocabulary)
 
-## 7. Open questions for the gate
+Request steps (WHEN / AND after a WHEN):
+| Pattern (anchored; `<...>` = typed capture) | Executable semantics |
+| --- | --- |
+| `I send a GET request to "<path>"` | `fetch(base+path, {method:"GET"})`; response becomes the current response |
+| `I send a DELETE request to "<path>"` | ditto, DELETE |
+| `I send a POST request to "<path>" with body <json>` | POST with `content-type: application/json`, body = the inline JSON literal (must parse; single line) |
+| `I send a PUT request to "<path>" with body <json>` | ditto, PUT |
+| `I remember the response field "<json.path>" as "<name>"` | binds a scenario-local variable from the current response body; subsequent `<path>`/`<json>` captures may reference `{<name>}` (exact substitution) — enables create→fetch chains without seed overfitting |
 
-1. Does the propose→archive OpenSpec cycle happen once per task (matching the per-task change
-   granularity) or once per sequence? (Per task matches how OpenSpec is actually used.)
-2. Do the ungated arms keep the standing-instruction arm, given its observed inertness — or does
-   v2 drop to two arms (prose vs executed) for budget?
-3. Scenario grammar scope: HTTP-request steps only (v1-equivalent coverage), or include the
-   conventions channel (error-envelope shape steps)?
-4. Does v1's bespoke-substrate lineage continue in parallel for comparability, or is it retired
-   as superseded?
+Assertion steps (THEN / AND after a THEN):
+| Pattern | Executable semantics | Strength class |
+| --- | --- | --- |
+| `the response status is <int>` | exact integer compare (no status classes — A3) | weak |
+| `the response field "<json.path>" equals <json-literal>` | canonicalized-JSON equality at the path | **value-binding** |
+| `the response field "<json.path>" equals the remembered "<name>"` | equality against a bound variable | **value-binding** |
+| `the response body equals <json-literal>` | canonicalized whole-body equality (exact-object) | **value-binding** |
+| `the response has no field "<json.path>"` | forbidden-field (absence) | value-binding (negative space) |
+| `the response list has length <int>` | array length exact | value-binding |
+| `the response field "<json.path>" is a <string\|number\|boolean\|array\|object>` | type/existence only | weak |
+
+Custody floors (A3/A8, checked at spec-exit in BOTH arms — they are spec-quality lint, not
+execution): every scenario has ≥1 THEN; every scenario has ≥1 **value-binding** assertion;
+statuses are integers; all string literals quoted; no other step text is legal. There are no
+`contains`/substring forms, no disjunctions, no negations of status, no optional parameters, and
+no default credentials (v1's substrate has no auth surface; if v2+ adds one, auth headers are
+explicit step arguments — A3).
+
+### 5.4 Sealing
+
+`e4-openspec-gherkin-v1` (converter), `e4-step-table-v1` (patterns + their executable
+semantics), and the floors are sealed in the v2 constants lineage and protocol-tested verbatim —
+the exact regex table is a constants-adjacent code twin with a pinned hash, same discipline as
+v1's block grammar.
+
+## 6. Gate mechanics (executed arm)
+
+Per task: spec phase → implementation phase, as v1, with these changes:
+
+1. **Custody** = spec changed + `openspec validate` passes + all scenarios parse and bind + A8
+   floors pass.
+2. **Discriminating red (A2/A10)**: every scenario NEW in this task's change must FAIL when
+   executed against the current (pre-implementation) workspace; the failure mode per scenario
+   (assertion-level vs route-absent) is recorded in the manifest. Any already-green new scenario
+   → custody-class refusal with feedback ("this scenario does not describe the requested
+   change"). Prior spec-of-record scenarios must remain green at red-check time (no-regression,
+   mirrors v1's prior-cumulative check).
+3. **Green** on done-claim: the FULL cumulative scenario set (spec-of-record + this change)
+   passes. Refusal returns the failing scenario titles + fixed-vocabulary failure strings.
+4. Behavior-preserving tasks keep the v1 §3.3 no-change affirmation (byte-unchanged spec + ≥1
+   smoke + done), unchanged.
+5. The hidden GT oracle runs once at close in both arms (A9); false-confidence = done accepted
+   by the agent's own gate while GT fails — in v2 this is a HEADLINE outcome, since it is
+   exactly "the executable spec was too weak to catch the lie."
+
+Prose arm: identical workspace, identical custody floors (spec must change, parse, floors pass —
+keeping authoring effort symmetric), but scenarios are never executed; done is accepted as in
+v1's ungated arms.
+
+## 7. Scenario-strength instrument (A1/A5 — measured, hidden, never a gate)
+
+Per task, harness-side after close (order: oracle → meter → strength → snapshot → probe):
+
+1. Generate the **adversarial bank** from the task's gold IR deterministically: fixed variant
+   set v1 = {validation-dropped, status-swapped (201→200 class-adjacent), no-op-write (mutations
+   don't persist), seed-echo (returns fixtures regardless of input), field-leak (extra internal
+   field in responses), wrong-filter (list ignores query params)}. Each variant = generated
+   workspace via the scaffold with a mutated IR/data file; bank ids and generation rules sealed.
+2. Execute the agent's cumulative scenario set against each variant (hermetic, as §5.2).
+3. **Kill score** = fraction of variants with ≥1 failing scenario. Recorded per task in the
+   manifest with per-variant verdicts; never fed back to the agent.
+4. Reported alongside: GT-vs-self-spec gap (tasks where the agent's gate was green but GT red)
+   and spec-surface coverage (diagnostic only — A5). Together these make gaming a measured
+   outcome: a vacuous-but-passing spec = high false-confidence + low kill score + coverage gap.
+
+Ecological-validity pin (from adjudication A1): the bank uses gold knowledge only the harness
+has, so it must never gate or feed back — it is the v2 analog of the hidden oracle, and the
+one-causal-variable discipline (execution of the spec is the only arm difference) is preserved.
+
+## 8. Prior art and reuse
+
+Live JIT OpenSpec→Gherkin converter:
+`hit-sdd-bench-e2/src/hit_sdd_e2/authored_spec/openspec.py` (`openspec-gherkin-v1`, proven live;
+commits `5e85e56`, `48ebfd9`, `2ab6ad2`, `5e50865` — converter version folded into the sealed
+spec hash there, the same discipline §5.4 adopts). E2's per-scenario step *bindings* are
+replaced here by the global sealed step table — harness-owned, not per-scenario — which is what
+the adjudication's R5 (no agent step code) requires. E1's OpenSpec CLI wrapper and its quirk
+handling are reused per §4.
+
+## 9. Milestones (each on explicit approval; spend only at the end)
+
+- **v2-M1** OpenSpec workspace generator + CLI integration + allowlist gate decision.
+- **v2-M2** Converter port (fixture cross-test vs Python original) + step table + hermetic
+  scenario executor (+ parser fuzz test).
+- **v2-M3** Gate rework (custody floors, discriminating red, green on cumulative scenarios;
+  validate wired); runner adjustments; red failure-mode capture.
+- **v2-M4** Meter re-pointing (coverage/staleness over scenario blocks; episode semantics kept)
+  + adversarial bank + kill-score instrument.
+- **v2-M5** Fake-agent behaviors (diligent / drifting / **vacuous-scenario gamer** — must land
+  as high false-confidence + low kill score + coverage gap, the live anti-cheat fixture) +
+  dry-run integration + non-budget v2 constants freeze + inspector/replay across the archive
+  seam.
+- **v2-M6** Budget calibration on deepseek-v4-pro (spend-gated) → budget freeze.
+- **v2-M7** Pre-registered frontier evidence run (spend-gated; seeds/interpretation sealed
+  pre-data; spec_touch trigger split, breakage-rate secondary, and kill-score reporting all
+  carried; claim language per the framing standard).
+
+## 10. Verification
+
+- Every milestone: full e1:protect triad + E4 import lint; test count grows from the current
+  baseline, never shrinks.
+- v2-M2: byte-identical parse vs the Python converter on shared fixtures; fuzz test green.
+- v2-M5 dry run: both drift directions + the vacuous-scenario gamer measured (not blocked) + a
+  seed-echo bank variant killed by the diligent agent's scenarios and NOT killed by the gamer's;
+  chain replay valid across the archive seam; oracle runs exactly once per close (A9 test).
+- v2-M7 only after: pre-registration sealed pre-data, e1:protect before/after, verdict tool is
+  the only claim source.
