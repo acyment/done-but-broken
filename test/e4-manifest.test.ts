@@ -44,11 +44,26 @@ function completeTaskRecord(overrides: Partial<E4TaskRecord> = {}): E4TaskRecord
       wall_clock_ms: 1000,
       spend_usd: 0.01,
       by_phase: {
-        spec: { turns: 0, tokens: tokenUsage(), wall_clock_ms: 0 },
-        implementation: { turns: 4, tokens: tokenUsage(), wall_clock_ms: 1000 }
+        spec: {
+          turns: 0,
+          tokens: tokenUsage(),
+          wall_clock_ms: 0,
+          spec_authoring_tokens: 0,
+          gate_protocol_interaction_tokens: 0,
+          oracle_feedback_tokens: 0
+        },
+        implementation: {
+          turns: 4,
+          tokens: tokenUsage(),
+          wall_clock_ms: 1000,
+          spec_authoring_tokens: 0,
+          gate_protocol_interaction_tokens: 0,
+          oracle_feedback_tokens: 0
+        }
       },
       gate_executor: null
     },
+    smoke_readiness_failures: 0,
     snapshot: { hash: "abc123", path: "runRoot/snapshots/e4_arm_0/task-1" },
     executor_artifacts: [],
     status: "complete",
@@ -72,10 +87,15 @@ function completeManifest(overrides: Partial<E4RunManifest> = {}): E4RunManifest
       substrate_version: "v1"
     },
     substrate_seed: 42,
+    substrate_config: {
+      task_count: 6,
+      op_mix: { weights: { drift_opportunity: 0.5, additive: 0.4, behavior_preserving: 0.1 } }
+    },
     pairing_label: "pair-1",
     arm: "e4_arm_0",
     model: { preset: "devstral", model_id: "devstral-medium", route_id: "direct" },
     budgets: { turns_per_task: 10, verifications_per_task: 5, token_budget: 100000, spend_cap_usd: 5 },
+    prompt_overhead_tokens: { estimator_id: "js-tiktoken-o200k_base-v1", system_prompt_tokens: 400, arm_channel_tokens: 0 },
     tasks: [completeTaskRecord()],
     resume_events: [],
     replay_validity: {
@@ -158,5 +178,33 @@ describe("Manifest schema accepts a complete record and rejects an incomplete on
     delete task.oracle;
 
     expect(() => validateE4RunManifest(manifest)).toThrow(/tasks\[0\]\.oracle/);
+  });
+
+  test("[M5] rejects a manifest missing the reproduction-sufficiency substrate_config", () => {
+    const manifest = completeManifest() as unknown as Record<string, unknown>;
+    delete manifest.substrate_config;
+
+    expect(() => validateE4RunManifest(manifest)).toThrow(/substrate_config/);
+  });
+
+  test("[M5] [R2: R2-8] rejects a manifest missing the prompt-overhead diagnostic or the by_phase component sub-fields", () => {
+    const withoutOverhead = completeManifest() as unknown as Record<string, unknown>;
+    delete withoutOverhead.prompt_overhead_tokens;
+
+    expect(() => validateE4RunManifest(withoutOverhead)).toThrow(/prompt_overhead_tokens/);
+
+    const manifest = completeManifest();
+    const specPhase = manifest.tasks[0].usage.by_phase.spec as unknown as Record<string, unknown>;
+    delete specPhase.gate_protocol_interaction_tokens;
+
+    expect(() => validateE4RunManifest(manifest)).toThrow(/gate_protocol_interaction_tokens/);
+  });
+
+  test("[M5] rejects a task record missing the §3.2 smoke prong counter", () => {
+    const manifest = completeManifest();
+    const task = manifest.tasks[0] as unknown as Record<string, unknown>;
+    delete task.smoke_readiness_failures;
+
+    expect(() => validateE4RunManifest(manifest)).toThrow(/smoke_readiness_failures/);
   });
 });

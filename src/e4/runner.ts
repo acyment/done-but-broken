@@ -13,6 +13,8 @@ import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { E1VerificationBudget } from "../e1-harness";
 import { callE1ProviderWithRetries, isE1ProviderExhaustedError } from "../e1-provider-runtime";
+import { assertE1NoSecretsInJson, type E1RedactionSecret } from "../e1-redaction";
+import { countE1Tokens } from "../e1-token-estimator";
 import type { E4ArmPolicy } from "./arm-policy";
 import { E4ArmHTaskGate, type E4GateExecutorRunner, type E4OracleCounts } from "./gate";
 import type { E4GateEvents, E4TaskUsage } from "./manifest";
@@ -55,6 +57,7 @@ export type E4TaskRunResult = {
   oracle: E4OracleCounts;
   false_confidence: { event: boolean; enforcement_outcome: "accepted" | "refused" | null };
   smoke_feedback_runs: number;
+  smoke_readiness_failures: number;
   drift: E4DriftReport;
   noticing_probe_answer: string;
   spec_touch: { touched: boolean; paths: string[] };
@@ -80,6 +83,9 @@ export type E4RunTaskInput = {
   rename_lineage: E4RenameLineageLookupEntry[];
   executor_config: E4ExecutorConfig;
   captureSnapshot: () => Promise<{ hash: string; path: string }>;
+  // [M5] emission fails closed: any record write that would contain one of these secret values
+  // throws (e1-redaction reuse — Feature 5 "secrets never land in artifacts").
+  secrets?: E1RedactionSecret[];
   // Test seam only: injects a no-op sleep into the sealed retry policy. Never a policy channel.
   retry_sleep?: (ms: number) => Promise<void>;
 };
@@ -169,6 +175,19 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
   const verificationBudget = new E1VerificationBudget(input.budgets.verifications_per_task);
   await mkdir(input.records_dir, { recursive: true });
 
+  // [M5] fail-closed record emission: e1-redaction reuse. The check runs on the exact payload
+  // bytes about to be written; a leaked secret aborts the write (and the run) rather than landing
+  // in any artifact.
+  const secrets = input.secrets ?? [];
+  const writeRecordFile = async (name: string, payload: string): Promise<void> => {
+    assertE1NoSecretsInJson(payload, secrets);
+    await writeFile(join(input.records_dir, name), payload);
+  };
+  const appendRecordLine = async (name: string, line: string): Promise<void> => {
+    assertE1NoSecretsInJson(line, secrets);
+    await appendFile(join(input.records_dir, name), line);
+  };
+
   const taskStart = Date.now();
   const usageByPhase: Record<E4TaskPhase, { turns: number; tokens: E4TokenUsage; wall_clock_ms: number }> = {
     spec: { turns: 0, tokens: zeroTokens(), wall_clock_ms: 0 },
@@ -177,7 +196,15 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
   const taskTokens = zeroTokens();
   let taskSpendUsd = 0;
   let smokeFeedbackRuns = 0;
+  let smokeReadinessFailures = 0;
   const specTouchPaths: string[] = [];
+
+  // [R2: R2-8] component attribution: sealed-estimator counts over the exact text, recorded once
+  // at the turn where it entered the conversation, keyed by the phase active at that turn.
+  const componentTokens: Record<E4TaskPhase, { spec_authoring: number; gate_protocol: number; oracle_feedback: number }> = {
+    spec: { spec_authoring: 0, gate_protocol: 0, oracle_feedback: 0 },
+    implementation: { spec_authoring: 0, gate_protocol: 0, oracle_feedback: 0 }
+  };
 
   // Gate executor plumbing: ONE engine (ADR-006) behind the gate's red/green checks, wrapped only
   // for accounting and artifact retention. `mode` is set around each gate call site.
@@ -203,8 +230,8 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
 
     gateRunCounter += 1;
     const artifact = `gate-run-${gateRunCounter}.json`;
-    await writeFile(
-      join(input.records_dir, artifact),
+    await writeRecordFile(
+      artifact,
       `${JSON.stringify({ mode: gateExecutorMode, test_ids: tests.map((test) => test.test_id), result }, null, 2)}\n`
     );
     executorArtifacts.push(artifact);
@@ -245,10 +272,7 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
     { role: "system", content: systemPrompt },
     { role: "user", content: taskMessage }
   ];
-  await writeFile(
-    join(input.records_dir, "initial-messages.json"),
-    `${JSON.stringify({ messages }, null, 2)}\n`
-  );
+  await writeRecordFile("initial-messages.json", `${JSON.stringify({ messages }, null, 2)}\n`);
 
   let termination: E4TaskTermination | null = null;
   let classificationRationale: string | null = null;
@@ -312,6 +336,7 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
     for (const appliedReplacement of applyResult.applied) {
       if (appliedReplacement.path === "specs" || appliedReplacement.path.startsWith("specs/")) {
         specTouchPaths.push(appliedReplacement.path);
+        componentTokens[phaseAtTurnStart].spec_authoring += countE1Tokens(appliedReplacement.content);
       }
     }
 
@@ -332,9 +357,14 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
           config: input.executor_config
         });
         smokeFeedbackRuns += 1;
+
+        if (smokeResult.kind === "readiness_failed") {
+          smokeReadinessFailures += 1;
+        }
+
         const smokeArtifact = `smoke-${smokeFeedbackRuns}.json`;
-        await writeFile(
-          join(input.records_dir, smokeArtifact),
+        await writeRecordFile(
+          smokeArtifact,
           `${JSON.stringify({ result: smokeResult, wall_clock_ms: Date.now() - smokeStarted }, null, 2)}\n`
         );
         executorArtifacts.push(smokeArtifact);
@@ -366,15 +396,22 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
         if (exit.outcome === "executor_error") {
           terminateExecutorError(exit.classification_rationale);
         } else if (exit.outcome === "custody_failed") {
+          // [R2: R2-8] custody exchanges are gate-protocol interaction, not oracle feedback.
           gateFeedback = exit.feedback;
+          componentTokens[phaseAtTurnStart].gate_protocol += countE1Tokens(exit.feedback);
         } else {
+          // [R2: R2-8] the transition sentence is protocol interaction; the red-check line is an
+          // oracle result payload — counted separately, injected together.
           const redLine =
             exit.red_check === "skipped_behavior_preserving"
               ? "no-change exit accepted; the red check was skipped for this behavior-preserving task."
               : exit.red_check === "red"
                 ? `red check: ${exit.delta_failures} new-behavior check(s) are failing (expected before implementation); previously accepted behavior ${exit.prior_cumulative_green ? "still passes" : "is NOT fully green"}.`
                 : "red check anomaly: every new-behavior check already passes. Proceed with the implementation phase; this has been recorded.";
-          gateFeedback = `gate: custody passed (${exit.custody_via}); entering the implementation phase. Files under specs/ are now frozen. ${redLine}`;
+          const transitionLine = `gate: custody passed (${exit.custody_via}); entering the implementation phase. Files under specs/ are now frozen.`;
+          gateFeedback = `${transitionLine} ${redLine}`;
+          componentTokens[phaseAtTurnStart].gate_protocol += countE1Tokens(transitionLine);
+          componentTokens[phaseAtTurnStart].oracle_feedback += countE1Tokens(redLine);
         }
       } else if (gate !== null) {
         gateExecutorMode = "green";
@@ -386,7 +423,9 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
           doneAccepted = true;
           termination = "done";
         } else {
+          // [R2: R2-8] refusal feedback carries the failing results — an oracle payload.
           gateFeedback = claim.feedback;
+          componentTokens[phaseAtTurnStart].oracle_feedback += countE1Tokens(claim.feedback);
         }
       } else {
         doneAccepted = true;
@@ -409,8 +448,8 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
 
     usageByPhase[phaseAtTurnStart].wall_clock_ms += Date.now() - turnStarted;
 
-    await appendFile(
-      join(input.records_dir, "turns.jsonl"),
+    await appendRecordLine(
+      "turns.jsonl",
       `${JSON.stringify({
         turn,
         phase: phaseAtTurnStart,
@@ -473,8 +512,8 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
       config: input.executor_config
     });
     const oracleArtifact = "hidden-oracle.json";
-    await writeFile(
-      join(input.records_dir, oracleArtifact),
+    await writeRecordFile(
+      oracleArtifact,
       `${JSON.stringify({ result: hiddenOracle, wall_clock_ms: Date.now() - oracleStarted }, null, 2)}\n`
     );
     executorArtifacts.push(oracleArtifact);
@@ -520,7 +559,7 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
     drift = emptyDriftReport(input.constants.compatibility_boundary.meter_version ?? "unknown");
   }
 
-  await writeFile(join(input.records_dir, "drift-report.json"), `${JSON.stringify(drift, null, 2)}\n`);
+  await writeRecordFile("drift-report.json", `${JSON.stringify(drift, null, 2)}\n`);
 
   const snapshot = await input.captureSnapshot();
 
@@ -544,16 +583,10 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
     } catch (error) {
       // The probe is a diagnostic, never load-bearing: a provider failure here leaves the answer
       // empty and is retained in the records; the task's own close stands.
-      await writeFile(
-        join(input.records_dir, "probe-error.json"),
-        `${JSON.stringify({ error: String(error) }, null, 2)}\n`
-      );
+      await writeRecordFile("probe-error.json", `${JSON.stringify({ error: String(error) }, null, 2)}\n`);
     }
 
-    await writeFile(
-      join(input.records_dir, "probe.json"),
-      `${JSON.stringify({ answer: noticingProbeAnswer, usage: probeUsage }, null, 2)}\n`
-    );
+    await writeRecordFile("probe.json", `${JSON.stringify({ answer: noticingProbeAnswer, usage: probeUsage }, null, 2)}\n`);
   }
 
   const gateSummary = gate?.summary() ?? null;
@@ -581,7 +614,20 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
     tokens: taskTokens,
     wall_clock_ms: Date.now() - taskStart,
     spend_usd: taskSpendUsd,
-    by_phase: usageByPhase,
+    by_phase: {
+      spec: {
+        ...usageByPhase.spec,
+        spec_authoring_tokens: componentTokens.spec.spec_authoring,
+        gate_protocol_interaction_tokens: componentTokens.spec.gate_protocol,
+        oracle_feedback_tokens: componentTokens.spec.oracle_feedback
+      },
+      implementation: {
+        ...usageByPhase.implementation,
+        spec_authoring_tokens: componentTokens.implementation.spec_authoring,
+        gate_protocol_interaction_tokens: componentTokens.implementation.gate_protocol,
+        oracle_feedback_tokens: componentTokens.implementation.oracle_feedback
+      }
+    },
     gate_executor: gate === null ? null : gateExecutorUsage
   };
 
@@ -594,6 +640,7 @@ export async function runE4Task(input: E4RunTaskInput): Promise<E4TaskRunResult>
     oracle,
     false_confidence: { event: falseConfidenceEvent, enforcement_outcome: enforcementOutcome },
     smoke_feedback_runs: smokeFeedbackRuns,
+    smoke_readiness_failures: smokeReadinessFailures,
     drift,
     noticing_probe_answer: noticingProbeAnswer,
     spec_touch: { touched: specTouchPaths.length > 0, paths: [...new Set(specTouchPaths)] },

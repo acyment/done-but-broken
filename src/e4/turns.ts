@@ -131,7 +131,12 @@ function requireM4Seals(constants: E4SealedConstants): {
   return { smoke_command: constants.feedback.smoke_command, protocol_text: constants.protocol_text };
 }
 
-export function renderE4SystemPrompt(input: { constants: E4SealedConstants; arm: E4ArmPolicy }): string {
+// Base protocol text vs the arm's declared policy channel, separated so the [R2: R2-8]
+// prompt-overhead diagnostic can count them independently (base is arm-identical by construction).
+export function renderE4SystemPromptParts(input: {
+  constants: E4SealedConstants;
+  arm: E4ArmPolicy;
+}): { base: string; channel: string | null } {
   const { smoke_command, protocol_text } = requireM4Seals(input.constants);
   const budgets = input.constants.budgets!;
 
@@ -156,15 +161,17 @@ export function renderE4SystemPrompt(input: { constants: E4SealedConstants; arm:
     `Budgets per task: ${budgets.turns_per_task} turns, ${budgets.verifications_per_task} verification runs.`
   ];
 
-  if (input.arm.standing_instruction !== null) {
-    sections.push(input.arm.standing_instruction);
-  }
+  const channel = input.arm.gate_enabled
+    ? protocol_text.arm_h_gate_protocol
+    : input.arm.standing_instruction;
 
-  if (input.arm.gate_enabled) {
-    sections.push(protocol_text.arm_h_gate_protocol);
-  }
+  return { base: sections.join("\n\n"), channel };
+}
 
-  return sections.join("\n\n");
+export function renderE4SystemPrompt(input: { constants: E4SealedConstants; arm: E4ArmPolicy }): string {
+  const { base, channel } = renderE4SystemPromptParts(input);
+
+  return channel === null ? base : `${base}\n\n${channel}`;
 }
 
 // The first (and only task-authored) user message: the business-natural change request plus a full

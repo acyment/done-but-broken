@@ -34,6 +34,16 @@ export type E4ByPhaseUsage = {
   turns: number;
   tokens: E4TokenUsage;
   wall_clock_ms: number;
+  // [R2: R2-8] named component attribution, direct manifest reads (Gate-1 change 4). These are
+  // sealed-estimator counts over the exact authored/injected text, counted once at the turn where
+  // the text entered the conversation (provider-reported usage cannot attribute per component —
+  // injected feedback recurs in every later turn's input). Estimator identity is recorded in
+  // manifest.prompt_overhead_tokens.estimator_id. Zero in arms 0/M except spec_authoring_tokens,
+  // which counts any arm's applied specs/ writes (arm-uniform definition; Arm-0 spec maintenance
+  // is a finding).
+  spec_authoring_tokens: number;
+  gate_protocol_interaction_tokens: number;
+  oracle_feedback_tokens: number;
 };
 
 export type E4GateExecutorUsage = {
@@ -65,6 +75,10 @@ export type E4TaskRecord = {
   };
   false_confidence: { event: boolean; enforcement_outcome: "accepted" | "refused" | null };
   smoke_feedback_runs: number;
+  // §3.2 floor-rule smoke prong ([R1-S1i]): how many of this task's smoke runs ended
+  // readiness_failed. The rule reads this as a per-task boolean (> 0); the count is retained so a
+  // flaky-start pattern stays visible.
+  smoke_readiness_failures: number;
   drift: E4DriftReport;
   noticing_probe_answer: string;
   spec_touch: { touched: boolean; paths: string[] };
@@ -77,6 +91,24 @@ export type E4TaskRecord = {
   classification_rationale: string | null;
 };
 
+// [M5] Reproduction sufficiency (Feature 5 criterion 1): substrate_seed alone cannot regenerate
+// the draw — the PRNG stream depends on task_count, and op_mix steers the draw — so the manifest
+// carries the full generator input. op_mix weights duplicate the sealed constants value by design;
+// the inspector cross-checks them against the constants file when given one.
+export type E4SubstrateConfigRecord = {
+  task_count: number;
+  op_mix: { weights: { drift_opportunity: number; additive: number; behavior_preserving: number } };
+};
+
+// [R2: R2-8] per-arm prompt-overhead diagnostic: sealed-estimator token counts of the system
+// prompt (base protocol text, arm-identical) and this arm's policy-channel addition (Arm M's
+// standing instruction / Arm H's gate protocol; 0 for Arm 0).
+export type E4PromptOverheadTokens = {
+  estimator_id: string;
+  system_prompt_tokens: number;
+  arm_channel_tokens: number;
+};
+
 export type E4RunManifest = {
   schema: "e4-run-manifest";
   schema_version: string;
@@ -84,10 +116,12 @@ export type E4RunManifest = {
   run_classification: E4RunClassification;
   compatibility_boundary: E4CompatibilityBoundaryRef;
   substrate_seed: number;
+  substrate_config: E4SubstrateConfigRecord;
   pairing_label: string;
   arm: E4ArmId;
   model: { preset: string; model_id: string; route_id: string };
   budgets: E4Budgets;
+  prompt_overhead_tokens: E4PromptOverheadTokens;
   tasks: E4TaskRecord[];
   resume_events: E4ResumeEvent[];
   replay_validity: {
@@ -147,7 +181,18 @@ function validateByPhaseUsage(value: unknown, path: string): void {
 
   for (const phase of TASK_PHASES) {
     const phaseUsage = requireObject(obj[phase], `${path}.${phase}`);
-    requireKeys(phaseUsage, ["turns", "tokens", "wall_clock_ms"], `${path}.${phase}`);
+    requireKeys(
+      phaseUsage,
+      [
+        "turns",
+        "tokens",
+        "wall_clock_ms",
+        "spec_authoring_tokens",
+        "gate_protocol_interaction_tokens",
+        "oracle_feedback_tokens"
+      ],
+      `${path}.${phase}`
+    );
     validateTokenUsage(phaseUsage.tokens, `${path}.${phase}.tokens`);
   }
 }
@@ -177,6 +222,7 @@ function validateTaskRecord(value: unknown, path: string): void {
       "oracle",
       "false_confidence",
       "smoke_feedback_runs",
+      "smoke_readiness_failures",
       "drift",
       "noticing_probe_answer",
       "spec_touch",
@@ -241,10 +287,12 @@ const MANIFEST_TOP_LEVEL_KEYS = [
   "run_classification",
   "compatibility_boundary",
   "substrate_seed",
+  "substrate_config",
   "pairing_label",
   "arm",
   "model",
   "budgets",
+  "prompt_overhead_tokens",
   "tasks",
   "resume_events",
   "replay_validity",
@@ -268,6 +316,19 @@ export function validateE4RunManifest(raw: unknown): E4RunManifest {
 
   const model = requireObject(manifest.model, "manifest.model");
   requireKeys(model, ["preset", "model_id", "route_id"], "manifest.model");
+
+  const substrateConfig = requireObject(manifest.substrate_config, "manifest.substrate_config");
+  requireKeys(substrateConfig, ["task_count", "op_mix"], "manifest.substrate_config");
+  const opMix = requireObject(substrateConfig.op_mix, "manifest.substrate_config.op_mix");
+  const weights = requireObject(opMix.weights, "manifest.substrate_config.op_mix.weights");
+  requireKeys(weights, ["drift_opportunity", "additive", "behavior_preserving"], "manifest.substrate_config.op_mix.weights");
+
+  const promptOverhead = requireObject(manifest.prompt_overhead_tokens, "manifest.prompt_overhead_tokens");
+  requireKeys(
+    promptOverhead,
+    ["estimator_id", "system_prompt_tokens", "arm_channel_tokens"],
+    "manifest.prompt_overhead_tokens"
+  );
 
   const budgets = requireObject(manifest.budgets, "manifest.budgets");
   requireKeys(budgets, ["turns_per_task", "verifications_per_task", "token_budget", "spend_cap_usd"], "manifest.budgets");

@@ -10,8 +10,11 @@
 // retained turn records — headline claims may rest only on sequences the inspector validates.
 import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
+import { assertE1NoSecretsInJson, type E1RedactionSecret } from "../e1-redaction";
+import { countE1Tokens, E1_TOKEN_ESTIMATOR_ID } from "../e1-token-estimator";
 import { buildE4ArmPolicies, validateE4RuntimeArmParity, type E4ArmPolicy, type E4ArmRuntime } from "./arm-policy";
 import type { E4SealedConstants } from "./constants";
+import { inspectE4ArmSequence } from "./inspect";
 import { validateE4RunManifest, type E4RunManifest, type E4TaskRecord } from "./manifest";
 import { runE4Task, type E4SequenceSpendLedger } from "./runner";
 import {
@@ -25,7 +28,7 @@ import {
 import type { E4ExecutorConfig } from "./oracle-executor";
 import { generateCumulativeTests, type E4HttpTest } from "./substrate/testgen";
 import type { E4GenerateResult, E4SubstrateConfig, E4SubstrateProvider } from "./substrate/provider";
-import { E4TurnProtocolError, type E4AgentProviderFactory } from "./turns";
+import { E4TurnProtocolError, renderE4SystemPromptParts, type E4AgentProviderFactory } from "./turns";
 import type { E4ArmId, E4ResumeEvent, E4RunClassification, E4TokenUsage } from "./types";
 
 const ARM_ORDER: readonly E4ArmId[] = ["e4_arm_0", "e4_arm_m", "e4_arm_h"];
@@ -41,6 +44,9 @@ export type E4RunInput = {
   model: { preset: string; model_id: string; route_id: string };
   providerFactory: E4AgentProviderFactory;
   resume?: boolean;
+  // [M5] fail-closed emission (Feature 5): any manifest or record write that would contain one of
+  // these secret values throws instead of landing on disk (e1-redaction reuse).
+  secrets?: E1RedactionSecret[];
   // Test seams only: sealed executor timeouts / retry sleeps are the real-run defaults.
   executor_config?: E4ExecutorConfig;
   retry_sleep?: (ms: number) => Promise<void>;
@@ -160,7 +166,9 @@ function manifestPath(runRoot: string, arm: E4ArmId): string {
   return join(runRoot, "manifests", `${arm}.json`);
 }
 
-async function writeManifest(runRoot: string, manifest: E4RunManifest): Promise<void> {
+async function writeManifest(runRoot: string, manifest: E4RunManifest, secrets: E1RedactionSecret[]): Promise<void> {
+  // [M5] Feature 5: secrets never land in artifacts — emission fails closed.
+  assertE1NoSecretsInJson(manifest, secrets);
   await mkdir(join(runRoot, "manifests"), { recursive: true });
   await writeFile(manifestPath(runRoot, manifest.arm), `${JSON.stringify(manifest, null, 2)}\n`);
 }
@@ -262,10 +270,18 @@ async function runArmSequence(context: {
         substrate_version: boundary.substrate_version ?? ""
       },
       substrate_seed: input.config.substrate_seed,
+      // [M5] reproduction sufficiency: the seed alone cannot regenerate the draw (the PRNG stream
+      // depends on task_count; op_mix steers it) — the inspector regenerates from these fields.
+      substrate_config: {
+        task_count: input.config.task_count,
+        op_mix: { weights: { ...input.config.op_mix.weights } }
+      },
       pairing_label: input.pairing_label,
       arm,
       model: input.model,
       budgets: input.constants.budgets!,
+      // [R2: R2-8] per-arm prompt-overhead diagnostic (sealed protocol/instruction text length).
+      prompt_overhead_tokens: buildPromptOverhead(input.constants, policy),
       tasks: [],
       resume_events: [],
       replay_validity: {
@@ -275,7 +291,7 @@ async function runArmSequence(context: {
       },
       usage_totals: { turns: 0, tokens: zeroTokens(), wall_clock_ms: 0, spend_usd: 0 }
     };
-    await writeManifest(runRoot, manifest);
+    await writeManifest(runRoot, manifest, input.secrets ?? []);
   }
 
   const spendLedger: E4SequenceSpendLedger = { spent_usd: manifest.usage_totals.spend_usd };
@@ -308,6 +324,7 @@ async function runArmSequence(context: {
       rename_lineage: generated.rename_lineage_map.filter((entry) => entry.task_index <= taskIndex),
       executor_config: executorConfig,
       captureSnapshot: () => captureE4Snapshot({ workspaceDir, runRoot, arm, taskIndex }),
+      ...(input.secrets ? { secrets: input.secrets } : {}),
       ...(input.retry_sleep ? { retry_sleep: input.retry_sleep } : {})
     });
 
@@ -324,6 +341,7 @@ async function runArmSequence(context: {
       noticing_probe_answer: result.noticing_probe_answer,
       spec_touch: result.spec_touch,
       usage: result.usage,
+      smoke_readiness_failures: result.smoke_readiness_failures,
       snapshot: { hash: result.snapshot.hash, path: relative(runRoot, result.snapshot.path) },
       executor_artifacts: result.executor_artifacts.map((artifact) => relative(runRoot, join(recordsDir, artifact))),
       status: result.status,
@@ -332,12 +350,22 @@ async function runArmSequence(context: {
 
     manifest.tasks.push(record);
     accumulateUsageTotals(manifest, record, result.probe_usage);
-    await writeManifest(runRoot, manifest);
+    await writeManifest(runRoot, manifest, input.secrets ?? []);
 
     if (result.status === "aborted") {
       break;
     }
   }
+
+  // [M5] finalize replay_validity by RECOMPUTING it (recorded-event reconstruction, R2-9b) — the
+  // sequence's own inspection, over exactly the artifacts a later `bin/e4-inspect.ts` run reads.
+  const inspection = await inspectE4ArmSequence({ runRoot, manifest, generated });
+  manifest.replay_validity = {
+    substrate_regeneration_ok: inspection.substrate_regeneration_ok,
+    per_task_replay_ok: inspection.per_task_replay_ok,
+    chain_replay_valid: inspection.chain_replay_valid
+  };
+  await writeManifest(runRoot, manifest, input.secrets ?? []);
 
   validateE4RunManifest(JSON.parse(JSON.stringify(manifest)));
 
@@ -423,9 +451,19 @@ async function resumeArmSequence(context: {
     generated.initial_workspace
   );
 
-  await writeManifest(runRoot, manifest);
+  await writeManifest(runRoot, manifest, input.secrets ?? []);
 
   return manifest;
+}
+
+function buildPromptOverhead(constants: E4SealedConstants, policy: E4ArmPolicy) {
+  const parts = renderE4SystemPromptParts({ constants, arm: policy });
+
+  return {
+    estimator_id: E1_TOKEN_ESTIMATOR_ID,
+    system_prompt_tokens: countE1Tokens(parts.channel === null ? parts.base : `${parts.base}\n\n${parts.channel}`),
+    arm_channel_tokens: parts.channel === null ? 0 : countE1Tokens(parts.channel)
+  };
 }
 
 // Re-exported so the M6 CLI and tests treat the orchestrator as the one entry point (the plan's

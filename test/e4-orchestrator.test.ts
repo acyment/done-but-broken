@@ -137,8 +137,9 @@ describe("Feature 4 — full 3-arm dry run: state carries forward, smoke is arm-
       expect(manifest.budgets).toEqual(constants.budgets!);
       expect(manifest.resume_events).toEqual([]);
       expect(manifest.replay_validity.substrate_regeneration_ok).toBe(true);
-      // chain replay stays conservatively false until the M5 inspector recomputes it.
-      expect(manifest.replay_validity.chain_replay_valid).toBe(false);
+      // [M5] the sequence finalizes by recomputing replay validity from the retained records.
+      expect(manifest.replay_validity.per_task_replay_ok).toEqual([true, true]);
+      expect(manifest.replay_validity.chain_replay_valid).toBe(true);
       expect(manifest.tasks.every((task) => task.status === "complete")).toBe(true);
 
       // The on-disk manifest matches the returned one (incremental durability).
@@ -313,6 +314,10 @@ describe("Feature 4 — crash-resume restores the chain", () => {
     await expect(stat(join(runRoot, "snapshots", "e4_arm_0", "task-2", "partial.txt"))).rejects.toThrow();
     expect(resumeCalls.get("e4_arm_0:2")![0][1].content).toContain("e4-marker.txt");
     expect(resumeCalls.get("e4_arm_0:2")![0][1].content).not.toContain("partial.txt");
+
+    // [M5] the resumed chain is replay-valid ACROSS the seam: task 2's fresh records replay over
+    // the verified snapshot 1, and the seam anchor matches the recorded hash.
+    expect(resumed.replay_validity.chain_replay_valid).toBe(true);
 
     // Arms the crashed run never reached started fresh on resume and completed.
     expect(manifests.e4_arm_m!.tasks.length).toBe(2);

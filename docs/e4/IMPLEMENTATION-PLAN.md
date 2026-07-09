@@ -399,6 +399,48 @@ hand-computed expectations.
 **(c) E1-protection.** Full triad + lint (`e1-redaction` is on the allowlist — reuse, don't fork).
 **(d) Constants-lineage.** `schema_version` for `e4-run-manifest` recorded; no new sealed parameters.
 
+**M5 implementation notes (recorded divergences/pins, Phase 3):**
+
+1. **[R2: R2-8] attribution mechanics.** Provider-reported usage cannot attribute tokens per
+   component (injected feedback recurs in every later turn's input), so the three named sub-fields
+   are **sealed-estimator counts over the exact authored/injected text, counted once at the turn
+   where it entered the conversation**, keyed by the phase active at that turn (estimator identity
+   recorded in `prompt_overhead_tokens.estimator_id`). They live as numeric sub-fields of
+   `usage.by_phase[phase]`; arms 0/M carry zeros except `spec_authoring_tokens`, which counts any
+   arm's applied `specs/` writes (arm-uniform definition — Arm-0 spec maintenance is a finding).
+   §3.1's "`usage.gate_executor` tokens" term is realized as the gate-channel components
+   (`gate_protocol_interaction` + `oracle_feedback`) injected in the **implementation** phase —
+   the spec phase's own totals already contain its share, so nothing is double-counted.
+2. **Manifest reproduction sufficiency.** `substrate_seed` alone cannot regenerate the draw (the
+   PRNG stream depends on `task_count`, and `op_mix` steers it), so the manifest gains
+   `substrate_config { task_count, op_mix.weights }`; the weights duplicate the sealed constants
+   value by design. The manifest also gains per-task `smoke_readiness_failures` — the §3.2 smoke
+   prong must be a manifest read.
+3. **Replay mechanics ([R2: R2-9b]).** The inspector re-parses each turn's retained raw output
+   with the sealed grammar and re-applies the **recorded** applied-path decisions — it never
+   re-simulates gate policy (recorded-event reconstruction; re-deriving policy would make old
+   manifests' replay validity hostage to policy code drift). Snapshot-integrity and
+   oracle-recomputation are reported **separately** from the chain property: the chain is about
+   the record's self-consistency, those two are about the retained artifacts still matching it.
+4. **The orchestrator finalizes `replay_validity` itself** at sequence close through the same
+   inspection code path `bin/e4-inspect.ts` uses, so completed manifests carry a recomputed
+   `chain_replay_valid` — M6's "chain_replay_valid is true for every sequence" acceptance follows
+   structurally rather than by a separate post-pass.
+5. **Aborted-record exclusion extended uniformly.** The ADR-005 pin names the taxes; the result
+   schema excludes `status == "aborted"` records from **all** analysis (velocity onset scans and
+   denominators, drift burden, floor rule, pass rates, propensity) — a drift observation of a
+   half-finished infra-aborted task state is not a task-close observation. H5's attempted-task
+   pairing = task indices with complete records in **both** arms ([R2: R2-2] "reduces the
+   denominator identically").
+6. **Self-check realization.** The manifest stores no H numbers, so "the manifest and the
+   recomputation must agree, or emission fails" is realized as (a) the inspector recomputing
+   oracle counts from retained verdicts against every record and (b) hand-computed fixture
+   expectations in `test/e4-result-schema.test.ts` — there is no stored-number/recomputed-number
+   pair to diff at emission time.
+7. **Latent M0 stub bug fixed:** `result-schema.ts` (and its test) imported `E4TaskRecord` from
+   `./types`, which never exported it — bun strips types, so it failed silently; both now import
+   from `./manifest`.
+
 ---
 
 ### M6 — Dry-run integration harness (fake provider, no spend)
