@@ -1,5 +1,7 @@
 # Claude Code Operating Notes
 
+When talking to the operator, minimize jargon. Prefer plain language over internal codenames and section numbers: say "the enforced arm kept the spec fresh" rather than "Arm-H custody passed", "the rule that flags a broken run" rather than "§5.1 trigger 3". Internal terms stay in docs, commits, and code — this is about conversation. When a technical term is unavoidable, gloss it in a few words on first use.
+
 `AGENTS.md` is the source of truth for repo-wide scientific, protocol, and evidence discipline. Follow it first.
 
 Claude Code must not run provider/model experiments, call OpenRouter, or create new runs unless explicitly asked.
