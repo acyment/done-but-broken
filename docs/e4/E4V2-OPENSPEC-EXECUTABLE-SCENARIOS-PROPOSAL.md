@@ -544,6 +544,19 @@ sealed-surface ambiguity in M2's step table it escalates rather than deciding.
   pre-data; spec_touch trigger split, breakage-rate secondary, and kill-score reporting all
   carried; claim language per the framing standard). *(Fable, incl. report and public post)*
 
+  **v2-M7 EXECUTED 2026-07-09 — PRE-REGISTERED VERDICT: `go` (exit 0), with the sealed §4
+  headline caveat attached.** Seeds 22/60 × 2 arms × 6 tasks = 24/24 task-runs on
+  `deepseek-v4-pro`, all four sequences `chain_replay_valid: true`, zero aborted records, zero
+  extraction failures, total spend $0.94, zero deviations from the pre-registration. (a) Arm-0
+  velocity 9.33/6.33 per seed; (c) via BOTH legs — c1 velocity 7.83 vs 3.83, c2 false confidence
+  10/12 vs 7/12. Headline caveat (§4 first branch, pre-committed): Arm-H false confidence is
+  HIGH (7/12) with kill score 1.0 throughout — true-but-insufficient scenario coverage, not
+  vacuousness; executing the spec reduced the lie rate, it did not make the gate honest. Full
+  report: `docs/protocols/e4-v2-m7-pilot-run-report-v1.md`; manifests:
+  `docs/protocols/e4-v2-m7-pilot-manifests-20260709-001/`; verdict re-runnable via
+  `bun run bin/e4-v2-gonogo.ts` on that folder. The public post remains a separate
+  operator-reviewed step.
+
 ## 10. Verification
 
 - Every milestone: full e1:protect triad + E4 import lint; test count grows from the current

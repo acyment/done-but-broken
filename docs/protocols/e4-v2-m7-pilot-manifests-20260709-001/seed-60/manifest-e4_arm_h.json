@@ -1,0 +1,2337 @@
+{
+  "schema": "e4-v2-run-manifest",
+  "schema_version": "1",
+  "run_classification": "pilot",
+  "protocol_profile_id": "e4-openspec-workflow-v1",
+  "arm": "e4_arm_h",
+  "arm_mode": "executed",
+  "pairing_label": "pair-pilot-seed-60",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "deepseek-v4-pro",
+    "route_id": "direct-deepseek-api-key"
+  },
+  "compatibility_boundary": {
+    "constants_version": "0.2",
+    "constants_hash": "d762bacc126618d086cea6416b1ec4d8f87d561a5bb366e4a0a8149d0e06836b",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1",
+    "substrate_config": {
+      "substrate_config_id": "v2-default",
+      "substrate_seed": 60,
+      "task_count": 6,
+      "op_mix": {
+        "weights": {
+          "drift_opportunity": 0.5,
+          "additive": 0.4,
+          "behavior_preserving": 0.1
+        }
+      }
+    }
+  },
+  "initial_snapshot": {
+    "hash": "f6e4f974a36124afa0c44f2fe05693a1b5d9e766da5bff269d23d39a92cfd711",
+    "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-0"
+  },
+  "tasks": [
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 9,
+          "carried_total": 2,
+          "novel_red": 6,
+          "novel_records": [
+            {
+              "title": "Creating a Widget returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget with a non-decimal price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with a non-bool in_stock is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with an invalid price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Widget persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Widget removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Filtering widgets by category_id returns only matching rows",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Widget with a non-decimal price is rejected",
+            "Creating a Widget with a non-bool in_stock is rejected",
+            "Creating a Widget with an invalid price is rejected"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 25,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "rename-widget-name-to-details",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 17,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without details is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by category_id returns only matching rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 17,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without details is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 17,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The task was straightforward: rename Widget's `name` field to `details` across the schema, seed data, and all scenarios. The existing specs correctly documented the current behavior, and the implementation followed the data-driven design described in the workspace guide.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-widget-name-to-details/proposal.md",
+          "openspec/changes/rename-widget-name-to-details/tasks.md",
+          "openspec/changes/rename-widget-name-to-details/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 9046,
+          "cached_input_tokens": 35584,
+          "output_tokens": 2812
+        },
+        "wall_clock_ms": 34085,
+        "spend_usd": 0.011926200000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 8849,
+              "cached_input_tokens": 11904,
+              "output_tokens": 1982
+            },
+            "wall_clock_ms": 20126,
+            "spec_authoring_tokens": 1711,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 74
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 197,
+              "cached_input_tokens": 23680,
+              "output_tokens": 830
+            },
+            "wall_clock_ms": 10080,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 121,
+          "cached_input_tokens": 12288,
+          "output_tokens": 61
+        },
+        "spend_usd": 0.0007969
+      },
+      "snapshot": {
+        "hash": "2f85b82e3aa95fb91b830b236db871f3678138ff4c794a5e980e499acfd1e730",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-1"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-2.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 1,
+      "op_kind": "rename_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Widget's name should now be called details."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 3,
+          "carried_total": 0,
+          "novel_red": 3,
+          "novel_records": [
+            {
+              "title": "Creating a Widget with empty details is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget with whitespace-only details is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Widget with empty details is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 1,
+        "cumulative_pass": 25,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "tighten-widget-details",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 20,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Widget details validation",
+              "scenario": "Creating a Widget with empty details is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Widget details validation",
+              "scenario": "Creating a Widget with whitespace-only details is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Widget details validation",
+              "scenario": "Updating a Widget with empty details is rejected"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget with whitespace-only details is rejected"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.details.format",
+            "semantic_item_uid": "uid-task-rule-1",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"\\\\S\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 20,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without details is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with empty details is rejected",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 20,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, everything in the provided spec/context files was accurate. The schema, seed data, server logic, and existing scenarios were all consistent with each other. The `details` field was already renamed from `name` (as shown in the archived change), and the validation system in `server.ts` correctly supported the `format` kind with regex patterns, which I used to add the non-whitespace requirement.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/tighten-widget-details/proposal.md",
+          "openspec/changes/tighten-widget-details/tasks.md",
+          "openspec/changes/tighten-widget-details/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 11220,
+          "cached_input_tokens": 51328,
+          "output_tokens": 1676
+        },
+        "wall_clock_ms": 30528,
+        "spend_usd": 0.011528400000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 10937,
+              "cached_input_tokens": 12800,
+              "output_tokens": 967
+            },
+            "wall_clock_ms": 15238,
+            "spec_authoring_tokens": 530,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 28
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 283,
+              "cached_input_tokens": 38528,
+              "output_tokens": 709
+            },
+            "wall_clock_ms": 11043,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 58,
+          "cached_input_tokens": 13184,
+          "output_tokens": 85
+        },
+        "spend_usd": 0.0008582
+      },
+      "snapshot": {
+        "hash": "dd4b472f72047d644137669030a3f4639901195c0316e9458cb8a7482559d0ad",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-2"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-2.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 2,
+      "op_kind": "add_validation_rule",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Tighten up what counts as a valid details on Widget."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 25,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget with whitespace-only details is rejected"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.details.format",
+            "semantic_item_uid": "uid-task-rule-1",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"\\\\S\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 20,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without details is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with empty details is rejected",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 20,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No inaccuracies found. The spec of record, code, and seed data are all consistent with each other. Every scenario I traced through the implementation would produce the expected outcome.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 12678,
+          "cached_input_tokens": 45440,
+          "output_tokens": 3244
+        },
+        "wall_clock_ms": 51370,
+        "spend_usd": 0.015099000000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 12549,
+              "cached_input_tokens": 29312,
+              "output_tokens": 3208
+            },
+            "wall_clock_ms": 45514,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 26,
+            "oracle_feedback_tokens": 15
+          },
+          "implementation": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 129,
+              "cached_input_tokens": 16128,
+              "output_tokens": 36
+            },
+            "wall_clock_ms": 2280,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 66,
+          "cached_input_tokens": 16256,
+          "output_tokens": 36
+        },
+        "spend_usd": 0.0009178
+      },
+      "snapshot": {
+        "hash": "dd4b472f72047d644137669030a3f4639901195c0316e9458cb8a7482559d0ad",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-3"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "gate-scenarios-1.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 3,
+      "op_kind": "noop_maintenance",
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "nl_request": "Do a quick review of current behavior against what's documented — flag anything that's actually broken."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 9,
+          "carried_total": 0,
+          "novel_red": 8,
+          "novel_records": [
+            {
+              "title": "Creating a Review returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Review without rating is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Review with a non-integer rating is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Review with a rating below 1 is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Review with a rating above 5 is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Fetching a missing Review returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Review persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Deleting a Review removes it",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Review increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [
+            "Fetching a missing Review returns not found"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 6,
+        "delta_total": 9,
+        "cumulative_pass": 31,
+        "cumulative_total": 36
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "add-review-list",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 20,
+          "scenarios_after": 29,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review returns the stored entity"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a non-integer rating is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a rating above 5 is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a rating below 1 is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review without rating is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Deleting a Review",
+              "scenario": "Deleting a Review removes it"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Fetching a Review",
+              "scenario": "Fetching a missing Review returns not found"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Listing Review records",
+              "scenario": "Creating a Review increases the list count"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Updating a Review",
+              "scenario": "Updating a Review persists the change"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:create",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "POST /reviews",
+              "found": "scenario: Creating a Review returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:read",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "GET /reviews/{id}",
+              "found": "scenario: Creating a Review returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:update",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "PUT /reviews/{id}",
+              "found": "scenario: Updating a Review persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:delete",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "DELETE /reviews/{id}",
+              "found": "scenario: Deleting a Review removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:list",
+            "semantic_item_uid": "uid-task-endpoint-9",
+            "detail": {
+              "expected": "GET /reviews",
+              "found": "scenario: Creating a Review increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget with whitespace-only details is rejected"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.name",
+            "semantic_item_uid": "uid-task-field-4",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.rating",
+            "semantic_item_uid": "code-only:field:Review.rating",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.comment",
+            "semantic_item_uid": "code-only:field:Review.comment",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.widget_id",
+            "semantic_item_uid": "code-only:field:Review.widget_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Widget\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.details.format",
+            "semantic_item_uid": "uid-task-rule-1",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"\\\\S\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Review.rating.range",
+            "semantic_item_uid": "code-only:rule:Review.rating.range",
+            "detail": {
+              "found": "{\"max\":5,\"min\":1}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 3
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 29,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Review without rating is rejected",
+              "Creating a Review with a non-integer rating is rejected",
+              "Creating a Review with a rating below 1 is rejected",
+              "Creating a Review with a rating above 5 is rejected",
+              "Creating a Widget without details is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with empty details is rejected",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 29,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The workspace snapshot correctly reflected the current state with Categories and Widgets, the schema/registry/seed files were consistent with each other, and the server.ts dispatcher was properly data-driven so adding the Review entity only required changes to schema.ts, seed.ts, and registry.ts.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/add-review-list/proposal.md",
+          "openspec/changes/add-review-list/tasks.md",
+          "openspec/changes/add-review-list/specs/reviews/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 12718,
+          "cached_input_tokens": 46208,
+          "output_tokens": 3456
+        },
+        "wall_clock_ms": 42799,
+        "spend_usd": 0.015581399999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 12496,
+              "cached_input_tokens": 15104,
+              "output_tokens": 1654
+            },
+            "wall_clock_ms": 19870,
+            "spec_authoring_tokens": 1387,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 47
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 222,
+              "cached_input_tokens": 31104,
+              "output_tokens": 1802
+            },
+            "wall_clock_ms": 17942,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 110,
+          "cached_input_tokens": 16512,
+          "output_tokens": 67
+        },
+        "spend_usd": 0.0010146
+      },
+      "snapshot": {
+        "hash": "c7bc02aa5bbc13053f152683523fa2128e95953e07b7f93d191bee47d2f7204d",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-4"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-2.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 4,
+      "op_kind": "add_entity",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Product wants a Review list added so the team can start recording them."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 9,
+          "carried_total": 1,
+          "novel_red": 5,
+          "novel_records": [
+            {
+              "title": "Creating a Review returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Review without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Review without rating is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Review with a non-integer rating is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Review with a rating below 1 is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Review with a rating above 5 is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Review persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Review removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Review increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Review without rating is rejected",
+            "Creating a Review with a non-integer rating is rejected",
+            "Creating a Review with a rating below 1 is rejected",
+            "Creating a Review with a rating above 5 is rejected"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 2,
+        "delta_total": 2,
+        "cumulative_pass": 32,
+        "cumulative_total": 37
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 4,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "add-review-name",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 29,
+          "scenarios_after": 30,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review without name is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review returns the stored entity"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a non-integer rating is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a rating above 5 is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a rating below 1 is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review without rating is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Deleting a Review",
+              "scenario": "Deleting a Review removes it"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Listing Review records",
+              "scenario": "Creating a Review increases the list count"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Updating a Review",
+              "scenario": "Updating a Review persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:create",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "POST /reviews",
+              "found": "scenario: Creating a Review returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:read",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "GET /reviews/{id}",
+              "found": "scenario: Creating a Review returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:update",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "PUT /reviews/{id}",
+              "found": "scenario: Updating a Review persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:delete",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "DELETE /reviews/{id}",
+              "found": "scenario: Deleting a Review removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Review:list",
+            "semantic_item_uid": "uid-task-endpoint-9",
+            "detail": {
+              "expected": "GET /reviews",
+              "found": "scenario: Creating a Review increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget with whitespace-only details is rejected"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.name",
+            "semantic_item_uid": "uid-task-field-4",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}",
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.rating",
+            "semantic_item_uid": "code-only:field:Review.rating",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.comment",
+            "semantic_item_uid": "code-only:field:Review.comment",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Review.widget_id",
+            "semantic_item_uid": "code-only:field:Review.widget_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Widget\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.details.format",
+            "semantic_item_uid": "uid-task-rule-1",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"\\\\S\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Review.rating.range",
+            "semantic_item_uid": "code-only:rule:Review.rating.range",
+            "detail": {
+              "found": "{\"max\":5,\"min\":1}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 3
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 30,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Review without name is rejected",
+              "Creating a Review without rating is rejected",
+              "Creating a Review with a non-integer rating is rejected",
+              "Creating a Review with a rating below 1 is rejected",
+              "Creating a Review with a rating above 5 is rejected",
+              "Creating a Widget without details is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with empty details is rejected",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Review returns the stored entity",
+              "Updating a Review persists the change",
+              "Deleting a Review removes it",
+              "Creating a Review increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 30,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec and context files were accurate. The Review entity had no `name` field, and the task was to add one as a required string field. All existing scenarios, schema, and seed data were consistent with each other.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/add-review-name/proposal.md",
+          "openspec/changes/add-review-name/tasks.md",
+          "openspec/changes/add-review-name/specs/reviews/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 6,
+        "tokens": {
+          "fresh_input_tokens": 19451,
+          "cached_input_tokens": 101120,
+          "output_tokens": 4768
+        },
+        "wall_clock_ms": 56423,
+        "spend_usd": 0.024317500000000002,
+        "by_phase": {
+          "spec": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 19160,
+              "cached_input_tokens": 37760,
+              "output_tokens": 2330
+            },
+            "wall_clock_ms": 27285,
+            "spec_authoring_tokens": 1557,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 83
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 291,
+              "cached_input_tokens": 63360,
+              "output_tokens": 2438
+            },
+            "wall_clock_ms": 24549,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 115,
+          "cached_input_tokens": 22400,
+          "output_tokens": 49
+        },
+        "spend_usd": 0.0012755
+      },
+      "snapshot": {
+        "hash": "158ee6e1ed4717d50b7920c828aace05086521d78f88351f154ab13d31a501c8",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-5"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 5,
+      "op_kind": "retype_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Update how Review's name is stored so it accepts the values the business now needs."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 1,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 5,
+          "carried_total": 0,
+          "novel_red": 5,
+          "novel_records": [
+            {
+              "title": "POST to reviews returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "GET reviews by id returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "GET reviews list returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "PUT to reviews returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "DELETE reviews returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 25,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 4,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "remove-review-tracking",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 30,
+          "scenarios_after": 25,
+          "dropped_scenarios": [
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review returns the stored entity"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a non-integer rating is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a rating above 5 is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review with a rating below 1 is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review without name is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Creating a Review",
+              "scenario": "Creating a Review without rating is rejected"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Deleting a Review",
+              "scenario": "Deleting a Review removes it"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Fetching a Review",
+              "scenario": "Fetching a missing Review returns not found"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Listing Review records",
+              "scenario": "Creating a Review increases the list count"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Updating a Review",
+              "scenario": "Updating a Review persists the change"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "reviews",
+              "requirement": "Review endpoints are removed",
+              "scenario": "DELETE reviews returns not found"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Review endpoints are removed",
+              "scenario": "GET reviews by id returns not found"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Review endpoints are removed",
+              "scenario": "GET reviews list returns not found"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Review endpoints are removed",
+              "scenario": "POST to reviews returns not found"
+            },
+            {
+              "spec": "reviews",
+              "requirement": "Review endpoints are removed",
+              "scenario": "PUT to reviews returns not found"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget with whitespace-only details is rejected"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.details.format",
+            "semantic_item_uid": "uid-task-rule-1",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"\\\\S\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 25,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without details is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with empty details is rejected",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget with whitespace-only details is rejected",
+              "Updating a Widget with empty details is rejected"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget with whitespace-only details is rejected"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 25,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec and context files were accurate. The workspace snapshot correctly showed all Review-related code (schema, routes, seed data, specs) that needed to be removed, and the existing Category and Widget entities were unaffected as stated.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/remove-review-tracking/proposal.md",
+          "openspec/changes/remove-review-tracking/tasks.md",
+          "openspec/changes/remove-review-tracking/specs/reviews/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 7,
+        "tokens": {
+          "fresh_input_tokens": 19518,
+          "cached_input_tokens": 136448,
+          "output_tokens": 5120
+        },
+        "wall_clock_ms": 57777,
+        "spend_usd": 0.026821400000000002,
+        "by_phase": {
+          "spec": {
+            "turns": 5,
+            "tokens": {
+              "fresh_input_tokens": 19280,
+              "cached_input_tokens": 88192,
+              "output_tokens": 3778
+            },
+            "wall_clock_ms": 38989,
+            "spec_authoring_tokens": 3216,
+            "gate_protocol_interaction_tokens": 47,
+            "oracle_feedback_tokens": 28
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 238,
+              "cached_input_tokens": 48256,
+              "output_tokens": 1342
+            },
+            "wall_clock_ms": 14293,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 151,
+          "cached_input_tokens": 24832,
+          "output_tokens": 48
+        },
+        "spend_usd": 0.0014131
+      },
+      "snapshot": {
+        "hash": "32a010995aed6d1fb079036a577d8afd9e050f7070b019d6a70958b6e37db1db",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m7-pilot/seed-60/snapshots/e4_arm_h/task-6"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-4.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 6,
+      "op_kind": "delete_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Review tracking is being retired — remove it from the product entirely."
+    }
+  ],
+  "usage_totals": {
+    "turns": 30,
+    "spend_usd": 0.11155000000000001,
+    "wall_clock_ms": 272982
+  },
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "status": "complete"
+}
