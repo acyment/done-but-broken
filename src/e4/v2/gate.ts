@@ -341,7 +341,10 @@ export class E4V2TaskGate {
     const novel = changeScenarios.filter((scenario) => !recordCanonical.has(canonicalScenarioBody(scenario)));
     const carried = changeScenarios.filter((scenario) => recordCanonical.has(canonicalScenarioBody(scenario)));
 
-    if (!behaviorPreserving && novel.length === 0) {
+    // §6.2 is the EXECUTED arm's machinery: the ≥1-novel requirement (like the ≥1-red rule) never
+    // gates the prose arm, whose custody is floors-only (§6 prose-arm paragraph — "spec must
+    // change, parse, floors pass"). A zero-novel prose change is measured drift, not a refusal.
+    if (this.input.arm_mode === "executed" && !behaviorPreserving && novel.length === 0) {
       this.discriminatingRedRefusals += 1;
       this.eventLog.push({ type: "discriminating_red_refusal", novel_total: 0, green_novel_titles: [] });
       return {

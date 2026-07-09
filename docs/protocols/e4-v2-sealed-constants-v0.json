@@ -1,0 +1,96 @@
+{
+  "schema": "e4-v2-sealed-constants",
+  "version": "0.1",
+  "protocol_profile_id": "e4-openspec-workflow-v1",
+  "arms": [
+    "e4_arm_0",
+    "e4_arm_h"
+  ],
+  "compatibility_boundary": {
+    "substrate_config_id": "v2-default",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1"
+  },
+  "code_twins": {
+    "src/e4/v2/converter.ts": "f74547e33abb832209bc0a558f1c063db098c42a441784605952dbe0bfcd2e0f",
+    "src/e4/v2/step-table.ts": "c7d57e5b3e841258bb7a862b93ae7fae16ed7fc04e9f0198f40a7f22c99c3866",
+    "src/e4/v2/scenario.ts": "28f10e02da90ccc8d2de53b2ac213607afb72e5dfe04ebfee76da538fdd25587",
+    "src/e4/v2/scenario-executor.ts": "13dd65ed15597d4d3a624e146841e2fe57dda3f8e4b0515f07de1b53333514f7",
+    "src/e4/v2/gold-spec.ts": "f61df8913464f727a71d25d49abec39dafd5ff0b246f14fb586b2a80732f2d39",
+    "src/e4/v2/bank.ts": "81caa088a06674fea53ee2dc75df3e6f2efa2af9e34c921c963fd308a8780f97",
+    "src/e4/substrate/v2/ops.ts": "38e5a874f98319df274a9d795e534fc519b3fa9c9d22931d3e2a2ae50b805213",
+    "src/e4/substrate/v2/scaffold.ts": "0b175c930c4ecf1fa8b891da0ad5bcdd0ee371acfc009ee7ee6b2183f800bc00",
+    "src/e4/substrate/v2/testgen.ts": "7fd4a5b835b82b97926d054cfad2bb3c0a6dd02b3fd564b49ae63a382f356c00",
+    "src/e4/substrate/v2/values.ts": "09508ab9255352a2773e393712c170530b2533cc2874efbf22be3bb5242f2f28"
+  },
+  "op_mix": {
+    "weights": {
+      "drift_opportunity": 0.5,
+      "additive": 0.4,
+      "behavior_preserving": 0.1
+    },
+    "min_behavior_preserving_tasks": 1
+  },
+  "executor": {
+    "readiness_timeout_ms": 10000,
+    "request_timeout_ms": 5000,
+    "readiness_poll_interval_ms": 25,
+    "fixed_order": true,
+    "port": 0,
+    "retry_policy": "single-attempt-no-retry-arm-independent"
+  },
+  "openspec": {
+    "package": "@fission-ai/openspec",
+    "version": "1.4.1",
+    "validate_specs_args": [
+      "validate",
+      "--specs",
+      "--strict",
+      "--no-interactive"
+    ],
+    "validate_change_args": [
+      "validate",
+      "<change>",
+      "--strict",
+      "--no-interactive"
+    ],
+    "archive_args": [
+      "archive",
+      "<change>",
+      "--yes"
+    ]
+  },
+  "feedback": {
+    "smoke_command": "bun run smoke",
+    "retry_policy": "provider-retries max_attempts=3 backoff_ms=[1000,4000] arm-independent; retries cost neither turns nor tokens"
+  },
+  "protocol_text": {
+    "block_grammar_id": "e4-block-grammar-v1",
+    "turn_protocol_id": "e4-turn-protocol-v1",
+    "workflow_protocol": "E4 v2 workflow (profile e4-openspec-workflow-v1).\n\nEvery task runs in two phases. The harness tracks the phase; you cannot skip it.\n\nSPEC PHASE (every task starts here).\n- Only files inside one change directory under openspec/changes/<change-name>/ are writable: proposal.md, tasks.md, and delta specs under specs/<capability>/spec.md using ## ADDED Requirements / ## MODIFIED Requirements / ## REMOVED Requirements blocks. A MODIFIED block replaces the whole requirement, so restate every scenario you keep.\n- openspec/specs/ is read-only everywhere: the harness rebuilds it from your archived change at task close.\n- Scenarios must follow the step vocabulary documented in README.md; it is checked when you exit the phase.\n- Output <<<DONE>>> to request the phase exit. The harness checks custody: exactly one change directory, `openspec validate` passing, every scenario parsing with at least one THEN and one value-binding assertion. If the exit is refused, fix the change and try again.\n- On tasks where no behavior changes, you may instead leave openspec/ untouched, run the verification command at least once, and output <<<DONE>>>.\n\nIMPLEMENTATION PHASE.\n- Files under openspec/ are now frozen; change the code so it does what your spec says.\n- Output <<<DONE>>> when the task is complete.\n\nAt task close the harness archives your change (openspec archive), rebuilding the spec of record from your deltas.",
+    "executed_arm_gate_protocol": "Executable-spec gate (in this workspace your scenarios are RUN; they are the acceptance check).\n\n- At the spec-phase exit, every scenario your change adds is executed against the current implementation. The change must contain at least one new scenario, and at least one new scenario must FAIL now (it describes behavior that does not exist yet). A change whose new scenarios all already pass is refused.\n- A done-claim in the implementation phase is accepted only when the FULL scenario set (the spec of record plus your change) passes against your implementation. The failing scenario titles and reasons are reported back after a refused claim; keep working until the set is green or the budget ends.\n- Scenario execution results are the only acceptance feedback you receive.",
+    "noticing_probe_prompt": "One final question about the task you just worked on: was anything in the provided spec/context files inaccurate? Answer briefly.",
+    "workspace_readme": "# Workspace guide\n\nThis service's observable behavior is specified in the OpenSpec tree, which you own and\nmust keep truthful:\n\n- `openspec/specs/<capability>/spec.md` — the spec of record, one capability per resource.\n- `openspec/changes/<change-name>/` — your proposed change for the current task.\n\nEach task follows the same workflow:\n\n1. **Propose**: create a change under `openspec/changes/<change-name>/` containing\n   `proposal.md`, `tasks.md`, and delta specs under `specs/<capability>/spec.md` using\n   `## ADDED Requirements` / `## MODIFIED Requirements` / `## REMOVED Requirements` blocks.\n   A MODIFIED block replaces the whole requirement, so restate every scenario you keep.\n2. **Implement**: make the code match the spec.\n3. At task close the harness archives the change (`openspec archive`), rebuilding the spec\n   of record from your deltas.\n\n## Scenario grammar\n\nEvery `#### Scenario:` block consists of bolded keyword bullets — `- **WHEN** <step>`,\n`- **THEN** <step>`, `- **AND** <step>` (AND continues the preceding WHEN or THEN). Each\nstep must match exactly one of the patterns below; no other step text is legal.\n\nRequest steps (WHEN, or AND after a WHEN):\n\n- I send a GET request to \"<path>\"\n- I send a DELETE request to \"<path>\"\n- I send a POST request to \"<path>\" with body <json>\n- I send a PUT request to \"<path>\" with body <json>\n- I send a PATCH request to \"<path>\" with body <json>\n- I remember the response field \"<json.path>\" as \"<name>\"\n\nAssertion steps (THEN, or AND after a THEN):\n\n- the response status is <int>\n- the response field \"<json.path>\" equals <json-literal>\n- the response field \"<json.path>\" equals the remembered \"<name>\"\n- the response body equals <json-literal>\n- the response has no field \"<json.path>\"\n- the response list has length <int>\n- the response field \"<json.path>\" is a <string|number|boolean|array|object>\n\nRules:\n\n- Every scenario has at least one THEN step.\n- Every scenario has at least one value-binding assertion (a field/body equality, a forbidden-field check, or a list-length check).\n- Statuses are exact integers (no status classes).\n- All string literals are quoted.\n- No step text outside the patterns above is legal.\n"
+  },
+  "budgets": {
+    "turns_per_task": 27,
+    "verifications_per_task": 12,
+    "token_budget": 490000,
+    "spend_cap_usd": 5
+  },
+  "floor_effect": {
+    "task_index_max": 3,
+    "consecutive_zero_tasks": 2,
+    "per_arm": true
+  },
+  "interpretability": {
+    "min_replay_valid_paired_seeds": 2,
+    "extraction_failed_max_fraction": 0.1,
+    "arm_h_spec_stall_max_fraction": 0.5
+  }
+}
