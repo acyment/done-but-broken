@@ -5,6 +5,13 @@ Drafted 2026-07-09 at operator direction; anti-cheat design frozen from the adju
 deep-research backlog (`E4V2-ANTICHEAT-ADJUDICATION.md`, items A1–A10; rejections R1–R8 are
 recorded there and not re-litigated here). Supersedes the earlier proposal draft in this file.
 
+**Amendment 2026-07-09 (Fable session, post-approval):** the v2-M1 build arc stopped cleanly on
+a design silence — the T0 gold spec-of-record generation policy — recorded in
+`E4V2-M1-ESCALATION-t0-gold-spec-generator.md`. Resolved here by adding **§5.5**
+(`e4-t0-gold-spec-v1`, sealed) and one clarifying sentence in §7.5 (spec-side convention
+coverage scope). §9/§10 gain the corresponding per-milestone verification split. No previously
+frozen surface is altered.
+
 ## 1. Motivation (from the v1 pilots)
 
 The v1 program (M0–M7b) validated every instrument and produced the finding that motivates this
@@ -139,6 +146,88 @@ semantics), and the floors are sealed in the v2 constants lineage and protocol-t
 the exact regex table is a constants-adjacent code twin with a pinned hash, same discipline as
 v1's block grammar.
 
+### 5.5 T0 gold spec-of-record generation (`e4-t0-gold-spec-v1`, sealed — 2026-07-09 amendment)
+
+The T0 workspace must ship a populated, in-sync spec-of-record: the pinned CLI's own validator
+requires `## Purpose` + `## Requirements` and **≥1 `#### Scenario:` per requirement**
+(`REQUIREMENT_NO_SCENARIOS`), the drift construct presupposes pre-existing scenarios that can go
+stale, and whatever T0 says is the sealed baseline for the §7.5 meter, the coverage denominator,
+and the §7 kill-score context. This section pins the generation policy: a deterministic pure
+function of a ground-truth IR snapshot (normally the fixed T0 baseline; M5's diligent fake agent
+reuses the same templates on post-op IRs to derive its gold change deltas by diffing against the
+pre-task spec-of-record).
+
+**Workspace shape.** The OpenSpec tree is THE agent-facing spec in v2: `specs/openapi.json` and
+`specs/CONVENTIONS.md` are not emitted (operationalizing §3 "replaced"; the code-side meter
+channel reads the registry/schema dump and is unaffected). One capability per entity; folder
+name = the first path segment of the entity's first endpoint in IR order, lowercased (e.g.
+`openspec/specs/widgets/spec.md`). `## Purpose` = one deterministic template sentence per
+entity. `## Requirements` = one `### Requirement:` per endpoint of that entity, in IR order.
+The workspace README is re-authored for v2: it documents the OpenSpec layout and per-task
+propose→implement→archive workflow and carries the §5.3 step-pattern vocabulary (patterns, not
+implementations) plus the A8 floors **verbatim** — the v1 Gate-1 "README carries the grammar
+verbatim" pin, transferred. README text seals under `protocol_text` at the M5 freeze.
+
+**Requirement and scenario templates (the sealed table).** Exact strings with typed
+placeholders, one requirement template per endpoint kind (title + one-sentence SHALL statement)
+and the following scenario set. Scenarios appear in template order under their requirement,
+entities in IR order — document order is execution order (§5.2). Every template stays inside
+the §5.3 vocabulary: single-line JSON bodies, quoted strings, integer statuses,
+dot-separated object paths only (no array indexing), no `remember` steps (ids are
+client-supplied in this substrate; the remember form remains available to agents).
+
+| Endpoint kind | Scenario(s) emitted |
+| --- | --- |
+| create | (1) *"Creating a ⟨entity⟩ returns the stored entity"*: POST ⟨collection⟩ with the fresh body → status 201 → body equals ⟨sent⟩ → GET ⟨collection⟩/⟨spec-id⟩ → status 200 → body equals ⟨sent⟩. (2) *"Creating a ⟨entity⟩ without ⟨field⟩ is rejected"*: POST the fresh body minus the first required non-id field → status 400 → field `error.⟨k1⟩` equals `"validation_error"` → field `error.⟨k2⟩` is a string. |
+| read | *"Fetching a missing ⟨entity⟩ returns not found"*: GET ⟨collection⟩/⟨missing-id⟩ → status 404 → field `error.⟨k1⟩` equals `"not_found"` → field `error.⟨k2⟩` is a string. (The happy-path read is covered by create's round-trip GET; a dedicated create→get twin would duplicate it under the §6 canonicalizer.) |
+| update | *"Updating a ⟨entity⟩ persists the change"*: POST fresh → 201 → PUT ⟨changed body⟩ → 200 → body equals ⟨changed⟩ → GET → 200 → body equals ⟨changed⟩. |
+| delete | *"Deleting a ⟨entity⟩ removes it"*: POST fresh → 201 → DELETE → 204 → GET → 404 → field `error.⟨k1⟩` equals `"not_found"`. |
+| list | *"Creating a ⟨entity⟩ increases the list count"*: POST fresh → 201 → GET ⟨collection⟩ → 200 → list has length ⟨seed-count + 1⟩. Additionally, when the entity has a ref field: *"Filtering ⟨collection⟩ by ⟨ref-field⟩ returns only matching rows"*: POST fresh (ref = seed parent 1) → 201 → GET ⟨collection⟩?⟨ref-field⟩=⟨parent-id⟩ → 200 → list has length ⟨matching-seed-count + 1⟩. |
+| analytics | *"Creating a ⟨entity⟩ increases the reported count"*: POST fresh → 201 → GET ⟨stats path⟩ → 200 → field `count` equals ⟨seed-count + 1⟩. |
+
+`⟨k1⟩/⟨k2⟩` are the error-envelope keys the error_format convention statement pins (`code`/
+`message` or `type`/`detail`), resolved exactly as the GT generator resolves them. Error
+**values** asserted are the stable machine codes only (`validation_error`, `not_found`); message/
+detail wording is never asserted (the M3 wording-overreach rule, carried over — the weak
+`is a string` form pins the second envelope key's presence without freezing prose).
+
+**Fixture-value policy (A6-aligned).** Fresh bodies carry every field of the entity, values from
+the GT generator's sealed field-value derivation at **spec-reserved ordinals**: fresh body n=5,
+update's changed value n=6 on the first non-id field (GT reserves 1/2 for seed rows, 9/20 for
+its own fixtures). Spec ids are `⟨entity⟩-spec-1`, the missing-id literal is
+`⟨entity⟩-spec-missing`; both must be disjoint from seed ids (`*-seed-N`) and GT fixture ids
+(`*-new-1`, `*-invalid-1`, `*-does-not-exist`) — asserted by the self-check, so agent-visible
+spec values and hidden-oracle values stay decorrelated by construction. Ref-typed fields
+reference seed row 1 of the referenced entity (the only pre-existing row at scenario start;
+per-scenario hermetic execution resets state to seed). One fresh fixture per entity, reused
+across that entity's templates.
+
+**Design rationale (recorded, not re-litigated):** the emitted set is the minimum that (a)
+covers every truth endpoint with ≥1 matching request, (b) satisfies the A8 floors with strong
+forms (whole-body equality on echo responses, consequence GETs per A7's create→get /
+delete→get-404 / list-count-delta shapes), and (c) achieves kill score 1.0 against the §7 bank
+at T0 — variant-by-variant: validation-dropped ← the required-field rejection; status-swapped ←
+exact integer statuses; no-op-write ← the update/delete consequence GETs; seed-echo ← fresh-body
+echo + round-trip; field-leak ← whole-body equality; wrong-filter ← the filtered-list count.
+A gold baseline that kills the full bank calibrates the instrument's ceiling: kill-score decay
+under the agent's maintenance then measures spec-strength erosion, never a weak starting point.
+
+**Verification split across milestones (executable):**
+- **v2-M1 (structural):** the emitted tree passes `openspec validate --specs --strict
+  --no-interactive`; the template table is total over the endpoint-kind vocabulary; fixture-id
+  disjointness holds; every scenario satisfies the A8 floors by construction (generator
+  self-check — the v2 analog of v1-M1's generator in-sync self-check).
+- **v2-M2 (executed):** the full T0 gold scenario set parses under the converter, binds under
+  the sealed step table, and passes 100% against the T0 gold implementation via the hermetic
+  executor.
+- **v2-M4 (instrument calibration):** the T0 gold spec-of-record achieves kill score 1.0 against
+  the T0 adversarial bank, and the re-based meter reports zero spec-side discrepancies at T0.
+
+**Sealing.** The template table (requirement titles/SHALL statements, scenario titles, step
+sequences, fixture ordinals, disjointness rules, capability naming) is `e4-t0-gold-spec-v1` —
+a constants-adjacent code twin with a pinned hash, same discipline as the step table (§5.4),
+stamped in every manifest.
+
 ## 6. Gate mechanics (executed arm)
 
 Per task: spec phase → implementation phase, as v1, with these changes:
@@ -227,6 +316,12 @@ conventions:
 - **Conventions**: a truth convention item (e.g. error-envelope shape) is covered iff ≥1
   scenario asserts on its shape (error-field paths against the sealed envelope keys); else
   `coverage_gap` on that convention item. Code-side convention measurement is unchanged.
+  **Scope clarification (2026-07-09 amendment):** spec-side convention coverage applies only to
+  convention kinds that are scenario-assertable under the sealed step table — in the v1
+  substrate, exactly `error_format`. `naming`/`command`/`structural` conventions are
+  code-side-only in v2 (recorded limitation, same class as the field/validation_rule exclusion
+  below; without this scope pin, T0 in-sync would be structurally unachievable, since no step
+  form can assert a naming/command/structural statement).
 - **Field/validation_rule granularity is deliberately NOT measured on the spec side in v2** —
   scenario text does not carry a reliable field inventory, and endpoint + convention granularity
   is what the drift claims need. The kinds remain in the report schema with zero spec-side
@@ -266,13 +361,16 @@ Standing exceptions: any GATE REVIEW response, design amendment, or unexpected-r
 adjudication is Fable regardless of phase (that is judgment work, not execution); if Opus hits a
 sealed-surface ambiguity in M2's step table it escalates rather than deciding.
 
-- **v2-M1** OpenSpec workspace generator + CLI integration + allowlist gate decision. *(Opus)*
+- **v2-M1** OpenSpec workspace generator (incl. the §5.5 T0 gold spec-of-record generator with
+  its structural self-checks) + CLI integration + allowlist gate decision. *(Opus)*
 - **v2-M2** Converter port (fixture cross-test vs Python original) + step table + hermetic
-  scenario executor (+ parser fuzz test). *(Opus — escalate step-table ambiguities)*
+  scenario executor (+ parser fuzz test) + the §5.5 executed T0 in-sync check. *(Opus —
+  escalate step-table ambiguities)*
 - **v2-M3** Gate rework (custody floors, discriminating red, green on cumulative scenarios;
   validate wired); runner adjustments; red failure-mode capture. *(Opus)*
 - **v2-M4** Meter re-pointing (coverage/staleness over scenario blocks; episode semantics kept)
-  + adversarial bank + kill-score instrument. *(Opus)*
+  + adversarial bank + kill-score instrument + the §5.5 calibration checks (T0 gold kill score
+  1.0; zero spec-side discrepancies at T0). *(Opus)*
 - **v2-M5** Fake-agent behaviors (diligent / drifting / **vacuous-scenario gamer** — must land
   as high false-confidence + low kill score + coverage gap, the live anti-cheat fixture) +
   dry-run integration + non-budget v2 constants freeze + inspector/replay across the archive
@@ -286,6 +384,8 @@ sealed-surface ambiguity in M2's step table it escalates rather than deciding.
 
 - Every milestone: full e1:protect triad + E4 import lint; test count grows from the current
   baseline, never shrinks.
+- §5.5's per-milestone T0 checks: structural self-checks at v2-M1, executed in-sync at v2-M2,
+  kill-score-1.0 + zero-discrepancy calibration at v2-M4.
 - v2-M2: byte-identical parse vs the Python converter on shared fixtures; fuzz test green.
 - v2-M5 dry run: both drift directions + the vacuous-scenario gamer measured (not blocked) + a
   seed-echo bank variant killed by the diligent agent's scenarios and NOT killed by the gamer's;
