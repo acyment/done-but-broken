@@ -10,6 +10,8 @@ import {
   loadE4Constants,
   validateE4Constants
 } from "../src/e4/constants";
+import { canonicalizeJson } from "../src/e4/oracle-executor";
+import { hashText } from "../src/snapshot";
 
 const repoRoot = resolve(import.meta.dir, "..");
 const draftPath = join(repoRoot, "docs", "protocols", "e4-sealed-constants-v0.json");
@@ -110,10 +112,8 @@ describe("E4 constants validate and hash under their own lineage", () => {
     expect(() => validateE4Constants({ ...validDraft(), executor: sealed })).not.toThrow();
   });
 
-  test("[M4] the on-disk draft (v0.4) seals budgets slots, feedback, snapshot cadence, and the remaining protocol_text surfaces", () => {
+  test("[M4] the on-disk draft seals budgets slots, feedback, snapshot cadence, and the remaining protocol_text surfaces", () => {
     const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
-
-    expect(constants.version).toBe("0.4");
     // Budget SLOTS are load-bearing at M4; the values stay provisional until M6.5 freezes them.
     expect(constants.budgets).not.toBeNull();
     expect(constants.budgets?.turns_per_task).toBeGreaterThan(0);
@@ -132,6 +132,22 @@ describe("E4 constants validate and hash under their own lineage", () => {
     expect(constants.protocol_text?.noticing_probe_prompt).toContain(
       "was anything in the provided spec/context files inaccurate?"
     );
+  });
+
+  test("[M6] [R1-S3] the NON-BUDGET constants are FROZEN: the sealed projection hash is pinned", () => {
+    // Freeze semantics: every sealed field EXCEPT the budget values (which freeze at M6.5 after
+    // their only real-model contact) and the draft-version metadata is now immutable. Any edit to
+    // a non-budget field fails this test; updating the pinned hash below requires a NEW GATE
+    // decision recorded in docs/e4/ — never an inline fix.
+    const raw = JSON.parse(readFileSync(draftPath, "utf8")) as Record<string, unknown>;
+    const projection = { ...raw };
+    delete projection.version;
+    delete projection.budgets;
+
+    expect(hashText(canonicalizeJson(projection))).toBe(
+      "1995df5e10fc793d086d52475a438f9964ace3167b12da4346e4965504ad9a2c"
+    );
+    expect((raw as { version: string }).version).toBe("0.5");
   });
 
   test("[M4] rejects a half-sealed M4 protocol_text block", () => {

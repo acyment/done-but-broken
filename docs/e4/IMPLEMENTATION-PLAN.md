@@ -492,6 +492,48 @@ floor-effect thresholds) here. The **budget values** (`turns_per_task`, `token_b
 freezing them against a fake agent seals numbers no live model ever pressured. No non-budget change
 after this point without a new gate.
 
+**M6 implementation notes (recorded divergences/pins, Phase 3):**
+
+1. **The freeze is executable.** Constants v0.5; `test/e4-constants.test.ts` pins the sha256 of the
+   canonical non-budget projection (every field except `budgets` values and the draft-`version`
+   metadata) — any non-budget edit fails the suite, and updating the pinned hash requires a new
+   recorded gate decision, never an inline fix. M6.5's budget edits pass untouched.
+2. **Gold derivation stays harness-side.** The fake agent scripts its turns from
+   `buildE4WorkspaceFiles(post-op ground-truth IR)` — the same codegen that built T0. This is
+   fixture machinery constructed FROM the generator's output; no agent-visible channel carries
+   gold, and no live arm ever will (the live provider path, absent until M6.5, has no such input).
+3. **"Diligent" is arm-shaped.** In Arm H the diligent behavior is two-phase (gold spec + DONE
+   through custody/red, then gold implementation + DONE through green; §3.3 affirmation with a
+   live smoke invocation on behavior-preserving tasks). In an ungated arm the same behavior lands
+   spec + implementation in ONE turn — there is no phase machinery to sequence it (this doubles as
+   the "Arm 0 spontaneously maintains the spec" finding-shaped fixture, used by the no-go test).
+4. **Registry-bypass surgery is anchored and fail-loud.** The fixture prunes one route from
+   `registry.ts` and direct-wires the same route object into `server.ts`'s dispatch table by
+   string surgery on two anchors of the (static) scaffold source; if the scaffold shape drifts,
+   the fixture throws rather than silently testing nothing. The bypassed route is chosen to be
+   baseline-stable (present and unchanged since T0) so the ONLY discrepancy for that item is
+   registry-absence with executor-green behavior — isolating the Gate-1 change 1 path.
+5. **`bin/e4.ts` is dry_run-only by construction.** No live-provider wiring exists in the binary
+   until M6.5, so no flag mistake can spend money or mint a `calibration`/`pilot` classification.
+   Multi-seed layout: `<run-root>/seed-<n>/` per paired draw, `pairing_label`
+   `pair-dryrun-seed-<n>`; `--crash-at <arm>:<task>` is the documented test seam for the resume
+   scenario (M4's malformed-result crash simulation).
+6. **Go/no-go operational pins** (`src/e4/gonogo.ts` + `bin/e4-gonogo.ts`): boundary discipline is
+   hard — manifests whose `constants_hash` differs from the sealed file refuse to pool (exit 3,
+   an operational error distinct from the three verdicts). Trigger 4's "fails to exit the spec
+   phase" counts ANY complete Arm-H task with `phase_at_termination == "spec"` (budget_exhausted
+   or agent_stalled alike — both are "never exited"). Trigger 2 treats a null velocity (no
+   drift-opportunity tasks drawn) as measuring nothing: it neither fires the trigger by itself
+   nor defuses it. §5.1 advisory flags (v)/(vi) print in the report and never gate. Predicate (b)
+   is the frozen-meter-version stamp check across every manifest; the known-drift-fixture test
+   itself remains a bun-test build precondition, re-asserted by the suite, not re-run inside the
+   binary.
+7. **Dry-run observed shape** (seeds 45/46, 3 tasks, zero spend): drifting arms pass the oracle
+   22/22 while accumulating spec-side drift; diligent Arm H closes every task `done` with zero
+   drift, red checks red, and the affirmation path live on the behavior-preserving task; verdicts:
+   go (exit 0) on the 2-seed fixture, no-go (exit 1) on the H1-absent fixture, and
+   inconclusive_uninterpretable (exit 2) on a single-seed root.
+
 ---
 
 ### M6.5 — Budget calibration: full-length Arm-H sequence (**required** pre-pilot step; spend-gated; `[R1-S3]` `[R2: R2-4]`)
