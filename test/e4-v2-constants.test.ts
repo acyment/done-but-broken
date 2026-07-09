@@ -122,6 +122,31 @@ describe("v2-M5 — non-budget constants freeze", () => {
     expect(() => validateE4V2Constants(missingReadme)).toThrow(/workspace_readme/);
   });
 
+  test("[v2-M6] v0 is FULLY FROZEN: the complete file hash is pinned (budgets ratified on deepseek-v4-pro)", async () => {
+    // Freeze lineage: provisional 0.1 27/12/490000/5 (v2-M5)
+    //   → v0.2 27/12/490000/5 (v2-M6, deepseek-v4-pro, seed 37, classification=calibration;
+    //     observed appetite: max turns/task=8, max tokens/task=142778, max verifications/task=3,
+    //     sequence spend $0.127716 — every wall well under cap, so the freeze rule's "fits with
+    //     headroom" branch applies and the provisional VALUES freeze unchanged; only `version`
+    //     moves to mark the freeze event.
+    //     docs/protocols/e4-v2-m6-calibration-manifest-20260709-001.json).
+    // This is the constants_hash every v2-M7 evidence manifest must stamp; immutable without a
+    // new gate. Budgets transfer to v2-M7 only on the exact model id deepseek-v4-pro (recorded in
+    // docs/e4/E4V2-M6-BUDGET-CALIBRATION-NOTES.md — not a JSON field, same as the v1 M6.5 pin).
+    const { constants } = await loadSealed();
+
+    expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
+      "d762bacc126618d086cea6416b1ec4d8f87d561a5bb366e4a0a8149d0e06836b"
+    );
+    expect(constants.version).toBe("0.2");
+    expect(constants.budgets).toEqual({
+      turns_per_task: 27,
+      verifications_per_task: 12,
+      token_budget: 490000,
+      spend_cap_usd: 5
+    });
+  });
+
   test("the v1 seal is untouched by the v2 lineage (different schema, different file)", async () => {
     const v1 = JSON.parse(await Bun.file(join(REPO_ROOT, "docs/protocols/e4-sealed-constants-v0.json")).text()) as {
       schema: string;
