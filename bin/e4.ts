@@ -14,8 +14,8 @@
 //   dry_run      → fake provider only; --live is refused.
 //   calibration  → live provider required; non-evidence by classification (result schema and
 //                  go/no-go exclude it structurally).
-//   pilot        → REFUSED here. M7 launches only at its own gate, with the pre-registered
-//                  analysis committed first; this guard is removed at that gate, not before.
+//   pilot        → live provider required; gate record =
+//                  docs/protocols/e4-m7-pilot-preregistration-v1.md (M7 gate, 2026-07-08).
 import { join, resolve } from "node:path";
 import { loadE4Constants } from "../src/e4/constants";
 import { runE4Run } from "../src/e4/run-orchestrator";
@@ -96,14 +96,11 @@ async function main(): Promise<number> {
     throw new Error("sealed constants are pre-M1: op_mix / substrate_config_id missing");
   }
 
-  if (args.classification === "pilot") {
-    throw new Error(
-      "M7 pilot launch is gated: the pre-registered analysis must be committed and the launch explicitly authorized at the M7 gate — this guard is removed there, not here."
-    );
-  }
-
-  if (args.classification === "calibration" && !args.live) {
-    throw new Error("calibration runs are live-model runs: pass --live (budgets are never frozen from fake-agent observation)");
+  // The M7 pilot-classification guard was removed at the M7 gate (2026-07-08): pre-registration
+  // committed at docs/protocols/e4-m7-pilot-preregistration-v1.md, operator spend authorization
+  // recorded there. Pilot runs are live-model runs like calibrations.
+  if ((args.classification === "calibration" || args.classification === "pilot") && !args.live) {
+    throw new Error(`${args.classification} runs are live-model runs: pass --live`);
   }
 
   if (args.classification === "dry_run" && args.live) {

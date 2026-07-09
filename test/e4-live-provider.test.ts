@@ -173,15 +173,15 @@ describe("M6.5 CLI classification gates (no run is launched)", () => {
     return stderr;
   }
 
-  test("pilot classification is refused until the M7 gate", async () => {
-    const stderr = await runCliExpectingError(["--run-root", "tmp/never", "--classification", "pilot"]);
-
-    expect(stderr).toContain("M7 pilot launch is gated");
-  });
-
-  test("calibration without --live and dry_run with --live are both refused", async () => {
+  test("calibration/pilot without --live and dry_run with --live are all refused", async () => {
+    // The M7 pilot-classification guard was removed at the M7 gate (pre-registration:
+    // docs/protocols/e4-m7-pilot-preregistration-v1.md); pilot now gates like calibration —
+    // live-only, never the fake agent.
     expect(await runCliExpectingError(["--run-root", "tmp/never", "--classification", "calibration"])).toContain(
-      "never frozen from fake-agent observation"
+      "calibration runs are live-model runs"
+    );
+    expect(await runCliExpectingError(["--run-root", "tmp/never", "--classification", "pilot"])).toContain(
+      "pilot runs are live-model runs"
     );
     expect(await runCliExpectingError(["--run-root", "tmp/never", "--live"])).toContain("--live is not valid for dry_run");
   });
