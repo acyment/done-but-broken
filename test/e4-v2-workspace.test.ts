@@ -68,7 +68,9 @@ describe("v2-M1 — T0 workspace shape (§5.5)", () => {
 
     expect(paths).toEqual([
       "README.md",
+      "openspec/specs/categories/spec.feature",
       "openspec/specs/categories/spec.md",
+      "openspec/specs/widgets/spec.feature",
       "openspec/specs/widgets/spec.md",
       "registry.ts",
       "schema.ts",

@@ -1,0 +1,69 @@
+{
+  "converter_version": "openspec-gherkin-v1",
+  "scenarios": [
+    {
+      "title": "Bolded keywords with colons and star bullets",
+      "steps": [
+        {
+          "keyword": "Given",
+          "text": "a seeded store"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a GET request to \"/widgets\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 200"
+        },
+        {
+          "keyword": "And",
+          "text": "the response list has length 2"
+        },
+        {
+          "keyword": "But",
+          "text": "the response has no field \"error\""
+        }
+      ]
+    },
+    {
+      "title": "Three-hash scenario header still parses",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "lowercase keyword casing is normalized"
+        },
+        {
+          "keyword": "Then",
+          "text": "mixed case binds too"
+        }
+      ]
+    },
+    {
+      "title": "Empty scenario",
+      "steps": []
+    },
+    {
+      "title": "Interleaved prose is skipped",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a DELETE request to \"/widgets/widget-spec-1\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 204"
+        }
+      ]
+    },
+    {
+      "title": "Whitespace   trimming   in titles",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "spaced   step   text   is   trimmed"
+        }
+      ]
+    }
+  ]
+}

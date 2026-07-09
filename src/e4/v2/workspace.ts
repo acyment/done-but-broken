@@ -15,6 +15,7 @@ import {
   type E4V2SpecOfRecord
 } from "./gold-spec";
 import { isRequestClassStep, isValueBindingAssertion, scenarioBulletLines } from "./scenario";
+import { openSpecToFeature } from "./converter";
 import { E4_V2_ASSERTION_STEP_PATTERNS, E4_V2_FLOORS_TEXT, E4_V2_REQUEST_STEP_PATTERNS } from "./step-vocabulary";
 
 // Renders one capability's spec.md in the exact shape the pinned CLI validates and the archive
@@ -173,7 +174,11 @@ export function buildE4V2WorkspaceFiles(ir: E4SchemaIR): Record<string, string> 
   const files: Record<string, string> = { ...buildE4V2AppFiles(ir) };
 
   for (const capability of spec.capabilities) {
-    files[`openspec/specs/${capability.name}/spec.md`] = renderCapabilitySpecMarkdown(capability);
+    const markdown = renderCapabilitySpecMarkdown(capability);
+    files[`openspec/specs/${capability.name}/spec.md`] = markdown;
+    // §5.2 step 1: the .feature rendering is a derived byproduct of the spec markdown via the
+    // e4-openspec-gherkin-v1 converter — never hand-maintained, never parsed back.
+    files[`openspec/specs/${capability.name}/spec.feature`] = openSpecToFeature(markdown, capability.name);
   }
 
   files["README.md"] = renderE4V2Readme();

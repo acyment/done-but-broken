@@ -1,0 +1,171 @@
+{
+  "converter_version": "openspec-gherkin-v1",
+  "scenarios": [
+    {
+      "title": "Creating a Category returns the stored entity",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a POST request to \"/categories\" with body {\"id\":\"category-spec-1\",\"name\":\"Sample name 5\"}"
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 201"
+        },
+        {
+          "keyword": "And",
+          "text": "the response body equals {\"id\":\"category-spec-1\",\"name\":\"Sample name 5\"}"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a GET request to \"/categories/category-spec-1\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 200"
+        },
+        {
+          "keyword": "And",
+          "text": "the response body equals {\"id\":\"category-spec-1\",\"name\":\"Sample name 5\"}"
+        }
+      ]
+    },
+    {
+      "title": "Creating a Category without name is rejected",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a POST request to \"/categories\" with body {\"id\":\"category-spec-1\"}"
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 400"
+        },
+        {
+          "keyword": "And",
+          "text": "the response field \"error.code\" equals \"validation_error\""
+        },
+        {
+          "keyword": "And",
+          "text": "the response field \"error.message\" is a string"
+        }
+      ]
+    },
+    {
+      "title": "Fetching a missing Category returns not found",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a GET request to \"/categories/category-spec-missing\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 404"
+        },
+        {
+          "keyword": "And",
+          "text": "the response field \"error.code\" equals \"not_found\""
+        },
+        {
+          "keyword": "And",
+          "text": "the response field \"error.message\" is a string"
+        }
+      ]
+    },
+    {
+      "title": "Updating a Category persists the change",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a POST request to \"/categories\" with body {\"id\":\"category-spec-1\",\"name\":\"Sample name 5\"}"
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 201"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a PUT request to \"/categories/category-spec-1\" with body {\"id\":\"category-spec-1\",\"name\":\"Sample name 6\"}"
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 200"
+        },
+        {
+          "keyword": "And",
+          "text": "the response body equals {\"id\":\"category-spec-1\",\"name\":\"Sample name 6\"}"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a GET request to \"/categories/category-spec-1\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 200"
+        },
+        {
+          "keyword": "And",
+          "text": "the response body equals {\"id\":\"category-spec-1\",\"name\":\"Sample name 6\"}"
+        }
+      ]
+    },
+    {
+      "title": "Deleting a Category removes it",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a POST request to \"/categories\" with body {\"id\":\"category-spec-1\",\"name\":\"Sample name 5\"}"
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 201"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a DELETE request to \"/categories/category-spec-1\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 204"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a GET request to \"/categories/category-spec-1\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 404"
+        },
+        {
+          "keyword": "And",
+          "text": "the response field \"error.code\" equals \"not_found\""
+        }
+      ]
+    },
+    {
+      "title": "Creating a Category increases the list count",
+      "steps": [
+        {
+          "keyword": "When",
+          "text": "I send a POST request to \"/categories\" with body {\"id\":\"category-spec-1\",\"name\":\"Sample name 5\"}"
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 201"
+        },
+        {
+          "keyword": "When",
+          "text": "I send a GET request to \"/categories\""
+        },
+        {
+          "keyword": "Then",
+          "text": "the response status is 200"
+        },
+        {
+          "keyword": "And",
+          "text": "the response list has length 3"
+        }
+      ]
+    }
+  ]
+}
