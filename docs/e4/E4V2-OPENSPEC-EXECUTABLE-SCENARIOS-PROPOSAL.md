@@ -62,6 +62,23 @@ the OpenSpec layout + pinned CLI integration (quirks known: exit-0 abort, dated 
 scenario grammar + step interpreter over the existing HTTP executor, meter re-pointing, fake-agent
 and fixture updates, then the usual staged path (dry run → calibration → pre-registered pilot).
 
+## 6.5 Prior art in the estate (operator recall, verified 2026-07-09)
+
+The harness repo already contains a **live, proven JIT OpenSpec→Gherkin converter**:
+`hit-sdd-bench-e2/src/hit_sdd_e2/authored_spec/openspec.py` (`CONVERTER_VERSION
+"openspec-gherkin-v1"`; commits `5e85e56` converter, `48ebfd9` genuine Gherkin + pytest-bdd
+proven live, `2ab6ad2` OpenSpec authoring + step bindings, `5e50865` converter version folded
+into the sealed spec hash). It parses `#### Scenario:` headers with bolded
+`- **WHEN**/**THEN**/**AND**` bullets and derives a real `.feature` deterministically — its
+docstring is this proposal's thesis: "OpenSpec stays canonical; Gherkin is its execution view."
+
+Reuse plan: port the ~40-line parse/derive rules to this repo's TypeScript under the same
+pinned-version discipline (cross-tested against the Python original's fixtures); feed parsed
+steps directly into E4's existing HTTP executor (no pytest-bdd needed); optionally still emit
+`.feature` files into the workspace as a derived byproduct for legibility. The E2 authoring
+prompts for producing grammar-compliant scenarios are also reusable for the agent-facing
+protocol text.
+
 ## 7. Open questions for the gate
 
 1. Does the propose→archive OpenSpec cycle happen once per task (matching the per-task change
