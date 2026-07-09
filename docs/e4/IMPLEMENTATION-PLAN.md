@@ -656,6 +656,45 @@ manifest's `compatibility_boundary`. This is the milestone that produces the fir
 > run. M7 executes only on explicit operator spend authorization at its gate, with a declared run
 > classification (`pilot`) and the pre-registered analysis (§3) committed **before** the run.
 
+**M7 EXECUTED 2026-07-08 — PRE-REGISTERED VERDICT: `inconclusive_uninterpretable`
+(`instrument_degraded`, §5.1 trigger 3). The pilot broke; it is not reported as having measured.**
+
+1. **Run record.** Pre-registration sealed pre-data
+   (`docs/protocols/e4-m7-pilot-preregistration-v1.md`, commit `980a933`); 3 arms × seeds 46/49 ×
+   6 tasks = 36 task-runs on deepseek-v4-flash, constants v0.6 (hash stamped in all manifests),
+   total spend ≈ **$0.85**, ALL SIX sequences `chain_replay_valid: true`, zero deviations from the
+   pre-registration. `bun run bin/e4-gonogo.ts` exit 2. Manifest provenance:
+   `docs/protocols/e4-m7-pilot-manifests-20260708-001/`. e1:protect PASS before and after.
+2. **The firing trigger, decomposed.** `extraction_failed` on 6/36 non-aborted records (16.7% >
+   sealed 10%), and the failures are **arm-differential**: Arm 0 seed-49 tasks 1/3/5, Arm M
+   seed-46 task 1 + seed-49 tasks 3/4, **Arm H zero on both seeds**. The fail-closed extraction is
+   behaving correctly — flash corrupts ungated workspaces badly enough that the registry/schema
+   modules stop importing — but that censors drift measurement exactly where drift is worst, so no
+   H1/H2/H3 comparison from this run is interpretable. Pre-committed reading: **instrument
+   degraded at this model tier**, not a null and not a positive.
+3. **Predicates (printed for diagnosis, carrying no claim under the fired trigger):** (a) true —
+   Arm-0 velocity 0.25 / 2.25 per seed; (b) true — frozen meter stamped everywhere; (c) true via
+   **c2 only**: pooled Arm-0/M unearned-done propensity 0.875 vs Arm-H 0.583. c1 was FALSE — mean
+   Arm-H velocity (1.75) exceeded Arm-0's (1.25), partly an artifact of the censoring in 2 (broken
+   Arm-0 workspaces cannot register code-side drift) plus a real Arm-H seed-49 drift excursion
+   (burden 10 at task 5 while oracle-green — the gate enforces custody, not spec accuracy, exactly
+   as ADR-003 pinned).
+4. **Mechanism observations (diagnostics only):** done-over-red refusals fired 22× live (8
+   seed-46, 14 seed-49); ungated arms claimed done over failing oracles on 5/6, 6/6, 6/6, 4/6
+   tasks including long 0/N stretches (server broken, done still claimed — the B1 phenomenon at
+   scale); Arm-H oracle end-state 21/21 and 17/18 vs Arm-0's 11/21 and 15/18. Seed-49 Arm-0
+   **floor-collapsed** (§3.2, trigger task 3) → H4 blocked as floor-confounded, per the
+   pre-registered rule. H5 per-seed: freshness tax ≈ 7.0k/7.3k tokens/task against a **negative**
+   drift tax (Arm 0 fails cheaply — the regime the always-print-pass-rates pin anticipated: Arm-0
+   pass rate 0.53/0.38 vs Arm-H 0.98/0.98). Advisory flags fired: (v) Arm 0 has zero
+   oracle-passing tasks pooled; (vi) Arm-0 velocity max/min ratio > 3 across seeds.
+5. **Recorded path forward (gate decisions, NOT executed):** the §5.1 trigger-3 outcome points at
+   the model tier, not the harness — every instrument worked (replay, gate, meter fail-closed,
+   floor rule, sensitivity machinery). Options for a follow-up gate: (i) rerun the pilot on a
+   stronger mid-tier model (budgets must be re-ratified per the M6.5 model-id pin), or (ii) accept
+   flash-tier breakage as part of the phenomenon and pre-register an analysis robust to
+   arm-differential extraction censoring. Neither happens without a new recorded gate decision.
+
 ---
 
 ### Milestone summary

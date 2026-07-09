@@ -1,0 +1,802 @@
+{
+  "schema": "e4-run-manifest",
+  "schema_version": "e4-run-manifest-v1",
+  "run_id": "pilot-pair-pilot-seed-46-e4_arm_0",
+  "run_classification": "pilot",
+  "compatibility_boundary": {
+    "constants_version": "0.6",
+    "constants_hash": "a0e51236d66de818ad1e3bf8eff9a055df9a8025127f363f950ad92632c3b0ee",
+    "meter_version": "e4-drift-meter-v1",
+    "substrate_config_id": "procedural-rest-v1-default",
+    "substrate_kind": "procedural-rest-v1",
+    "substrate_version": "procedural-rest-v1.1"
+  },
+  "substrate_seed": 46,
+  "substrate_config": {
+    "task_count": 6,
+    "op_mix": {
+      "weights": {
+        "drift_opportunity": 0.5,
+        "additive": 0.4,
+        "behavior_preserving": 0.1
+      }
+    }
+  },
+  "pairing_label": "pair-pilot-seed-46",
+  "arm": "e4_arm_0",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "deepseek-v4-flash",
+    "route_id": "direct-deepseek-api-key"
+  },
+  "budgets": {
+    "turns_per_task": 18,
+    "verifications_per_task": 8,
+    "token_budget": 310000,
+    "spend_cap_usd": 5
+  },
+  "prompt_overhead_tokens": {
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "system_prompt_tokens": 242,
+    "arm_channel_tokens": 0
+  },
+  "tasks": [
+    {
+      "task_index": 1,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 12,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 4,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The workspace was internally consistent — the `errorEnvelopeStyle` in `schema.ts` was `\"code_message\"`, the `server.ts` handled both formats correctly, and the conventions in `specs/CONVENTIONS.md` and `README.md` matched the `code`/`message` format. The task simply required applying a cross-cutting change (switching to `type`/`detail` format) across all relevant files, which I did.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 4809,
+          "cached_input_tokens": 29952,
+          "output_tokens": 4698
+        },
+        "wall_clock_ms": 40081,
+        "spend_usd": 0.0132981,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 5,
+            "tokens": {
+              "fresh_input_tokens": 4809,
+              "cached_input_tokens": 29952,
+              "output_tokens": 4698
+            },
+            "wall_clock_ms": 37819,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "dbc0ea4de8a09c6798f4cc1bdbe6f08770045dfcdc12f452642e302a83904c76",
+        "path": "snapshots/e4_arm_0/task-1"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_0/task-1/smoke-1.json",
+        "records/e4_arm_0/task-1/smoke-2.json",
+        "records/e4_arm_0/task-1/smoke-3.json",
+        "records/e4_arm_0/task-1/smoke-4.json",
+        "records/e4_arm_0/task-1/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 2,
+      "opportunity_labels": [
+        "additive"
+      ],
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 11,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 8,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "The spec/context files were accurate. The task was to add `is_featured` to each Category, which I did by:\n\n1. Adding `is_featured` as a `bool` field (not required) to the Category entity schema in `schema.ts`\n2. Adding `is_featured` values to the seed data in `seed.ts`\n3. Adding `is_featured` as a boolean property in the OpenAPI spec's Category schema in `specs/openapi.json`\n4. Updating the server's list handler to support filtering by boolean fields via query parameters\n\nThe server started successfully and the changes are consistent across all files.\n\n<<<DONE>>>",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 18,
+        "tokens": {
+          "fresh_input_tokens": 6123,
+          "cached_input_tokens": 237824,
+          "output_tokens": 12710
+        },
+        "wall_clock_ms": 103062,
+        "spend_usd": 0.0403727,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 18,
+            "tokens": {
+              "fresh_input_tokens": 6123,
+              "cached_input_tokens": 237824,
+              "output_tokens": 12710
+            },
+            "wall_clock_ms": 100238,
+            "spec_authoring_tokens": 936,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 4,
+      "snapshot": {
+        "hash": "8e1bbc3edf5a3193169a04002e3816d4e70e237d58d4ebfd75a93f518e61930f",
+        "path": "snapshots/e4_arm_0/task-2"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_0/task-2/smoke-1.json",
+        "records/e4_arm_0/task-2/smoke-2.json",
+        "records/e4_arm_0/task-2/smoke-3.json",
+        "records/e4_arm_0/task-2/smoke-4.json",
+        "records/e4_arm_0/task-2/smoke-5.json",
+        "records/e4_arm_0/task-2/smoke-6.json",
+        "records/e4_arm_0/task-2/smoke-7.json",
+        "records/e4_arm_0/task-2/smoke-8.json",
+        "records/e4_arm_0/task-2/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 3,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 11,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 3,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The task was clear: the API needed to support a partial-update convention (PATCH) for Widget updates, which was missing from the original codebase. The existing files correctly reflected the state before the change (only PUT for updates), and the conventions file and OpenAPI spec were truthful about what existed.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 4669,
+          "cached_input_tokens": 32000,
+          "output_tokens": 3580
+        },
+        "wall_clock_ms": 32431,
+        "spend_usd": 0.0110945,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 5,
+            "tokens": {
+              "fresh_input_tokens": 4669,
+              "cached_input_tokens": 32000,
+              "output_tokens": 3580
+            },
+            "wall_clock_ms": 29716,
+            "spec_authoring_tokens": 997,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "4e961af7682a8944c33fa29d2698eb17cac5a384f122d6212559cf0872229913",
+        "path": "snapshots/e4_arm_0/task-3"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_0/task-3/smoke-1.json",
+        "records/e4_arm_0/task-3/smoke-2.json",
+        "records/e4_arm_0/task-3/smoke-3.json",
+        "records/e4_arm_0/task-3/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 4,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 1,
+        "cumulative_pass": 11,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The task was straightforward: rename the `in_stock` field to `alias` on the Widget entity, and the files correctly reflected the current state with `in_stock` in `schema.ts`, `seed.ts`, and `specs/openapi.json`. No inaccuracies were present.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 4637,
+          "cached_input_tokens": 6912,
+          "output_tokens": 1987
+        },
+        "wall_clock_ms": 16508,
+        "spend_usd": 0.006638099999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 4637,
+              "cached_input_tokens": 6912,
+              "output_tokens": 1987
+            },
+            "wall_clock_ms": 14619,
+            "spec_authoring_tokens": 995,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "d16ed4fde961ed056c96f840b6477c8ccbe8f925499bc73d3df0d873a8b31e54",
+        "path": "snapshots/e4_arm_0/task-4"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_0/task-4/smoke-1.json",
+        "records/e4_arm_0/task-4/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 5,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 11,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The task was straightforward: the Widget entity had a PATCH method for updates while Category only used PUT, and the task asked to make Widget match the rest of the API (i.e., remove PATCH). The files correctly reflected this inconsistency, and the changes were consistent across registry.ts, specs/openapi.json, and server.ts.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 4610,
+          "cached_input_tokens": 8064,
+          "output_tokens": 3166
+        },
+        "wall_clock_ms": 25519,
+        "spend_usd": 0.0090402,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 4610,
+              "cached_input_tokens": 8064,
+              "output_tokens": 3166
+            },
+            "wall_clock_ms": 22897,
+            "spec_authoring_tokens": 937,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "c8af2f9b227397b5cda9e5147b293c7035b6bf3da69a304a692771c975e0d07f",
+        "path": "snapshots/e4_arm_0/task-5"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_0/task-5/smoke-1.json",
+        "records/e4_arm_0/task-5/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 6,
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 11,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, everything in the provided spec/context files was accurate and consistent. The server starts correctly, the routes match the registry, the schemas align with the OpenAPI spec, and the conventions document matches the actual behavior. No changes were needed.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 4453,
+          "cached_input_tokens": 4864,
+          "output_tokens": 48
+        },
+        "wall_clock_ms": 4708,
+        "spend_usd": 0.0025656999999999998,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 4453,
+              "cached_input_tokens": 4864,
+              "output_tokens": 48
+            },
+            "wall_clock_ms": 2998,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "c8af2f9b227397b5cda9e5147b293c7035b6bf3da69a304a692771c975e0d07f",
+        "path": "snapshots/e4_arm_0/task-6"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_0/task-6/smoke-1.json",
+        "records/e4_arm_0/task-6/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    }
+  ],
+  "resume_events": [],
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "usage_totals": {
+    "turns": 34,
+    "tokens": {
+      "fresh_input_tokens": 29820,
+      "cached_input_tokens": 374272,
+      "output_tokens": 26705
+    },
+    "wall_clock_ms": 222309,
+    "spend_usd": 0.08703359999999999
+  }
+}

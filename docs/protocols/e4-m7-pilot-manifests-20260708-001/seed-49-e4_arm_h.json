@@ -1,0 +1,1124 @@
+{
+  "schema": "e4-run-manifest",
+  "schema_version": "e4-run-manifest-v1",
+  "run_id": "pilot-pair-pilot-seed-49-e4_arm_h",
+  "run_classification": "pilot",
+  "compatibility_boundary": {
+    "constants_version": "0.6",
+    "constants_hash": "a0e51236d66de818ad1e3bf8eff9a055df9a8025127f363f950ad92632c3b0ee",
+    "meter_version": "e4-drift-meter-v1",
+    "substrate_config_id": "procedural-rest-v1-default",
+    "substrate_kind": "procedural-rest-v1",
+    "substrate_version": "procedural-rest-v1.1"
+  },
+  "substrate_seed": 49,
+  "substrate_config": {
+    "task_count": 6,
+    "op_mix": {
+      "weights": {
+        "drift_opportunity": 0.5,
+        "additive": 0.4,
+        "behavior_preserving": 0.1
+      }
+    }
+  },
+  "pairing_label": "pair-pilot-seed-49",
+  "arm": "e4_arm_h",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "deepseek-v4-flash",
+    "route_id": "direct-deepseek-api-key"
+  },
+  "budgets": {
+    "turns_per_task": 18,
+    "verifications_per_task": 8,
+    "token_budget": 310000,
+    "spend_cap_usd": 5
+  },
+  "prompt_overhead_tokens": {
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "system_prompt_tokens": 670,
+    "arm_channel_tokens": 428
+  },
+  "tasks": [
+    {
+      "task_index": 1,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 0
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 19,
+        "cumulative_total": 19
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the spec/context files were accurate. The `specs/openapi.json` correctly described the Widget schema including `category_id`, and `specs/CONVENTIONS.md` had no references to it. The code files (`schema.ts`, `seed.ts`) also accurately reflected the presence of `category_id` in the Widget entity. Everything was consistent and truthful.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json",
+          "specs/CONVENTIONS.md"
+        ]
+      },
+      "usage": {
+        "turns": 3,
+        "tokens": {
+          "fresh_input_tokens": 4418,
+          "cached_input_tokens": 13568,
+          "output_tokens": 2007
+        },
+        "wall_clock_ms": 16797,
+        "spend_usd": 0.0069014,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4259,
+              "cached_input_tokens": 640,
+              "output_tokens": 1139
+            },
+            "wall_clock_ms": 7049,
+            "spec_authoring_tokens": 1007,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 159,
+              "cached_input_tokens": 12928,
+              "output_tokens": 868
+            },
+            "wall_clock_ms": 7781,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 1,
+          "wall_clock_ms": 152
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "0ab457c464e850cf224ead6d1fd43b846791f212f9e632275649e67f4d366835",
+        "path": "snapshots/e4_arm_h/task-1"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-1/gate-run-1.json",
+        "records/e4_arm_h/task-1/gate-run-2.json",
+        "records/e4_arm_h/task-1/smoke-1.json",
+        "records/e4_arm_h/task-1/gate-run-3.json",
+        "records/e4_arm_h/task-1/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 2,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 0
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 18,
+        "cumulative_total": 18
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The task was straightforward: remove the `name` field from Category. The spec files (`specs/openapi.json` and `specs/CONVENTIONS.md`) correctly described the state before the change, and the code files (`schema.ts`, `seed.ts`) matched that state. No inaccuracies were present.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 4455,
+          "cached_input_tokens": 19712,
+          "output_tokens": 1876
+        },
+        "wall_clock_ms": 17203,
+        "spend_usd": 0.006965099999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4174,
+              "cached_input_tokens": 640,
+              "output_tokens": 1006
+            },
+            "wall_clock_ms": 6473,
+            "spec_authoring_tokens": 877,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 281,
+              "cached_input_tokens": 19072,
+              "output_tokens": 870
+            },
+            "wall_clock_ms": 8750,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 1,
+          "wall_clock_ms": 150
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "4a7cf4170e46a853d29d2b0fc1c0c4ca34872ca0c748f8159aaf50160fe9e69f",
+        "path": "snapshots/e4_arm_h/task-2"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-2/gate-run-1.json",
+        "records/e4_arm_h/task-2/gate-run-2.json",
+        "records/e4_arm_h/task-2/smoke-1.json",
+        "records/e4_arm_h/task-2/gate-run-3.json",
+        "records/e4_arm_h/task-2/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 3,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 1
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 18,
+        "cumulative_total": 18
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "entity:ErrorResponse",
+            "semantic_item_uid": "spec-only:entity:ErrorResponse",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:ErrorResponse.error",
+            "semantic_item_uid": "spec-only:field:ErrorResponse.error",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"object\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "Yes, the spec files I changed were inaccurate. I incorrectly updated `specs/CONVENTIONS.md` to say the error format uses `{ \"type\": string, \"detail\": string }` and updated `specs/openapi.json` with an `ErrorResponse` schema using `type`/`detail`. The acceptance tests expect the original `{ \"code\": string, \"message\": string }` format, so my spec changes were wrong. Since specs are now frozen, I cannot correct them.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/CONVENTIONS.md",
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 4737,
+          "cached_input_tokens": 31488,
+          "output_tokens": 4010
+        },
+        "wall_clock_ms": 32376,
+        "spend_usd": 0.011962899999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4112,
+              "cached_input_tokens": 640,
+              "output_tokens": 1977
+            },
+            "wall_clock_ms": 11237,
+            "spec_authoring_tokens": 1702,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 625,
+              "cached_input_tokens": 30848,
+              "output_tokens": 2033
+            },
+            "wall_clock_ms": 19117,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 215
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 2,
+          "wall_clock_ms": 156
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "4285017d45b63d6128798cc3dcb8d897e8fe2c85d06e150f5a48e6b56f65ef65",
+        "path": "snapshots/e4_arm_h/task-3"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-3/gate-run-1.json",
+        "records/e4_arm_h/task-3/gate-run-2.json",
+        "records/e4_arm_h/task-3/smoke-1.json",
+        "records/e4_arm_h/task-3/gate-run-3.json",
+        "records/e4_arm_h/task-3/smoke-2.json",
+        "records/e4_arm_h/task-3/gate-run-4.json",
+        "records/e4_arm_h/task-3/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 4,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "red",
+        "refused_done_over_red": 1
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 18,
+        "cumulative_total": 18
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/widgets/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "entity:ErrorResponse",
+            "semantic_item_uid": "spec-only:entity:ErrorResponse",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:ErrorResponse.error",
+            "semantic_item_uid": "spec-only:field:ErrorResponse.error",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"object\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:update-validation",
+            "semantic_item_uid": "spec-only:convention:update-validation",
+            "detail": {
+              "found": "{\"statement\":\"Update endpoints validate required fields and return 400 if any are missing, matching create endpoint behavior.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          }
+        }
+      },
+      "noticing_probe_answer": "Looking back at the task, I realize my interpretation was wrong. The task says \"Switch how clients update a Widget record to match the rest of the API.\"\n\nThe key insight I missed: the Widget update currently uses PUT (full replacement), but the \"rest of the API\" for updates (Category update) also uses PUT. They're already the same. So the task must be about something else.\n\nActually, re-reading the server.ts `update` case more carefully:\n\n```typescript\ncase \"update\": {\n  if (!table.has(params.id)) {\n    return Response.json(errorBody(\"not_found\", \"resource not found\"), { status: 404 });\n  }\n  const body = (await req.json()) as Record<string, unknown>;\n  table.set(params.id, body);\n  return Response.json(body, { status: 200 });\n}\n```\n\nThe Widget update replaces the entire record. But the Category update does the same thing. They're already consistent.\n\nWait - maybe the issue is that the Widget update should validate required fields (like the create does), while the Category update doesn't need to because Category only has `id` which is in the URL. This would make the Widget update \"match the rest of the API\" in terms of consistency with the create endpoint.\n\nBut the acceptance test was failing with a 404, not a 400. So the validation isn't the issue.\n\nLet me think about this differently. The test \"Widget-update\" expects a 200 response. It's getting a 404. The 404 means the resource doesn't exist. But the test was passing before my change...\n\nUnless the test is running against a fresh server and the test creates a widget first, then updates it. If the create fails, the update would get a 404.\n\nBut the create was working before my change. My change only modified the update case.\n\nWait - I changed the registry.ts to use PATCH instead of PUT. The test might be sending a PUT request, which would now return 404 because there's no PUT route for widgets.\n\nThat's the issue! The test is sending a PUT request to update a widget, but I changed the route to PATCH. The test expects PUT.\n\nLet me revert the registry.ts change and instead focus on what the task actually requires.\n\nActually, let me re-read the task one more time: \"Switch how clients update a Widget record to match the rest of the API.\"\n\nI think the answer is simpler than I thought. The Widget update should use PUT (like Category update), but it should validate required fields (like the create does). The Category update doesn't validate because Category only has `id` which is in the URL.\n\nBut the test was failing with 404, not 400. So maybe the test creates a widget first, and the create is failing?\n\nActually, I think the issue might be that the test is running against a server that was started before my changes were applied. Let me check the smoke test output - it said the server started and answered the readiness probe. But maybe the acceptance test is running against a different server instance.\n\nLet me revert my changes and try a different approach. Let me go back to the original interpretation: add validation to the Widget update, but keep the HTTP method as PUT.\n\n<<<FILE registry.ts>>>\n// GENERATED at T0 by src/e4/substrate/scaffold.ts — do not hand-edit route wiring here.\nexport type E4RouteDefinition = {\n  method: \"GET\" | \"POST\" | \"PUT\" | \"PATCH\" | \"DELETE\";\n  path: string;\n  entity: string;\n  kind: \"create\" | \"read\" | \"update\" | \"delete\" | \"list\" | \"analytics\";\n};\n\nexport const routeRegistry: E4RouteDefinition[] = [\n  {\n    \"method\": \"POST\",\n    \"path\": \"/categories\",\n    \"entity\": \"Category\",\n    \"kind\": \"create\"\n  },\n  {\n    \"method\": \"GET\",\n    \"path\": \"/categories/{id}\",\n    \"entity\": \"Category\",\n    \"kind\": \"read\"\n  },\n  {\n    \"method\": \"PUT\",\n    \"path\": \"/categories/{id}\",\n    \"entity\": \"Category\",\n    \"kind\": \"update\"\n  },\n  {\n    \"method\": \"DELETE\",\n    \"path\": \"/categories/{id}\",\n    \"entity\": \"Category\",\n    \"kind\": \"delete\"\n  },\n  {\n    \"method\": \"GET\",\n    \"path\": \"/categories\",\n    \"entity\": \"Category\",\n    \"kind\": \"list\"\n  },\n  {\n    \"method\": \"POST\",\n    \"path\": \"/widgets\",\n    \"entity\": \"Widget\",\n    \"kind\": \"create\"\n  },\n  {\n    \"method\": \"GET\",\n    \"path\": \"/widgets/{id}\",\n    \"entity\": \"Widget\",\n    \"kind\": \"read\"\n  },\n  {\n    \"method\": \"PUT\",\n    \"path\": \"/widgets/{id}\",\n    \"entity\": \"Widget\",\n    \"kind\": \"update\"\n  },\n  {\n    \"method\": \"DELETE\",\n    \"path\": \"/widgets/{id}\",\n    \"entity\": \"Widget\",\n    \"kind\": \"delete\"\n  },\n  {\n    \"method\": \"GET\",\n    \"path\": \"/widgets\",\n    \"entity\": \"Widget\",\n    \"kind\": \"list\"\n  },\n  {\n    \"method\": \"GET\",\n    \"path\": \"/widgets/stats\",\n    \"entity\": \"Widget\",\n    \"kind\": \"analytics\"\n  }\n];\n<<<END>>>\n\n<<<FILE server.ts>>>\n// Generic dispatcher (ADR-001 scaffold contract). Behavior is entirely data-driven from\n// registry.ts + schema.ts + seed.ts — this file never changes across substrate configs.\nimport { routeRegistry, type E4RouteDefinition } from \"./registry\";\nimport { entitySchemas, validationRules, errorEnvelopeStyle } from \"./schema\";\nimport { createStore } from \"./storage\";\nimport { seedFixture } from \"./seed\";\n\nconst store = createStore(seedFixture);\nconst port = Number(process.env.E4_PORT ?? \"0\");\n\nfunction errorBody(code: string, message: string): unknown {\n  return errorEnvelopeStyle === \"type_detail\" ? { error: { type: code, detail: message } } : { error: { code, message } };\n}\n\nfunction matchPath(pattern: string, pathname: string): Record<string, string> | null {\n  const patternSegments = pattern.split(\"/\").filter(Boolean);\n  const actualSegments = pathname.split(\"/\").filter(Boolean);\n\n  if (patternSegments.length !== actualSegments.length) {\n    return null;\n  }\n\n  const params: Record<string, string> = {};\n\n  for (let i = 0; i < patternSegments.length; i += 1) {\n    const patternSegment = patternSegments[i];\n    const actualSegment = actualSegments[i];\n\n    if (patternSegment.startsWith(\"{\") && patternSegment.endsWith(\"}\")) {\n      params[patternSegment.slice(1, -1)] = actualSegment;\n    } else if (patternSegment !== actualSegment) {\n      return null;\n    }\n  }\n\n  return params;\n}\n\nfunction literalSegmentCount(path: string): number {\n  return path.split(\"/\").filter((segment) => segment.length > 0 && !segment.startsWith(\"{\")).length;\n}\n\n// More-specific (more literal-segment) routes must be tried before wildcard ones, or a route like\n// GET /widgets/{id} (read) shadows GET /widgets/stats (analytics) — {id} matches \"stats\" too.\nconst routesBySpecificity = [...routeRegistry].sort((a, b) => literalSegmentCount(b.path) - literalSegmentCount(a.path));\n\nfunction matchRoute(method: string, pathname: string): { route: E4RouteDefinition; params: Record<string, string> } | null {\n  for (const route of routesBySpecificity) {\n    if (route.method !== method) {\n      continue;\n    }\n    const params = matchPath(route.path, pathname);\n    if (params) {\n      return { route, params };\n    }\n  }\n  return null;\n}\n\n// Required-ness lives on the field schema (field.required) — validationRules never carries a\n// \"required\" kind (see schema.ts note), so this reads entitySchemas, the same source the spec's\n// `required` array is generated from.\nfunction firstMissingRequiredField(entityName: string, body: Record<string, unknown>): string | null {\n  const entity = entitySchemas.find((candidate) => candidate.name === entityName);\n  for (const field of entity?.fields ?? []) {\n    if (field.required && (body[field.name] === undefined || body[field.name] === null)) {\n      return field.name;\n    }\n  }\n  return null;\n}\n\nasync function handle(req: Request): Promise<Response> {\n  const url = new URL(req.url);\n  const matched = matchRoute(req.method, url.pathname);\n\n  if (!matched) {\n    return Response.json(errorBody(\"not_found\", \"route not found\"), { status: 404 });\n  }\n\n  const { route, params } = matched;\n  const table = store.get(route.entity);\n\n  if (!table) {\n    return Response.json(errorBody(\"not_found\", \"unknown entity\"), { status: 404 });\n  }\n\n  switch (route.kind) {\n    case \"create\": {\n      const body = (await req.json()) as Record<string, unknown>;\n      const missingField = firstMissingRequiredField(route.entity, body);\n      if (missingField) {\n        return Response.json(errorBody(\"validation_error\", `${missingField} is required`), { status: 400 });\n      }\n      table.set(String(body.id), body);\n      return Response.json(body, { status: 201 });\n    }\n    case \"read\": {\n      const row = table.get(params.id);\n      if (!row) {\n        return Response.json(errorBody(\"not_found\", \"resource not found\"), { status: 404 });\n      }\n      return Response.json(row, { status: 200 });\n    }\n    case \"update\": {\n      if (!table.has(params.id)) {\n        return Response.json(errorBody(\"not_found\", \"resource not found\"), { status: 404 });\n      }\n      const body = (await req.json()) as Record<string, unknown>;\n      const missingField = firstMissingRequiredField(route.entity, body);\n      if (missingField) {\n        return Response.json(errorBody(\"validation_error\", `${missingField} is required`), { status: 400 });\n      }\n      table.set(params.id, body);\n      return Response.json(body, { status: 200 });\n    }\n    case \"delete\": {\n      if (!table.has(params.id)) {\n        return Response.json(errorBody(\"not_found\", \"resource not found\"), { status: 404 });\n      }\n      table.delete(params.id);\n      return new Response(null, { status: 204 });\n    }\n    case \"list\": {\n      const refField = entitySchemas.find((entity) => entity.name === route.entity)?.fields.find((field) => field.type === \"ref\");\n      const filterValue = refField ? url.searchParams.get(refField.name) : null;\n      const rows = [...table.values()].filter((row) => !filterValue || row[refField!.name] === filterValue);\n      return Response.json(rows, { status: 200 });\n    }\n    case \"analytics\": {\n      return Response.json({ count: table.size }, { status: 200 });\n    }\n    default: {\n      return Response.json(errorBody(\"not_found\", \"unknown route kind\"), { status: 404 });\n    }\n  }\n}\n\nconst server = Bun.serve({ port, fetch: handle });\nconsole.log(`E4 app listening on port ${server.port}`);\n<<<END>>>\n\n<<<VERIFY>>>\nbun run smoke\n<<<END>>>",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json",
+          "specs/CONVENTIONS.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 5320,
+          "cached_input_tokens": 44800,
+          "output_tokens": 9733
+        },
+        "wall_clock_ms": 89755,
+        "spend_usd": 0.024366,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4849,
+              "cached_input_tokens": 640,
+              "output_tokens": 3205
+            },
+            "wall_clock_ms": 22498,
+            "spec_authoring_tokens": 1775,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 25
+          },
+          "implementation": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 471,
+              "cached_input_tokens": 44160,
+              "output_tokens": 6528
+            },
+            "wall_clock_ms": 50516,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 33
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 2,
+          "wall_clock_ms": 167
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "729d765d9d3105ff99c8c9596bb627161081788648dd93c56a5fd3e632e30f58",
+        "path": "snapshots/e4_arm_h/task-4"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-4/gate-run-1.json",
+        "records/e4_arm_h/task-4/gate-run-2.json",
+        "records/e4_arm_h/task-4/smoke-1.json",
+        "records/e4_arm_h/task-4/gate-run-3.json",
+        "records/e4_arm_h/task-4/smoke-2.json",
+        "records/e4_arm_h/task-4/gate-run-4.json",
+        "records/e4_arm_h/task-4/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 5,
+      "opportunity_labels": [
+        "additive"
+      ],
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 8
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 17,
+        "cumulative_total": 18
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "refused"
+      },
+      "smoke_feedback_runs": 7,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/widgets/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "entity:ErrorResponse",
+            "semantic_item_uid": "spec-only:entity:ErrorResponse",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Category.discount_pct",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}",
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:ErrorResponse.error",
+            "semantic_item_uid": "spec-only:field:ErrorResponse.error",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"object\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "rule:Category.discount_pct.range",
+            "semantic_item_uid": "spec-only:rule:Category.discount_pct.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:update-validation",
+            "semantic_item_uid": "spec-only:convention:update-validation",
+            "detail": {
+              "found": "{\"statement\":\"Update endpoints validate required fields and return 400 if any are missing, matching create endpoint behavior.\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.discount_pct",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}",
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Category.discount_pct.range",
+            "semantic_item_uid": "code-only:rule:Category.discount_pct.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 2
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          }
+        }
+      },
+      "noticing_probe_answer": "Looking at the spec/context files, I notice one inaccuracy: the `specs/CONVENTIONS.md` file states the error format as `{ \"error\": { \"type\": string, \"detail\": string } }` (type_detail style), but the actual server code in `schema.ts` has `errorEnvelopeStyle: \"code_message\"` which produces `{ \"error\": { \"code\": string, \"message\": string } }`. The acceptance tests also expect the `code_message` style. So the CONVENTIONS.md was out of sync with the actual behavior.\n\nThis mismatch caused confusion during the implementation phase when I tried to align the error envelope style with the spec, which broke many acceptance tests.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json",
+          "specs/CONVENTIONS.md"
+        ]
+      },
+      "usage": {
+        "turns": 18,
+        "tokens": {
+          "fresh_input_tokens": 6587,
+          "cached_input_tokens": 183680,
+          "output_tokens": 9550
+        },
+        "wall_clock_ms": 88002,
+        "spend_usd": 0.0315775,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4961,
+              "cached_input_tokens": 640,
+              "output_tokens": 1949
+            },
+            "wall_clock_ms": 11070,
+            "spec_authoring_tokens": 1804,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 17,
+            "tokens": {
+              "fresh_input_tokens": 1626,
+              "cached_input_tokens": 183040,
+              "output_tokens": 7601
+            },
+            "wall_clock_ms": 74361,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 386
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 8,
+          "wall_clock_ms": 479
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "ceb97d75d57b99a11072f63dbc21160a6fcca1932f808db2928e779952bbf2bd",
+        "path": "snapshots/e4_arm_h/task-5"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-5/gate-run-1.json",
+        "records/e4_arm_h/task-5/gate-run-2.json",
+        "records/e4_arm_h/task-5/smoke-1.json",
+        "records/e4_arm_h/task-5/gate-run-3.json",
+        "records/e4_arm_h/task-5/smoke-2.json",
+        "records/e4_arm_h/task-5/gate-run-4.json",
+        "records/e4_arm_h/task-5/smoke-3.json",
+        "records/e4_arm_h/task-5/gate-run-5.json",
+        "records/e4_arm_h/task-5/smoke-4.json",
+        "records/e4_arm_h/task-5/smoke-5.json",
+        "records/e4_arm_h/task-5/gate-run-6.json",
+        "records/e4_arm_h/task-5/smoke-6.json",
+        "records/e4_arm_h/task-5/gate-run-7.json",
+        "records/e4_arm_h/task-5/smoke-7.json",
+        "records/e4_arm_h/task-5/gate-run-8.json",
+        "records/e4_arm_h/task-5/gate-run-9.json",
+        "records/e4_arm_h/task-5/gate-run-10.json",
+        "records/e4_arm_h/task-5/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 6,
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "skipped_behavior_preserving",
+        "refused_done_over_red": 4
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 17,
+        "cumulative_total": 18
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "refused"
+      },
+      "smoke_feedback_runs": 5,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/widgets/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "entity:ErrorResponse",
+            "semantic_item_uid": "spec-only:entity:ErrorResponse",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Category.discount_pct",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}",
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:ErrorResponse.error",
+            "semantic_item_uid": "spec-only:field:ErrorResponse.error",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"object\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "rule:Category.discount_pct.range",
+            "semantic_item_uid": "spec-only:rule:Category.discount_pct.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:structural-storage",
+            "semantic_item_uid": "uid-base-convention-structural",
+            "detail": {
+              "expected": "{\"statement\":\"All persistent state access goes through src/storage.ts; no module reads or writes state directly.\"}",
+              "found": "{\"statement\":\"All persistent state access goes through storage.ts; no module reads or writes state directly.\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.discount_pct",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}",
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Category.discount_pct.range",
+            "semantic_item_uid": "code-only:rule:Category.discount_pct.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 2
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "Yes, there were several inaccuracies in the original spec/context files:\n\n1. **`error-format` convention**: `specs/CONVENTIONS.md` said error responses use `{ \"error\": { \"type\": string, \"detail\": string } }`, but the actual code in `server.ts` and `schema.ts` (`errorEnvelopeStyle: \"code_message\"`) produces `{ \"error\": { \"code\": string, \"message\": string } }`.\n\n2. **`update-validation` convention**: `specs/CONVENTIONS.md` claimed update endpoints validate required fields and return 400, but the `update` case in `server.ts` does not perform any required-field validation — it just merges the request body with the existing record.\n\n3. **`structural-storage` path**: The convention said state access goes through `src/storage.ts`, but the actual file is at `storage.ts` (no `src/` prefix).\n\n4. **Category schema in `specs/openapi.json`**: The `required` array for Category only listed `id`, but the entity schema in `schema.ts` has `discount_pct` as `required: true`. The OpenAPI spec was missing `discount_pct` from the required fields.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/CONVENTIONS.md",
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 12,
+        "tokens": {
+          "fresh_input_tokens": 6504,
+          "cached_input_tokens": 268800,
+          "output_tokens": 44574
+        },
+        "wall_clock_ms": 294933,
+        "spend_usd": 0.10584,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 5100,
+              "cached_input_tokens": 640,
+              "output_tokens": 2390
+            },
+            "wall_clock_ms": 14636,
+            "spec_authoring_tokens": 1735,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 17
+          },
+          "implementation": {
+            "turns": 11,
+            "tokens": {
+              "fresh_input_tokens": 1404,
+              "cached_input_tokens": 268160,
+              "output_tokens": 42184
+            },
+            "wall_clock_ms": 276322,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 294
+          }
+        },
+        "gate_executor": {
+          "red_runs": 0,
+          "green_runs": 4,
+          "wall_clock_ms": 173
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "d786c5d529aa1ac24483557acc0a9f685a3c38baf28f08b32a4c627230904135",
+        "path": "snapshots/e4_arm_h/task-6"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-6/gate-run-1.json",
+        "records/e4_arm_h/task-6/smoke-1.json",
+        "records/e4_arm_h/task-6/smoke-2.json",
+        "records/e4_arm_h/task-6/gate-run-2.json",
+        "records/e4_arm_h/task-6/smoke-3.json",
+        "records/e4_arm_h/task-6/gate-run-3.json",
+        "records/e4_arm_h/task-6/smoke-4.json",
+        "records/e4_arm_h/task-6/gate-run-4.json",
+        "records/e4_arm_h/task-6/smoke-5.json",
+        "records/e4_arm_h/task-6/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    }
+  ],
+  "resume_events": [],
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "usage_totals": {
+    "turns": 47,
+    "tokens": {
+      "fresh_input_tokens": 32541,
+      "cached_input_tokens": 666752,
+      "output_tokens": 74959
+    },
+    "wall_clock_ms": 539066,
+    "spend_usd": 0.1995261
+  }
+}

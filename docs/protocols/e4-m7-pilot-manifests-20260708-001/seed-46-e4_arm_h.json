@@ -1,0 +1,899 @@
+{
+  "schema": "e4-run-manifest",
+  "schema_version": "e4-run-manifest-v1",
+  "run_id": "pilot-pair-pilot-seed-46-e4_arm_h",
+  "run_classification": "pilot",
+  "compatibility_boundary": {
+    "constants_version": "0.6",
+    "constants_hash": "a0e51236d66de818ad1e3bf8eff9a055df9a8025127f363f950ad92632c3b0ee",
+    "meter_version": "e4-drift-meter-v1",
+    "substrate_config_id": "procedural-rest-v1-default",
+    "substrate_kind": "procedural-rest-v1",
+    "substrate_version": "procedural-rest-v1.1"
+  },
+  "substrate_seed": 46,
+  "substrate_config": {
+    "task_count": 6,
+    "op_mix": {
+      "weights": {
+        "drift_opportunity": 0.5,
+        "additive": 0.4,
+        "behavior_preserving": 0.1
+      }
+    }
+  },
+  "pairing_label": "pair-pilot-seed-46",
+  "arm": "e4_arm_h",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "deepseek-v4-flash",
+    "route_id": "direct-deepseek-api-key"
+  },
+  "budgets": {
+    "turns_per_task": 18,
+    "verifications_per_task": 8,
+    "token_budget": 310000,
+    "spend_cap_usd": 5
+  },
+  "prompt_overhead_tokens": {
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "system_prompt_tokens": 670,
+    "arm_channel_tokens": 428
+  },
+  "tasks": [
+    {
+      "task_index": 1,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 0
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 21,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. The workspace correctly showed:\n\n1. The current error format convention in `specs/CONVENTIONS.md` used `code`/`message`\n2. The code in `schema.ts` had `errorEnvelopeStyle` set to `\"code_message\"`\n3. The server implementation in `server.ts` correctly branched on that setting\n\nThe task was simply to update the convention (which I did in the spec phase by changing `specs/CONVENTIONS.md` to specify `type`/`detail`), and then implement the corresponding code change (which I did by flipping `errorEnvelopeStyle` to `\"type_detail\"` in `schema.ts`). Everything was consistent and accurate.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/CONVENTIONS.md",
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 3,
+        "tokens": {
+          "fresh_input_tokens": 4854,
+          "cached_input_tokens": 13952,
+          "output_tokens": 2375
+        },
+        "wall_clock_ms": 22638,
+        "spend_usd": 0.0078746,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4647,
+              "cached_input_tokens": 256,
+              "output_tokens": 1588
+            },
+            "wall_clock_ms": 12090,
+            "spec_authoring_tokens": 1032,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 207,
+              "cached_input_tokens": 13696,
+              "output_tokens": 787
+            },
+            "wall_clock_ms": 7498,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 1,
+          "wall_clock_ms": 154
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "6734a580e2c155365cd57fd2dcca04970298425556fe18a3e95822d0f3ba401f",
+        "path": "snapshots/e4_arm_h/task-1"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-1/gate-run-1.json",
+        "records/e4_arm_h/task-1/gate-run-2.json",
+        "records/e4_arm_h/task-1/smoke-1.json",
+        "records/e4_arm_h/task-1/gate-run-3.json",
+        "records/e4_arm_h/task-1/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 2,
+      "opportunity_labels": [
+        "additive"
+      ],
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 3
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 20,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "refused"
+      },
+      "smoke_feedback_runs": 5,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:category-featured",
+            "semantic_item_uid": "spec-only:convention:category-featured",
+            "detail": {
+              "found": "{\"statement\":\"Category objects include an optional boolean field `is_featured` that defaults to false.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the spec/context files were accurate. The workspace snapshot correctly reflected the current state of all files, and the task description was clear: add `is_featured` to Category. The spec phase allowed me to update `specs/openapi.json` and `specs/CONVENTIONS.md`, and the implementation phase allowed me to update the code files (`schema.ts`, `seed.ts`, `server.ts`) to implement the change.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json",
+          "specs/CONVENTIONS.md"
+        ]
+      },
+      "usage": {
+        "turns": 13,
+        "tokens": {
+          "fresh_input_tokens": 5955,
+          "cached_input_tokens": 301440,
+          "output_tokens": 55897
+        },
+        "wall_clock_ms": 389658,
+        "spend_usd": 0.1298435,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4647,
+              "cached_input_tokens": 256,
+              "output_tokens": 1167
+            },
+            "wall_clock_ms": 7773,
+            "spec_authoring_tokens": 1071,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 12,
+            "tokens": {
+              "fresh_input_tokens": 1308,
+              "cached_input_tokens": 301184,
+              "output_tokens": 54730
+            },
+            "wall_clock_ms": 378738,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 69
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 3,
+          "wall_clock_ms": 262
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "d6fd9f5354cf47e56b2a44dc0320ca4ab42bd9f90637fbc1fd88c1c78312dc64",
+        "path": "snapshots/e4_arm_h/task-2"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-2/gate-run-1.json",
+        "records/e4_arm_h/task-2/gate-run-2.json",
+        "records/e4_arm_h/task-2/smoke-1.json",
+        "records/e4_arm_h/task-2/gate-run-3.json",
+        "records/e4_arm_h/task-2/smoke-2.json",
+        "records/e4_arm_h/task-2/smoke-3.json",
+        "records/e4_arm_h/task-2/smoke-4.json",
+        "records/e4_arm_h/task-2/gate-run-4.json",
+        "records/e4_arm_h/task-2/smoke-5.json",
+        "records/e4_arm_h/task-2/gate-run-5.json",
+        "records/e4_arm_h/task-2/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 3,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "agent_stalled",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "red",
+        "refused_done_over_red": 2
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 20,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "refused"
+      },
+      "smoke_feedback_runs": 2,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:category-featured",
+            "semantic_item_uid": "spec-only:convention:category-featured",
+            "detail": {
+              "found": "{\"statement\":\"Category objects include an optional boolean field `is_featured` that defaults to false.\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:partial-update",
+            "semantic_item_uid": "spec-only:convention:partial-update",
+            "detail": {
+              "found": "{\"statement\":\"Updates use PATCH with a partial body; only the supplied fields are merged into the existing resource, preserving omitted fields.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 2
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the spec/context files were accurate. The issue was in my implementation. The Category-read check was failing because I had changed the `update` handler in `server.ts` to do partial merge for all entities, but the Category update should still use full replacement (PUT). I fixed this by checking the HTTP method: PATCH does partial merge, PUT does full replacement.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/CONVENTIONS.md",
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 10,
+        "tokens": {
+          "fresh_input_tokens": 5341,
+          "cached_input_tokens": 180736,
+          "output_tokens": 69323
+        },
+        "wall_clock_ms": 452511,
+        "spend_usd": 0.1503533,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4441,
+              "cached_input_tokens": 640,
+              "output_tokens": 1213
+            },
+            "wall_clock_ms": 8803,
+            "spec_authoring_tokens": 1099,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 27
+          },
+          "implementation": {
+            "turns": 9,
+            "tokens": {
+              "fresh_input_tokens": 900,
+              "cached_input_tokens": 180096,
+              "output_tokens": 68110
+            },
+            "wall_clock_ms": 440735,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 46
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 2,
+          "wall_clock_ms": 191
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "8831c0c1e669b8616e2987555762ddd4429be41f6cfb4416c7d9bfede3c6ae16",
+        "path": "snapshots/e4_arm_h/task-3"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-3/gate-run-1.json",
+        "records/e4_arm_h/task-3/gate-run-2.json",
+        "records/e4_arm_h/task-3/smoke-1.json",
+        "records/e4_arm_h/task-3/gate-run-3.json",
+        "records/e4_arm_h/task-3/smoke-2.json",
+        "records/e4_arm_h/task-3/gate-run-4.json",
+        "records/e4_arm_h/task-3/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 4,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "green_anomaly",
+        "refused_done_over_red": 3
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 21,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "refused"
+      },
+      "smoke_feedback_runs": 7,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:category-featured",
+            "semantic_item_uid": "spec-only:convention:category-featured",
+            "detail": {
+              "found": "{\"statement\":\"Category objects include an optional boolean field `is_featured` that defaults to false.\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:partial-update",
+            "semantic_item_uid": "spec-only:convention:partial-update",
+            "detail": {
+              "found": "{\"statement\":\"Updates use PATCH with a partial body; only the supplied fields are merged into the existing resource, preserving omitted fields.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 2
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the spec/context files were accurate. The task was straightforward: rename the `in_stock` field on Widget to `alias`. The spec files (`specs/openapi.json` and `specs/CONVENTIONS.md`) correctly described the API surface and conventions, and the code files (`schema.ts`, `seed.ts`) matched the spec. The only issue was that the acceptance test for Category-read was failing, which I couldn't resolve within the implementation phase since the Category entity was unchanged by my task.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 15,
+        "tokens": {
+          "fresh_input_tokens": 5817,
+          "cached_input_tokens": 280064,
+          "output_tokens": 37354
+        },
+        "wall_clock_ms": 237287,
+        "spend_usd": 0.0916197,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4545,
+              "cached_input_tokens": 640,
+              "output_tokens": 1042
+            },
+            "wall_clock_ms": 6792,
+            "spec_authoring_tokens": 934,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 24
+          },
+          "implementation": {
+            "turns": 14,
+            "tokens": {
+              "fresh_input_tokens": 1272,
+              "cached_input_tokens": 279424,
+              "output_tokens": 36312
+            },
+            "wall_clock_ms": 226948,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 69
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 3,
+          "wall_clock_ms": 203
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "813511098cd4531f049a87707914068a51eb4f79422c0a6b0e91323a6617f19c",
+        "path": "snapshots/e4_arm_h/task-4"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-4/gate-run-1.json",
+        "records/e4_arm_h/task-4/gate-run-2.json",
+        "records/e4_arm_h/task-4/smoke-1.json",
+        "records/e4_arm_h/task-4/gate-run-3.json",
+        "records/e4_arm_h/task-4/smoke-2.json",
+        "records/e4_arm_h/task-4/smoke-3.json",
+        "records/e4_arm_h/task-4/smoke-4.json",
+        "records/e4_arm_h/task-4/smoke-5.json",
+        "records/e4_arm_h/task-4/gate-run-4.json",
+        "records/e4_arm_h/task-4/smoke-6.json",
+        "records/e4_arm_h/task-4/smoke-7.json",
+        "records/e4_arm_h/task-4/gate-run-5.json",
+        "records/e4_arm_h/task-4/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 5,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "red",
+        "refused_done_over_red": 0
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 21,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:category-featured",
+            "semantic_item_uid": "spec-only:convention:category-featured",
+            "detail": {
+              "found": "{\"statement\":\"Category objects include an optional boolean field `is_featured` that defaults to false.\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:full-replacement",
+            "semantic_item_uid": "spec-only:convention:full-replacement",
+            "detail": {
+              "found": "{\"statement\":\"Updates use PUT with a full body; the entire resource is replaced, not merged.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 2
+          }
+        }
+      },
+      "noticing_probe_answer": "No, the spec/context files were accurate. The task description matched the workspace state: Widgets used PATCH for updates while Categories used PUT, and the task was to switch Widget updates to PUT to match the rest of the API. The spec artifacts (openapi.json and CONVENTIONS.md) truthfully described the current state before the change, and the code (registry.ts, server.ts) correctly implemented the described behavior.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json",
+          "specs/CONVENTIONS.md"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 4890,
+          "cached_input_tokens": 21248,
+          "output_tokens": 2042
+        },
+        "wall_clock_ms": 19222,
+        "spend_usd": 0.0075914,
+        "by_phase": {
+          "spec": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 4538,
+              "cached_input_tokens": 640,
+              "output_tokens": 1213
+            },
+            "wall_clock_ms": 7895,
+            "spec_authoring_tokens": 1092,
+            "gate_protocol_interaction_tokens": 21,
+            "oracle_feedback_tokens": 25
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 352,
+              "cached_input_tokens": 20608,
+              "output_tokens": 829
+            },
+            "wall_clock_ms": 9277,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": {
+          "red_runs": 2,
+          "green_runs": 1,
+          "wall_clock_ms": 123
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "3c6b1fe34ad759ae522637805353428ebeb3cb42b73104d39874c5d380021aa7",
+        "path": "snapshots/e4_arm_h/task-5"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-5/gate-run-1.json",
+        "records/e4_arm_h/task-5/gate-run-2.json",
+        "records/e4_arm_h/task-5/smoke-1.json",
+        "records/e4_arm_h/task-5/gate-run-3.json",
+        "records/e4_arm_h/task-5/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 6,
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": {
+        "custody_failures": 0,
+        "red_check": "skipped_behavior_preserving",
+        "refused_done_over_red": 0
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 21,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:category-featured",
+            "semantic_item_uid": "spec-only:convention:category-featured",
+            "detail": {
+              "found": "{\"statement\":\"Category objects include an optional boolean field `is_featured` that defaults to false.\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:full-replacement",
+            "semantic_item_uid": "spec-only:convention:full-replacement",
+            "detail": {
+              "found": "{\"statement\":\"Updates use PUT with a full body; the entire resource is replaced, not merged.\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 2
+          }
+        }
+      },
+      "noticing_probe_answer": "No, everything in the spec/context files was accurate and consistent with the running server behavior. The spec artifacts (specs/openapi.json and specs/CONVENTIONS.md) correctly described the API surface and conventions, and the code matched those descriptions.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 3,
+        "tokens": {
+          "fresh_input_tokens": 4692,
+          "cached_input_tokens": 11136,
+          "output_tokens": 170
+        },
+        "wall_clock_ms": 7018,
+        "spend_usd": 0.0032428,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 4560,
+              "cached_input_tokens": 5888,
+              "output_tokens": 143
+            },
+            "wall_clock_ms": 3742,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 25,
+            "oracle_feedback_tokens": 17
+          },
+          "implementation": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 132,
+              "cached_input_tokens": 5248,
+              "output_tokens": 27
+            },
+            "wall_clock_ms": 1504,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": {
+          "red_runs": 0,
+          "green_runs": 1,
+          "wall_clock_ms": 72
+        }
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "3c6b1fe34ad759ae522637805353428ebeb3cb42b73104d39874c5d380021aa7",
+        "path": "snapshots/e4_arm_h/task-6"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_h/task-6/smoke-1.json",
+        "records/e4_arm_h/task-6/gate-run-1.json",
+        "records/e4_arm_h/task-6/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    }
+  ],
+  "resume_events": [],
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "usage_totals": {
+    "turns": 48,
+    "tokens": {
+      "fresh_input_tokens": 32080,
+      "cached_input_tokens": 1007232,
+      "output_tokens": 167727
+    },
+    "wall_clock_ms": 1128334,
+    "spend_usd": 0.40185560000000003
+  }
+}
