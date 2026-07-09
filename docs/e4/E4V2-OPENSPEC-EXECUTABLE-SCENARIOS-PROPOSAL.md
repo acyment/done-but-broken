@@ -195,21 +195,38 @@ handling are reused per §4.
 
 ## 9. Milestones (each on explicit approval; spend only at the end)
 
-- **v2-M1** OpenSpec workspace generator + CLI integration + allowlist gate decision.
+Model assignments (operator request, 2026-07-09): chosen for value-per-dollar with minimal
+tier-switching. Rationale: this design doc freezes the judgment-heavy decisions to regex-level
+detail, so the BUILD milestones are spec-execution — Opus-tier with the doc as anchor — while
+the tier switches land at natural phase boundaries (build → operations → evidence). Two
+switches total. If a milestone surfaces a genuine design ambiguity, it stops and escalates
+rather than improvising (the same rule as v1's recorded-divergence discipline).
+
+| Phase | Milestones | Model | Why |
+| --- | --- | --- | --- |
+| Build | v2-M1 … v2-M5 | **Opus** (one continuous arc) | Implementation against a frozen spec; the two riskiest cells have executable guards baked in (M2's parser fuzz test + byte-cross-test vs the Python converter; M5's freeze-pin tests). Fable here would buy little over the doc+guards. |
+| Operations | v2-M6 | **Sonnet** | The calibration procedure has now been executed twice and is fully documented (launch → monitor → pinned adjust-once formula → freeze + hash-pin test). Judgment is pre-committed; the run is mechanical. |
+| Evidence | v2-M7 + verdict/report + any post-run adjudication + the public post | **Fable** | Pre-registration seals interpretation; the report carries the claim discipline the LinkedIn/CTO goal depends on; wrong-but-plausible here corrupts the program's only public output. |
+
+Standing exceptions: any GATE REVIEW response, design amendment, or unexpected-result
+adjudication is Fable regardless of phase (that is judgment work, not execution); if Opus hits a
+sealed-surface ambiguity in M2's step table it escalates rather than deciding.
+
+- **v2-M1** OpenSpec workspace generator + CLI integration + allowlist gate decision. *(Opus)*
 - **v2-M2** Converter port (fixture cross-test vs Python original) + step table + hermetic
-  scenario executor (+ parser fuzz test).
+  scenario executor (+ parser fuzz test). *(Opus — escalate step-table ambiguities)*
 - **v2-M3** Gate rework (custody floors, discriminating red, green on cumulative scenarios;
-  validate wired); runner adjustments; red failure-mode capture.
+  validate wired); runner adjustments; red failure-mode capture. *(Opus)*
 - **v2-M4** Meter re-pointing (coverage/staleness over scenario blocks; episode semantics kept)
-  + adversarial bank + kill-score instrument.
+  + adversarial bank + kill-score instrument. *(Opus)*
 - **v2-M5** Fake-agent behaviors (diligent / drifting / **vacuous-scenario gamer** — must land
   as high false-confidence + low kill score + coverage gap, the live anti-cheat fixture) +
   dry-run integration + non-budget v2 constants freeze + inspector/replay across the archive
-  seam.
-- **v2-M6** Budget calibration on deepseek-v4-pro (spend-gated) → budget freeze.
+  seam. *(Opus)*
+- **v2-M6** Budget calibration on deepseek-v4-pro (spend-gated) → budget freeze. *(Sonnet)*
 - **v2-M7** Pre-registered frontier evidence run (spend-gated; seeds/interpretation sealed
   pre-data; spec_touch trigger split, breakage-rate secondary, and kill-score reporting all
-  carried; claim language per the framing standard).
+  carried; claim language per the framing standard). *(Fable, incl. report and public post)*
 
 ## 10. Verification
 
