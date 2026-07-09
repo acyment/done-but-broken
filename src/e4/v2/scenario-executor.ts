@@ -222,11 +222,12 @@ function assertionFailure(step: E4V2Step, response: CurrentResponse | null, reme
   }
 }
 
-// A10 failure-mode signature: the red is classified "route_absent" when the response the failing
-// step was judging is a 404 the step did not itself expect — the request surface is missing, as
-// opposed to present-but-wrong behavior ("assertion").
+// A10 failure-mode signature: the red is classified "route_absent" only when a STATUS assertion
+// expecting a non-404 observed a 404 — the request surface is missing. Every other failure —
+// including a wrong error envelope on a 404 the scenario itself expected — is present-but-wrong
+// behavior ("assertion").
 function classifyFailureMode(step: E4V2Step, response: CurrentResponse | null): E4V2ScenarioFailureMode {
-  if (response !== null && response.status === 404 && !(step.kind === "assert_status" && step.status === 404)) {
+  if (response !== null && response.status === 404 && step.kind === "assert_status" && step.status !== 404) {
     return "route_absent";
   }
 
