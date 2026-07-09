@@ -41,6 +41,18 @@ per scenario in the manifest. This is agent-facing because it is realistic — a
 is standard TDD machinery, not benchmark-only apparatus. (v1's `green_anomaly` recorded-and-
 proceed policy applied to harness-authored tests; agent-authored scenarios get the strict form.)
 
+> **Superseded in part (design Amendment 2, 2026-07-09):** scenario-level all-red proved
+> unsatisfiable — a template-faithful change necessarily bundles replacement happy-path
+> scenarios (green when the new behavior's accepted set contains the old fixture) with the
+> discriminating rejection scenario, and on the v1 substrate most ops were behaviorally
+> invisible outright (escalation record `E4V2-M1-ESCALATION-2-red-rule-vs-op-space.md`). The
+> binding form is now **change-level red** (§6.2.i of the design as amended): ≥1 novel
+> scenario, ≥1 of them red; all-green novel sets still refuse (A2's anti-tautology core);
+> green novels are recorded (`green_novel`) and fed to the §7 diagnostics, not blocked.
+> Capability retirement is expressed via the §5.5 retirement tombstone (itself a novel red
+> scenario), so no zero-novel custody shape exists. The per-scenario failure-mode capture
+> (A10) is unchanged.
+
 **A3 — Grammar hardening set (upstream, closes permanent gaps).** Convergent "Stage 0" across
 reports: anything the parser accepts loosely is invisible to every downstream safeguard.
 **Pins:** exact integer statuses only (no `4xx` classes); quoted literals with exact-equality

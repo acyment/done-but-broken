@@ -12,6 +12,26 @@ a design silence — the T0 gold spec-of-record generation policy — recorded i
 coverage scope). §9/§10 gain the corresponding per-milestone verification split. No previously
 frozen surface is altered.
 
+**Amendment 2 (2026-07-09, Fable session):** the restarted build arc stopped cleanly a second
+time, before any code, on a systemic interaction recorded in
+`E4V2-M1-ESCALATION-2-red-rule-vs-op-space.md`: most v1 substrate ops are behaviorally
+invisible at the HTTP surface (the generated server enforced only required-fields; renames
+never moved paths), so §6's discriminating-red rule was unsatisfiable on the majority of the
+task distribution, the §5.5 template derivation dead-ended on more, the vocabulary could not
+express PATCH, and the §7 wrong-filter bank variant was unkillable at T0 under uniform seed
+references. Resolved here by: **§5.6** (`procedural-rest-v2`, the substrate observability
+revision — every non-behavior-preserving op now has an observable HTTP consequence, with an
+executable per-op census guard at the new milestone v2-M0), a **PATCH request form** in §5.3,
+**field/rule-level rejection templates + sealed violating-value tables** in §5.5, a
+**change-level red rule** replacing scenario-level all-red in §6, a sealed **retirement
+tombstone** convention for capability removals (forced by a CLI fact probed at this
+amendment: the pinned `openspec archive` refuses to rebuild a spec to zero requirements and
+aborts the whole archive — so remove-all changes are mechanically un-archivable),
+and corrections to the §5.5 kill-score rationale and the §7.5
+"identical code shape" wording. A2 of the anti-cheat adjudication is superseded **in part**
+(scenario-level → change-level strictness; recorded there). A new milestone **v2-M0** is
+prepended; the build arc becomes v2-M0…v2-M5, milestone names otherwise unchanged.
+
 ## 1. Motivation (from the v1 pilots)
 
 The v1 program (M0–M7b) validated every instrument and produced the finding that motivates this
@@ -35,9 +55,9 @@ with the archive step run by the harness identically in both arms — profile
 `e4-openspec-workflow-v1`, following the blessed `e1-openspec-workflow-v0` shared-environment
 shape). The spec's `#### Scenario:` blocks are written in a **sealed WHEN/THEN grammar** whose
 steps map 1:1 onto a **harness-owned step-pattern table** (§5). In the **prose arm** the
-scenarios are never executed. In the **executed arm** they are the acceptance gate: new
-scenarios must fail before implementation (discriminating red, §6) and the full scenario set
-must pass to accept "done". The framework, artifacts, workflow, budgets, and provider are
+scenarios are never executed. In the **executed arm** they are the acceptance gate: each
+change's new scenarios must include a pre-implementation failure (discriminating red, §6) and
+the full scenario set must pass to accept "done". The framework, artifacts, workflow, budgets, and provider are
 identical in both arms; *whether the spec runs* is the only difference. Hidden, harness-side and
 unchanged in both arms: the ground-truth suite (true correctness), the drift meter (spec
 freshness), and the new **scenario-strength instrument** (adversarial-implementation kill score,
@@ -119,6 +139,7 @@ Request steps (WHEN / AND after a WHEN):
 | `I send a DELETE request to "<path>"` | ditto, DELETE |
 | `I send a POST request to "<path>" with body <json>` | POST with `content-type: application/json`, body = the inline JSON literal (must parse; single line) |
 | `I send a PUT request to "<path>" with body <json>` | ditto, PUT |
+| `I send a PATCH request to "<path>" with body <json>` | ditto, PATCH (Amendment 2 — makes the `modify_endpoint` op's post-state expressible; without it the update endpoint's truth is un-specifiable after a PUT→PATCH flip) |
 | `I remember the response field "<json.path>" as "<name>"` | binds a scenario-local variable from the current response body; subsequent `<path>`/`<json>` captures may reference `{<name>}` (exact substitution) — enables create→fetch chains without seed overfitting |
 
 Assertion steps (THEN / AND after a THEN):
@@ -180,7 +201,7 @@ client-supplied in this substrate; the remember form remains available to agents
 | --- | --- |
 | create | (1) *"Creating a ⟨entity⟩ returns the stored entity"*: POST ⟨collection⟩ with the fresh body → status 201 → body equals ⟨sent⟩ → GET ⟨collection⟩/⟨spec-id⟩ → status 200 → body equals ⟨sent⟩. (2) *"Creating a ⟨entity⟩ without ⟨field⟩ is rejected"*: POST the fresh body minus the first required non-id field → status 400 → field `error.⟨k1⟩` equals `"validation_error"` → field `error.⟨k2⟩` is a string. |
 | read | *"Fetching a missing ⟨entity⟩ returns not found"*: GET ⟨collection⟩/⟨missing-id⟩ → status 404 → field `error.⟨k1⟩` equals `"not_found"` → field `error.⟨k2⟩` is a string. (The happy-path read is covered by create's round-trip GET; a dedicated create→get twin would duplicate it under the §6 canonicalizer.) |
-| update | *"Updating a ⟨entity⟩ persists the change"*: POST fresh → 201 → PUT ⟨changed body⟩ → 200 → body equals ⟨changed⟩ → GET → 200 → body equals ⟨changed⟩. |
+| update | *"Updating a ⟨entity⟩ persists the change"*: POST fresh → 201 → ⟨update-method⟩ ⟨changed body⟩ → 200 → body equals ⟨changed⟩ → GET → 200 → body equals ⟨changed⟩. ⟨update-method⟩ = the update endpoint's IR method, PUT or PATCH (Amendment 2). |
 | delete | *"Deleting a ⟨entity⟩ removes it"*: POST fresh → 201 → DELETE → 204 → GET → 404 → field `error.⟨k1⟩` equals `"not_found"`. |
 | list | *"Creating a ⟨entity⟩ increases the list count"*: POST fresh → 201 → GET ⟨collection⟩ → 200 → list has length ⟨seed-count + 1⟩. Additionally, when the entity has a ref field: *"Filtering ⟨collection⟩ by ⟨ref-field⟩ returns only matching rows"*: POST fresh (ref = seed parent 1) → 201 → GET ⟨collection⟩?⟨ref-field⟩=⟨parent-id⟩ → 200 → list has length ⟨matching-seed-count + 1⟩. |
 | analytics | *"Creating a ⟨entity⟩ increases the reported count"*: POST fresh → 201 → GET ⟨stats path⟩ → 200 → field `count` equals ⟨seed-count + 1⟩. |
@@ -191,6 +212,48 @@ client-supplied in this substrate; the remember form remains available to agents
 detail wording is never asserted (the M3 wording-overreach rule, carried over — the weak
 `is a string` form pins the second envelope key's presence without freezing prose).
 
+**Field- and rule-level rejection templates (Amendment 2 — sealed alongside the table above).**
+These pin the §5.6 validation surface and give type/rule-touching ops a discriminating delta.
+Both sit under the entity's **create** requirement; scenario order under that requirement is:
+happy path, required-field rejection, type rejections (fields in IR order), rule rejections
+(rules in IR order).
+
+| Template | Applies to | Scenario emitted |
+| --- | --- | --- |
+| type rejection | every field of type `int`/`decimal`/`bool`/`date` on an entity with a create endpoint | *"Creating a ⟨entity⟩ with a non-⟨type⟩ ⟨field⟩ is rejected"*: POST the fresh body with ⟨field⟩ = ⟨type-violating literal⟩ → status 400 → field `error.⟨k1⟩` equals `"validation_error"` → field `error.⟨k2⟩` is a string. |
+| rule rejection | every validation rule | *"Creating a ⟨entity⟩ with an invalid ⟨field⟩ is rejected"*: POST the fresh body with ⟨field⟩ = ⟨rule-violating literal⟩ → status 400 → field `error.⟨k1⟩` equals `"validation_error"` → field `error.⟨k2⟩` is a string. |
+
+Sealed violating-value tables (part of the `e4-t0-gold-spec-v1` code twin; the §5.6 server
+enforces the mirror checks, and the v2-M2 executed in-sync check cross-verifies the two):
+type-violating literals — `int` → `1.5`, `decimal` → `"1.5"`, `bool` → `"yes"`, `date` →
+`"not-a-date"` (`string`/`ref` fields get no type-rejection scenario: any JSON string is
+type-valid for them, so no violating literal exists inside the vocabulary). Rule-violating
+literals — `range` → `min − 1` (or `max + 1` when only a max is pinned), `format` → a sealed
+non-matching literal per pattern in the substrate's pattern pool (`"^[\\w -]{1,80}$"` → `"!"`),
+`enum` → `"__not_a_member__"`.
+
+**Retirement tombstone (Amendment 2 — the delta-derivation rule for retired capabilities).**
+The change-delta derivation is a function of the pair ⟨post-op IR, pre-task spec-of-record⟩;
+the tombstone is the one rule where the second input contributes content rather than just the
+diff. For every capability present in the pre-task spec-of-record whose folder name (= first
+path segment, §5.5 workspace shape) matches the first path segment of NO post-op IR endpoint
+— the `delete_entity` signature, and the old-name capability of a `rename_entity` — the
+derived change REPLACES that capability's requirements with exactly one, phrased on the
+capability name (the entity may no longer exist in the IR): *"### Requirement: Retired
+⟨capability⟩ endpoints"* / *"The service SHALL NOT serve the retired /⟨capability⟩
+endpoints."*, carrying one scenario — *"Requests to retired /⟨capability⟩ endpoints return
+not found"*: GET /⟨capability⟩ → status 404 → field `error.⟨k1⟩` equals `"not_found"` →
+field `error.⟨k2⟩` is a string. This exists because the pinned CLI refuses to rebuild a spec
+to zero requirements (whole-archive abort, exit 0 — probed and pinned at this amendment, same
+quirk class as the exit-0 abort in §4), so capability retirement must stay expressible as a
+valid non-empty spec; it also gives `delete_entity` and `rename_entity` changes a NOVEL,
+RED-pre-implementation scenario (the collection GET returns 200 before the routes move or
+vanish), satisfies the A8 floors (the `error.⟨k1⟩` equality is value-binding), and remains
+TRUE against every later gold implementation until the collection path is reused — a
+re-added entity's derivation then replaces the tombstone with the full template set
+(delete-then-re-add stays coherent). A tombstone that still passes against gold is not drift
+(§7.5 as amended: a scenario that passes against gold is never a discrepancy).
+
 **Fixture-value policy (A6-aligned).** Fresh bodies carry every field of the entity, values from
 the GT generator's sealed field-value derivation at **spec-reserved ordinals**: fresh body n=5,
 update's changed value n=6 on the first non-id field (GT reserves 1/2 for seed rows, 9/20 for
@@ -198,21 +261,33 @@ its own fixtures). Spec ids are `⟨entity⟩-spec-1`, the missing-id literal is
 `⟨entity⟩-spec-missing`; both must be disjoint from seed ids (`*-seed-N`) and GT fixture ids
 (`*-new-1`, `*-invalid-1`, `*-does-not-exist`) — asserted by the self-check, so agent-visible
 spec values and hidden-oracle values stay decorrelated by construction. Ref-typed fields
-reference seed row 1 of the referenced entity (the only pre-existing row at scenario start;
-per-scenario hermetic execution resets state to seed). One fresh fixture per entity, reused
-across that entity's templates.
+reference seed row 1 of the referenced entity (seed rows are the only pre-existing rows at
+scenario start; per-scenario hermetic execution resets state to seed — and seed refs are
+themselves heterogeneous per §5.6.6, which is what makes the filtered-list template
+discriminating). One fresh fixture per entity, reused across that entity's templates. The
+Amendment-2 violating-value literals above are fixture policy too: sealed literals, not
+ordinals.
 
 **Design rationale (recorded, not re-litigated):** the emitted set is the minimum that (a)
 covers every truth endpoint with ≥1 matching request, (b) satisfies the A8 floors with strong
 forms (whole-body equality on echo responses, consequence GETs per A7's create→get /
 delete→get-404 / list-count-delta shapes), and (c) achieves kill score 1.0 against the §7 bank
-at T0 — variant-by-variant: validation-dropped ← the required-field rejection; status-swapped ←
-exact integer statuses; no-op-write ← the update/delete consequence GETs; seed-echo ← fresh-body
-echo + round-trip; field-leak ← whole-body equality; wrong-filter ← the filtered-list count.
+at T0 — variant-by-variant: validation-dropped ← the required-field, type, and rule rejections;
+status-swapped ← exact integer statuses; no-op-write ← the update/delete consequence GETs;
+seed-echo ← fresh-body echo + round-trip; field-leak ← whole-body equality; wrong-filter ← the
+filtered-list count, whose discrimination **requires §5.6's heterogeneous seed refs** (under
+v1's uniform all-rows-reference-parent-1 seeding the filtered and unfiltered counts coincide
+and the wrong-filter variant is unkillable at T0 — found and corrected at Amendment 2). The
+create round-trip GET is guaranteed a target by the §5.6 every-entity-has-a-read invariant.
 A gold baseline that kills the full bank calibrates the instrument's ceiling: kill-score decay
 under the agent's maintenance then measures spec-strength erosion, never a weak starting point.
 
 **Verification split across milestones (executable):**
+- **v2-M0 (census, Amendment 2):** the §5.6 per-op observability census passes on
+  `procedural-rest-v2` — for every op kind and eligible variant, the derived delta (templates
+  + retirement tombstone) contains ≥1 novel scenario red against the pre-op gold
+  implementation, and the post-op derived set passes 100% against the post-op gold
+  implementation.
 - **v2-M1 (structural):** the emitted tree passes `openspec validate --specs --strict
   --no-interactive`; the template table is total over the endpoint-kind vocabulary; fixture-id
   disjointness holds; every scenario satisfies the A8 floors by construction (generator
@@ -224,9 +299,68 @@ under the agent's maintenance then measures spec-strength erosion, never a weak 
   the T0 adversarial bank, and the re-based meter reports zero spec-side discrepancies at T0.
 
 **Sealing.** The template table (requirement titles/SHALL statements, scenario titles, step
-sequences, fixture ordinals, disjointness rules, capability naming) is `e4-t0-gold-spec-v1` —
-a constants-adjacent code twin with a pinned hash, same discipline as the step table (§5.4),
-stamped in every manifest.
+sequences, fixture ordinals, violating-value literals, disjointness rules, capability naming)
+is `e4-t0-gold-spec-v1` — a constants-adjacent code twin with a pinned hash, same discipline
+as the step table (§5.4), stamped in every manifest.
+
+### 5.6 Substrate observability revision (`procedural-rest-v2`, sealed — Amendment 2)
+
+The v1 substrate was built for harness-side test oracles and a text-level meter; most of its
+drift/additive ops were invisible at the HTTP surface (the generated server enforced only
+required-fields; renames never moved paths; validation rules were data the server never read).
+That deadlocks §6's discriminating red, dead-ends the §5.5 diligent derivation, and blinds the
+§7.5 spec-side channel — the executed arm would be structurally refused on most tasks while
+the prose arm sails through, an arm-differential censoring channel of the class that broke the
+flash pilot (full census: `E4V2-M1-ESCALATION-2-red-rule-vs-op-space.md`). v2 therefore runs
+on **`procedural-rest-v2`**: same IR types, same registry/schema **dump format** (the §7.5
+code channel's extraction is untouched), same op vocabulary except the pins below — and every
+non-behavior-preserving op has an observable HTTP consequence:
+
+1. **Full request validation in the generated server**, sealed check order: unknown field →
+   missing required → type → validation rule; first failure wins; status 400, machine code
+   `validation_error`, envelope per the error_format convention; applies to create and update
+   bodies. Type checks: `string`/`ref` = JSON string (no referential-integrity check —
+   recorded limitation), `int` = integer number, `decimal` = finite number (integers
+   admissible), `bool` = boolean, `date` = string matching `^\d{4}-\d{2}-\d{2}$`; `null` is
+   treated as absent. Enforced rules: `range` (min/max), `enum` (membership), `format`
+   (pattern).
+2. **Entity renames move paths**: every endpoint of the renamed entity has its collection
+   segment regenerated as `lowercase(newName) + "s"` (`/widgets/{id}` → `/products/{id}`,
+   `/widgets/stats` → `/products/stats`). The rename-lineage map gains one entry per affected
+   endpoint (rendered id changes, `semantic_item_uid` preserved) so §7.5 identity merging is
+   unchanged; the capability folder tracks the new first path segment. This is what makes the
+   `stale_claim` drift signature real in the ungated arm.
+3. **`add_entity` mints full CRUD + list** (create/read/update/delete/list — the baseline
+   entity shape). Substrate invariant, census-asserted: **every entity has a read endpoint at
+   all times**, so the create template's round-trip GET is total.
+4. **`delete_field` eligibility narrows to required, non-id, non-ruled fields.** An optional
+   field's removal has no observable consequence even under strict validation, and the
+   template function (a pure function of the post-op IR) cannot know the removed field to
+   assert its rejection.
+5. **`modify_convention` targets only the `error_format` convention** in v2 sequences.
+   naming/command/structural conventions are static baseline items — they have no HTTP
+   consequence and no scenario-assertable surface (the §7.5 scope clarification's logic,
+   applied to the op space). Code-side meter coverage of those kinds is unchanged; recorded
+   limitation, same class as the field/validation_rule spec-side exclusion.
+6. **Heterogeneous seed refs**: seed row *n*'s ref fields reference seed row *n* of the
+   referenced entity (v1 pointed every row at parent 1, which made the filtered-list count
+   equal the unfiltered count — see the corrected §5.5 rationale).
+7. **GT testgen v2** adds the mirror negative tests (unknown-field, type, and rule rejections
+   at the GT-reserved fixture ordinals), so the hidden oracle requires the enforcement the
+   spec now describes (A6/A7 alignment), and adapts expected bodies to (6).
+
+`substrate_version = "procedural-rest-v2"`; a fresh compatibility boundary in the v2 constants
+lineage. v1 substrate modules stay untouched and their tests keep passing (the v1 seal and the
+test-count-only-grows rule are unaffected).
+
+**Executable design guard (the census test, v2-M0 — the escalation's paper census made
+mechanical):** for every op kind — and every variant its eligibility admits (each retype
+direction, each deletable-field class, the convention target, ref/non-ref list entities) —
+applying the §5.5 delta derivation (templates over the post-op IR + the retirement-tombstone
+rule, diffed against the pre-op spec-of-record) yields a delta containing ≥1 novel scenario
+that FAILS against the pre-op gold implementation, and the full post-op derived scenario set
+passes 100% against the post-op gold implementation. Build-time test, never a run-time gate;
+it is the acceptance criterion for this amendment.
 
 ## 6. Gate mechanics (executed arm)
 
@@ -234,11 +368,12 @@ Per task: spec phase → implementation phase, as v1, with these changes:
 
 1. **Custody** = spec changed + `openspec validate` passes + all scenarios parse and bind + A8
    floors pass.
-2. **Discriminating red (A2/A10)**: every scenario NOVEL in this task's change must FAIL when
-   executed against the current (pre-implementation) workspace; the failure mode per scenario
-   (assertion-level vs route-absent) is recorded in the manifest. Any already-green novel
-   scenario → custody-class refusal with feedback ("this scenario does not describe the
-   requested change").
+2. **Discriminating red (A2/A10, change-level per Amendment 2)**: every scenario NOVEL in this
+   task's change is executed against the current (pre-implementation) workspace and its
+   red/green status and failure mode (assertion-level vs route-absent) are recorded in the
+   manifest; the CHANGE must contain at least one red novel scenario, per rule (i) below. A
+   change whose novel scenarios are all already green → custody-class refusal with feedback
+   ("the change adds no scenario that discriminates the requested change").
 
    **Novelty semantics under OpenSpec MODIFIED blocks (pinned — modified requirement blocks
    replace wholesale, so block membership cannot define "new"):** canonicalize every scenario in
@@ -246,10 +381,27 @@ Per task: spec phase → implementation phase, as v1, with these changes:
    canonicalizer precedent (`e1-openspec-scenario-canonicalizer-v1`: strip Gherkin keywords,
    bold markers, bullets, case, whitespace). A change scenario whose canonical form already
    exists in the spec-of-record is **carried**; one whose canonical form does not is **novel** —
-   regardless of whether it sits in an ADDED or MODIFIED block. Rules: (i) on a
-   non-behavior-preserving task, the change must contain **≥1 novel scenario** (zero novel
-   scenarios = custody refusal: "the change adds no new behavioral scenarios") and **all novel
-   scenarios must be red**; (ii) **carried** scenarios and the prior spec-of-record set are
+   regardless of whether it sits in an ADDED or MODIFIED block. Rules: (i, **as amended at
+   Amendment 2 — change-level red**) on a non-behavior-preserving task, the change must
+   contain **≥1 novel scenario, of which ≥1 must be red**; a change whose novel scenarios are
+   ALL green is refused ("the change adds no scenario that discriminates the requested
+   change"); novel-but-green scenarios in an otherwise-discriminating change are RECORDED per
+   scenario (`green_novel`, extending the A10 capture) and echoed in feedback but are NOT
+   gating. There is NO pure-removal custody shape: a change with zero novel scenarios is
+   always refused on a non-behavior-preserving task — capability retirement is expressed
+   through the §5.5 retirement tombstone (itself a novel red scenario), and the pinned CLI
+   makes remove-all changes un-archivable anyway (empty-rebuild abort, probed at this
+   amendment). Wrongful scenario removals inside otherwise-valid changes remain the meter's
+   business (coverage_gap onsets) and the strength instrument's (kill-score decay), never the
+   gate's — the gate enforces custody, not truth (ADR-003, R2-3). *Rationale for the
+   amendment (recorded): scenario-level all-red — A2 as originally adjudicated — is
+   unsatisfiable even on an observable substrate, because a template-faithful delta necessarily
+   bundles the replacement happy-path scenario (green whenever the new behavior's accepted set
+   contains the old fixture, e.g. a decimal→int retype) with the discriminating rejection
+   scenario; change-level discrimination preserves A2's anti-tautology core (all-green refusal)
+   while admitting mixed deltas. A gamer padding one red scenario with green tautologies is
+   measured, not blocked: `green_novel` counts, kill score, and coverage feed the §7
+   diagnostics.* (ii) **carried** scenarios and the prior spec-of-record set are
    executed at red-check time and their green/red status is RECORDED (`prior_green`,
    v1-style) but is NOT gating — the agent may be mid-flight, and the done-claim's cumulative
    green is the enforcement point; (iii) behavior-preserving tasks keep v1 semantics: the red
@@ -294,7 +446,8 @@ one-causal-variable discipline (execution of the spec is the only arm difference
 **Code-side channel (`code_vs_truth`): UNCHANGED from v1.** The registry/schema surface-dump
 extraction, all five item kinds (endpoint/entity/field/validation_rule/convention), the
 registry-bypass reconciliation, and the fail-closed extraction behavior carry over verbatim —
-the generated app's code shape is identical in v2.
+the generated app's registry/schema **dump format** is identical in v2 (Amendment 2 wording
+fix: the app itself is `procedural-rest-v2` per §5.6, behaviorally stricter, dump-compatible).
 
 **Spec-side channel (`spec_vs_truth`): re-based on scenario EXECUTION, not static parsing.**
 Statically inferring semantics from assertion text would re-implement the executor badly;
@@ -306,10 +459,13 @@ conventions:
 - **`contradiction`** — a scenario that FAILS against gold: the spec claims behavior that is not
   true. Attributed to the truth endpoint(s) its request steps match (dispatcher matching rules,
   literal-segment specificity), `semantic_item_uid` = the matched endpoint's IR uid.
-- **`stale_claim`** — a scenario whose request matches NO current truth route: the spec
-  describes surface that no longer exists (the post-rename/post-delete signature). `item_id` =
-  the rendered `endpoint:<METHOD> <path>` form of the unmatched request; identity resolution
-  through the v1 rename-lineage merge (`resolveStaleClaimIdentity`) unchanged.
+- **`stale_claim`** — a scenario that FAILS against gold and whose request matches NO current
+  truth route: the spec describes surface that no longer exists (the post-rename/post-delete
+  signature). `item_id` = the rendered `endpoint:<METHOD> <path>` form of the unmatched
+  request; identity resolution through the v1 rename-lineage merge (`resolveStaleClaimIdentity`)
+  unchanged. **Amendment 2 clarification:** a scenario that PASSES against gold is never a
+  discrepancy, matched or not — a §5.5 retirement tombstone correctly asserts negative space
+  (its request matches no route and its 404 assertions hold), which is truth, not staleness.
 - **`coverage_gap`** — a truth endpoint matched by NO scenario request. Uid = the endpoint's IR
   uid. (Weak-only scenarios — no value-binding assertion — cannot exist post-custody, so
   "mentioned but unpinned" is excluded by the A3 floors rather than classified here.)
@@ -353,7 +509,7 @@ rather than improvising (the same rule as v1's recorded-divergence discipline).
 
 | Phase | Milestones | Model | Why |
 | --- | --- | --- | --- |
-| Build | v2-M1 … v2-M5 | **Opus** (one continuous arc) | Implementation against a frozen spec; the two riskiest cells have executable guards baked in (M2's parser fuzz test + byte-cross-test vs the Python converter; M5's freeze-pin tests). Fable here would buy little over the doc+guards. |
+| Build | v2-M0 … v2-M5 | **Opus** (one continuous arc) | Implementation against a frozen spec; the three riskiest cells have executable guards baked in (M0's per-op observability census; M2's parser fuzz test + byte-cross-test vs the Python converter; M5's freeze-pin tests). Fable here would buy little over the doc+guards. |
 | Operations | v2-M6 | **Sonnet** | The calibration procedure has now been executed twice and is fully documented (launch → monitor → pinned adjust-once formula → freeze + hash-pin test). Judgment is pre-committed; the run is mechanical. |
 | Evidence | v2-M7 + verdict/report + any post-run adjudication + the public post | **Fable** | Pre-registration seals interpretation; the report carries the claim discipline the LinkedIn/CTO goal depends on; wrong-but-plausible here corrupts the program's only public output. |
 
@@ -361,20 +517,28 @@ Standing exceptions: any GATE REVIEW response, design amendment, or unexpected-r
 adjudication is Fable regardless of phase (that is judgment work, not execution); if Opus hits a
 sealed-surface ambiguity in M2's step table it escalates rather than deciding.
 
+- **v2-M0** (Amendment 2) Substrate observability revision: `procedural-rest-v2` per §5.6
+  (server validation surface, paths-follow-renames + endpoint-level lineage entries, full-CRUD
+  add_entity, delete_field/modify_convention eligibility pins, heterogeneous seed refs, GT
+  testgen negative tests) + the per-op observability census test. v1 substrate modules
+  untouched. *(Opus)*
 - **v2-M1** OpenSpec workspace generator (incl. the §5.5 T0 gold spec-of-record generator with
-  its structural self-checks) + CLI integration + allowlist gate decision. *(Opus)*
-- **v2-M2** Converter port (fixture cross-test vs Python original) + step table + hermetic
-  scenario executor (+ parser fuzz test) + the §5.5 executed T0 in-sync check. *(Opus —
-  escalate step-table ambiguities)*
-- **v2-M3** Gate rework (custody floors, discriminating red, green on cumulative scenarios;
-  validate wired); runner adjustments; red failure-mode capture. *(Opus)*
+  its structural self-checks, over the v2 substrate) + CLI integration + allowlist gate
+  decision. *(Opus)*
+- **v2-M2** Converter port (fixture cross-test vs Python original) + step table (incl. the
+  Amendment-2 PATCH form) + hermetic scenario executor (+ parser fuzz test) + the §5.5
+  executed T0 in-sync check. *(Opus — escalate step-table ambiguities)*
+- **v2-M3** Gate rework (custody floors, change-level discriminating red per §6.2.i as
+  amended incl. `green_novel` recording, green on cumulative scenarios; validate wired);
+  runner adjustments; red failure-mode capture. *(Opus)*
 - **v2-M4** Meter re-pointing (coverage/staleness over scenario blocks; episode semantics kept)
   + adversarial bank + kill-score instrument + the §5.5 calibration checks (T0 gold kill score
   1.0; zero spec-side discrepancies at T0). *(Opus)*
 - **v2-M5** Fake-agent behaviors (diligent / drifting / **vacuous-scenario gamer** — must land
-  as high false-confidence + low kill score + coverage gap, the live anti-cheat fixture) +
-  dry-run integration + non-budget v2 constants freeze + inspector/replay across the archive
-  seam. *(Opus)*
+  as high false-confidence + low kill score + coverage gap, the live anti-cheat fixture; the
+  diligent agent's retirement-tombstone path exercised on a delete_entity or rename_entity
+  task when the drawn fixture sequence contains one) + dry-run integration + non-budget v2
+  constants freeze + inspector/replay across the archive seam. *(Opus)*
 - **v2-M6** Budget calibration on deepseek-v4-pro (spend-gated) → budget freeze. *(Sonnet)*
 - **v2-M7** Pre-registered frontier evidence run (spend-gated; seeds/interpretation sealed
   pre-data; spec_touch trigger split, breakage-rate secondary, and kill-score reporting all
@@ -384,6 +548,9 @@ sealed-surface ambiguity in M2's step table it escalates rather than deciding.
 
 - Every milestone: full e1:protect triad + E4 import lint; test count grows from the current
   baseline, never shrinks.
+- v2-M0: the §5.6 per-op observability census test green (every op kind/variant's derived
+  delta contains ≥1 red novel scenario, tombstone included; post-op derived sets 100% green
+  vs post-op gold); all v1 substrate tests still green.
 - §5.5's per-milestone T0 checks: structural self-checks at v2-M1, executed in-sync at v2-M2,
   kill-score-1.0 + zero-discrepancy calibration at v2-M4.
 - v2-M2: byte-identical parse vs the Python converter on shared fixtures; fuzz test green.
