@@ -48,7 +48,7 @@ only shakedown, budgets re-ratified on that model at the calibration milestone.
 | Gate custody (spec changed + parses) | Custody + `openspec validate` (new wiring through the existing generic CLI runner) + step-grammar check + static floors (A8) |
 | Gate red/green (harness tests) | The agent's own scenarios, executed per §5–§6 |
 | Hidden oracle | Unchanged referee, runs exactly once per task close (A9) |
-| Drift meter | Re-pointed at requirement/scenario blocks: coverage + staleness vs truth; MODIFIED-replace archive semantics become a first-class measured rot channel |
+| Drift meter | Re-pointed per the pinned §7.5 mapping: code-side channel UNCHANGED from v1; spec-side channel re-based on scenario execution against gold |
 | — (new) | Scenario-strength instrument: IR-generated adversarial bank + kill score (§7) |
 | Fake agent, snapshots, replay, budgets, manifest/inspector, verdict tool, live provider | Carry over; field additions only |
 
@@ -145,12 +145,29 @@ Per task: spec phase → implementation phase, as v1, with these changes:
 
 1. **Custody** = spec changed + `openspec validate` passes + all scenarios parse and bind + A8
    floors pass.
-2. **Discriminating red (A2/A10)**: every scenario NEW in this task's change must FAIL when
+2. **Discriminating red (A2/A10)**: every scenario NOVEL in this task's change must FAIL when
    executed against the current (pre-implementation) workspace; the failure mode per scenario
-   (assertion-level vs route-absent) is recorded in the manifest. Any already-green new scenario
-   → custody-class refusal with feedback ("this scenario does not describe the requested
-   change"). Prior spec-of-record scenarios must remain green at red-check time (no-regression,
-   mirrors v1's prior-cumulative check).
+   (assertion-level vs route-absent) is recorded in the manifest. Any already-green novel
+   scenario → custody-class refusal with feedback ("this scenario does not describe the
+   requested change").
+
+   **Novelty semantics under OpenSpec MODIFIED blocks (pinned — modified requirement blocks
+   replace wholesale, so block membership cannot define "new"):** canonicalize every scenario in
+   the change AND every scenario in the current spec-of-record using the estate's scenario
+   canonicalizer precedent (`e1-openspec-scenario-canonicalizer-v1`: strip Gherkin keywords,
+   bold markers, bullets, case, whitespace). A change scenario whose canonical form already
+   exists in the spec-of-record is **carried**; one whose canonical form does not is **novel** —
+   regardless of whether it sits in an ADDED or MODIFIED block. Rules: (i) on a
+   non-behavior-preserving task, the change must contain **≥1 novel scenario** (zero novel
+   scenarios = custody refusal: "the change adds no new behavioral scenarios") and **all novel
+   scenarios must be red**; (ii) **carried** scenarios and the prior spec-of-record set are
+   executed at red-check time and their green/red status is RECORDED (`prior_green`,
+   v1-style) but is NOT gating — the agent may be mid-flight, and the done-claim's cumulative
+   green is the enforcement point; (iii) behavior-preserving tasks keep v1 semantics: the red
+   requirement is skipped (novel scenarios are permitted and their pre-implementation status is
+   recorded), and the §3.3 byte-unchanged affirmation path stands for true no-change exits;
+   (iv) REMOVED scenarios play no role in the red check — removed coverage is the drift meter's
+   business, not the gate's.
 3. **Green** on done-claim: the FULL cumulative scenario set (spec-of-record + this change)
    passes. Refusal returns the failing scenario titles + fixed-vocabulary failure strings.
 4. Behavior-preserving tasks keep the v1 §3.3 no-change affirmation (byte-unchanged spec + ≥1
@@ -182,6 +199,43 @@ Per task, harness-side after close (order: oracle → meter → strength → sna
 Ecological-validity pin (from adjudication A1): the bank uses gold knowledge only the harness
 has, so it must never gate or feed back — it is the v2 analog of the hidden oracle, and the
 one-causal-variable discipline (execution of the spec is the only arm difference) is preserved.
+
+### 7.5 Drift-meter mapping (pinned — the v2 inventory semantics)
+
+**Code-side channel (`code_vs_truth`): UNCHANGED from v1.** The registry/schema surface-dump
+extraction, all five item kinds (endpoint/entity/field/validation_rule/convention), the
+registry-bypass reconciliation, and the fail-closed extraction behavior carry over verbatim —
+the generated app's code shape is identical in v2.
+
+**Spec-side channel (`spec_vs_truth`): re-based on scenario EXECUTION, not static parsing.**
+Statically inferring semantics from assertion text would re-implement the executor badly;
+instead the meter runs the spec-of-record's scenarios (post-archive, i.e. the living spec)
+against the task's GOLD implementation, harness-side and hidden (gold never touches the agent —
+same isolation class as the hidden oracle). Classification, at endpoint granularity plus
+conventions:
+
+- **`contradiction`** — a scenario that FAILS against gold: the spec claims behavior that is not
+  true. Attributed to the truth endpoint(s) its request steps match (dispatcher matching rules,
+  literal-segment specificity), `semantic_item_uid` = the matched endpoint's IR uid.
+- **`stale_claim`** — a scenario whose request matches NO current truth route: the spec
+  describes surface that no longer exists (the post-rename/post-delete signature). `item_id` =
+  the rendered `endpoint:<METHOD> <path>` form of the unmatched request; identity resolution
+  through the v1 rename-lineage merge (`resolveStaleClaimIdentity`) unchanged.
+- **`coverage_gap`** — a truth endpoint matched by NO scenario request. Uid = the endpoint's IR
+  uid. (Weak-only scenarios — no value-binding assertion — cannot exist post-custody, so
+  "mentioned but unpinned" is excluded by the A3 floors rather than classified here.)
+- **Conventions**: a truth convention item (e.g. error-envelope shape) is covered iff ≥1
+  scenario asserts on its shape (error-field paths against the sealed envelope keys); else
+  `coverage_gap` on that convention item. Code-side convention measurement is unchanged.
+- **Field/validation_rule granularity is deliberately NOT measured on the spec side in v2** —
+  scenario text does not carry a reliable field inventory, and endpoint + convention granularity
+  is what the drift claims need. The kinds remain in the report schema with zero spec-side
+  counts (recorded limitation, revisit at a full-run gate).
+
+Episode/velocity semantics ([R2: R2-1] — onsets on `semantic_item_uid`, lineage merge,
+convention aggregation) operate on the resulting discrepancy lists unchanged. The MODIFIED-
+replace archive rot surface lands naturally in this mapping: scenarios silently dropped by an
+archive show up as `coverage_gap` onsets at the next task's meter run.
 
 ## 8. Prior art and reuse
 
