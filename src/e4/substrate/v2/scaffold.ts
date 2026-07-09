@@ -42,6 +42,13 @@ export function errorEnvelopeKeysV2(ir: E4SchemaIR): [string, string] {
   return errorEnvelopeStyleV2(ir) === "type_detail" ? ["type", "detail"] : ["code", "message"];
 }
 
+// Statement-level resolution for consumers that hold a convention statement rather than a full
+// IR (the §7.5 spec-side convention-coverage rule resolves keys exactly this way).
+export function envelopeKeysForStatement(statement: string): [string, string] | null {
+  const style = ERROR_FORMAT_STYLE_BY_STATEMENT[statement];
+  return style === undefined ? null : style === "type_detail" ? ["type", "detail"] : ["code", "message"];
+}
+
 function registryFileContents(ir: E4SchemaIR): string {
   const routes = ir.endpoints.map((endpoint) => ({
     method: endpoint.method,

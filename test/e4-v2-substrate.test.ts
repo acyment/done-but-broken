@@ -132,10 +132,14 @@ describe("§5.6 v2 op pins", () => {
       new_item_id: "entity:Product",
       semantic_item_uid: "uid-base-entity-widget"
     });
+    // Two rendered-id forms per affected endpoint (§7.5): (entity, kind) for the code-side
+    // channel and `endpoint:<METHOD> <path>` for spec-side stale_claim identity resolution.
     const endpointEntries = result.rename_lineage.slice(1);
-    expect(endpointEntries).toHaveLength(6);
+    expect(endpointEntries).toHaveLength(12);
     expect(endpointEntries.map((entry) => entry.old_item_id)).toContain("endpoint:Widget:analytics");
     expect(endpointEntries.map((entry) => entry.new_item_id)).toContain("endpoint:Product:analytics");
+    expect(endpointEntries.map((entry) => entry.old_item_id)).toContain("endpoint:GET /widgets/stats");
+    expect(endpointEntries.map((entry) => entry.new_item_id)).toContain("endpoint:GET /products/stats");
     expect(endpointEntries.every((entry) => entry.semantic_item_uid.startsWith("uid-base-endpoint-widget"))).toBe(true);
   });
 

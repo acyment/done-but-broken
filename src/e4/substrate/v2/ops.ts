@@ -122,14 +122,25 @@ function applyRenameEntityV2(ir: E4SchemaIR, _minter: UidMinter, prng: E4Prng, s
   const newName = unusedName(RENAME_NOUN_POOL_V2, existingNames, prng);
 
   // Endpoint-level lineage entries are computed against the OLD rendered ids before the cascade
-  // rewrites endpoint.entity — one entry per affected endpoint, semantic_item_uid preserved.
+  // rewrites endpoint.entity/path. Each affected endpoint contributes TWO entries with the same
+  // preserved semantic_item_uid: the (entity, kind) form the §7.5 code-side channel renders, and
+  // the `endpoint:<METHOD> <path>` form the §7.5 spec-side stale_claim rule renders for an
+  // unmatched scenario request — both must resolve through the same lineage merge.
+  const newSegment = collectionSegment(newName);
   const endpointLineage = next.endpoints
     .filter((endpoint) => endpoint.entity === oldName)
-    .map((endpoint) => ({
-      old_item_id: renderEndpointItemId(oldName, endpoint.kind),
-      new_item_id: renderEndpointItemId(newName, endpoint.kind),
-      semantic_item_uid: endpoint.semantic_item_uid
-    }));
+    .flatMap((endpoint) => [
+      {
+        old_item_id: renderEndpointItemId(oldName, endpoint.kind),
+        new_item_id: renderEndpointItemId(newName, endpoint.kind),
+        semantic_item_uid: endpoint.semantic_item_uid
+      },
+      {
+        old_item_id: `endpoint:${endpoint.method} ${endpoint.path}`,
+        new_item_id: `endpoint:${endpoint.method} ${replaceCollectionSegment(endpoint.path, newSegment)}`,
+        semantic_item_uid: endpoint.semantic_item_uid
+      }
+    ]);
 
   entity.name = newName;
 
@@ -145,8 +156,6 @@ function applyRenameEntityV2(ir: E4SchemaIR, _minter: UidMinter, prng: E4Prng, s
       }
     }
   }
-
-  const newSegment = collectionSegment(newName);
 
   for (const endpoint of next.endpoints) {
     if (endpoint.entity === oldName) {
