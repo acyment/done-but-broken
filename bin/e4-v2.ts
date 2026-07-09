@@ -14,8 +14,10 @@
 //   dry_run      → fake provider only; --live is refused.
 //   calibration  → live provider required; non-evidence by classification (excluded from any
 //                  future go/no-go or verdict computation structurally, same as v1).
-//   pilot        → REFUSED BY CONSTRUCTION: no v2-M7 pre-registration exists yet. Reused only
-//                  after that gate is authorized and this refusal is deliberately lifted.
+//   pilot        → live provider required. The unconditional v2-M6 refusal was deliberately
+//                  lifted at the v2-M7 gate (2026-07-09, operator-authorized): the sealed
+//                  pre-registration is docs/protocols/e4-v2-m7-pilot-preregistration-v1.md and
+//                  this lift is the gate action it records (v1 precedent).
 import { mkdir, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { E4_V2_CONSTANTS_PATH, loadE4V2Constants, type E4V2ArmId } from "../src/e4/v2/constants";
@@ -57,14 +59,12 @@ const extraBodyArg = argValue("--extra-body");
 const extraBody = extraBodyArg ? (JSON.parse(extraBodyArg) as Record<string, unknown>) : null;
 
 // ---- classification gates (checked before any workspace/provider setup) ----
-if (classification === "pilot") {
-  throw new Error(
-    "pilot runs are refused until the v2-M7 gate: no pre-registration exists yet (E4V2 design §9)"
-  );
-}
-
-if (classification === "calibration" && !live) {
-  throw new Error("calibration runs are live-model runs: pass --live");
+// v2-M7 gate action (operator-authorized, 2026-07-09): the unconditional pilot refusal that
+// stood since v2-M6 is lifted — the pre-registration is sealed and is this lift's record
+// (docs/protocols/e4-v2-m7-pilot-preregistration-v1.md). pilot remains a live-model
+// classification, gated exactly like calibration.
+if ((classification === "pilot" || classification === "calibration") && !live) {
+  throw new Error(`${classification} runs are live-model runs: pass --live`);
 }
 
 if (classification === "dry_run" && live) {

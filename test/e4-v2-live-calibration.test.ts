@@ -1,6 +1,8 @@
 // v2-M6 wiring acceptance (no spend): bin/e4-v2.ts's --live calibration path refuses every unsafe
-// classification/flag combination before any provider is constructed — including `pilot`, which
-// stays refused by construction until the v2-M7 pre-registration gate exists. The live-provider
+// classification/flag combination before any provider is constructed. The unconditional `pilot`
+// refusal was lifted at the v2-M7 gate (operator-authorized, 2026-07-09; record:
+// docs/protocols/e4-v2-m7-pilot-preregistration-v1.md) — pilot is now gated as a live-model
+// classification exactly like calibration. The live-provider
 // adapter itself (src/e4/live-provider.ts) is exercised by test/e4-live-provider.test.ts and is
 // reused here verbatim (E4-owned, not v1-specific); this file covers only the v2 CLI surface and
 // the v2 manifest/orchestrator model-stamping this milestone adds.
@@ -32,9 +34,9 @@ describe("v2-M6 CLI classification gates (no run is launched)", () => {
     return stderr;
   }
 
-  test("pilot is refused by construction (no v2-M7 pre-registration exists yet)", async () => {
+  test("pilot without --live is refused (the unconditional refusal was lifted at the v2-M7 gate)", async () => {
     expect(await runCliExpectingError(["--classification", "pilot", "--run-root", "tmp/never"])).toContain(
-      "pilot runs are refused until the v2-M7 gate"
+      "pilot runs are live-model runs"
     );
   });
 
