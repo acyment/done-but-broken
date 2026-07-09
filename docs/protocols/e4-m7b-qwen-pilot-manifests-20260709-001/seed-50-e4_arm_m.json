@@ -1,0 +1,1964 @@
+{
+  "schema": "e4-run-manifest",
+  "schema_version": "e4-run-manifest-v1",
+  "run_id": "pilot-pair-pilot-seed-50-e4_arm_m",
+  "run_classification": "pilot",
+  "compatibility_boundary": {
+    "constants_version": "0.7",
+    "constants_hash": "b4d2e9df5c0ae0952ccc5aedcd5655b04a0e3fccf96b7110d5989893ef3781a9",
+    "meter_version": "e4-drift-meter-v1",
+    "substrate_config_id": "procedural-rest-v1-default",
+    "substrate_kind": "procedural-rest-v1",
+    "substrate_version": "procedural-rest-v1.1"
+  },
+  "substrate_seed": 50,
+  "substrate_config": {
+    "task_count": 6,
+    "op_mix": {
+      "weights": {
+        "drift_opportunity": 0.5,
+        "additive": 0.4,
+        "behavior_preserving": 0.1
+      }
+    }
+  },
+  "pairing_label": "pair-pilot-seed-50",
+  "arm": "e4_arm_m",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "qwen-plus",
+    "route_id": "direct-dashscope-api-key"
+  },
+  "budgets": {
+    "turns_per_task": 27,
+    "verifications_per_task": 12,
+    "token_budget": 490000,
+    "spend_cap_usd": 5
+  },
+  "prompt_overhead_tokens": {
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "system_prompt_tokens": 263,
+    "arm_channel_tokens": 21
+  },
+  "tasks": [
+    {
+      "task_index": 1,
+      "opportunity_labels": [
+        "additive"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 3,
+        "delta_total": 3,
+        "cumulative_pass": 24,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Warehouse:read",
+            "semantic_item_uid": "spec-only:endpoint:Warehouse:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/warehouses/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Warehouse:update",
+            "semantic_item_uid": "spec-only:endpoint:Warehouse:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/warehouses/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Warehouse:delete",
+            "semantic_item_uid": "spec-only:endpoint:Warehouse:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/warehouses/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Warehouse.location",
+            "semantic_item_uid": "spec-only:field:Warehouse.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Warehouse.capacity",
+            "semantic_item_uid": "spec-only:field:Warehouse.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Warehouse:read",
+            "semantic_item_uid": "code-only:endpoint:Warehouse:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/warehouses/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Warehouse:update",
+            "semantic_item_uid": "code-only:endpoint:Warehouse:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/warehouses/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Warehouse:delete",
+            "semantic_item_uid": "code-only:endpoint:Warehouse:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/warehouses/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Warehouse.location",
+            "semantic_item_uid": "code-only:field:Warehouse.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Warehouse.capacity",
+            "semantic_item_uid": "code-only:field:Warehouse.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 6
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 4
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies found in the provided spec/context files. All conventions and existing implementations were consistent and correctly followed.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 11902,
+          "cached_input_tokens": 0,
+          "output_tokens": 3330
+        },
+        "wall_clock_ms": 55897,
+        "spend_usd": 0.012611,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 11902,
+              "cached_input_tokens": 0,
+              "output_tokens": 3330
+            },
+            "wall_clock_ms": 54032,
+            "spec_authoring_tokens": 1311,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "3c65084924210bd5277f5f1586c4bed422e0cf1650bce53b60b2e4a5051a9fda",
+        "path": "snapshots/e4_arm_m/task-1"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-1/smoke-1.json",
+        "records/e4_arm_m/task-1/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 2,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 21,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "spec-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "spec-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "spec-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "spec-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "spec-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "code-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "code-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "code-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "code-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "code-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 4,
+            "coverage_gap": 0,
+            "stale_claim": 6
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 4
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies were found in the provided spec/context files. All files were consistent with each other and the task requirements.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 13508,
+          "cached_input_tokens": 0,
+          "output_tokens": 3248
+        },
+        "wall_clock_ms": 74299,
+        "spend_usd": 0.013250000000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 13508,
+              "cached_input_tokens": 0,
+              "output_tokens": 3248
+            },
+            "wall_clock_ms": 73034,
+            "spec_authoring_tokens": 1309,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "a09d741c3c37d1f52fcaed9fbdc6ea95fb53c3de756658182dd8a0d31d464fbb",
+        "path": "snapshots/e4_arm_m/task-2"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-2/smoke-1.json",
+        "records/e4_arm_m/task-2/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 3,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 12,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "spec-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "spec-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "spec-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "spec-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "spec-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "code-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "code-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "code-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "code-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "code-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 4,
+            "coverage_gap": 0,
+            "stale_claim": 6
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 4
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, all provided spec/context files were accurate and consistent with each other. The `errorEnvelopeStyle` constant in `schema.ts` matched the `error-format` convention described in `specs/CONVENTIONS.md`, and both aligned with the actual error response logic in `server.ts`.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/CONVENTIONS.md"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 6712,
+          "cached_input_tokens": 4992,
+          "output_tokens": 1458
+        },
+        "wall_clock_ms": 35862,
+        "spend_usd": 0.0065216,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 6712,
+              "cached_input_tokens": 4992,
+              "output_tokens": 1458
+            },
+            "wall_clock_ms": 33368,
+            "spec_authoring_tokens": 112,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "f30bd539aa6c61e359acf53c4d4ff32f407b4ef10c0fa2d998d2f4e59e896b8e",
+        "path": "snapshots/e4_arm_m/task-3"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-3/smoke-1.json",
+        "records/e4_arm_m/task-3/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 4,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 7,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "spec-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "spec-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "spec-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "spec-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "spec-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "code-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "code-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "code-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "code-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "code-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 14,
+            "coverage_gap": 0,
+            "stale_claim": 6
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 4
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies found in the provided spec/context files. All references to \"Category\" were consistently updated to \"Asset\" across all relevant files (registry.ts, schema.ts, seed.ts, specs/openapi.json), and the verification passed successfully.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 13492,
+          "cached_input_tokens": 0,
+          "output_tokens": 3441
+        },
+        "wall_clock_ms": 77767,
+        "spend_usd": 0.013628000000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 13492,
+              "cached_input_tokens": 0,
+              "output_tokens": 3441
+            },
+            "wall_clock_ms": 75687,
+            "spec_authoring_tokens": 1309,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "88ccd98ff35e114c7d4b70a50e3df128f52c5182a1e9b780bffca1457cc8c7be",
+        "path": "snapshots/e4_arm_m/task-4"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-4/smoke-1.json",
+        "records/e4_arm_m/task-4/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 5,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 1,
+        "cumulative_pass": 7,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "spec-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "spec-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PATCH\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "spec-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "spec-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "spec-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "code-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "code-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PATCH\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "code-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "code-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "code-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 14,
+            "coverage_gap": 0,
+            "stale_claim": 6
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 4
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies found in the provided spec/context files. All files were consistent with each other and with the task requirements.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 14080,
+          "cached_input_tokens": 0,
+          "output_tokens": 3838
+        },
+        "wall_clock_ms": 89180,
+        "spend_usd": 0.014716,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 14080,
+              "cached_input_tokens": 0,
+              "output_tokens": 3838
+            },
+            "wall_clock_ms": 86994,
+            "spec_authoring_tokens": 1309,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "95bc62eda4c0a2b86bbbd94e38ad00673063e176c55a575e209119ade8f70da2",
+        "path": "snapshots/e4_arm_m/task-5"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-5/smoke-1.json",
+        "records/e4_arm_m/task-5/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 6,
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 7,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Asset:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "spec-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "spec-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PATCH\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "spec-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "spec-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "spec-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:naming-endpoints",
+            "semantic_item_uid": "uid-base-convention-naming",
+            "detail": {
+              "expected": "{\"statement\":\"Endpoint paths use kebab-case plural nouns (e.g. /widgets, /widget-categories).\"}",
+              "found": "{\"statement\":\"Endpoint paths use lowercase plural nouns (e.g. /widgets, /categories).\"}"
+            }
+          },
+          {
+            "kind": "convention",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "convention:error-format",
+            "semantic_item_uid": "uid-base-convention-error-format",
+            "detail": {
+              "expected": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"code\\\": string, \\\"message\\\": string } }.\"}",
+              "found": "{\"statement\":\"Error responses are JSON bodies of the shape { \\\"error\\\": { \\\"type\\\": string, \\\"detail\\\": string } }.\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PATCH\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/assets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Asset:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/assets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:list",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/warehouses\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/items\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:read",
+            "semantic_item_uid": "code-only:endpoint:Item:read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:update",
+            "semantic_item_uid": "code-only:endpoint:Item:update",
+            "detail": {
+              "found": "{\"method\":\"PATCH\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Item:delete",
+            "semantic_item_uid": "code-only:endpoint:Item:delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/items/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.location",
+            "semantic_item_uid": "code-only:field:Item.location",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Item.capacity",
+            "semantic_item_uid": "code-only:field:Item.capacity",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":false,\"type\":\"int\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 14,
+            "coverage_gap": 0,
+            "stale_claim": 6
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 4
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies found — all spec files (`specs/CONVENTIONS.md`, `specs/openapi.json`) and implementation files (`registry.ts`, `schema.ts`, `server.ts`, etc.) are consistent with each other and with the documented conventions.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 5864,
+          "cached_input_tokens": 5120,
+          "output_tokens": 469
+        },
+        "wall_clock_ms": 13219,
+        "spend_usd": 0.004126,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 5864,
+              "cached_input_tokens": 5120,
+              "output_tokens": 469
+            },
+            "wall_clock_ms": 11567,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "95bc62eda4c0a2b86bbbd94e38ad00673063e176c55a575e209119ade8f70da2",
+        "path": "snapshots/e4_arm_m/task-6"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-6/smoke-1.json",
+        "records/e4_arm_m/task-6/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    }
+  ],
+  "resume_events": [],
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "usage_totals": {
+    "turns": 12,
+    "tokens": {
+      "fresh_input_tokens": 96485,
+      "cached_input_tokens": 25728,
+      "output_tokens": 16011
+    },
+    "wall_clock_ms": 346224,
+    "spend_usd": 0.0815509
+  }
+}

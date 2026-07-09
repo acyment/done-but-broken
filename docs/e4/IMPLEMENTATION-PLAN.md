@@ -695,6 +695,40 @@ manifest's `compatibility_boundary`. This is the milestone that produces the fir
    flash-tier breakage as part of the phenomenon and pre-register an analysis robust to
    arm-differential extraction censoring. Neither happens without a new recorded gate decision.
 
+**M7b EXECUTED 2026-07-09 (qwen-plus rerun under the qwen gate + pre-registration v2) —
+PRE-REGISTERED VERDICT: `go` (exit 0).**
+
+1. **Run record.** Pre-registration v2 sealed pre-data (`edd5092`); 36/36 task-runs (3 arms ×
+   seeds 50/52 × 6 tasks) on qwen-plus, constants v0.7 stamped, ~$1.15 total, ALL SIX sequences
+   `chain_replay_valid: true`, **zero extraction failures (0/36)** — the trigger that killed the
+   flash pilot is fully cleared at this tier. Zero deviations. Provenance:
+   `docs/protocols/e4-m7b-qwen-pilot-manifests-20260709-001/`. e1:protect PASS before and after.
+2. **Verdict detail.** All four §5.1 triggers clear. (a) holds decisively — Arm-0 velocity 9.0 /
+   3.67 per seed, with the purest observed cell being seed-50 task 1: oracle 24/24 (perfect
+   code) with drift burden already 10. (b) holds. (c) holds **by a whisker and only via c1/c3**:
+   c1 arm-0 mean 6.33 vs arm-H 6.17; c2 FALSE (unearned-done propensity 0.917 vs arm-H refusal
+   propensity 1.0 — the gated arm was refused on essentially every task, advisory flag (v) fired:
+   zero oracle-passing arm-H tasks pooled); c3 marginal (M spec-side 3.21 vs 0's 3.375).
+3. **Substantive findings (the v2 motivation, recorded as such):** (i) **enforcement of code
+   correctness does not protect the spec** — the enforced arm's drift velocity nearly equals the
+   controls'; custody forces spec *changes*, not spec *truth* (ADR-003's pin observed at scale);
+   (ii) the **standing-instruction arm is behaviorally inert** — Arm M reproduced Arm 0's
+   trajectory point-for-point on seed 50 (identical oracle and burden at every close);
+   (iii) **competence-band boundary**: on seed-50's hard tail the enforced arm ended BELOW the
+   controls (5/24 vs 7/24; burden 28 vs 26) at ~10× cost — refusing false dones cannot create
+   ability, only make failure honest and expensive; (iv) H4 evaluable this time (decline without
+   floor collapse: 24/24 → 7/24 with monotone drift on seed 50); (v) H5: freshness tax ≈ 7k
+   tokens/task against a NEGATIVE drift tax (Arm 0 fails cheaply) — pass rates carry the cost
+   story, as pinned.
+4. **Operator correction recorded:** flash benchmarks ABOVE qwen-plus; the two pilots therefore
+   sampled failure *styles* (reckless-strong vs tidy-weak), not a capability ladder. Model
+   choice for any follow-up leans on workspace hygiene + competence band, not tier labels.
+5. **Disposition:** the formal `go` licenses the machinery; the program pivots to the v2
+   redesign (OpenSpec + executable scenarios — see `E4V2-OPENSPEC-EXECUTABLE-SCENARIOS-PROPOSAL.md`)
+   rather than a v1 full run, per operator direction. v1 closes as instrument validation with
+   two pilots: one broken-by-model-tier (flash, inconclusive as pre-registered), one measuring
+   the phenomenon cleanly (qwen, go with marginal separation).
+
 ---
 
 ### Milestone summary

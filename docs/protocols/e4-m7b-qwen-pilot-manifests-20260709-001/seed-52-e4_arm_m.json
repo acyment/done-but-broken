@@ -1,0 +1,1387 @@
+{
+  "schema": "e4-run-manifest",
+  "schema_version": "e4-run-manifest-v1",
+  "run_id": "pilot-pair-pilot-seed-52-e4_arm_m",
+  "run_classification": "pilot",
+  "compatibility_boundary": {
+    "constants_version": "0.7",
+    "constants_hash": "b4d2e9df5c0ae0952ccc5aedcd5655b04a0e3fccf96b7110d5989893ef3781a9",
+    "meter_version": "e4-drift-meter-v1",
+    "substrate_config_id": "procedural-rest-v1-default",
+    "substrate_kind": "procedural-rest-v1",
+    "substrate_version": "procedural-rest-v1.1"
+  },
+  "substrate_seed": 52,
+  "substrate_config": {
+    "task_count": 6,
+    "op_mix": {
+      "weights": {
+        "drift_opportunity": 0.5,
+        "additive": 0.4,
+        "behavior_preserving": 0.1
+      }
+    }
+  },
+  "pairing_label": "pair-pilot-seed-52",
+  "arm": "e4_arm_m",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "qwen-plus",
+    "route_id": "direct-dashscope-api-key"
+  },
+  "budgets": {
+    "turns_per_task": 27,
+    "verifications_per_task": 12,
+    "token_budget": 490000,
+    "spend_cap_usd": 5
+  },
+  "prompt_overhead_tokens": {
+    "estimator_id": "js-tiktoken-o200k_base-v1",
+    "system_prompt_tokens": 263,
+    "arm_channel_tokens": 21
+  },
+  "tasks": [
+    {
+      "task_index": 1,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 15,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 10,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, all spec/context files were accurate and consistent with the current state. The rebranding task was straightforward since all references to \"Category\" were correctly identified and updated to \"Listing\" across the codebase.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 6891,
+          "cached_input_tokens": 4224,
+          "output_tokens": 2466
+        },
+        "wall_clock_ms": 58105,
+        "spend_usd": 0.0085887,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 6891,
+              "cached_input_tokens": 4224,
+              "output_tokens": 2466
+            },
+            "wall_clock_ms": 55785,
+            "spec_authoring_tokens": 922,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "51b227e3b523cc2dd1ad52831d324fa223a05bdf78d0652d7fd5b37fbe5e3d0b",
+        "path": "snapshots/e4_arm_m/task-1"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-1/smoke-1.json",
+        "records/e4_arm_m/task-1/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 2,
+      "opportunity_labels": [
+        "additive"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 16,
+        "cumulative_total": 22
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 2,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 10,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies found in the provided spec/context files. The registry.ts, openapi.json, and server.ts were all consistent with each other and with the task requirements.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 3,
+        "tokens": {
+          "fresh_input_tokens": 16828,
+          "cached_input_tokens": 0,
+          "output_tokens": 1993
+        },
+        "wall_clock_ms": 37018,
+        "spend_usd": 0.0124,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 16828,
+              "cached_input_tokens": 0,
+              "output_tokens": 1993
+            },
+            "wall_clock_ms": 35603,
+            "spec_authoring_tokens": 988,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "6e8073e659b93ec99a8ab394127d12f618609514e893eec2400c5cd415dd5f47",
+        "path": "snapshots/e4_arm_m/task-2"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-2/smoke-1.json",
+        "records/e4_arm_m/task-2/smoke-2.json",
+        "records/e4_arm_m/task-2/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 3,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 16,
+        "cumulative_total": 22
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 10,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies detected in the provided spec/context files. The registry.ts, openapi.json, and server.ts were internally consistent—both Listing and Widget used PUT for update, and the server handled \"update\" kind uniformly. The task was to align Widget with \"the rest of the API\", and since Listing was the only other entity with an update route, changing Widget to PATCH was a reasonable interpretation to adopt a more precise REST method (PATCH for partial updates), even though the current implementation does full replacement. No contradictions or factual errors were present in the source files.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 12083,
+          "cached_input_tokens": 0,
+          "output_tokens": 3250
+        },
+        "wall_clock_ms": 55501,
+        "spend_usd": 0.0125415,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 12083,
+              "cached_input_tokens": 0,
+              "output_tokens": 3250
+            },
+            "wall_clock_ms": 52425,
+            "spec_authoring_tokens": 988,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "43f1a8e72d297bc7116fd5b17284bbcf8c6939d212dcd1a98db19a5206d8a6ce",
+        "path": "snapshots/e4_arm_m/task-3"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-3/smoke-1.json",
+        "records/e4_arm_m/task-3/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 4,
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 16,
+        "cumulative_total": 22
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 10,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, all spec/context files were accurate and in sync with the implementation.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 9306,
+          "cached_input_tokens": 0,
+          "output_tokens": 321
+        },
+        "wall_clock_ms": 9204,
+        "spend_usd": 0.005294999999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 9306,
+              "cached_input_tokens": 0,
+              "output_tokens": 321
+            },
+            "wall_clock_ms": 7584,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "43f1a8e72d297bc7116fd5b17284bbcf8c6939d212dcd1a98db19a5206d8a6ce",
+        "path": "snapshots/e4_arm_m/task-4"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-4/smoke-1.json",
+        "records/e4_arm_m/task-4/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 5,
+      "opportunity_labels": [
+        "additive"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 16,
+        "cumulative_total": 22
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 10,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No, all provided spec/context files were accurate and consistent with the current state. The task was straightforward: add a `notes` field to Listing, and all files were correctly updated to reflect this change.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 6560,
+          "cached_input_tokens": 4352,
+          "output_tokens": 2104
+        },
+        "wall_clock_ms": 49085,
+        "spend_usd": 0.0077056,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 6560,
+              "cached_input_tokens": 4352,
+              "output_tokens": 2104
+            },
+            "wall_clock_ms": 47633,
+            "spec_authoring_tokens": 1002,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "bde083170ba67dc5303a9ef1350a375091b973edcb514ba36fd6ac0c8c334d58",
+        "path": "snapshots/e4_arm_m/task-5"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-5/smoke-1.json",
+        "records/e4_arm_m/task-5/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    },
+    {
+      "task_index": 6,
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "gate_events": null,
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 16,
+        "cumulative_total": 21
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "drift": {
+        "meter_version": "e4-drift-meter-v1",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"POST\",\"path\":\"/listings\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-category-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"PUT\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-category-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/categories/{id}\"}",
+              "found": "{\"method\":\"DELETE\",\"path\":\"/listings/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-category-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/categories\"}",
+              "found": "{\"method\":\"GET\",\"path\":\"/listings\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 10,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "noticing_probe_answer": "No inaccuracies found in the provided spec/context files. The task description (\"We stopped tracking name for Listing; remove it\") aligned perfectly with the current state of all files, and the changes made were consistent across schema.ts, seed.ts, and specs/openapi.json.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "specs/openapi.json"
+        ]
+      },
+      "usage": {
+        "turns": 2,
+        "tokens": {
+          "fresh_input_tokens": 10975,
+          "cached_input_tokens": 0,
+          "output_tokens": 1980
+        },
+        "wall_clock_ms": 47272,
+        "spend_usd": 0.009447500000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 10975,
+              "cached_input_tokens": 0,
+              "output_tokens": 1980
+            },
+            "wall_clock_ms": 44844,
+            "spec_authoring_tokens": 984,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        },
+        "gate_executor": null
+      },
+      "smoke_readiness_failures": 0,
+      "snapshot": {
+        "hash": "419856c6f578f53ef1510e759cac066584d01d574affcaf144e4a7eccfd7d8fd",
+        "path": "snapshots/e4_arm_m/task-6"
+      },
+      "executor_artifacts": [
+        "records/e4_arm_m/task-6/smoke-1.json",
+        "records/e4_arm_m/task-6/hidden-oracle.json"
+      ],
+      "status": "complete",
+      "classification_rationale": null
+    }
+  ],
+  "resume_events": [],
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "usage_totals": {
+    "turns": 13,
+    "tokens": {
+      "fresh_input_tokens": 75576,
+      "cached_input_tokens": 34944,
+      "output_tokens": 12415
+    },
+    "wall_clock_ms": 256185,
+    "spend_usd": 0.0643652
+  }
+}
