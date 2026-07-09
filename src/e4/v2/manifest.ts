@@ -28,6 +28,7 @@ export type E4V2RunManifest = {
   arm: E4V2ArmId;
   arm_mode: "prose" | "executed";
   pairing_label: string;
+  model: { preset: string; model_id: string; route_id: string };
   compatibility_boundary: {
     constants_version: string;
     constants_hash: string;
@@ -81,6 +82,14 @@ export function validateE4V2Manifest(raw: unknown): E4V2RunManifest {
 
   if (!manifest.compatibility_boundary?.constants_hash || !manifest.compatibility_boundary?.substrate_config) {
     throw new E4V2ManifestError("compatibility_boundary is incomplete");
+  }
+
+  if (
+    typeof manifest.model?.preset !== "string" ||
+    typeof manifest.model?.model_id !== "string" ||
+    typeof manifest.model?.route_id !== "string"
+  ) {
+    throw new E4V2ManifestError("model is incomplete");
   }
 
   if (!Array.isArray(manifest.tasks)) {

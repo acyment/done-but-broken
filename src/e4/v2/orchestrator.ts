@@ -33,7 +33,13 @@ export type E4V2RunInput = {
   executor_config: E4ExecutorConfig;
   secrets?: E1RedactionSecret[];
   arms?: E4V2ArmId[];
+  // v2-M6: the model identity stamped into every manifest. Defaults to the dry-run fake-agent
+  // identity (v1 bin/e4.ts precedent) so existing dry-run callers are unaffected; a live run
+  // (v2-M6 calibration, v2-M7 pilot) must pass the real provider identity.
+  model?: { preset: string; model_id: string; route_id: string };
 };
+
+const DRY_RUN_MODEL_IDENTITY = { preset: "fake-deterministic", model_id: "e4-fake-agent-v1", route_id: "none" };
 
 export type E4V2RunResult = {
   manifests: Record<E4V2ArmId, E4V2RunManifest>;
@@ -94,6 +100,7 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
       arm,
       arm_mode: policy.arm_mode,
       pairing_label: input.pairing_label,
+      model: input.model ?? DRY_RUN_MODEL_IDENTITY,
       compatibility_boundary: {
         constants_version: input.constants.version,
         constants_hash: input.constants_hash,
