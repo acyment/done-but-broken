@@ -28,7 +28,12 @@ const E1_CLOSED_WORLD = [
   "src/e1-turn-adapter.ts",
   "src/e1-l1-constants.ts",
   "src/conditions.ts",
-  "src/result-schema.ts"
+  "src/result-schema.ts",
+  // v2-M1 allowlist-extension companion (ADR-007 amendment, operator-approved 2026-07-09):
+  // e1-openspec-workflow.ts/e1-openspec-harness.ts join the ALLOWLIST as generic libraries, but
+  // e1-openspec-constants.ts stays E1-bound (E1 profile id, E1 base-constants loader, E1
+  // snapshot roots) — E4 wraps it via src/e4/v2/openspec.ts instead of importing it.
+  "src/e1-openspec-constants.ts"
 ];
 
 const FORBIDDEN_ENTRY_POINTS = [...LEGACY_STACK, ...E1_CLOSED_WORLD].map((path) =>
@@ -136,7 +141,8 @@ describe("E4 legacy-import lint (Gate-0 Q4 + Gate-1 change 3)", () => {
         'import { validateE1Constants } from "../e1-l1-constants";',
         'import type { ConditionId } from "../conditions";',
         'import { validateResult } from "../result-schema";',
-        'import { runE1NoProviderCheckpoint } from "../e1-no-provider-runner";'
+        'import { runE1NoProviderCheckpoint } from "../e1-no-provider-runner";',
+        'import { loadE1OpenSpecProfile } from "../e1-openspec-constants";'
       ].join("\n")
     );
 
@@ -144,13 +150,14 @@ describe("E4 legacy-import lint (Gate-0 Q4 + Gate-1 change 3)", () => {
       "../conditions",
       "../e1-l1-constants",
       "../e1-no-provider-runner",
+      "../e1-openspec-constants",
       "../e1-package-runner",
       "../e1-turn-adapter",
       "../result-schema"
     ]);
   });
 
-  test("scanner accepts allowlisted library imports", () => {
+  test("scanner accepts allowlisted library imports (incl. the v2-M1 OpenSpec extension)", () => {
     const syntheticFile = join(repoRoot, "src", "e4", "synthetic-example.ts");
     const violations = findViolations(
       syntheticFile,
@@ -158,6 +165,8 @@ describe("E4 legacy-import lint (Gate-0 Q4 + Gate-1 change 3)", () => {
         'import { applyReplacements } from "../e1-harness";',
         'import { parseE1Turn } from "../e1-l1-parser";',
         'import { hashDirectory } from "../snapshot";',
+        'import { runOpenSpecCommand } from "../e1-openspec-workflow";',
+        'import { canonicalizeOpenSpecScenarioText } from "../e1-openspec-harness";',
         'import { readFile } from "node:fs/promises";'
       ].join("\n")
     );

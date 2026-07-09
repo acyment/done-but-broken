@@ -48,6 +48,15 @@ E4 modules MAY import (read-only, never modified by E4 milestones):
 - **Provider plumbing:** `src/e1-live-provider.ts`, `src/e1-provider-runtime.ts`,
   `src/model-provider-presets.ts`, token estimator/ledger modules, `src/e1-redaction.ts`.
 - **Provenance primitives:** `src/snapshot.ts`, `src/e1-workspace-snapshot.ts`.
+- **OpenSpec workflow libraries (v2-M1 amendment, operator-approved 2026-07-09 at the E4 v2
+  design gate):** `src/e1-openspec-workflow.ts` (pinned-CLI plumbing: version pin, telemetry-off
+  env, output normalization) and `src/e1-openspec-harness.ts` (archive step with exit-0 abort
+  detection + deterministic archive rename, scenario parsing, the
+  `e1-openspec-scenario-canonicalizer-v1` canonicalizer, survival ledger) — generic per the v2
+  exploration, reused read-only. The E1-BOUND pieces stay out: `src/e1-openspec-constants.ts`
+  (E1 profile id, E1 base-constants loader, E1 snapshot roots) is added to the forbidden set
+  below; E4 carries its own thin wrapper (`src/e4/v2/openspec.ts`, profile
+  `e4-openspec-workflow-v1`).
 
 E4 modules MUST NOT import:
 
@@ -61,6 +70,9 @@ E4 modules MUST NOT import:
   equivalents; the E1 versions stay bit-identical. (The turn adapter is deliberately on this list:
   it encodes E1's termination/continuation semantics against E1 conditions — E4's sequencing state
   machine subsumes its role.)
+- **E1-bound OpenSpec profile module (v2-M1 amendment):** `src/e1-openspec-constants.ts` — its
+  loader validates the E1 profile schema/id and resolves the E1 base seal; E4 uses
+  `src/e4/v2/openspec.ts` instead.
 
 **Enforcement (shipped with this ADR, per Gate-0 Q4 + Gate-1 change 3):**
 `test/e4-no-legacy-imports.test.ts` scans every E4 module (`src/e4/**`, `bin/e4*`, `test/e4-*`) and
