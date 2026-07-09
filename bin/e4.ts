@@ -42,6 +42,7 @@ type CliArgs = {
   pricing: { input: number; cached_input: number; output: number };
   maxOutputTokens: number;
   disableThinking: boolean;
+  extraBody: Record<string, unknown> | null;
 };
 
 function parseArgs(argv: string[]): CliArgs {
@@ -84,7 +85,11 @@ function parseArgs(argv: string[]): CliArgs {
       output: Number(get("--pricing-out") ?? "2.0")
     },
     maxOutputTokens: Number(get("--max-output-tokens") ?? "16000"),
-    disableThinking: argv.includes("--disable-thinking")
+    disableThinking: argv.includes("--disable-thinking"),
+    // Provider-specific request extras as raw JSON (e.g. DashScope needs {"enable_thinking":false}
+    // where DeepSeek uses {"thinking":{"type":"disabled"}} — --disable-thinking covers only the
+    // latter). Merged over any --disable-thinking body.
+    extraBody: get("--extra-body") ? (JSON.parse(get("--extra-body")!) as Record<string, unknown>) : null
   };
 }
 
@@ -135,7 +140,14 @@ async function main(): Promise<number> {
           sealed_spend_cap_usd: constants.budgets!.spend_cap_usd,
           max_estimated_call_cost_usd: 0.25,
           max_output_tokens: args.maxOutputTokens,
-          ...(args.disableThinking ? { extra_body: { thinking: { type: "disabled" } } } : {})
+          ...(args.disableThinking || args.extraBody
+            ? {
+                extra_body: {
+                  ...(args.disableThinking ? { thinking: { type: "disabled" } } : {}),
+                  ...(args.extraBody ?? {})
+                }
+              }
+            : {})
         }
       });
       providerFactory = live.factory;

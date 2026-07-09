@@ -151,24 +151,28 @@ describe("E4 constants validate and hash under their own lineage", () => {
     // M6.5 (budget ratification) while this hash stayed fixed — the M6.5 test pins the version.
   });
 
-  test("[M6.5] v0 is FULLY FROZEN: the complete file hash is pinned (budgets ratified from the calibration run)", () => {
-    // Budget values 18/8/310000/5 were adjusted ONCE from the provisional 12/6/200000/5 per the
-    // M6.5 rule, from observed appetite on calibration-pair-calibration-seed-45-e4_arm_h
-    // (deepseek-v4-flash, provenance: docs/protocols/e4-m65-calibration-manifest-20260708-001.json;
-    // turn wall hit at 12 with oracle 21/22, token wall at 203,452 > 200,000). After M6.5 the v0
-    // hash is FINAL and immutable without a new gate; this is the constants_hash every pilot
-    // manifest must stamp.
+  test("[M6.5 + qwen gate] v0 is FULLY FROZEN: the complete file hash is pinned (budgets ratified on the pilot model)", () => {
+    // Freeze lineage (each step a recorded gate, budgets adjusted ONCE per ratification run):
+    //   provisional 12/6/200000/5
+    //   → v0.6 18/8/310000/5 (M6.5, deepseek-v4-flash, seed 45;
+    //     docs/protocols/e4-m65-calibration-manifest-20260708-001.json — hash a0e51236…)
+    //   → v0.7 27/12/490000/5 (qwen-plus gate, docs/protocols/e4-qwen-plus-gate-decision-v1.md;
+    //     same seed-45 draw for direct appetite comparison, turn wall 18 hit twice with oracles
+    //     21/22 & 19/21, token wall 324,954 > 310,000, verification budget saturated 8/8;
+    //     docs/protocols/e4-m65b-qwen-calibration-manifest-20260709-001.json).
+    // This is the constants_hash every qwen-plus pilot manifest must stamp; immutable without a
+    // new gate.
     expect(hashE4ConstantsBytes(readFileSync(draftPath))).toBe(
-      "a0e51236d66de818ad1e3bf8eff9a055df9a8025127f363f950ad92632c3b0ee"
+      "b4d2e9df5c0ae0952ccc5aedcd5655b04a0e3fccf96b7110d5989893ef3781a9"
     );
 
     const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
 
-    expect(constants.version).toBe("0.6");
+    expect(constants.version).toBe("0.7");
     expect(constants.budgets).toEqual({
-      turns_per_task: 18,
-      verifications_per_task: 8,
-      token_budget: 310000,
+      turns_per_task: 27,
+      verifications_per_task: 12,
+      token_budget: 490000,
       spend_cap_usd: 5
     });
   });

@@ -1,6 +1,6 @@
 {
   "schema": "e4-sealed-constants",
-  "version": "0.6",
+  "version": "0.7",
   "compatibility_boundary": {
     "substrate_config_id": "procedural-rest-v1-default",
     "substrate_kind": "procedural-rest-v1",
@@ -44,9 +44,9 @@
     "arm_h_gate_protocol": "E4 Arm-H gate protocol (v1).\n\nEvery task runs in two phases. The harness tracks the phase; you cannot skip it.\n\nSPEC PHASE (every task starts here).\n- Only files under specs/ are writable (specs/openapi.json and specs/CONVENTIONS.md). Any attempt to write any other file is rejected and recorded; the task stays in the spec phase.\n- Update the spec artifacts so they describe the requested change, then write exactly <<<DONE>>> on its own line to request the gate check.\n- The gate check verifies custody: at least one spec artifact changed since task start, specs/openapi.json parses as JSON, and every specs/CONVENTIONS.md line that begins with \"- `\" matches the bullet grammar - `<convention-id>`: <statement>. If custody fails you receive feedback and remain in the spec phase; turns keep counting against the task budget.\n- If custody passes, the harness runs the task's acceptance checks once: the new-behavior checks are expected to fail (the code does not implement the change yet) while previously accepted behavior still passes. You then enter the implementation phase.\n- No-change exit (for requests that genuinely require no change to the API surface or conventions): leave both spec files byte-for-byte unchanged, invoke the designated verification (smoke) command at least once during the spec phase, then write exactly <<<DONE>>> on its own line. All three conditions are required; inaction alone never exits the spec phase.\n\nIMPLEMENTATION PHASE.\n- Files under specs/ are frozen (read-only); all other workspace files are writable. A spec error discovered now cannot be corrected within this task.\n- Implement the change. When you believe the task is complete, write exactly <<<DONE>>> on its own line.\n- On <<<DONE>>>, the harness re-runs the task's acceptance checks (new-behavior plus cumulative). If everything passes, the task closes. If anything fails, your done-claim is refused, the failing results are returned to you as feedback, and the turn loop continues until the checks pass or the task budget is exhausted."
   },
   "budgets": {
-    "turns_per_task": 18,
-    "verifications_per_task": 8,
-    "token_budget": 310000,
+    "turns_per_task": 27,
+    "verifications_per_task": 12,
+    "token_budget": 490000,
     "spend_cap_usd": 5
   },
   "feedback": {
