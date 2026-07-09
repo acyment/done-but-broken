@@ -128,8 +128,17 @@ export function computeE4GoNoGo(input: {
 }): E4GoNoGoReport {
   const { constants, constantsHash } = input;
 
-  if (input.manifests.length === 0) {
-    throw new E4GoNoGoError("no manifests to evaluate");
+  // [M6.5] calibration runs are non-evidence (estate precedent): they never enter any go/no-go
+  // computation. Excluded here structurally, not by caller discipline.
+  const manifests = input.manifests.filter((manifest) => manifest.run_classification !== "calibration");
+  const excludedCalibrations = input.manifests.length - manifests.length;
+
+  if (manifests.length === 0) {
+    throw new E4GoNoGoError(
+      excludedCalibrations > 0
+        ? `all ${excludedCalibrations} manifest(s) are calibration-classified (non-evidence) — nothing to evaluate`
+        : "no manifests to evaluate"
+    );
   }
 
   if (constants.meter_rules.convention_aggregation_min_items === null || constants.compatibility_boundary.meter_version === null) {
@@ -137,7 +146,7 @@ export function computeE4GoNoGo(input: {
   }
 
   // Compatibility boundary is the pooling unit: refuse to pool across constants identities.
-  for (const manifest of input.manifests) {
+  for (const manifest of manifests) {
     if (manifest.compatibility_boundary.constants_hash !== constantsHash) {
       throw new E4GoNoGoError(
         `constants-hash mismatch in ${manifest.run_id}: manifests from a different compatibility boundary cannot be pooled`
@@ -146,7 +155,7 @@ export function computeE4GoNoGo(input: {
   }
 
   const aggregation = { convention_aggregation_min_items: constants.meter_rules.convention_aggregation_min_items };
-  const groups = groupE4PairedSeeds(input.manifests);
+  const groups = groupE4PairedSeeds(manifests);
   const survivors = groups.filter((group) => group.surviving);
 
   // ---- §5.1 hard triggers (run FIRST; any one fires the class) ----
@@ -179,7 +188,7 @@ export function computeE4GoNoGo(input: {
     detail: anyArmDrifts ? "at least one arm records drift velocity > 0" : "all arms record drift velocity == 0 — H1 untested"
   });
 
-  const allRecords = input.manifests.flatMap((manifest) => manifest.tasks);
+  const allRecords = manifests.flatMap((manifest) => manifest.tasks);
   const nonAborted = allRecords.filter((task) => task.status === "complete");
   const extractionFailed = nonAborted.filter((task) => task.drift.extraction_failed).length;
   const extractionFraction = nonAborted.length > 0 ? extractionFailed / nonAborted.length : 0;
@@ -190,7 +199,7 @@ export function computeE4GoNoGo(input: {
     detail: `extraction_failed on ${extractionFailed}/${nonAborted.length} non-aborted records (sealed max fraction ${constants.interpretability.extraction_failed_max_fraction})`
   });
 
-  const armHRecords = input.manifests.filter((manifest) => manifest.arm === "e4_arm_h").flatMap((manifest) => manifest.tasks);
+  const armHRecords = manifests.filter((manifest) => manifest.arm === "e4_arm_h").flatMap((manifest) => manifest.tasks);
   const armHAttempted = armHRecords.filter((task) => task.status === "complete");
   const armHSpecStalled = armHAttempted.filter((task) => task.phase_at_termination === "spec").length;
   const stallFraction = armHAttempted.length > 0 ? armHSpecStalled / armHAttempted.length : 0;
@@ -210,7 +219,7 @@ export function computeE4GoNoGo(input: {
   // [R1-S8] any-class velocity counts; the class composition is a diagnostic, never the gate.
   const aHolds = perSeedArm0.some((entry) => (entry.velocity ?? 0) > 0);
 
-  const badStamp = input.manifests.find(
+  const badStamp = manifests.find(
     (manifest) => manifest.compatibility_boundary.meter_version !== constants.compatibility_boundary.meter_version
   );
   const bHolds = badStamp === undefined;

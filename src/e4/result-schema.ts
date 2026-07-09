@@ -379,6 +379,16 @@ export function computeE4HypothesisReport(input: {
   constants: { convention_aggregation_min_items: number };
 }): E4HypothesisReport {
   const { manifests, constants } = input;
+
+  // [M6.5] calibration runs are non-evidence (estate precedent): no H number is ever computed
+  // over one. Structural, not caller discipline.
+  for (const manifest of Object.values(manifests)) {
+    if (manifest.run_classification === "calibration") {
+      throw new Error(
+        `[e4-result-schema] ${manifest.run_id} is calibration-classified (non-evidence) and cannot enter a hypothesis computation`
+      );
+    }
+  }
   const h4Arm0 = computeE4H4(manifests.arm_0.tasks);
   const h4ArmH = computeE4H4(manifests.arm_h.tasks);
 

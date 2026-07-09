@@ -147,7 +147,30 @@ describe("E4 constants validate and hash under their own lineage", () => {
     expect(hashText(canonicalizeJson(projection))).toBe(
       "1995df5e10fc793d086d52475a438f9964ace3167b12da4346e4965504ad9a2c"
     );
-    expect((raw as { version: string }).version).toBe("0.5");
+    // The draft version itself is deliberately OUTSIDE the projection: it moved 0.5 → 0.6 at
+    // M6.5 (budget ratification) while this hash stayed fixed — the M6.5 test pins the version.
+  });
+
+  test("[M6.5] v0 is FULLY FROZEN: the complete file hash is pinned (budgets ratified from the calibration run)", () => {
+    // Budget values 18/8/310000/5 were adjusted ONCE from the provisional 12/6/200000/5 per the
+    // M6.5 rule, from observed appetite on calibration-pair-calibration-seed-45-e4_arm_h
+    // (deepseek-v4-flash, provenance: docs/protocols/e4-m65-calibration-manifest-20260708-001.json;
+    // turn wall hit at 12 with oracle 21/22, token wall at 203,452 > 200,000). After M6.5 the v0
+    // hash is FINAL and immutable without a new gate; this is the constants_hash every pilot
+    // manifest must stamp.
+    expect(hashE4ConstantsBytes(readFileSync(draftPath))).toBe(
+      "a0e51236d66de818ad1e3bf8eff9a055df9a8025127f363f950ad92632c3b0ee"
+    );
+
+    const constants = validateE4Constants(JSON.parse(readFileSync(draftPath, "utf8")));
+
+    expect(constants.version).toBe("0.6");
+    expect(constants.budgets).toEqual({
+      turns_per_task: 18,
+      verifications_per_task: 8,
+      token_budget: 310000,
+      spend_cap_usd: 5
+    });
   });
 
   test("[M4] rejects a half-sealed M4 protocol_text block", () => {

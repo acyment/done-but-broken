@@ -589,6 +589,45 @@ final and immutable without a new gate.
 > classification with non-evidence status. "Required" fixes the *sequence* (M6.5 always precedes M7);
 > "spend-gated" governs *when* it is allowed to run.
 
+**M6.5 EXECUTED 2026-07-08 (operator-authorized spend; recorded results and pins):**
+
+1. **Run identity:** `calibration-pair-calibration-seed-45-e4_arm_h` — one full-length Arm-H
+   sequence, 6 tasks × seed 45 (3 drift / 2 additive / 1 behavior-preserving), model
+   **deepseek-v4-flash** (direct endpoint, thinking disabled, max_tokens 16000), classification
+   `calibration`, total spend **$0.30**, `chain_replay_valid: true` — the M5 replay machinery held
+   on a live model run. Manifest provenance committed at
+   `docs/protocols/e4-m65-calibration-manifest-20260708-001.json`; live wiring =
+   `src/e4/live-provider.ts` over the allowlisted E1 provider plumbing (sealed ledger cap is the
+   classified stop; the provider-level cap is a 4x backstop only). Calibration runs are excluded
+   from go/no-go and hypothesis computations **structurally** (both refuse the classification).
+2. **Model-class pin:** deepseek-v4-flash is the operator's designated cheap-tier
+   calibration/shakedown model (decision 2026-06-12) standing in for "Devstral-class". **The
+   frozen budgets transfer to M7 only if the pilot runs the same model id**; a different pilot
+   model requires repeating the M6.5 ratification on it (single dollars) — never a second
+   adjustment of this freeze without a gate.
+3. **Both provisional ceilings were observed binding — the adjust-once rule fired.** Turn wall:
+   tasks 3 and 6 exhausted exactly 12 turns with near-miss oracles (21/22, 19/21). Token wall:
+   task 4 crossed 200,000 (203,452). Sequence spend $0.30 ≪ $5. Ratified values (~1.5× observed
+   max, from `bin/e4-budget-report.ts` over the manifest): **turns_per_task 12→18,
+   verifications_per_task 6→8, token_budget 200000→310000, spend_cap_usd 5 unchanged.**
+4. **v0 is FULLY FROZEN**: version 0.6, full-file sha256
+   `a0e51236d66de818ad1e3bf8eff9a055df9a8025127f363f950ad92632c3b0ee` pinned by test — this is the
+   `constants_hash` every pilot manifest must stamp. The M6 non-budget projection hash held
+   unchanged through the ratification (only `budgets` + `version` moved), demonstrating the
+   freeze-boundary discipline end-to-end.
+5. **Mechanism observations (non-evidence, instrument-works confirmations):** the done-over-red
+   refusal lever fired 12 times live (flash repeatedly claimed done over red and was refused —
+   the Claim-B/B1 enforcement channel works on a real model); custody passed 6/6 tasks with zero
+   failures including the live §3.3 affirmation path; spec-phase cost was cleanly measurable
+   (~6.4–12.6k tokens/task — the H5 freshness-tax instrument reads). One task ended
+   `agent_stalled` (3 no-op turns, §5.1-trigger-4 material at 1/6, well under 0.5).
+6. **Substrate diagnostic flagged for the pilot report (not an M6.5 blocker):** `red_check:
+   green_anomaly` on 4/6 tasks — several op classes (notably field-level renames) produce delta
+   sets that already pass on pre-implementation code, because the generated CRUD tests cannot
+   always distinguish surface renames behaviorally. The anomaly is recorded per ADR-003 and tasks
+   proceed; drift measurement (the meter) is unaffected. The §5(a)/[R2: R2-10] class-composition
+   and op-type diagnostics must carry this observation in the pilot report.
+
 ---
 
 ### M7 — PILOT (final milestone; requires explicit spend authorization)

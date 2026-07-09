@@ -44,6 +44,10 @@ export type E4RunInput = {
   model: { preset: string; model_id: string; route_id: string };
   providerFactory: E4AgentProviderFactory;
   resume?: boolean;
+  // [M6.5, R2-4] a calibration run is a SINGLE full-length Arm-H sequence: this restricts which
+  // arm sequences execute. The parity triple is still constructed and validated in full — the
+  // declared-channel invariant holds whether or not every arm runs.
+  arms?: E4ArmId[];
   // [M5] fail-closed emission (Feature 5): any manifest or record write that would contain one of
   // these secret values throws instead of landing on disk (e1-redaction reuse).
   secrets?: E1RedactionSecret[];
@@ -211,10 +215,20 @@ export async function runE4Run(input: E4RunInput): Promise<E4RunResult> {
     readiness_poll_interval_ms: input.constants.executor!.readiness_poll_interval_ms
   };
 
+  const armsToRun = input.arms ?? [...ARM_ORDER];
+
+  for (const arm of armsToRun) {
+    if (!ARM_ORDER.includes(arm)) {
+      throw new E4OrchestratorError(`unknown arm: ${arm}`);
+    }
+  }
+
   const manifests: Partial<Record<E4ArmId, E4RunManifest>> = {};
 
   for (const arm of ARM_ORDER) {
-    manifests[arm] = await runArmSequence({ input, arm, generated, policy: policies[arm], executorConfig });
+    if (armsToRun.includes(arm)) {
+      manifests[arm] = await runArmSequence({ input, arm, generated, policy: policies[arm], executorConfig });
+    }
   }
 
   return { manifests };
