@@ -139,3 +139,24 @@ Rejected in favor of A4.
 scale the conventions channel (error-envelope style variation) already injects one non-modal
 decision, and the A1 bank covers prior-guessing more directly. Deferred to the full-run
 pre-registration alongside the pool-difficulty ladder.
+
+---
+
+## v3 addendum (2026-07-10, recorded at v3-M2 per E4V3-PRODUCT-LOOP-PROPOSAL.md §6.6)
+
+**Arm-side boundary mutation (ACCEPTED for the v3 product arm) vs the rejected Stryker item.**
+The earlier rejection of mutation tooling was in the MEASUREMENT role — a hidden instrument
+whose mutants derive from ground truth. v3's `e4-agent-boundary-mutation-v1`
+(src/e4/v3/mutation.ts) is a different role on both axes that drove that rejection: (i) it is
+ARM FEEDBACK inside the product gate, visible to the agent by design — the product ships it, so
+the arm carrying it is ecological validity, not contamination; (ii) it reads only the agent's
+own workspace (mutants are HTTP-boundary transforms of the agent's own server), never ground
+truth, so it cannot leak the oracle. The hidden bank and oracle remain the untouched
+measurement; Goodhart pressure against the arm-side mutants lands where the design wants it —
+in stronger agent scenarios — and any residual gaming still surfaces in the measured kill
+score, contradiction channel, and false-confidence event exactly as before. The A1 pin
+("adversarial bank never gates, never feeds back") is unchanged: the bank still never does.
+
+**Threshold discipline.** The arm-side kill threshold is calibrated at T0 (gold code + gold
+template scenarios kill 6/6 — verified by the v3-M2 census) and sealed below that at the v3
+constants freeze; it is gate feedback, never a verdict input.
