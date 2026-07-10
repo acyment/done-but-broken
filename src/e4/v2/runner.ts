@@ -34,12 +34,19 @@ import {
   createE4TurnParser,
   readE4V2OpenSpecTree,
   renderE4TurnFeedback,
-  renderE4V2SystemPrompt,
+  renderE4V2SystemPromptParts,
   renderE4V2TaskMessage,
   type E4AgentProvider,
   type E4ChatMessage
 } from "./turns";
 import { readOpenSpecSpecOfRecord } from "../../e1-openspec-harness";
+// v3-M3 (E4V3-PRODUCT-LOOP-PROPOSAL.md §3): the product loop enters through the OPTIONAL `v3`
+// input — v2 callers never set it and their control flow is byte-path-identical.
+import { extractSurfaceDump } from "../meter/extract";
+import { E4V3ProductTaskGate, type E4V3ProductGateConfig, type E4V3ProductGateSummary } from "../v3/product-gate";
+import { runE4AgentMutationAnalysis } from "../v3/mutation";
+import { extractAskPm } from "../v3/turn-protocol";
+import type { E4TaskDelta } from "../v3/task-delta";
 
 export type E4V2SequenceSpendLedger = { spent_usd: number };
 
@@ -65,6 +72,7 @@ export type E4V2TaskUsage = {
       spec_authoring_tokens: number;
       gate_protocol_interaction_tokens: number;
       oracle_feedback_tokens: number;
+      pm_brief_tokens: number; // v3 additive component; always 0 in v2 runs
     }
   >;
 };
@@ -89,6 +97,9 @@ export type E4V2TaskRunResult = {
   probe_usage: { tokens: E4TokenUsage; spend_usd: number } | null;
   snapshot: { hash: string; path: string };
   executor_artifacts: string[];
+  // v3 additive fields (E4V3-PRODUCT-LOOP-PROPOSAL.md §3); null in every v2 run.
+  pm_brief: { requested: boolean; first_turn: number | null } | null;
+  product_gate: E4V3ProductGateSummary | null;
 };
 
 export type E4V2RunTaskInput = {
@@ -109,6 +120,16 @@ export type E4V2RunTaskInput = {
   // A9 test seam: the hidden-oracle engine, defaulting to the real executor. Tests inject a
   // counting wrapper to assert the oracle runs exactly once per task close.
   oracle_runner?: typeof runE4OracleExecutor;
+  // v3-M3: present only in v3 runs (profile e4-openspec-workflow-v2). The PM brief is a pure
+  // function of the drawn task, computed by the orchestrator; base_extra (the ASK_PM protocol
+  // text) is arm-identical by construction; channel_extra and product are the product arm's
+  // declared policy delta.
+  v3?: {
+    pm_brief_text: string;
+    base_extra: string;
+    channel_extra: string | null;
+    product: { delta: E4TaskDelta; config: E4V3ProductGateConfig } | null;
+  };
 };
 
 function zeroTokens(): E4TokenUsage {
@@ -175,12 +196,16 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
   const specTouchPaths: string[] = [];
   const executorArtifacts: string[] = [];
   let gateRunCounter = 0;
+  let mutationRunCounter = 0;
+  let askPmRequested = false;
+  let askPmFirstTurn: number | null = null;
+  const pmBriefTokens: Record<E4TaskPhase, number> = { spec: 0, implementation: 0 };
 
-  const gate = new E4V2TaskGate({
+  const gateInput = {
     arm_mode: input.arm.arm_mode,
     opportunity_labels: input.task.opportunity_labels,
     task_start_openspec: await readE4V2OpenSpecTree(input.workspace_dir),
-    validateChange: async (changeName) => {
+    validateChange: async (changeName: string) => {
       const result = await runE4OpenSpecValidateChange({
         repoRoot: input.repoRoot,
         workspacePath: input.workspace_dir,
@@ -188,9 +213,9 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
       });
       return { ok: result.exit_code === 0, detail: result.normalized_stdout.split("\n").slice(-3).join(" ") };
     },
-    previewMergedScenarios: (changeName) =>
+    previewMergedScenarios: (changeName: string | null) =>
       previewE4V2MergedScenarios({ repoRoot: input.repoRoot, workspacePath: input.workspace_dir, changeName }),
-    runScenarios: async (scenarios) => {
+    runScenarios: async (scenarios: Parameters<typeof runE4V2ScenarioSet>[0]["scenarios"]) => {
       const verdicts = await runE4V2ScenarioSet({
         workspace_dir: input.workspace_dir,
         scenarios,
@@ -203,11 +228,40 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
       executorArtifacts.push(artifact);
       return verdicts;
     }
-  });
+  };
+
+  const gate: E4V2TaskGate | E4V3ProductTaskGate = input.v3?.product
+    ? new E4V3ProductTaskGate({
+        ...gateInput,
+        delta: input.v3.product.delta,
+        briefDelivered: () => askPmRequested,
+        extractDump: () => extractSurfaceDump(input.workspace_dir),
+        runMutationAnalysis: async (scenarios) => {
+          mutationRunCounter += 1;
+          const report = await runE4AgentMutationAnalysis({
+            workspaceDir: input.workspace_dir,
+            scenarios,
+            config: input.executor_config,
+            scratchRoot: join(input.records_dir, "mutation", `attempt-${mutationRunCounter}`),
+            concurrency: 4
+          });
+          const artifact = `mutation-${mutationRunCounter}.json`;
+          await writeRecordFile(artifact, `${JSON.stringify(report, null, 2)}\n`);
+          executorArtifacts.push(artifact);
+          return report;
+        },
+        productConfig: input.v3.product.config
+      })
+    : new E4V2TaskGate(gateInput);
 
   const currentPhase = (): E4TaskPhase => (gate.phase() === "closed" ? "implementation" : gate.phase());
 
-  const systemPrompt = renderE4V2SystemPrompt({ constants: input.constants, arm: input.arm });
+  const promptParts = renderE4V2SystemPromptParts({ constants: input.constants, arm: input.arm });
+  const promptBase = input.v3 ? `${promptParts.base}\n\n${input.v3.base_extra}` : promptParts.base;
+  const promptChannel = [promptParts.channel, input.v3?.channel_extra ?? null]
+    .filter((part): part is string => part !== null)
+    .join("\n\n");
+  const systemPrompt = promptChannel.length === 0 ? promptBase : `${promptBase}\n\n${promptChannel}`;
   const taskMessage = await renderE4V2TaskMessage({ nl_request: input.task.nl_request, workspaceDir: input.workspace_dir });
   const messages: E4ChatMessage[] = [
     { role: "system", content: systemPrompt },
@@ -260,12 +314,23 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
     taskSpendUsd += turnResult.spend_usd;
     input.spend_ledger.spent_usd += turnResult.spend_usd;
 
-    const parsed = parser.parse(turnResult.text);
+    const prePass = input.v3 ? extractAskPm(turnResult.text) : { text: turnResult.text, ask_pm: false };
+    const parsed = parser.parse(prePass.text);
+    const effectiveNoOp = parsed.no_op && !prePass.ask_pm;
 
-    if (parsed.no_op) {
+    if (effectiveNoOp) {
       consecutiveNoOps += 1;
     } else {
       consecutiveNoOps = 0;
+    }
+
+    let pmBriefFeedback: string | null = null;
+
+    if (prePass.ask_pm && input.v3) {
+      askPmRequested = true;
+      askPmFirstTurn ??= turn;
+      pmBriefFeedback = input.v3.pm_brief_text;
+      pmBriefTokens[phaseAtTurnStart] += countE1Tokens(input.v3.pm_brief_text);
     }
 
     const applyResult = await applyE4V2Replacements({
@@ -368,6 +433,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
       }
     }
 
+    const gateAndBrief = [gateFeedback, pmBriefFeedback].filter((part): part is string => part !== null);
     const feedback = renderE4TurnFeedback({
       confirmations: applyResult.confirmations,
       rejections: applyResult.rejected,
@@ -377,8 +443,8 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
         detail: violation.detail
       })),
       verification: verificationFeedback,
-      gate: gateFeedback,
-      no_op: parsed.no_op
+      gate: gateAndBrief.length === 0 ? null : gateAndBrief.join("\n\n"),
+      no_op: effectiveNoOp
     });
 
     usageByPhase[phaseAtTurnStart].wall_clock_ms += Date.now() - turnStarted;
@@ -393,6 +459,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
         rejected: applyResult.rejected,
         verification: parsed.verification === null ? null : { command: parsed.verification.raw },
         done: parsed.done,
+        ask_pm: prePass.ask_pm,
         feedback
       })}\n`
     );
@@ -584,13 +651,15 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
         ...usageByPhase.spec,
         spec_authoring_tokens: componentTokens.spec.spec_authoring,
         gate_protocol_interaction_tokens: componentTokens.spec.gate_protocol,
-        oracle_feedback_tokens: componentTokens.spec.oracle_feedback
+        oracle_feedback_tokens: componentTokens.spec.oracle_feedback,
+        pm_brief_tokens: pmBriefTokens.spec
       },
       implementation: {
         ...usageByPhase.implementation,
         spec_authoring_tokens: componentTokens.implementation.spec_authoring,
         gate_protocol_interaction_tokens: componentTokens.implementation.gate_protocol,
-        oracle_feedback_tokens: componentTokens.implementation.oracle_feedback
+        oracle_feedback_tokens: componentTokens.implementation.oracle_feedback,
+        pm_brief_tokens: pmBriefTokens.implementation
       }
     }
   };
@@ -617,6 +686,8 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
     usage,
     probe_usage: probeUsage,
     snapshot,
-    executor_artifacts: executorArtifacts
+    executor_artifacts: executorArtifacts,
+    pm_brief: input.v3 ? { requested: askPmRequested, first_turn: askPmFirstTurn } : null,
+    product_gate: gate instanceof E4V3ProductTaskGate ? gate.productSummary() : null
   };
 }

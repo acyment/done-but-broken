@@ -38,7 +38,8 @@ export type E4V2FakeBehavior = "diligent" | "drifting" | "vacuous_gamer";
 
 export const E4_V2_DEFAULT_FAKE_BEHAVIORS: Record<E4V2ArmId, E4V2FakeBehavior> = {
   e4_arm_0: "drifting",
-  e4_arm_h: "diligent"
+  e4_arm_h: "diligent",
+  e4_arm_p: "diligent" // v3-M3: the product arm's dry-run default mirrors the executed arm's
 };
 
 export class E4V2FakeProviderError extends Error {

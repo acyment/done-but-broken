@@ -20,6 +20,14 @@ import {
   renderE4V2SystemPromptParts,
   type E4AgentProviderFactory
 } from "./turns";
+// v3-M3 (E4V3-PRODUCT-LOOP-PROPOSAL.md §3): three-arm product-loop runs enter through the
+// OPTIONAL `v3` input; v2 callers are unchanged.
+import { buildBaselineIr } from "../substrate/ir";
+import type { E4ChangeOpKind } from "../substrate/ops";
+import { computeE4TaskDelta, type E4TaskDelta } from "../v3/task-delta";
+import { renderE4PmBrief } from "../v3/pm-brief";
+import { E4_V3_PRODUCT_GATE_PROTOCOL_TEXT, type E4V3ProductGateConfig } from "../v3/product-gate";
+import { E4_V3_ASK_PM_PROTOCOL_TEXT } from "../v3/turn-protocol";
 
 export type E4V2RunInput = {
   repoRoot: string;
@@ -37,6 +45,10 @@ export type E4V2RunInput = {
   // identity (v1 bin/e4.ts precedent) so existing dry-run callers are unaffected; a live run
   // (v2-M6 calibration, v2-M7 pilot) must pass the real provider identity.
   model?: { preset: string; model_id: string; route_id: string };
+  // v3-M3: presence switches the run to the three-arm product-loop shape — profile
+  // e4-openspec-workflow-v2, the PM brief channel in every arm, and the product gate on
+  // e4_arm_p. Absent for every v2 run.
+  v3?: { product_config: E4V3ProductGateConfig };
 };
 
 const DRY_RUN_MODEL_IDENTITY = { preset: "fake-deterministic", model_id: "e4-fake-agent-v1", route_id: "none" };
@@ -51,14 +63,37 @@ function manifestPath(runRoot: string, arm: E4V2ArmId): string {
 }
 
 export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResult> {
-  const arms = input.arms ?? (["e4_arm_0", "e4_arm_h"] as E4V2ArmId[]);
+  const arms =
+    input.arms ??
+    (input.v3 ? (["e4_arm_0", "e4_arm_h", "e4_arm_p"] as E4V2ArmId[]) : (["e4_arm_0", "e4_arm_h"] as E4V2ArmId[]));
   const generated = await e4ProceduralRestV2Provider.generate(input.substrate_config);
   const secrets = input.secrets ?? [];
 
+  // v3: the per-task PM briefs are a pure function of the drawn sequence (task-delta over the
+  // ground-truth chain) — identical text in every arm by construction.
+  const v3TaskExtras = new Map<number, { delta: E4TaskDelta; brief_text: string }>();
+
+  if (input.v3) {
+    let previousIr = buildBaselineIr();
+
+    for (const task of generated.tasks) {
+      const delta = computeE4TaskDelta(previousIr, task.ground_truth_ir);
+      const brief = renderE4PmBrief({ opKind: task.op_kind as E4ChangeOpKind, delta });
+
+      v3TaskExtras.set(task.task_index, { delta, brief_text: brief.text });
+      previousIr = task.ground_truth_ir;
+    }
+  }
+
   // Arm parity before anything runs: identical task text, budgets, retry policy, and base
-  // prompt; the execution channel is the executed arm's only declared delta.
-  const runtimes: E4V2ArmRuntime[] = (["e4_arm_0", "e4_arm_h"] as E4V2ArmId[]).map((arm) => {
+  // prompt; execution channels are the executed-mode arms' only declared deltas (the product
+  // arm's channel adds the product-gate protocol).
+  const runtimes: E4V2ArmRuntime[] = arms.map((arm) => {
     const parts = renderE4V2SystemPromptParts({ constants: input.constants, arm: E4_V2_ARM_POLICIES[arm] });
+    const base = input.v3 ? `${parts.base}\n\n${E4_V3_ASK_PM_PROTOCOL_TEXT}` : parts.base;
+    const channelParts = [parts.channel, arm === "e4_arm_p" ? E4_V3_PRODUCT_GATE_PROTOCOL_TEXT : null].filter(
+      (part): part is string => part !== null
+    );
 
     return {
       arm,
@@ -66,11 +101,11 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
       task_text: generated.tasks.map((task) => task.nl_request).join("\n"),
       budgets: input.constants.budgets,
       retry_policy: E4_PROVIDER_RETRY_POLICY_TEXT,
-      system_prompt_base: parts.base,
-      execution_channel: parts.channel
+      system_prompt_base: base,
+      execution_channel: channelParts.length === 0 ? null : channelParts.join("\n\n")
     };
   });
-  validateE4V2RuntimeArmParity(runtimes);
+  validateE4V2RuntimeArmParity(runtimes, arms);
 
   const manifests: Partial<Record<E4V2ArmId, E4V2RunManifest>> = {};
   const manifestPaths: Partial<Record<E4V2ArmId, string>> = {};
@@ -96,7 +131,7 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
       schema: "e4-v2-run-manifest",
       schema_version: "1",
       run_classification: input.run_classification,
-      protocol_profile_id: "e4-openspec-workflow-v1",
+      protocol_profile_id: input.v3 ? "e4-openspec-workflow-v2" : "e4-openspec-workflow-v1",
       arm,
       arm_mode: policy.arm_mode,
       pairing_label: input.pairing_label,
@@ -136,6 +171,7 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
 
     for (const task of generated.tasks) {
       const provider = input.providerFactory({ arm, pairing_label: input.pairing_label, task_index: task.task_index });
+      const extras = v3TaskExtras.get(task.task_index);
       const result = await runE4V2Task({
         repoRoot: input.repoRoot,
         arm: policy,
@@ -150,7 +186,17 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
         executor_config: input.executor_config,
         captureSnapshot: () =>
           captureE4Snapshot({ workspaceDir, runRoot: input.runRoot, arm, taskIndex: task.task_index }),
-        secrets
+        secrets,
+        ...(input.v3 && extras
+          ? {
+              v3: {
+                pm_brief_text: extras.brief_text,
+                base_extra: E4_V3_ASK_PM_PROTOCOL_TEXT,
+                channel_extra: arm === "e4_arm_p" ? E4_V3_PRODUCT_GATE_PROTOCOL_TEXT : null,
+                product: arm === "e4_arm_p" ? { delta: extras.delta, config: input.v3.product_config } : null
+              }
+            }
+          : {})
       });
 
       const record: E4V2TaskRecord = {

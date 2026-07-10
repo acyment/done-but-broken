@@ -93,7 +93,8 @@ export type E4V2ApplyResult = {
 export async function applyE4V2Replacements(input: {
   workspaceDir: string;
   replacements: Array<{ path: string; content: string }>;
-  gate: E4V2TaskGate;
+  // structural: the v3 product gate exposes the same guard surface (v3-M3)
+  gate: Pick<E4V2TaskGate, "evaluateWriteAccess" | "phase">;
 }): Promise<E4V2ApplyResult> {
   const applied: E4V2AppliedReplacement[] = [];
   const rejected: E4V2RejectedReplacement[] = [];

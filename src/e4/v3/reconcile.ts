@@ -226,8 +226,14 @@ export function reconcileE4SpecAndCode(input: {
     }
   }
 
-  // 2. Every scenario request resolves to a code route.
+  // 2. Every scenario request resolves to a code route — EXCEPT in scenarios asserting 404,
+  // whose unmatched requests are deliberate negative-space claims (the §5.5 retirement
+  // tombstone; the same exemption the drift meter's stale_claim rule applies).
   for (const { scenario, requests } of requestsByScenario) {
+    if (scenario.steps.some((step) => step.kind === "assert_status" && step.status === 404)) {
+      continue;
+    }
+
     for (const request of requests) {
       if (!matchDumpRoute(request, dump.routes)) {
         findings.push({

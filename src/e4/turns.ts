@@ -102,7 +102,8 @@ export interface E4AgentProvider {
 }
 
 export type E4AgentProviderFactory = (input: {
-  arm: E4ArmId;
+  // widened for the v3 product arm (v3-M3); v1/v2 callers only ever pass their own arm ids
+  arm: E4ArmId | "e4_arm_p";
   pairing_label: string;
   task_index: number;
 }) => E4AgentProvider;

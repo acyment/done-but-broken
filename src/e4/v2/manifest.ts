@@ -24,7 +24,9 @@ export type E4V2RunManifest = {
   schema: "e4-v2-run-manifest";
   schema_version: "1";
   run_classification: E4RunClassification;
-  protocol_profile_id: "e4-openspec-workflow-v1";
+  // v2 runs stamp -v1; v3 three-arm product-loop runs stamp -v2 (the PM brief channel is a
+  // shared-environment change — E4V3-PRODUCT-LOOP-PROPOSAL.md §3.4).
+  protocol_profile_id: "e4-openspec-workflow-v1" | "e4-openspec-workflow-v2";
   arm: E4V2ArmId;
   arm_mode: "prose" | "executed";
   pairing_label: string;
@@ -72,12 +74,19 @@ export function validateE4V2Manifest(raw: unknown): E4V2RunManifest {
     throw new E4V2ManifestError(`schema mismatch: ${String(manifest.schema)}`);
   }
 
-  if (manifest.protocol_profile_id !== "e4-openspec-workflow-v1") {
-    throw new E4V2ManifestError("protocol_profile_id must be e4-openspec-workflow-v1");
+  if (
+    manifest.protocol_profile_id !== "e4-openspec-workflow-v1" &&
+    manifest.protocol_profile_id !== "e4-openspec-workflow-v2"
+  ) {
+    throw new E4V2ManifestError("protocol_profile_id must be e4-openspec-workflow-v1 or -v2");
   }
 
-  if (manifest.arm !== "e4_arm_0" && manifest.arm !== "e4_arm_h") {
+  if (manifest.arm !== "e4_arm_0" && manifest.arm !== "e4_arm_h" && manifest.arm !== "e4_arm_p") {
     throw new E4V2ManifestError(`unknown arm: ${String(manifest.arm)}`);
+  }
+
+  if (manifest.arm === "e4_arm_p" && manifest.protocol_profile_id !== "e4-openspec-workflow-v2") {
+    throw new E4V2ManifestError("e4_arm_p exists only under the e4-openspec-workflow-v2 profile");
   }
 
   if (!manifest.compatibility_boundary?.constants_hash || !manifest.compatibility_boundary?.substrate_config) {

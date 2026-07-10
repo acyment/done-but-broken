@@ -10,7 +10,11 @@
 // VALUES stay free for the v2-M6 calibration; everything else is frozen at v2-M5.
 import type { E4Budgets } from "../types";
 
-export type E4V2ArmId = "e4_arm_0" | "e4_arm_h";
+// v3-M3 widened the id union with the product arm (E4V3-PRODUCT-LOOP-PROPOSAL.md §2; the
+// naked-execution arm keeps the e4_arm_h id it has always had — the proposal's "arm x" label is
+// presentation, and renaming it would break cross-version comparability with the M7/M8
+// manifests). v2 runs never construct e4_arm_p; the v2 constants FILE is untouched.
+export type E4V2ArmId = "e4_arm_0" | "e4_arm_h" | "e4_arm_p";
 
 export type E4V2SealedConstants = {
   schema: "e4-v2-sealed-constants";

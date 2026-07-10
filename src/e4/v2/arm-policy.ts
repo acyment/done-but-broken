@@ -1,8 +1,12 @@
 // v2 arm policies + runtime parity validator (E4V2 design §2: TWO arms, operator decision — the
 // instruction arm is dropped as observed inert). Arms are policy objects, not branches; the only
-// declared delta is the EXECUTED arm's scenario-execution channel (gate red/green + the gate
+// declared delta is an EXECUTED arm's scenario-execution channel (gate red/green + the gate
 // protocol text). The workflow itself — phases, custody, archive — is shared task environment
 // and appears in NO policy delta.
+//
+// v3-M3 (E4V3-PRODUCT-LOOP-PROPOSAL.md §2/§3) adds the product arm e4_arm_p: executed mode plus
+// the product-gate feedback channel (reconciliation + agent-side mutation + PM spec review).
+// v2 callers are unchanged — the validator still defaults to the two-arm shape.
 import type { E4Budgets } from "../types";
 import type { E4V2ArmId } from "./constants";
 import type { E4V2ArmMode } from "./gate";
@@ -11,14 +15,20 @@ export interface E4V2ArmPolicy {
   readonly arm: E4V2ArmId;
   readonly arm_mode: E4V2ArmMode;
   readonly feedback: {
-    smoke: true; // both arms, always
-    scenario_execution: boolean; // executed arm only: red-check + done-claim verdicts as feedback
+    smoke: true; // all arms, always
+    scenario_execution: boolean; // executed arms: red-check + done-claim verdicts as feedback
+    product_gate?: boolean; // v3 product arm only; absent/false for the v2 arms
   };
 }
 
 export const E4_V2_ARM_POLICIES: Record<E4V2ArmId, E4V2ArmPolicy> = {
   e4_arm_0: { arm: "e4_arm_0", arm_mode: "prose", feedback: { smoke: true, scenario_execution: false } },
-  e4_arm_h: { arm: "e4_arm_h", arm_mode: "executed", feedback: { smoke: true, scenario_execution: true } }
+  e4_arm_h: { arm: "e4_arm_h", arm_mode: "executed", feedback: { smoke: true, scenario_execution: true } },
+  e4_arm_p: {
+    arm: "e4_arm_p",
+    arm_mode: "executed",
+    feedback: { smoke: true, scenario_execution: true, product_gate: true }
+  }
 };
 
 export type E4V2ArmRuntime = {
@@ -28,7 +38,7 @@ export type E4V2ArmRuntime = {
   budgets: E4Budgets;
   retry_policy: string;
   system_prompt_base: string; // must be byte-identical across arms
-  execution_channel: string | null; // executed arm only
+  execution_channel: string | null; // executed-mode arms only
 };
 
 export class E4V2ArmParityError extends Error {
@@ -40,15 +50,20 @@ export class E4V2ArmParityError extends Error {
 
 const REQUIRED_ARMS: readonly E4V2ArmId[] = ["e4_arm_0", "e4_arm_h"];
 
-// The validateE1RuntimeArmParity / validateE4RuntimeArmParity precedent, at v2's two-arm shape:
-// identical task text, budgets, retry policy, and base prompt; the execution channel is the one
-// allowlisted delta and belongs to the executed arm only.
-export function validateE4V2RuntimeArmParity(runtime: E4V2ArmRuntime[]): void {
-  if (runtime.length !== REQUIRED_ARMS.length) {
-    throw new E4V2ArmParityError(`expected exactly ${REQUIRED_ARMS.length} arm runtimes, got ${runtime.length}`);
+// The validateE1RuntimeArmParity / validateE4RuntimeArmParity precedent: identical task text,
+// budgets, retry policy, and base prompt; execution channels are the allowlisted per-arm delta
+// and belong to executed-mode arms only (the product arm's channel additionally carries the
+// product-gate protocol, which is why channels are compared per policy, not for equality).
+// Defaults to the v2 two-arm shape; the v3 orchestrator passes its three-arm set.
+export function validateE4V2RuntimeArmParity(
+  runtime: E4V2ArmRuntime[],
+  requiredArms: readonly E4V2ArmId[] = REQUIRED_ARMS
+): void {
+  if (runtime.length !== requiredArms.length) {
+    throw new E4V2ArmParityError(`expected exactly ${requiredArms.length} arm runtimes, got ${runtime.length}`);
   }
 
-  for (const expected of REQUIRED_ARMS) {
+  for (const expected of requiredArms) {
     if (!runtime.some((entry) => entry.arm === expected)) {
       throw new E4V2ArmParityError(`missing arm runtime for ${expected}`);
     }
@@ -79,10 +94,10 @@ export function validateE4V2RuntimeArmParity(runtime: E4V2ArmRuntime[]): void {
   }
 
   for (const entry of runtime) {
-    const channelAllowed = entry.arm === "e4_arm_h";
+    const channelAllowed = E4_V2_ARM_POLICIES[entry.arm].arm_mode === "executed";
 
     if (channelAllowed && (entry.execution_channel === null || entry.execution_channel.length === 0)) {
-      throw new E4V2ArmParityError("e4_arm_h must carry a non-empty execution channel");
+      throw new E4V2ArmParityError(`${entry.arm} must carry a non-empty execution channel`);
     }
 
     if (!channelAllowed && entry.execution_channel !== null) {
