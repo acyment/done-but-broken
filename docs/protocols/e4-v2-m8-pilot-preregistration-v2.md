@@ -1,7 +1,7 @@
 # E4 v2-M8 evidence run — pre-registration (v2)
 
-**Status: DRAFT — NOT SEALED. Awaiting operator review; sealing (an operator commit) and run
-authorization (explicit operator spend approval) are two further, separate acts.** This
+**Status: SEALED 2026-07-10 (operator-reviewed and approved as-is; this commit is the sealing
+act; run spend separately authorized in the same operator directive).** This
 document was drafted before any *valid* v2-M8 evidence data exists; once sealed, nothing below
 changes after launch. Deviations, if any, are recorded in the run report as deviations — never
 edited in here. Naming and discipline follow the M7 precedent
