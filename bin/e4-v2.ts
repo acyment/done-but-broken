@@ -18,11 +18,17 @@
 //                  lifted at the v2-M7 gate (2026-07-09, operator-authorized): the sealed
 //                  pre-registration is docs/protocols/e4-v2-m7-pilot-preregistration-v1.md and
 //                  this lift is the gate action it records (v1 precedent).
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { E4_V2_CONSTANTS_PATH, loadE4V2Constants, type E4V2ArmId } from "../src/e4/v2/constants";
 import { buildE4V2FakeProviderFactory } from "../src/e4/v2/fake-provider";
 import { createE4LiveProviderFactory } from "../src/e4/live-provider";
+import { createFetchE1ProviderTransport } from "../src/e1-live-provider";
+import {
+  createRecordingTransport,
+  extractReasoningSignals,
+  type RecordedExchange
+} from "../src/e4/reasoning-observability";
 import { runE4V2Sequences } from "../src/e4/v2/orchestrator";
 import { e4ProceduralRestV2Provider } from "../src/e4/substrate/v2/provider";
 import type { E4RunClassification } from "../src/e4/types";
@@ -90,9 +96,18 @@ await mkdir(runRoot, { recursive: true });
 let providerFactory: E4AgentProviderFactory;
 let modelIdentity: { preset: string; model_id: string; route_id: string };
 let secrets: Array<{ id: string; value: string }> = [];
+// v2-M8 §4 setup-time validity instrument: on live runs, tee every raw provider exchange through
+// the (already-tested) recording transport so the reasoning signals — active? honestly counted?
+// truncated? — can be checked over the REAL run's responses, not just the single-turn smoke.
+// Passthrough only: the base transport's response is forwarded unchanged, transport_kind preserved.
+// Only DERIVED signals (booleans + token counts) are persisted below — never raw bodies.
+let reasoningRecords: RecordedExchange[] | null = null;
 
 if (live) {
+  const recorder = createRecordingTransport(createFetchE1ProviderTransport());
+  reasoningRecords = recorder.records;
   const liveProvider = createE4LiveProviderFactory({
+    transport: recorder.transport,
     config: {
       preset: "direct-openai-compatible",
       model: model!,
@@ -159,6 +174,49 @@ for (const [arm, manifest] of Object.entries(result.manifests)) {
       ].join("  ")
     );
   }
+}
+
+// v2-M8 §4 reasoning-observability report (live runs only): derived per-call signals over the
+// recorded exchanges. Calibration-grade at most — analysis context, never evidence, never a task
+// outcome. §4(a) fails ⇒ the "thinking-on" label is false for this run; §4(b) "separate" ⇒ the
+// budget ledger undercounted and the E4-side adjustment must be activated before any freeze.
+if (live && reasoningRecords !== null) {
+  const perCall = reasoningRecords.map((record, call) => ({
+    call,
+    signals: extractReasoningSignals(record.response.body)
+  }));
+  const activeCalls = perCall.filter((entry) => entry.signals.reasoning_active).length;
+  const accountingSet = [...new Set(perCall.map((entry) => entry.signals.accounting))];
+  const anyTruncated = perCall.some((entry) => entry.signals.truncated);
+  const adjustmentNeeded = perCall.some((entry) => entry.signals.adjustment_needed);
+
+  const reasoningReport = {
+    schema: "e4-v2-reasoning-observability-v1",
+    classification,
+    route: {
+      model: modelIdentity.model_id,
+      route_id: modelIdentity.route_id,
+      endpoint,
+      extra_body: extraBody ?? {},
+      disable_thinking: disableThinking,
+      max_output_tokens: maxOutputTokens
+    },
+    checks: {
+      calls_recorded: perCall.length,
+      reasoning_active_calls: activeCalls,
+      reasoning_active_4a: activeCalls > 0,
+      accounting_4b: accountingSet,
+      adjustment_needed: adjustmentNeeded,
+      truncated_5iv: anyTruncated
+    },
+    per_call: perCall
+  };
+  const reasoningReportPath = join(runRoot, "reasoning-observability.json");
+  await writeFile(reasoningReportPath, JSON.stringify(reasoningReport, null, 2));
+  console.log(
+    `\nreasoning observability (§4): active ${activeCalls}/${perCall.length} calls, accounting=${accountingSet.join(",")}, ` +
+      `truncated=${anyTruncated} → ${reasoningReportPath}`
+  );
 }
 
 console.log(`\nmodel: ${modelIdentity.preset}/${modelIdentity.model_id} classification=${classification}`);
