@@ -122,7 +122,7 @@ describe("v2-M5 — non-budget constants freeze", () => {
     expect(() => validateE4V2Constants(missingReadme)).toThrow(/workspace_readme/);
   });
 
-  test("[v2-M6] v0 is FULLY FROZEN: the complete file hash is pinned (budgets ratified on deepseek-v4-pro)", async () => {
+  test("[v2-M6/v2-M8] v0 is FULLY FROZEN: the complete file hash is pinned (budgets ratified per model)", async () => {
     // Freeze lineage: provisional 0.1 27/12/490000/5 (v2-M5)
     //   → v0.2 27/12/490000/5 (v2-M6, deepseek-v4-pro, seed 37, classification=calibration;
     //     observed appetite: max turns/task=8, max tokens/task=142778, max verifications/task=3,
@@ -130,15 +130,29 @@ describe("v2-M5 — non-budget constants freeze", () => {
     //     headroom" branch applies and the provisional VALUES freeze unchanged; only `version`
     //     moves to mark the freeze event.
     //     docs/protocols/e4-v2-m6-calibration-manifest-20260709-001.json).
-    // This is the constants_hash every v2-M7 evidence manifest must stamp; immutable without a
-    // new gate. Budgets transfer to v2-M7 only on the exact model id deepseek-v4-pro (recorded in
-    // docs/e4/E4V2-M6-BUDGET-CALIBRATION-NOTES.md — not a JSON field, same as the v1 M6.5 pin).
+    //     v0.2 full-file hash was d762bacc126618d086cea6416b1ec4d8f87d561a5bb366e4a0a8149d0e06836b —
+    //     the constants_hash every v2-M7 evidence manifest stamps (historical; to re-run the M7
+    //     verdict, pass `--constants` pointing at the archived v0.2, e.g.
+    //     `git show de9a679:docs/protocols/e4-v2-sealed-constants-v0.json`).
+    //   → v0.3 27/12/490000/5 (v2-M8, glm-5.2 THINKING-ON, seed 37, classification=calibration;
+    //     observed appetite: max turns/task=6, max tokens/task=122626, max verifications/task=3,
+    //     sequence spend $0.642259 (run 1) / max turns 5, max tokens 116246, max verifications 1,
+    //     spend $0.617758 (run 2, with the §4 reasoning-observability recorder: reasoning active
+    //     35/35 calls, token accounting folded on every call, zero truncation at max_tokens 32000)
+    //     — no wall hit in either run, "fits with headroom" branch again: VALUES freeze unchanged,
+    //     only `version` moves to mark GLM's own freeze event.
+    //     docs/protocols/e4-v2-m8-glm-calibration-manifest-20260710-001.json).
+    // This is the constants_hash every v2-M8 evidence manifest must stamp; immutable without a
+    // new gate. Budgets are MODEL-PINNED: they transfer to an evidence run only on the exact model
+    // id they were ratified on (deepseek-v4-pro per v0.2 / glm-5.2 thinking-on per v0.3 — recorded
+    // in docs/e4/E4V2-M6-BUDGET-CALIBRATION-NOTES.md and
+    // docs/e4/E4V2-M8-GLM-BUDGET-CALIBRATION-NOTES.md, not a JSON field, same as the v1 M6.5 pin).
     const { constants } = await loadSealed();
 
     expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
-      "d762bacc126618d086cea6416b1ec4d8f87d561a5bb366e4a0a8149d0e06836b"
+      "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c"
     );
-    expect(constants.version).toBe("0.2");
+    expect(constants.version).toBe("0.3");
     expect(constants.budgets).toEqual({
       turns_per_task: 27,
       verifications_per_task: 12,
