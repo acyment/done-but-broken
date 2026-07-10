@@ -1,0 +1,2508 @@
+{
+  "schema": "e4-v2-run-manifest",
+  "schema_version": "1",
+  "run_classification": "pilot",
+  "protocol_profile_id": "e4-openspec-workflow-v1",
+  "arm": "e4_arm_h",
+  "arm_mode": "executed",
+  "pairing_label": "pair-pilot-seed-3",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "glm-5.2",
+    "route_id": "direct-zhipu-api-key"
+  },
+  "compatibility_boundary": {
+    "constants_version": "0.3",
+    "constants_hash": "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1",
+    "substrate_config": {
+      "substrate_config_id": "v2-default",
+      "substrate_seed": 3,
+      "task_count": 6,
+      "op_mix": {
+        "weights": {
+          "drift_opportunity": 0.5,
+          "additive": 0.4,
+          "behavior_preserving": 0.1
+        }
+      }
+    }
+  },
+  "initial_snapshot": {
+    "hash": "f6e4f974a36124afa0c44f2fe05693a1b5d9e766da5bff269d23d39a92cfd711",
+    "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-0"
+  },
+  "tasks": [
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 5,
+          "carried_total": 0,
+          "novel_red": 4,
+          "novel_records": [
+            {
+              "title": "Creating a Promotion returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Promotion without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Promotion with an invalid discount_percent is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Fetching a missing Promotion returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Promotion increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [
+            "Fetching a missing Promotion returns not found"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 4,
+        "delta_total": 9,
+        "cumulative_pass": 30,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "add-promotions",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 22,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Promotion returns the stored entity"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Promotion with an invalid discount_percent is rejected"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Promotion without name is rejected"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Fetching a Promotion",
+              "scenario": "Fetching a missing Promotion returns not found"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Listing Promotion records",
+              "scenario": "Creating a Promotion increases the list count"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "POST /promotions",
+              "found": "scenario: Creating a Promotion returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:read",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "GET /promotions/{id}",
+              "found": "scenario: Creating a Promotion returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:list",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "GET /promotions",
+              "found": "scenario: Creating a Promotion increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "PUT /promotions/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "DELETE /promotions/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Promotion:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/promotions/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Promotion:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/promotions/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Promotion.discount_percent",
+            "semantic_item_uid": "code-only:field:Promotion.discount_percent",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Promotion.discount_percent.range",
+            "semantic_item_uid": "code-only:rule:Promotion.discount_percent.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 4,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 22,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Promotion without name is rejected",
+              "Creating a Promotion with an invalid discount_percent is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 22,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec and context files were accurate and internally consistent — the scenario grammar, existing specs, and data-driven code structure (schema/registry/seed/server) all matched, and the implementation passed on the first verification run.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/add-promotions/proposal.md",
+          "openspec/changes/add-promotions/tasks.md",
+          "openspec/changes/add-promotions/specs/promotions/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 11823,
+          "cached_input_tokens": 28032,
+          "output_tokens": 10405
+        },
+        "wall_clock_ms": 154281,
+        "spend_usd": 0.06962252,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 9134,
+              "cached_input_tokens": 8896,
+              "output_tokens": 8437
+            },
+            "wall_clock_ms": 120325,
+            "spec_authoring_tokens": 837,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 47
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 2689,
+              "cached_input_tokens": 19136,
+              "output_tokens": 1968
+            },
+            "wall_clock_ms": 26390,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 37,
+          "cached_input_tokens": 11712,
+          "output_tokens": 162
+        },
+        "spend_usd": 0.00380972
+      },
+      "snapshot": {
+        "hash": "19d1376e5ac12fafb1e07397cff5df4fd8d09c0586b798ae4f95de981a750438",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-1"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 1,
+      "op_kind": "add_entity",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Product wants a Promotion list added so the team can start recording them."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 1,
+          "carried_total": 0,
+          "novel_red": 1,
+          "novel_records": [
+            {
+              "title": "Updating a Widget persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 30,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "switch-widget-update-to-patch",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 22,
+          "scenarios_after": 22,
+          "dropped_scenarios": [],
+          "added_scenarios": [],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "POST /promotions",
+              "found": "scenario: Creating a Promotion returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:read",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "GET /promotions/{id}",
+              "found": "scenario: Creating a Promotion returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:list",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "GET /promotions",
+              "found": "scenario: Creating a Promotion increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "PUT /promotions/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "DELETE /promotions/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Promotion:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/promotions/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Promotion:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/promotions/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Promotion.discount_percent",
+            "semantic_item_uid": "code-only:field:Promotion.discount_percent",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Promotion.discount_percent.range",
+            "semantic_item_uid": "code-only:rule:Promotion.discount_percent.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 4,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 22,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Promotion without name is rejected",
+              "Creating a Promotion with an invalid discount_percent is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 22,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The spec and context files were internally consistent — the registry, schema, seed, and server code all matched the documented scenarios, and the Widget update route was indeed `PUT` as shown. The only ambiguity was in the task prompt itself (\"match the rest of the API\"), since Categories also use PUT, so I interpreted the switch as moving Widget updates to PATCH.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/switch-widget-update-to-patch/proposal.md",
+          "openspec/changes/switch-widget-update-to-patch/tasks.md",
+          "openspec/changes/switch-widget-update-to-patch/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 12423,
+          "cached_input_tokens": 47744,
+          "output_tokens": 9030
+        },
+        "wall_clock_ms": 176250,
+        "spend_usd": 0.06953764,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 10927,
+              "cached_input_tokens": 11968,
+              "output_tokens": 8229
+            },
+            "wall_clock_ms": 137794,
+            "spec_authoring_tokens": 461,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 28
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 1496,
+              "cached_input_tokens": 35776,
+              "output_tokens": 801
+            },
+            "wall_clock_ms": 20689,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 33,
+          "cached_input_tokens": 12864,
+          "output_tokens": 667
+        },
+        "spend_usd": 0.00632564
+      },
+      "snapshot": {
+        "hash": "072df26ff1072efdb374ce43bba154efd09e74429ddbd05c361d9b291aff1f08",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-2"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 2,
+      "op_kind": "modify_endpoint",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Switch how clients update a Widget record to match the rest of the API."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 9,
+          "carried_total": 2,
+          "novel_red": 6,
+          "novel_records": [
+            {
+              "title": "Creating a Widget returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget with a non-decimal price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with a non-bool in_stock is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with an invalid price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Widget persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Widget removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Filtering widgets by category_id returns only matching rows",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Widget with a non-decimal price is rejected",
+            "Creating a Widget with a non-bool in_stock is rejected",
+            "Creating a Widget with an invalid price is rejected"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 29,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "rename-widget-name-to-summary",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 22,
+          "scenarios_after": 22,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without summary is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by category_id returns only matching rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "POST /promotions",
+              "found": "scenario: Creating a Promotion returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:read",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "GET /promotions/{id}",
+              "found": "scenario: Creating a Promotion returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:list",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "GET /promotions",
+              "found": "scenario: Creating a Promotion increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "PUT /promotions/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Promotion:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "DELETE /promotions/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Promotion:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/promotions/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Promotion:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/promotions/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Promotion.discount_percent",
+            "semantic_item_uid": "code-only:field:Promotion.discount_percent",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Promotion.discount_percent.range",
+            "semantic_item_uid": "code-only:rule:Promotion.discount_percent.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 4,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 22,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Promotion without name is rejected",
+              "Creating a Promotion with an invalid discount_percent is rejected",
+              "Creating a Widget without summary is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Promotion returns the stored entity",
+              "Creating a Promotion increases the list count",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 22,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec/context files were accurate and consistent — the schema, seed, registry, and spec scenarios all aligned with the current implementation, and the task description correctly identified `name` as the Widget detail field to rename.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-widget-name-to-summary/proposal.md",
+          "openspec/changes/rename-widget-name-to-summary/tasks.md",
+          "openspec/changes/rename-widget-name-to-summary/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 14512,
+          "cached_input_tokens": 38784,
+          "output_tokens": 7715
+        },
+        "wall_clock_ms": 109205,
+        "spend_usd": 0.06434664,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 11523,
+              "cached_input_tokens": 12608,
+              "output_tokens": 6609
+            },
+            "wall_clock_ms": 82499,
+            "spec_authoring_tokens": 1757,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 74
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 2989,
+              "cached_input_tokens": 26176,
+              "output_tokens": 1106
+            },
+            "wall_clock_ms": 16961,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 66,
+          "cached_input_tokens": 15040,
+          "output_tokens": 226
+        },
+        "spend_usd": 0.0049972
+      },
+      "snapshot": {
+        "hash": "f86e32a60a65e4ced5050e46641dac1c383c91526a5ce4f1fec0f24fcd67a99b",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-3"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 3,
+      "op_kind": "rename_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Rename the name detail on Widget to summary."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 5,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 6,
+          "carried_total": 0,
+          "novel_red": 5,
+          "novel_records": [
+            {
+              "title": "Creating a Resource returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Resource without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Resource with an invalid discount_percent is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Fetching a missing Resource returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Resource increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Listing Resources returns seeded data",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [
+            "Fetching a missing Resource returns not found"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 29,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "rename-promotion-to-resource",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 22,
+          "scenarios_after": 23,
+          "dropped_scenarios": [
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Promotion returns the stored entity"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Promotion with an invalid discount_percent is rejected"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Promotion without name is rejected"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Fetching a Promotion",
+              "scenario": "Fetching a missing Promotion returns not found"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Listing Promotion records",
+              "scenario": "Creating a Promotion increases the list count"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Resource returns the stored entity"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Resource with an invalid discount_percent is rejected"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Creating a Promotion",
+              "scenario": "Creating a Resource without name is rejected"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Fetching a Promotion",
+              "scenario": "Fetching a missing Resource returns not found"
+            },
+            {
+              "spec": "promotions",
+              "requirement": "Listing Promotion records",
+              "scenario": "Creating a Resource increases the list count"
+            },
+            {
+              "spec": "resources",
+              "requirement": "Listing Resource records",
+              "scenario": "Listing Resources returns seeded data"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "POST /resources",
+              "found": "scenario: Creating a Resource returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:read",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "GET /resources/{id}",
+              "found": "scenario: Creating a Resource returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:list",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "GET /resources",
+              "found": "scenario: Creating a Resource increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "PUT /resources/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "DELETE /resources/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Resource:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/resources/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Resource:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/resources/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Resource.discount_percent",
+            "semantic_item_uid": "code-only:field:Resource.discount_percent",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Resource.discount_percent.range",
+            "semantic_item_uid": "code-only:rule:Resource.discount_percent.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 4,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 23,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Resource without name is rejected",
+              "Creating a Resource with an invalid discount_percent is rejected",
+              "Creating a Widget without summary is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 23,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec and context files were accurate and consistent — the `promotions` capability, `Promotion` entity in `schema.ts`/`registry.ts`/`seed.ts`, and all archived changes aligned with each other and with the task description.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-promotion-to-resource/proposal.md",
+          "openspec/changes/rename-promotion-to-resource/tasks.md",
+          "openspec/changes/rename-promotion-to-resource/specs/promotions/spec.md",
+          "openspec/changes/rename-promotion-to-resource/specs/resources/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 8,
+        "tokens": {
+          "fresh_input_tokens": 18606,
+          "cached_input_tokens": 111808,
+          "output_tokens": 70341
+        },
+        "wall_clock_ms": 1119645,
+        "spend_usd": 0.36461888,
+        "by_phase": {
+          "spec": {
+            "turns": 7,
+            "tokens": {
+              "fresh_input_tokens": 17725,
+              "cached_input_tokens": 93632,
+              "output_tokens": 68667
+            },
+            "wall_clock_ms": 1089216,
+            "spec_authoring_tokens": 3842,
+            "gate_protocol_interaction_tokens": 127,
+            "oracle_feedback_tokens": 47
+          },
+          "implementation": {
+            "turns": 1,
+            "tokens": {
+              "fresh_input_tokens": 881,
+              "cached_input_tokens": 18176,
+              "output_tokens": 1674
+            },
+            "wall_clock_ms": 20579,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 1648,
+          "cached_input_tokens": 19008,
+          "output_tokens": 238
+        },
+        "spend_usd": 0.00829648
+      },
+      "snapshot": {
+        "hash": "1775e25169072d7a6d6daeafd75475cedd613b89c87ee1d1e439f7646ec91f01",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-4"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-2.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 4,
+      "op_kind": "rename_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "The business now calls Promotion \"Resource\" — update accordingly."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 7,
+          "carried_total": 0,
+          "novel_red": 6,
+          "novel_records": [
+            {
+              "title": "Creating a Category returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Category without name is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Category without resource_id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Category persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Category removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Category increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Filtering categories by resource_id returns only matching rows",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Category without name is rejected"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 30,
+        "cumulative_total": 36
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 6,
+      "smoke_readiness_failures": 3,
+      "archive": {
+        "attempted": true,
+        "change_name": "link-category-to-resource",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 23,
+          "scenarios_after": 25,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category without resource_id is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Listing Category records",
+              "scenario": "Filtering categories by resource_id returns only matching rows"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category returns the stored entity"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category without name is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Deleting a Category",
+              "scenario": "Deleting a Category removes it"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Listing Category records",
+              "scenario": "Creating a Category increases the list count"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Updating a Category",
+              "scenario": "Updating a Category persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Category:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "POST /categories",
+              "found": "scenario: Creating a Category without resource_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "POST /resources",
+              "found": "scenario: Creating a Resource returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:read",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "GET /resources/{id}",
+              "found": "scenario: Creating a Resource returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:list",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "GET /resources",
+              "found": "scenario: Creating a Resource increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "PUT /resources/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "DELETE /resources/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Resource:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/resources/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Resource:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/resources/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.resource_id",
+            "semantic_item_uid": "uid-task-field-9",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Resource\",\"required\":false,\"type\":\"ref\"}",
+              "found": "{\"ref_entity\":\"Resource\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Resource.discount_percent",
+            "semantic_item_uid": "code-only:field:Resource.discount_percent",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Resource.discount_percent.range",
+            "semantic_item_uid": "code-only:rule:Resource.discount_percent.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 4,
+            "coverage_gap": 4,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 25,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Category without resource_id is rejected",
+              "Creating a Resource without name is rejected",
+              "Creating a Resource with an invalid discount_percent is rejected",
+              "Creating a Widget without summary is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without resource_id is rejected",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 25,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec and context files were accurate and internally consistent — the schema, registry, seed data, and spec files all matched each other and the server's data-driven behavior.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/link-category-to-resource/proposal.md",
+          "openspec/changes/link-category-to-resource/tasks.md",
+          "openspec/changes/link-category-to-resource/specs/categories/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 11,
+        "tokens": {
+          "fresh_input_tokens": 22395,
+          "cached_input_tokens": 190848,
+          "output_tokens": 25046
+        },
+        "wall_clock_ms": 395147,
+        "spend_usd": 0.19117588,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 14788,
+              "cached_input_tokens": 15872,
+              "output_tokens": 16018
+            },
+            "wall_clock_ms": 237515,
+            "spec_authoring_tokens": 1230,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 47
+          },
+          "implementation": {
+            "turns": 9,
+            "tokens": {
+              "fresh_input_tokens": 7607,
+              "cached_input_tokens": 174976,
+              "output_tokens": 9028
+            },
+            "wall_clock_ms": 147864,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 36,
+          "cached_input_tokens": 22720,
+          "output_tokens": 162
+        },
+        "spend_usd": 0.0066704
+      },
+      "snapshot": {
+        "hash": "fe731a27c9553ab31523a378f9bb404e31ea949e610405fb4b37a7ba58fc7199",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-5"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "smoke-6.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 5,
+      "op_kind": "add_relationship",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Every Category should be linkable to a Resource going forward."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 30,
+        "cumulative_total": 36
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Category:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "POST /categories",
+              "found": "scenario: Creating a Category without resource_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:create",
+            "semantic_item_uid": "uid-task-endpoint-4",
+            "detail": {
+              "expected": "POST /resources",
+              "found": "scenario: Creating a Resource returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:read",
+            "semantic_item_uid": "uid-task-endpoint-5",
+            "detail": {
+              "expected": "GET /resources/{id}",
+              "found": "scenario: Creating a Resource returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:list",
+            "semantic_item_uid": "uid-task-endpoint-8",
+            "detail": {
+              "expected": "GET /resources",
+              "found": "scenario: Creating a Resource increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "PUT /resources/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Resource:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "DELETE /resources/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Resource:update",
+            "semantic_item_uid": "uid-task-endpoint-6",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/resources/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Resource:delete",
+            "semantic_item_uid": "uid-task-endpoint-7",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/resources/{id}\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.resource_id",
+            "semantic_item_uid": "uid-task-field-9",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Resource\",\"required\":false,\"type\":\"ref\"}",
+              "found": "{\"ref_entity\":\"Resource\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Resource.discount_percent",
+            "semantic_item_uid": "code-only:field:Resource.discount_percent",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Resource.discount_percent.range",
+            "semantic_item_uid": "code-only:rule:Resource.discount_percent.range",
+            "detail": {
+              "found": "{\"max\":100,\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 4,
+            "coverage_gap": 4,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 25,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Category without resource_id is rejected",
+              "Creating a Resource without name is rejected",
+              "Creating a Resource with an invalid discount_percent is rejected",
+              "Creating a Widget without summary is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category without resource_id is rejected",
+              "Updating a Category persists the change",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without resource_id is rejected",
+              "Filtering categories by resource_id returns only matching rows",
+              "Creating a Resource returns the stored entity",
+              "Creating a Resource increases the list count",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 25,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes — one notable inaccuracy: the `rename-promotion-to-resource` change was supposed to *replace* the `promotions` capability with a `resources` capability, but after archiving, both still exist. The `promotions` spec now describes `/resources` endpoints under stale requirement titles (\"Creating a Promotion\", \"Listing Promotion records\") while a separate `resources` spec also covers the same endpoints. Additionally, both specs have \"TBD\" Purpose fields that were never updated. This is a spec hygiene issue, not a behavior break — the implementation itself matches all scenarios.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 6,
+        "tokens": {
+          "fresh_input_tokens": 17278,
+          "cached_input_tokens": 87552,
+          "output_tokens": 14830
+        },
+        "wall_clock_ms": 809089,
+        "spend_usd": 0.11220472,
+        "by_phase": {
+          "spec": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 17095,
+              "cached_input_tokens": 52224,
+              "output_tokens": 14696
+            },
+            "wall_clock_ms": 785199,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 26,
+            "oracle_feedback_tokens": 15
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 183,
+              "cached_input_tokens": 35328,
+              "output_tokens": 134
+            },
+            "wall_clock_ms": 7478,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 34,
+          "cached_input_tokens": 17792,
+          "output_tokens": 751
+        },
+        "spend_usd": 0.00797792
+      },
+      "snapshot": {
+        "hash": "fe731a27c9553ab31523a378f9bb404e31ea949e610405fb4b37a7ba58fc7199",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v2-m8-pilot-v2/seed-3/snapshots/e4_arm_h/task-6"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "gate-scenarios-1.json",
+        "hidden-oracle.json"
+      ],
+      "task_index": 6,
+      "op_kind": "noop_maintenance",
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "nl_request": "Do a quick review of current behavior against what's documented — flag anything that's actually broken."
+    }
+  ],
+  "usage_totals": {
+    "turns": 38,
+    "spend_usd": 0.90958364,
+    "wall_clock_ms": 2763617
+  },
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "status": "complete"
+}

@@ -1,0 +1,1046 @@
+{
+  "schema": "e4-v2-reasoning-observability-v1",
+  "classification": "pilot",
+  "route": {
+    "model": "glm-5.2",
+    "route_id": "direct-zhipu-api-key",
+    "endpoint": "https://api.z.ai/api/paas/v4/chat/completions",
+    "extra_body": {},
+    "disable_thinking": false,
+    "max_output_tokens": 32000
+  },
+  "checks": {
+    "calls_recorded": 73,
+    "reasoning_active_calls": 72,
+    "reasoning_active_4a": true,
+    "accounting_4b": [
+      "folded"
+    ],
+    "adjustment_needed": false,
+    "truncated_5iv": false
+  },
+  "per_call": [
+    {
+      "call": 0,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3654,
+        "reasoning_tokens": 3592,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3654) >= reasoning_tokens (3592) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 1,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2505,
+        "reasoning_tokens": 797,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2505) >= reasoning_tokens (797) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 2,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 158,
+        "reasoning_tokens": 108,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (158) >= reasoning_tokens (108) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 3,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 794,
+        "reasoning_tokens": 72,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (794) >= reasoning_tokens (72) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 4,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 32,
+        "reasoning_tokens": 27,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (32) >= reasoning_tokens (27) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 5,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 203,
+        "reasoning_tokens": 135,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (203) >= reasoning_tokens (135) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 6,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 4492,
+        "reasoning_tokens": 4437,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (4492) >= reasoning_tokens (4437) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 7,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2610,
+        "reasoning_tokens": 1656,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2610) >= reasoning_tokens (1656) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 8,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 789,
+        "reasoning_tokens": 185,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (789) >= reasoning_tokens (185) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 9,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 206,
+        "reasoning_tokens": 190,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (206) >= reasoning_tokens (190) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 10,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 392,
+        "reasoning_tokens": 322,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (392) >= reasoning_tokens (322) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 11,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3935,
+        "reasoning_tokens": 3732,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3935) >= reasoning_tokens (3732) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 12,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 33,
+        "reasoning_tokens": 20,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (33) >= reasoning_tokens (20) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 13,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2365,
+        "reasoning_tokens": 2181,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2365) >= reasoning_tokens (2181) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 14,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 450,
+        "reasoning_tokens": 396,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (450) >= reasoning_tokens (396) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 15,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 431,
+        "reasoning_tokens": 352,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (431) >= reasoning_tokens (352) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 16,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3456,
+        "reasoning_tokens": 3371,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3456) >= reasoning_tokens (3371) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 17,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1781,
+        "reasoning_tokens": 1750,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1781) >= reasoning_tokens (1750) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 18,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1239,
+        "reasoning_tokens": 186,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1239) >= reasoning_tokens (186) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 19,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 131,
+        "reasoning_tokens": 95,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (131) >= reasoning_tokens (95) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 20,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1529,
+        "reasoning_tokens": 26,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1529) >= reasoning_tokens (26) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 21,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 293,
+        "reasoning_tokens": 236,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (293) >= reasoning_tokens (236) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 22,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 199,
+        "reasoning_tokens": 141,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (199) >= reasoning_tokens (141) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 23,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 7356,
+        "reasoning_tokens": 7306,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (7356) >= reasoning_tokens (7306) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 24,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 199,
+        "reasoning_tokens": 171,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (199) >= reasoning_tokens (171) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 25,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 6951,
+        "reasoning_tokens": 5893,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (6951) >= reasoning_tokens (5893) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 26,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 970,
+        "reasoning_tokens": 78,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (970) >= reasoning_tokens (78) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 27,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 127,
+        "reasoning_tokens": 90,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (127) >= reasoning_tokens (90) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 28,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 535,
+        "reasoning_tokens": 451,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (535) >= reasoning_tokens (451) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 29,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2918,
+        "reasoning_tokens": 2872,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2918) >= reasoning_tokens (2872) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 30,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1206,
+        "reasoning_tokens": 187,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1206) >= reasoning_tokens (187) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 31,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2649,
+        "reasoning_tokens": 1640,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2649) >= reasoning_tokens (1640) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 32,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 80,
+        "reasoning_tokens": 54,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (80) >= reasoning_tokens (54) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 33,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1275,
+        "reasoning_tokens": 75,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1275) >= reasoning_tokens (75) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 34,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 31,
+        "reasoning_tokens": 26,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (31) >= reasoning_tokens (26) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 35,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 394,
+        "reasoning_tokens": 317,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (394) >= reasoning_tokens (317) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 36,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 4925,
+        "reasoning_tokens": 4833,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (4925) >= reasoning_tokens (4833) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 37,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3616,
+        "reasoning_tokens": 243,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3616) >= reasoning_tokens (243) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 38,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 217,
+        "reasoning_tokens": 204,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (217) >= reasoning_tokens (204) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 39,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1660,
+        "reasoning_tokens": 83,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1660) >= reasoning_tokens (83) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 40,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 179,
+        "reasoning_tokens": 126,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (179) >= reasoning_tokens (126) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 41,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 738,
+        "reasoning_tokens": 16,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (738) >= reasoning_tokens (16) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 42,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 21,
+        "reasoning_tokens": 16,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (21) >= reasoning_tokens (16) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 43,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 245,
+        "reasoning_tokens": 175,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (245) >= reasoning_tokens (175) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 44,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 9683,
+        "reasoning_tokens": 9617,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (9683) >= reasoning_tokens (9617) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 45,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3929,
+        "reasoning_tokens": 2760,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3929) >= reasoning_tokens (2760) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 46,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 648,
+        "reasoning_tokens": 57,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (648) >= reasoning_tokens (57) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 47,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 578,
+        "reasoning_tokens": 25,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (578) >= reasoning_tokens (25) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 48,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 303,
+        "reasoning_tokens": 237,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (303) >= reasoning_tokens (237) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 49,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 8188,
+        "reasoning_tokens": 7911,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (8188) >= reasoning_tokens (7911) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 50,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 42,
+        "reasoning_tokens": 29,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (42) >= reasoning_tokens (29) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 51,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1412,
+        "reasoning_tokens": 1198,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1412) >= reasoning_tokens (1198) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 52,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 253,
+        "reasoning_tokens": 211,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (253) >= reasoning_tokens (211) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 53,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 5,
+        "reasoning_tokens": 0,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (5) >= reasoning_tokens (0) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 54,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 368,
+        "reasoning_tokens": 283,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (368) >= reasoning_tokens (283) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 55,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 6111,
+        "reasoning_tokens": 6040,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (6111) >= reasoning_tokens (6040) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 56,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2392,
+        "reasoning_tokens": 1027,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2392) >= reasoning_tokens (1027) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 57,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 189,
+        "reasoning_tokens": 149,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (189) >= reasoning_tokens (149) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 58,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1718,
+        "reasoning_tokens": 85,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1718) >= reasoning_tokens (85) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 59,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 79,
+        "reasoning_tokens": 74,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (79) >= reasoning_tokens (74) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 60,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 237,
+        "reasoning_tokens": 180,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (237) >= reasoning_tokens (180) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 61,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 14780,
+        "reasoning_tokens": 14667,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (14780) >= reasoning_tokens (14667) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 62,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3281,
+        "reasoning_tokens": 2385,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3281) >= reasoning_tokens (2385) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 63,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 115,
+        "reasoning_tokens": 61,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (115) >= reasoning_tokens (61) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 64,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 772,
+        "reasoning_tokens": 35,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (772) >= reasoning_tokens (35) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 65,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 24,
+        "reasoning_tokens": 19,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (24) >= reasoning_tokens (19) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 66,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 301,
+        "reasoning_tokens": 236,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (301) >= reasoning_tokens (236) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 67,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 4401,
+        "reasoning_tokens": 4320,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (4401) >= reasoning_tokens (4320) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 68,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2624,
+        "reasoning_tokens": 1955,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2624) >= reasoning_tokens (1955) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 69,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 94,
+        "reasoning_tokens": 58,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (94) >= reasoning_tokens (58) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 70,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 1308,
+        "reasoning_tokens": 69,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (1308) >= reasoning_tokens (69) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 71,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 23,
+        "reasoning_tokens": 18,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (23) >= reasoning_tokens (18) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 72,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 147,
+        "reasoning_tokens": 90,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (147) >= reasoning_tokens (90) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    }
+  ]
+}
