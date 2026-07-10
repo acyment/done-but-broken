@@ -13,7 +13,7 @@ import { e4ProceduralRestV2Provider, type E4SubstrateConfig } from "../substrate
 import { E4_V2_ARM_POLICIES, validateE4V2RuntimeArmParity, type E4V2ArmRuntime } from "./arm-policy";
 import type { E4V2ArmId, E4V2SealedConstants } from "./constants";
 import { inspectE4V2Sequence } from "./inspect";
-import type { E4V2RunManifest, E4V2TaskRecord } from "./manifest";
+import type { E4V2RunManifest, E4V2TaskRecord, E4V3BoundaryStamp } from "./manifest";
 import { runE4V2Task, type E4V2SequenceSpendLedger } from "./runner";
 import {
   E4_PROVIDER_RETRY_POLICY_TEXT,
@@ -48,7 +48,11 @@ export type E4V2RunInput = {
   // v3-M3: presence switches the run to the three-arm product-loop shape — profile
   // e4-openspec-workflow-v2, the PM brief channel in every arm, and the product gate on
   // e4_arm_p. Absent for every v2 run.
-  v3?: { product_config: E4V3ProductGateConfig };
+  // v3-M6 gate commit: `constants_stamp` carries the v3 constants identity into every manifest's
+  // compatibility_boundary.v3 block (M5 flag 1). Optional at the type level so pre-stamp callers
+  // (fixture tests with draft configs) keep working; bin/e4-v3.ts always passes it, and pilot
+  // manifests without it fail validation.
+  v3?: { product_config: E4V3ProductGateConfig; constants_stamp?: E4V3BoundaryStamp };
 };
 
 const DRY_RUN_MODEL_IDENTITY = { preset: "fake-deterministic", model_id: "e4-fake-agent-v1", route_id: "none" };
@@ -151,7 +155,8 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
           substrate_seed: input.substrate_config.substrate_seed,
           task_count: input.substrate_config.task_count,
           op_mix: input.substrate_config.op_mix
-        }
+        },
+        ...(input.v3?.constants_stamp ? { v3: input.v3.constants_stamp } : {})
       },
       initial_snapshot: initialSnapshot,
       tasks: [],

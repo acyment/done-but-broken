@@ -84,11 +84,14 @@ describe("v3-M4: CLI classification gates (no run, no spend)", () => {
     return { exitCode, stderr };
   }
 
-  test("pilot is refused unconditionally until the v3-M6 gate", async () => {
-    const { exitCode, stderr } = await runCli(["--classification", "pilot", "--live", "--model", "x"]);
+  test("pilot without --live is refused (the unconditional refusal was lifted at the v3-M6 gate)", async () => {
+    // The v2-M7 lift pattern (3571a08): pilot is now gated as a live-model classification
+    // exactly like calibration; the lift is the v3-M6 gate commit's recorded action
+    // (docs/protocols/e4-v3-m6-pilot-preregistration-v1.md).
+    const { exitCode, stderr } = await runCli(["--classification", "pilot", "--run-root", "tmp/never"]);
 
     expect(exitCode).not.toBe(0);
-    expect(stderr).toContain("refused until the v3-M6 pre-registration gate");
+    expect(stderr).toContain("pilot runs are live-model runs");
   });
 
   test("calibration without --live and dry_run with --live are refused", async () => {

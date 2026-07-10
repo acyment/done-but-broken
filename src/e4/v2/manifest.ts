@@ -20,6 +20,24 @@ export type E4V2ReplayValidity = {
   chain_replay_valid: boolean;
 };
 
+// v3-M6 gate commit (E4V3-M5-BUDGET-CALIBRATION-NOTES.md flag 1): three-arm product-loop runs
+// stamp the v3 constants identity alongside the v2 one — the v3 file EXTENDS the frozen v2 file,
+// so the boundary is only fully identified by both hashes. Additive and optional at the type
+// level (historical v3-M5 calibration manifests predate it); REQUIRED on pilot-classified
+// manifests under the v2 profile (validation below) and read by the v3 verdict tool's predicate
+// (b).
+export type E4V3BoundaryStamp = {
+  constants_version: string;
+  constants_hash: string;
+  determinacy_table_id: string;
+  pm_brief_id: string;
+  reconciler_id: string;
+  mutation_harness_id: string;
+  pm_review_id: string;
+  product_gate_id: string;
+  turn_protocol_id: string;
+};
+
 export type E4V2RunManifest = {
   schema: "e4-v2-run-manifest";
   schema_version: "1";
@@ -47,6 +65,7 @@ export type E4V2RunManifest = {
       task_count: number;
       op_mix: { weights: Record<string, number> };
     };
+    v3?: E4V3BoundaryStamp;
   };
   initial_snapshot: { hash: string; path: string };
   tasks: E4V2TaskRecord[];
@@ -91,6 +110,20 @@ export function validateE4V2Manifest(raw: unknown): E4V2RunManifest {
 
   if (!manifest.compatibility_boundary?.constants_hash || !manifest.compatibility_boundary?.substrate_config) {
     throw new E4V2ManifestError("compatibility_boundary is incomplete");
+  }
+
+  // v3-M6 gate: evidence (pilot) manifests under the three-arm profile must stamp the v3
+  // constants identity. Dry-run and calibration manifests may omit it (the committed v3-M5
+  // calibration manifest predates the stamp), but the v3 verdict tool's predicate (b) reads it
+  // on every evidence manifest.
+  if (manifest.run_classification === "pilot" && manifest.protocol_profile_id === "e4-openspec-workflow-v2") {
+    const v3 = manifest.compatibility_boundary.v3;
+
+    if (!v3 || !/^[0-9a-f]{64}$/.test(v3.constants_hash ?? "") || typeof v3.constants_version !== "string") {
+      throw new E4V2ManifestError(
+        "pilot manifests under e4-openspec-workflow-v2 must stamp the v3 constants identity (compatibility_boundary.v3)"
+      );
+    }
   }
 
   if (

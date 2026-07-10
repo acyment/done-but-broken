@@ -14,8 +14,10 @@
 // Classification gates (bin/e4.ts → bin/e4-v2.ts precedent):
 //   dry_run      → fake providers only; --live refused.
 //   calibration  → live required; non-evidence by classification.
-//   pilot        → REFUSED UNCONDITIONALLY until the v3-M6 pre-registration gate lifts this
-//                  (the v2-M6 refusal + v2-M7 lift pattern; the lift is that gate's action).
+//   pilot        → live required. The unconditional refusal was lifted at the v3-M6
+//                  pre-registration gate commit (the v2-M7 lift pattern, 3571a08: the lift is
+//                  that gate commit's recorded action; spend still requires explicit operator
+//                  authorization per the sealed pre-registration).
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { E4_V2_CONSTANTS_PATH, loadE4V2Constants, type E4V2ArmId } from "../src/e4/v2/constants";
@@ -61,14 +63,8 @@ const extraBodyArg = argValue("--extra-body");
 const extraBody = extraBodyArg ? (JSON.parse(extraBodyArg) as Record<string, unknown>) : null;
 
 // ---- classification gates (checked before any workspace/provider setup) ----
-if (classification === "pilot") {
-  throw new Error(
-    "v3 pilot runs are refused until the v3-M6 pre-registration gate lifts this refusal (v2-M6/M7 precedent: the lift is that gate commit's recorded action)"
-  );
-}
-
-if (classification === "calibration" && !live) {
-  throw new Error("calibration runs are live-model runs: pass --live");
+if ((classification === "calibration" || classification === "pilot") && !live) {
+  throw new Error(`${classification} runs are live-model runs: pass --live`);
 }
 
 if (classification === "dry_run" && live) {
@@ -144,7 +140,16 @@ const result = await runE4V2Sequences({
   providerFactory,
   executor_config: constants.executor,
   model: modelIdentity,
-  v3: { product_config: v3Constants.product_gate },
+  v3: {
+    product_config: v3Constants.product_gate,
+    // v3-M6 gate commit (M5 flag 1): every v3 manifest stamps the v3 constants identity —
+    // pilot manifests refuse to validate without it.
+    constants_stamp: {
+      constants_version: v3Constants.version,
+      constants_hash: v3Hash,
+      ...v3Constants.compatibility_boundary
+    }
+  },
   ...(arms ? { arms } : {}),
   ...(secrets.length > 0 ? { secrets } : {})
 });
