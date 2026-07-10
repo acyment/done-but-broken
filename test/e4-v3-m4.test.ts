@@ -18,7 +18,10 @@ import { e4ProceduralRestV2Provider } from "../src/e4/substrate/v2/provider";
 const REPO_ROOT = resolve(import.meta.dir, "..");
 
 // [v3-M4] v0 FREEZE: the full-file sha256 of the v3 constants file. Any edit is a new gate.
-const FROZEN_V3_CONSTANTS_SHA256 = "3610792788755d1002c8e27620f66aed678f2379386cad4d634b88efb9e12878";
+// [v3-M5] budgets RATIFIED UNCHANGED on glm-5.2 thinking-on (seed-37 e4_arm_p calibration, no
+// wall hit); version 0.1 -> 0.2 marks that ratification event. This hash is the v3 constants
+// identity a v3-M6 evidence run must be checked against.
+const FROZEN_V3_CONSTANTS_SHA256 = "aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a";
 
 describe("v3-M4: constants freeze", () => {
   test("[FREEZE] the v3 constants file hash is pinned", () => {
@@ -33,7 +36,7 @@ describe("v3-M4: constants freeze", () => {
       v2Path: join(REPO_ROOT, E4_V2_CONSTANTS_PATH)
     });
 
-    expect(constants.version).toBe("0.1");
+    expect(constants.version).toBe("0.2");
     expect(constants.product_gate.mutation_kill_floor).toBeCloseTo(5 / 6, 10);
     expect(constants.product_gate.blocking_checks).not.toContain("field_never_exercised");
     // the sealed ids match the modules' own exported ids
