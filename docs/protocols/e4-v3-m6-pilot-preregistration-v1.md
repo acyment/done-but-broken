@@ -1,10 +1,11 @@
 # E4 v3-M6 evidence run — pre-registration (v1)
 
-**Status: DRAFT — NOT SEALED. This document was drafted before any v3 evidence data exists.
-Sealing is a separate operator act (a commit flipping only this header, the `f1894f9`/`7e9d84d`
-pattern); the evidence run's spend requires its own separate explicit operator authorization.
-Nothing below changes after sealing; deviations, if any, are recorded in the run report as
-deviations — never edited in here.** Naming and discipline follow the M7/M8 precedent
+**Status: SEALED 2026-07-10 (operator-reviewed and approved as-is — directive "seal as-is",
+ratifying the three [SEAL-CONFIRM] items below; this commit is the sealing act, flipping only
+this header per the `f1894f9`/`7e9d84d` pattern; the evidence run's spend requires its own
+separate explicit operator authorization and is NOT authorized by this seal). This document was
+drafted before any v3 evidence data exists. Nothing below changes after sealing; deviations, if
+any, are recorded in the run report as deviations — never edited in here.** Naming and discipline follow the M7/M8 precedent
 (`e4-v2-m7-pilot-preregistration-v1.md`, `e4-v2-m8-pilot-preregistration-v2.md`): seeds,
 predicates, and interpretation are fixed here, pre-data, and the verdict tool is the only claim
 source.
