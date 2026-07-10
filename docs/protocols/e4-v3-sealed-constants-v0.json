@@ -1,0 +1,47 @@
+{
+  "schema": "e4-v3-sealed-constants",
+  "version": "0.1",
+  "protocol_profile_id": "e4-openspec-workflow-v2",
+  "arms": [
+    "e4_arm_0",
+    "e4_arm_h",
+    "e4_arm_p"
+  ],
+  "extends": {
+    "v2_constants_path": "docs/protocols/e4-v2-sealed-constants-v0.json",
+    "v2_constants_hash": "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c"
+  },
+  "compatibility_boundary": {
+    "determinacy_table_id": "e4-request-determinacy-v1",
+    "pm_brief_id": "e4-pm-brief-v1",
+    "reconciler_id": "e4-spec-code-reconciler-v1",
+    "mutation_harness_id": "e4-agent-boundary-mutation-v1",
+    "pm_review_id": "e4-pm-review-v1",
+    "product_gate_id": "e4-product-gate-v1",
+    "turn_protocol_id": "e4-turn-protocol-v2"
+  },
+  "product_gate": {
+    "mutation_kill_floor": 0.8333333333333334,
+    "blocking_checks": [
+      "route_without_scenario",
+      "scenario_route_absent",
+      "rule_without_rejection_scenario",
+      "rejection_scenario_without_rule",
+      "scenario_field_unknown",
+      "scenario_floor",
+      "create_round_trip_missing",
+      "rejection_case_missing"
+    ]
+  },
+  "code_twins": {
+    "src/e4/v3/task-delta.ts": "f4c6e369ae247780a9945415cee000ec8f235c1c8f7c8521b568877aee83b168",
+    "src/e4/v3/ambiguity.ts": "e8eb672987629edeaf9af63f983373b96c0e1ebfcb2cc9161d967ba007ea861a",
+    "src/e4/v3/pm-brief.ts": "107ba8ab76a55b0eb94e68c6b928c139d01fa7cee5ced32264545a9a9e11c2d9",
+    "src/e4/v3/reconcile.ts": "7593d793bbf51eb769da0440115452746ef97300c6ef899c532554ac96480a9e",
+    "src/e4/v3/mutation.ts": "2f9bc2be817935046ae47d11f76ec7a04e5ba7b69ec7a331f5b7481694426f07",
+    "src/e4/v3/pm-review.ts": "b56c6e3f00518a40f7070c57e2f98450a9708a733ed4ca31737f2380e3e65f9d",
+    "src/e4/v3/product-gate.ts": "88c69b90bfb74d8927057e3bbc473ba5fab5c197efaa0ca2650f24abefa6ee84",
+    "src/e4/v3/turn-protocol.ts": "01b1eed1886b56e39cbe9d2319a0059b69c316b0ead5266f5062a540e419ef88"
+  },
+  "budgets_note": "Budgets for v3 runs carry PROVISIONALLY from the v2 v0.3 file (27 turns / 12 verifications / 490000 tokens / $5 cap). The product gate changes per-task appetite; the v3-M5 calibration must re-ratify or adjust-once on the pilot model before any evidence run. The ASK_PM and product-gate protocol texts are sealed via the code_twins over turn-protocol.ts and product-gate.ts."
+}
