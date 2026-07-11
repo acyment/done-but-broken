@@ -32,4 +32,26 @@ the learning level; stop spending and redesign.
 
 ## Rungs
 
-(none run yet — L1 awaits operator authorization)
+### exp01 — L1 grind-dissolution probe: **PASS** (2026-07-11)
+
+- Authorization: operator "authorized" (this rung only). Command: `bin/e4-v3.ts --seed 7
+  --tasks 3 --arms e4_arm_p --live --classification calibration --model glm-5.2
+  --budget-override '{"spend_cap_usd":0.75,"token_budget":240000}'` (M6 route defaults),
+  detached via the shim. Run root `tmp/e4-v3-learning/exp01-L1-seed-7`; report JSON
+  `docs/protocols/e4-v3-learning-exp01-report.json`. Spend **$0.268** / cap $0.75; 19 turns;
+  replay-valid; thinking-on checks clean (22/22 active, folded, no truncation).
+- **Question:** with stderr/abort-hint feedback + the tombstone README, do rename tasks exit
+  the spec phase? **Answer: yes — decisively.** 3/3 tasks closed `done`, zero spec-phase
+  walls; the rename task passed custody after **2** failures (M6 same-op arm_p: 10–17 and
+  death) and its archived change uses the **exact README tombstone pattern** (ADDED "Retired
+  widgets endpoints" + REMOVED all six prior requirements) — a pattern never produced in any
+  M6 arm. Product gate engaged at the close: 2 reconcile refusals on task 1, then a revised
+  accepted close (a live refusal→revision cycle, one of the graduation ingredients).
+- **The other face:** with walls gone the arm runs green-and-weak — fc 3/3 (oracle 11/26–27:
+  implementation diverged from hidden gold while its own scenarios stayed green), drift
+  burden 18→22. Grind was substantially the harness feedback defect; honesty-at-close is now
+  cleanly the open question. Also supports reading the M6 velocity inversion as partly
+  harness-artifact.
+- **Decision: proceed to L2** (arm_0 + arm_p, same seed-class hard seed, matched pairs at the
+  close). Seed 7 is now live-consumed; L2 uses a fresh hard seed (candidates: 13 or 17;
+  12 reserved as double-rename stress).
