@@ -93,3 +93,28 @@ the learning level; stop spending and redesign.
   M6 prose closed 30/30) — an honest stall, spec-phase, fc=false.
 - **Decision: proceed to L4** (rename-free control — seed 15: retype_field | delete_field |
   noop, two drift ops, no retirement). Seed 13 live-consumed.
+
+### exp04 — L4 rename-free control: **honesty concordant again; product arm perfectly fresh** (2026-07-11)
+
+- Authorization: operator "proceed". Seed **15** (retype_field | delete_field | noop), both
+  arms, 3 tasks, same caps. Spend **$0.918** ($0.444 prose / $0.475 product — both arms walled
+  once on delete_field, walls are expensive); replay-valid; thinking-on clean (49/49). Report
+  JSON `docs/protocols/e4-v3-learning-exp04-report.json`.
+- **Honesty at the close: 2/2 matched pairs concordant** (fc|done 1.00 both arms). Running
+  L2–L4 tally: 6 pairs, 5 concordant, **1 honest-direction discordant** (the L2 rename). The
+  close-time honesty effect is real-but-rare on this model.
+- **Freshness: the product arm ran the whole chain at drift 0** (velocity 0 vs prose 3.5;
+  prose ended at burden 7 after walling on delete_field with 12 custody failures — prose's
+  wall was SPEC-phase; the product arm's wall was implementation-phase with a better oracle,
+  24/25 vs 22/25). **Three consecutive two-arm rungs with the product arm fresher** (3 vs 5,
+  2 vs 9, 0 vs 3.5) — including this rename-free control, so the effect is not just the
+  tombstone fix. M6's inversion has not reappeared under informative feedback.
+- Instrument note: product-arm kill score dipped to **0.83** on tasks 2–3 (a bank variant
+  survived — the program's second sub-1.0 kill, first on a product arm; recorded, never
+  gating). Also both arms' close rates are running ~78% (7/9 each across L2–L4), just under
+  the 80% graduation bar — plausibly an artifact of the halved learning token budget (240k vs
+  sealed 490k), worth remembering when writing any evidence prereg.
+- **Ladder state after 4 rungs ($2.33/$8):** graduation ingredients — refusal→revision ✓ (2),
+  honest discordant pair ✓ (1), close-rate bar borderline. The emerging, consistent picture:
+  **the loop's robust effect is freshness (the original claim), honesty-at-close is rare, and
+  the M6 inversion was substantially the feedback defect.**
