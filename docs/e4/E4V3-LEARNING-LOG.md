@@ -118,3 +118,41 @@ the learning level; stop spending and redesign.
   honest discordant pair ✓ (1), close-rate bar borderline. The emerging, consistent picture:
   **the loop's robust effect is freshness (the original claim), honesty-at-close is rare, and
   the M6 inversion was substantially the feedback defect.**
+
+### exp05 — L5 delete_entity coverage: **both arms perfect; LADDER GRADUATES** (2026-07-11)
+
+- Authorization: operator "l5". Seed **1** (add_entity | noop | delete_entity — pure
+  retirement, end of chain), both arms, 3 tasks, same caps. Spend **$0.685** ($0.270 prose /
+  $0.415 product); replay-valid; thinking-on clean (48/48). Report JSON
+  `docs/protocols/e4-v3-learning-exp05-report.json`.
+- **Both arms ran the chain perfectly**: 6/6 closes, hidden oracle fully green at every close,
+  drift 0 everywhere, zero false confidence, 3/3 matched pairs honestly concordant. The
+  delete_entity retirement archived cleanly in both arms post-fix — the second retirement op
+  is covered, with no counter-signal (freshness tied at zero; nothing to separate when both
+  are perfect).
+- **Final ladder tallies (5 rungs, $3.02 of $8):** matched pairs 9 — 8 concordant, 1
+  honest-direction discordant (L2 rename, truth-repair); close rates arm 0 **10/12 (83%)**,
+  arm p **10/12 (83%)**; refusal→revision cycles 2; freshness: product fresher on all 3 rungs
+  where separation was possible, tied on L5; spec-phase walls post-fix: product arm **0 in 15
+  live tasks** (M6: 8 in 30). **All four graduation criteria are met** (≥80% closes both arms,
+  ≥1 refusal→revision, ≥1 honest-direction discordant pair, cost ≤$1.5/rung).
+- **GRADUATION DECISION: the ladder recommends writing the new evidence pre-registration on
+  the v0.4/v0.3 boundary** — hierarchical predicates (freshness/velocity as PRIMARY at sealed
+  budgets, conditional-on-close false confidence + matched-pair concordance as first-class
+  pre-registered secondaries), fresh seeds (all of {1,7,13,15,17} + the 20 prior seeds
+  excluded), sealed-budget runs (the 240k learning cap likely depressed close rates). Drafting
+  the prereg is a docs-only gate act; sealing and spend are separate operator acts.
+
+## Ladder learning summary (all classification `calibration` — no claim weight)
+
+1. The M6 rename death-spirals were substantially a **harness feedback defect** (empty
+   validate errors, hidden archive hints, undocumented tombstone) — fixed at `ae4169d`,
+   L1 confirmed dissolution decisively.
+2. With informative feedback, **the product loop keeps the spec fresher than prose review**
+   on every seed where the arms separated — the direction M6 inverted.
+3. **Honesty at the close remains rare** (1/9 pairs): when this model's own gate is green it
+   closes, truthful or not, in every arm. The gate's honesty contribution is mostly refusing
+   weak closes (2 refusal→revision cycles), occasionally producing genuine truth-repair.
+4. The M6 verdict structure (go-on-honesty, inverted-on-freshness) is likely close to
+   backwards of the post-fix reality (strong-on-freshness, rare-honesty) — a powered evidence
+   run under the new boundary decides.
