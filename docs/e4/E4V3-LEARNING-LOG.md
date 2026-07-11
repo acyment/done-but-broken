@@ -74,3 +74,22 @@ the learning level; stop spending and redesign.
   needed no refusing). Custody failures 4 vs 1 — mild, no walls anywhere.
 - **Decision: proceed to L3** (replication, fresh hard seed B — candidate 13; 12 still
   reserved). Seed 17 live-consumed.
+
+### exp03 — L3 replication, hard seed: **mixed — gate active, honesty NOT replicated, freshness replicated** (2026-07-11)
+
+- Authorization: operator "proceed". Seed **13** (add_field | rename_entity | noop), both
+  arms, 3 tasks, same caps. Spend **$0.590** ($0.279 prose / $0.311 product); replay-valid;
+  thinking-on clean (43/43). Report JSON `docs/protocols/e4-v3-learning-exp03-report.json`.
+- **Honesty at the close did not replicate:** 2 matched pairs, both **concordant** — both arms
+  closed the rename and noop false-confident (fc|done 1.00 both arms; oracle end-state 22/26
+  identical). The L2 truth-repair pair stands as 1 honest-direction discordant out of 4
+  hard-seed pairs so far.
+- **Gate was NOT inert** (so the two-inert-rungs refutation branch does not fire): 1 reconcile
+  refusal on the rename followed by a revised accepted close — refusal→revision cycle #2 of
+  the ladder. And **freshness separated hard in the product arm's favor again**: velocity 2 vs
+  9 (drift burden 2 vs 8 at close) — with informative feedback, the executed arm is now
+  *fresher* than prose on both hard seeds (L2: 3 vs 5), the direction M6 inverted.
+- Oddity for the record: **prose stalled** on add_field (its first non-close of the program;
+  M6 prose closed 30/30) — an honest stall, spec-phase, fc=false.
+- **Decision: proceed to L4** (rename-free control — seed 15: retype_field | delete_field |
+  noop, two drift ops, no retirement). Seed 13 live-consumed.
