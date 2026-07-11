@@ -1,0 +1,2391 @@
+{
+  "schema": "e4-v2-run-manifest",
+  "schema_version": "1",
+  "run_classification": "pilot",
+  "protocol_profile_id": "e4-openspec-workflow-v2",
+  "arm": "e4_arm_0",
+  "arm_mode": "prose",
+  "pairing_label": "pair-pilot-seed-62",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "glm-5.2",
+    "route_id": "direct-zhipu-api-key"
+  },
+  "compatibility_boundary": {
+    "constants_version": "0.3",
+    "constants_hash": "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1",
+    "substrate_config": {
+      "substrate_config_id": "v2-default",
+      "substrate_seed": 62,
+      "task_count": 6,
+      "op_mix": {
+        "weights": {
+          "drift_opportunity": 0.5,
+          "additive": 0.4,
+          "behavior_preserving": 0.1
+        }
+      }
+    },
+    "v3": {
+      "constants_version": "0.2",
+      "constants_hash": "aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a",
+      "determinacy_table_id": "e4-request-determinacy-v1",
+      "pm_brief_id": "e4-pm-brief-v1",
+      "reconciler_id": "e4-spec-code-reconciler-v1",
+      "mutation_harness_id": "e4-agent-boundary-mutation-v1",
+      "pm_review_id": "e4-pm-review-v1",
+      "product_gate_id": "e4-product-gate-v1",
+      "turn_protocol_id": "e4-turn-protocol-v2"
+    }
+  },
+  "initial_snapshot": {
+    "hash": "f6e4f974a36124afa0c44f2fe05693a1b5d9e766da5bff269d23d39a92cfd711",
+    "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-0"
+  },
+  "tasks": [
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 1,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "prose_recorded",
+          "novel_total": 6,
+          "carried_total": 0,
+          "novel_red": null,
+          "novel_records": [],
+          "green_novel_titles": [],
+          "prior_green": null
+        }
+      },
+      "oracle": {
+        "delta_pass": 9,
+        "delta_total": 9,
+        "cumulative_pass": 35,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "add-supplier-resource",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 23,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "suppliers",
+              "requirement": "Creating a Supplier",
+              "scenario": "Creating a Supplier returns the stored entity"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Creating a Supplier",
+              "scenario": "Creating a Supplier without name is rejected"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Deleting a Supplier",
+              "scenario": "Deleting a Supplier removes it"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Fetching a Supplier",
+              "scenario": "Fetching a missing Supplier returns not found"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Listing Supplier records",
+              "scenario": "Creating a Supplier increases the list count"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Updating a Supplier",
+              "scenario": "Updating a Supplier persists the change"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 23,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Supplier without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 23,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec/context files were accurate and internally consistent. The server.ts dispatcher is genuinely data-driven from registry.ts/schema.ts/seed.ts, the Category resource served as a clean template for Supplier, seed counts matched the list-length assertions (2 seed + 1 created = 3), and the scenario grammar in README.md matched the existing specs. The smoke run passed on the first attempt after adding the Supplier schema, seed, and routes.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/add-supplier-resource/proposal.md",
+          "openspec/changes/add-supplier-resource/tasks.md",
+          "openspec/changes/add-supplier-resource/specs/suppliers/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 7,
+        "tokens": {
+          "fresh_input_tokens": 13016,
+          "cached_input_tokens": 60288,
+          "output_tokens": 5840
+        },
+        "wall_clock_ms": 118648,
+        "spend_usd": 0.05959328,
+        "by_phase": {
+          "spec": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 10339,
+              "cached_input_tokens": 27904,
+              "output_tokens": 4133
+            },
+            "wall_clock_ms": 76771,
+            "spec_authoring_tokens": 1872,
+            "gate_protocol_interaction_tokens": 47,
+            "oracle_feedback_tokens": 5,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 2677,
+              "cached_input_tokens": 32384,
+              "output_tokens": 1707
+            },
+            "wall_clock_ms": 29776,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 36,
+          "cached_input_tokens": 12736,
+          "output_tokens": 264
+        },
+        "spend_usd": 0.00452336
+      },
+      "snapshot": {
+        "hash": "d5e53f87d113fb42d1516a04725b29d9a59434cf067bdeaa136b7790f053c82a",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-1"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": null,
+      "task_index": 1,
+      "op_kind": "add_entity",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "We're launching Supplier as a new resource — customers need to be able to track it."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 6,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "prose_recorded",
+          "novel_total": 17,
+          "carried_total": 0,
+          "novel_red": null,
+          "novel_records": [],
+          "green_novel_titles": [],
+          "prior_green": null
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 32,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "rebrand-category-as-listing",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 23,
+          "scenarios_after": 24,
+          "dropped_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category returns the stored entity"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category without name is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Deleting a Category",
+              "scenario": "Deleting a Category removes it"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Fetching a Category",
+              "scenario": "Fetching a missing Category returns not found"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Listing Category records",
+              "scenario": "Creating a Category increases the list count"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Updating a Category",
+              "scenario": "Updating a Category persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by category_id returns only matching rows"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Listing returns the stored entity"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Listing without name is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Deleting a Category",
+              "scenario": "Deleting a Listing removes it"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Fetching a Category",
+              "scenario": "Fetching a missing Listing returns not found"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Listing Category records",
+              "scenario": "Creating a Listing increases the list count"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Updating a Category",
+              "scenario": "Updating a Listing persists the change"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Listing endpoint availability",
+              "scenario": "Listing endpoint returns seeded rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by listing_id returns only matching rows"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /widgets/{id}",
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /widgets/{id}",
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /widgets",
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /widgets/stats",
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "uid-base-field-widget-category-id",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.listing_id",
+            "semantic_item_uid": "code-only:field:Widget.listing_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 24,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing without name is rejected",
+              "Creating a Supplier without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Filtering widgets by listing_id returns only matching rows"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 24,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate. They consistently described a Category resource with `/categories` endpoints, `category_id` fields in widgets, and `category-seed-*` identifiers throughout the specs, schema, seed, and registry. The task simply required rebranding all of those to Listing — there were no inconsistencies or errors in the provided state.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rebrand-category-as-listing/proposal.md",
+          "openspec/changes/rebrand-category-as-listing/tasks.md",
+          "openspec/changes/rebrand-category-as-listing/specs/categories/spec.md",
+          "openspec/changes/rebrand-category-as-listing/specs/listings/spec.md",
+          "openspec/changes/rebrand-category-as-listing/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 10,
+        "tokens": {
+          "fresh_input_tokens": 21172,
+          "cached_input_tokens": 145536,
+          "output_tokens": 53925
+        },
+        "wall_clock_ms": 903567,
+        "spend_usd": 0.30475016000000005,
+        "by_phase": {
+          "spec": {
+            "turns": 8,
+            "tokens": {
+              "fresh_input_tokens": 18418,
+              "cached_input_tokens": 106944,
+              "output_tokens": 51844
+            },
+            "wall_clock_ms": 858410,
+            "spec_authoring_tokens": 6768,
+            "gate_protocol_interaction_tokens": 156,
+            "oracle_feedback_tokens": 5,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 2754,
+              "cached_input_tokens": 38592,
+              "output_tokens": 2081
+            },
+            "wall_clock_ms": 30380,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 129,
+          "cached_input_tokens": 21440,
+          "output_tokens": 479
+        },
+        "spend_usd": 0.0078626
+      },
+      "snapshot": {
+        "hash": "d6c54a6ae1eb177d3475302cff9832b1b537c81ae561ea708ea2fd0963699262",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-2"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": null,
+      "task_index": 2,
+      "op_kind": "rename_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Rebrand Category as Listing everywhere it appears to customers."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 32,
+        "cumulative_total": 35
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /widgets/{id}",
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /widgets/{id}",
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /widgets",
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /widgets/stats",
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "uid-base-field-widget-category-id",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.listing_id",
+            "semantic_item_uid": "code-only:field:Widget.listing_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 24,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing without name is rejected",
+              "Creating a Supplier without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Filtering widgets by listing_id returns only matching rows"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Deleting a Supplier removes it",
+              "Creating a Supplier increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Supplier returns the stored entity",
+              "Updating a Supplier persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 24,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The `categories` capability spec is a stale artifact of the rebrand: its Purpose and requirement names still say \"Category\" (e.g., \"Creating a Category\", \"Fetching a Category\"), but all its scenarios actually hit `/listings` endpoints and describe Listing behavior. Meanwhile the `listings` capability spec only contains the list-endpoint scenario. So the full Listing CRUD is documented under the wrong capability name with stale headers — confusing, though not a behavior bug.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 15261,
+          "cached_input_tokens": 61568,
+          "output_tokens": 17022
+        },
+        "wall_clock_ms": 316613,
+        "spend_usd": 0.11226988,
+        "by_phase": {
+          "spec": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 14675,
+              "cached_input_tokens": 30848,
+              "output_tokens": 16867
+            },
+            "wall_clock_ms": 297377,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 26,
+            "oracle_feedback_tokens": 15,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 586,
+              "cached_input_tokens": 30720,
+              "output_tokens": 155
+            },
+            "wall_clock_ms": 8868,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 56,
+          "cached_input_tokens": 15680,
+          "output_tokens": 355
+        },
+        "spend_usd": 0.0057172
+      },
+      "snapshot": {
+        "hash": "d6c54a6ae1eb177d3475302cff9832b1b537c81ae561ea708ea2fd0963699262",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-3"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": null,
+      "task_index": 3,
+      "op_kind": "noop_maintenance",
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "nl_request": "Do a quick review of current behavior against what's documented — flag anything that's actually broken."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 1,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "prose_recorded",
+          "novel_total": 2,
+          "carried_total": 0,
+          "novel_red": null,
+          "novel_records": [],
+          "green_novel_titles": [],
+          "prior_green": null
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 23,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "remove-supplier-resource",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 24,
+          "scenarios_after": 20,
+          "dropped_scenarios": [
+            {
+              "spec": "suppliers",
+              "requirement": "Creating a Supplier",
+              "scenario": "Creating a Supplier returns the stored entity"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Creating a Supplier",
+              "scenario": "Creating a Supplier without name is rejected"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Deleting a Supplier",
+              "scenario": "Deleting a Supplier removes it"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Fetching a Supplier",
+              "scenario": "Fetching a missing Supplier returns not found"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Listing Supplier records",
+              "scenario": "Creating a Supplier increases the list count"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Updating a Supplier",
+              "scenario": "Updating a Supplier persists the change"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "suppliers",
+              "requirement": "Supplier endpoints are removed",
+              "scenario": "Creating a Supplier is no longer possible"
+            },
+            {
+              "spec": "suppliers",
+              "requirement": "Supplier endpoints are removed",
+              "scenario": "Requesting a Supplier endpoint returns not found"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /widgets/{id}",
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /widgets/{id}",
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /widgets",
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /widgets/stats",
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "uid-base-field-widget-category-id",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.listing_id",
+            "semantic_item_uid": "code-only:field:Widget.listing_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 20,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Filtering widgets by listing_id returns only matching rows"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 20,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "The specs accurately reflected the code behavior. One notable inconsistency: the `categories` capability spec describes `/listings` endpoints (a leftover from the rebrand), and both `listings/spec.md` and `suppliers/spec.md` had placeholder \"TBD\" Purpose lines that were never updated after archiving. These are cosmetic/spec-hygiene issues rather than behavioral inaccuracies.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/remove-supplier-resource/proposal.md",
+          "openspec/changes/remove-supplier-resource/tasks.md",
+          "openspec/changes/remove-supplier-resource/specs/suppliers/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 6,
+        "tokens": {
+          "fresh_input_tokens": 18242,
+          "cached_input_tokens": 82048,
+          "output_tokens": 7289
+        },
+        "wall_clock_ms": 130468,
+        "spend_usd": 0.07894287999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 15817,
+              "cached_input_tokens": 30848,
+              "output_tokens": 5957
+            },
+            "wall_clock_ms": 90890,
+            "spec_authoring_tokens": 1948,
+            "gate_protocol_interaction_tokens": 47,
+            "oracle_feedback_tokens": 5,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 2425,
+              "cached_input_tokens": 51200,
+              "output_tokens": 1332
+            },
+            "wall_clock_ms": 23565,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 63,
+          "cached_input_tokens": 18688,
+          "output_tokens": 497
+        },
+        "spend_usd": 0.00713388
+      },
+      "snapshot": {
+        "hash": "8142923481c764756448fc6487a18111eb9fc1d14587b78b1bcdba345cc4c455",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-4"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": null,
+      "task_index": 4,
+      "op_kind": "delete_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "We no longer need Supplier; take it out of the system."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "prose_recorded",
+          "novel_total": 10,
+          "carried_total": 0,
+          "novel_red": null,
+          "novel_records": [],
+          "green_novel_titles": [],
+          "prior_green": null
+        }
+      },
+      "oracle": {
+        "delta_pass": 2,
+        "delta_total": 2,
+        "cumulative_pass": 23,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "rename-price-to-summary",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 20,
+          "scenarios_after": 20,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal summary is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid summary is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by listing_id returns only matching rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /widgets/{id}",
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /widgets/{id}",
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /widgets",
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /widgets/stats",
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "uid-base-field-widget-category-id",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.listing_id",
+            "semantic_item_uid": "code-only:field:Widget.listing_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.summary.range",
+            "semantic_item_uid": "code-only:rule:Widget.summary.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 20,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal summary is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid summary is rejected",
+              "Filtering widgets by listing_id returns only matching rows"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 20,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "The `openspec/specs/categories/spec.md` is misleading: its Purpose and requirement titles still say \"Category\" while all scenarios hit `/listings` endpoints — a leftover from the archived rebrand change. The actual HTTP behavior described is accurate; only the naming is stale. Everything else (schema, seed, registry, server, other specs) was consistent.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-price-to-summary/proposal.md",
+          "openspec/changes/rename-price-to-summary/tasks.md",
+          "openspec/changes/rename-price-to-summary/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 19233,
+          "cached_input_tokens": 66368,
+          "output_tokens": 13682
+        },
+        "wall_clock_ms": 192180,
+        "spend_usd": 0.10438268,
+        "by_phase": {
+          "spec": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 16493,
+              "cached_input_tokens": 30592,
+              "output_tokens": 12725
+            },
+            "wall_clock_ms": 160313,
+            "spec_authoring_tokens": 1731,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 5,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 2740,
+              "cached_input_tokens": 35776,
+              "output_tokens": 957
+            },
+            "wall_clock_ms": 17823,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 79,
+          "cached_input_tokens": 19648,
+          "output_tokens": 443
+        },
+        "spend_usd": 0.00716828
+      },
+      "snapshot": {
+        "hash": "0878a85b0e991ef218e2712e42192b5e4fe8b677ffc6fb95b950e9d4472ae12d",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-5"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": null,
+      "task_index": 5,
+      "op_kind": "rename_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Rename the price detail on Widget to summary."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "prose_recorded",
+          "novel_total": 6,
+          "carried_total": 1,
+          "novel_red": null,
+          "novel_records": [],
+          "green_novel_titles": [],
+          "prior_green": null
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 24,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "associate-listing-with-widget",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 20,
+          "scenarios_after": 21,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Listing without widget_id is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Listing returns the stored entity"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Listing without name is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Deleting a Category",
+              "scenario": "Deleting a Listing removes it"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Listing Category records",
+              "scenario": "Creating a Listing increases the list count"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Updating a Category",
+              "scenario": "Updating a Listing persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "POST /listings",
+              "found": "scenario: Creating a Listing without widget_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /widgets/{id}",
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /widgets/{id}",
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /widgets",
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /widgets/stats",
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "field:Listing.widget_id",
+            "semantic_item_uid": "uid-task-field-9",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Widget\",\"required\":false,\"type\":\"ref\"}",
+              "found": "{\"ref_entity\":\"Widget\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "uid-base-field-widget-category-id",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.listing_id",
+            "semantic_item_uid": "code-only:field:Widget.listing_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Listing\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.summary.range",
+            "semantic_item_uid": "code-only:rule:Widget.summary.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 7,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 1,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 21,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing without name is rejected",
+              "Creating a Listing without widget_id is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal summary is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid summary is rejected",
+              "Filtering widgets by listing_id returns only matching rows"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without widget_id is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without widget_id is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without widget_id is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without widget_id is rejected",
+              "Updating a Listing persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing without widget_id is rejected",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by listing_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 21,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "The most notable issue: `openspec/specs/listings/spec.md` and `openspec/specs/suppliers/spec.md` both still have `Purpose: TBD - created by archiving change ...` placeholders that were never updated after archiving. Additionally, the `categories` spec retains \"Category\" in its requirement names (e.g., \"Creating a Category\") even though all content describes Listings — a leftover from the rebrand that was never fully reconciled.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/associate-listing-with-widget/proposal.md",
+          "openspec/changes/associate-listing-with-widget/tasks.md",
+          "openspec/changes/associate-listing-with-widget/specs/categories/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 18836,
+          "cached_input_tokens": 71104,
+          "output_tokens": 13338
+        },
+        "wall_clock_ms": 220289,
+        "spend_usd": 0.10354464,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 16451,
+              "cached_input_tokens": 17408,
+              "output_tokens": 11974
+            },
+            "wall_clock_ms": 173027,
+            "spec_authoring_tokens": 1227,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 5,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 2385,
+              "cached_input_tokens": 53696,
+              "output_tokens": 1364
+            },
+            "wall_clock_ms": 30924,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 91,
+          "cached_input_tokens": 19200,
+          "output_tokens": 624
+        },
+        "spend_usd": 0.007865
+      },
+      "snapshot": {
+        "hash": "3249951ccdc759268f3a1ffde5439518bf4fbb8c486bfde00d68a5c0a7b2a9d5",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-62/snapshots/e4_arm_0/task-6"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": null,
+      "task_index": 6,
+      "op_kind": "add_relationship",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "We need to associate Listing records with a Widget."
+    }
+  ],
+  "usage_totals": {
+    "turns": 38,
+    "spend_usd": 0.80375384,
+    "wall_clock_ms": 1881765
+  },
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "status": "complete"
+}

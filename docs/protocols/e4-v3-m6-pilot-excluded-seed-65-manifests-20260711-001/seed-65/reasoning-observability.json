@@ -1,0 +1,501 @@
+{
+  "schema": "e4-v2-reasoning-observability-v1",
+  "classification": "pilot",
+  "route": {
+    "model": "glm-5.2",
+    "route_id": "direct-zhipu-api-key",
+    "endpoint": "https://api.z.ai/api/paas/v4/chat/completions",
+    "extra_body": {},
+    "disable_thinking": false,
+    "max_output_tokens": 32000
+  },
+  "checks": {
+    "calls_recorded": 34,
+    "reasoning_active_calls": 8,
+    "reasoning_active_4a": true,
+    "accounting_4b": [
+      "folded",
+      "indeterminate"
+    ],
+    "adjustment_needed": false,
+    "truncated_5iv": false
+  },
+  "per_call": [
+    {
+      "call": 0,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 188,
+        "reasoning_tokens": 182,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (188) >= reasoning_tokens (182) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 1,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 7291,
+        "reasoning_tokens": 7161,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (7291) >= reasoning_tokens (7161) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 2,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3050,
+        "reasoning_tokens": 1246,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3050) >= reasoning_tokens (1246) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 3,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 772,
+        "reasoning_tokens": 54,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (772) >= reasoning_tokens (54) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 4,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 153,
+        "reasoning_tokens": 148,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (153) >= reasoning_tokens (148) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 5,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 505,
+        "reasoning_tokens": 411,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (505) >= reasoning_tokens (411) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 6,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 3055,
+        "reasoning_tokens": 2990,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (3055) >= reasoning_tokens (2990) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 7,
+      "signals": {
+        "reasoning_active": true,
+        "reasoning_content_present": true,
+        "visible_content_present": true,
+        "truncated": false,
+        "completion_tokens": 2767,
+        "reasoning_tokens": 1098,
+        "accounting": "folded",
+        "accounting_rationale": "completion_tokens (2767) >= reasoning_tokens (1098) with the surplus attributable to visible output — reasoning is folded into completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 8,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 9,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 10,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 11,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 12,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 13,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 14,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 15,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 16,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 17,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 18,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 19,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 20,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 21,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 22,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 23,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 24,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 25,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 26,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 27,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 28,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 29,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 30,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 31,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 32,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    },
+    {
+      "call": 33,
+      "signals": {
+        "reasoning_active": false,
+        "reasoning_content_present": false,
+        "visible_content_present": false,
+        "truncated": false,
+        "completion_tokens": null,
+        "reasoning_tokens": null,
+        "accounting": "indeterminate",
+        "accounting_rationale": "no completion_tokens_details.reasoning_tokens side count to compare against completion_tokens",
+        "adjustment_needed": false
+      }
+    }
+  ]
+}

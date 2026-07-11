@@ -1,0 +1,4218 @@
+{
+  "schema": "e4-v2-run-manifest",
+  "schema_version": "1",
+  "run_classification": "pilot",
+  "protocol_profile_id": "e4-openspec-workflow-v2",
+  "arm": "e4_arm_p",
+  "arm_mode": "executed",
+  "pairing_label": "pair-pilot-seed-75",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "glm-5.2",
+    "route_id": "direct-zhipu-api-key"
+  },
+  "compatibility_boundary": {
+    "constants_version": "0.3",
+    "constants_hash": "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1",
+    "substrate_config": {
+      "substrate_config_id": "v2-default",
+      "substrate_seed": 75,
+      "task_count": 6,
+      "op_mix": {
+        "weights": {
+          "drift_opportunity": 0.5,
+          "additive": 0.4,
+          "behavior_preserving": 0.1
+        }
+      }
+    },
+    "v3": {
+      "constants_version": "0.2",
+      "constants_hash": "aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a",
+      "determinacy_table_id": "e4-request-determinacy-v1",
+      "pm_brief_id": "e4-pm-brief-v1",
+      "reconciler_id": "e4-spec-code-reconciler-v1",
+      "mutation_harness_id": "e4-agent-boundary-mutation-v1",
+      "pm_review_id": "e4-pm-review-v1",
+      "product_gate_id": "e4-product-gate-v1",
+      "turn_protocol_id": "e4-turn-protocol-v2"
+    }
+  },
+  "initial_snapshot": {
+    "hash": "f6e4f974a36124afa0c44f2fe05693a1b5d9e766da5bff269d23d39a92cfd711",
+    "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-0"
+  },
+  "tasks": [
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "spec",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 15,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 11,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 3,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:POST /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:PUT /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:DELETE /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/stats",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /products/stats"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/stats\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "{\"method\":\"POST\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/stats\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Product",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "expected": "{}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Widget",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.id",
+            "semantic_item_uid": "uid-base-field-widget-id",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.name",
+            "semantic_item_uid": "uid-base-field-widget-name",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.price",
+            "semantic_item_uid": "uid-base-field-widget-price",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.in_stock",
+            "semantic_item_uid": "uid-base-field-widget-in-stock",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.category_id",
+            "semantic_item_uid": "uid-base-field-widget-category-id",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.id",
+            "semantic_item_uid": "code-only:field:Widget.id",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.name",
+            "semantic_item_uid": "code-only:field:Widget.name",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.price",
+            "semantic_item_uid": "code-only:field:Widget.price",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.in_stock",
+            "semantic_item_uid": "code-only:field:Widget.in_stock",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Product.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "code-only:rule:Widget.price.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 12,
+            "stale_claim": 12
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 5,
+            "stale_claim": 5
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 17,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 17,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec and context files were internally consistent and accurate. The README's scenario grammar matched the patterns used in the spec files, and the code files (registry.ts, schema.ts, seed.ts, server.ts) were all consistent with each other and with the specs. The only gap was insufficient documentation on how to properly format delta specs for capability renames (especially REMOVED blocks and new capability creation), which caused the repeated validation failures.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-widget-to-product/proposal.md",
+          "openspec/changes/rename-widget-to-product/tasks.md",
+          "openspec/changes/rename-widget-to-product/specs/products/spec.md",
+          "openspec/changes/rename-widget-to-product/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 16,
+        "tokens": {
+          "fresh_input_tokens": 40427,
+          "cached_input_tokens": 354240,
+          "output_tokens": 129833
+        },
+        "wall_clock_ms": 1538240,
+        "spend_usd": 0.7199653999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 16,
+            "tokens": {
+              "fresh_input_tokens": 40427,
+              "cached_input_tokens": 354240,
+              "output_tokens": 129833
+            },
+            "wall_clock_ms": 1524540,
+            "spec_authoring_tokens": 30086,
+            "gate_protocol_interaction_tokens": 290,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 75
+          },
+          "implementation": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 1736,
+          "cached_input_tokens": 39872,
+          "output_tokens": 540
+        },
+        "spend_usd": 0.01517312
+      },
+      "snapshot": {
+        "hash": "d4687e71d828089cd58c3f64e176b4b31bdad50f819303d43cb156c37d8f9350",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-1"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 6
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": null,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 1,
+      "op_kind": "rename_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "The business now calls Widget \"Product\" — update accordingly."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "spec",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 15,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 11,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:POST /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:PUT /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:DELETE /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/stats",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /products/stats"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/stats\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "{\"method\":\"POST\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/stats\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Product",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "expected": "{}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Widget",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.id",
+            "semantic_item_uid": "uid-base-field-widget-id",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.name",
+            "semantic_item_uid": "uid-base-field-widget-name",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.price",
+            "semantic_item_uid": "uid-base-field-widget-price",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.in_stock",
+            "semantic_item_uid": "uid-base-field-widget-in-stock",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.id",
+            "semantic_item_uid": "code-only:field:Widget.id",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.name",
+            "semantic_item_uid": "code-only:field:Widget.name",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.price",
+            "semantic_item_uid": "code-only:field:Widget.price",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.in_stock",
+            "semantic_item_uid": "code-only:field:Widget.in_stock",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Product.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "code-only:rule:Widget.price.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 12,
+            "stale_claim": 12
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 4,
+            "stale_claim": 5
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 17,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 17,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The workspace snapshot shows `openspec/changes/rename-widget-to-product/` as a pre-existing change directory with partially completed tasks, but the code still uses Widget (not Product). This leftover directory blocks the custody check (exactly one change directory required) and I cannot delete it via the file-replacement protocol. The context should either have started clean or noted this pre-existing change must be reused.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-widget-to-product/proposal.md",
+          "openspec/changes/rename-widget-to-product/tasks.md",
+          "openspec/changes/rename-widget-to-product/specs/products/spec.md",
+          "openspec/changes/rename-widget-to-product/specs/widgets/spec.md",
+          "openspec/changes/remove-category-id-from-product/proposal.md",
+          "openspec/changes/remove-category-id-from-product/tasks.md",
+          "openspec/changes/remove-category-id-from-product/specs/widgets/spec.md",
+          "openspec/changes/remove-category-id-from-product/specs/products/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 18,
+        "tokens": {
+          "fresh_input_tokens": 25762,
+          "cached_input_tokens": 347200,
+          "output_tokens": 128403
+        },
+        "wall_clock_ms": 3234166,
+        "spend_usd": 0.6913119999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 18,
+            "tokens": {
+              "fresh_input_tokens": 25762,
+              "cached_input_tokens": 347200,
+              "output_tokens": 128403
+            },
+            "wall_clock_ms": 3211418,
+            "spec_authoring_tokens": 19795,
+            "gate_protocol_interaction_tokens": 396,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 44
+          },
+          "implementation": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 67,
+          "cached_input_tokens": 34880,
+          "output_tokens": 1323
+        },
+        "spend_usd": 0.0149838
+      },
+      "snapshot": {
+        "hash": "2a4dc34fd94969eeec6e2bc3d8608c707aef4b188ddd65952c0c55e610449bd0",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-2"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 18
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": null,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 2,
+      "op_kind": "delete_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "We stopped tracking category_id for Product; remove it."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "spec",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 11,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 11,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 6,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:POST /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:PUT /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:DELETE /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/stats",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /products/stats"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/stats\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "{\"method\":\"POST\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/stats\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Product",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "expected": "{}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Widget",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.id",
+            "semantic_item_uid": "uid-base-field-widget-id",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.name",
+            "semantic_item_uid": "uid-base-field-widget-name",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.price",
+            "semantic_item_uid": "uid-base-field-widget-price",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.in_stock",
+            "semantic_item_uid": "uid-base-field-widget-in-stock",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.id",
+            "semantic_item_uid": "code-only:field:Widget.id",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.name",
+            "semantic_item_uid": "code-only:field:Widget.name",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.price",
+            "semantic_item_uid": "code-only:field:Widget.price",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.in_stock",
+            "semantic_item_uid": "code-only:field:Widget.in_stock",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Product.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "code-only:rule:Widget.price.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 12,
+            "stale_claim": 12
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 4,
+            "stale_claim": 5
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 17,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 17,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The `rename-widget-to-product/proposal.md` was titled \"Remove category_id from Product\" — copied from the other change directory — and didn't mention the Widget→Product rename at all, while the spec delta actually introduced `/products` endpoints. The `products/spec.md` used `## MODIFIED Requirements` for a capability that doesn't exist in the spec of record (should be `## ADDED Requirements`). The `widgets/spec.md` delta was empty when it should have had `## REMOVED Requirements` blocks. And the `remove-category-id-from-product` directory was abandoned/void but still present, causing the custody check to fail.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-widget-to-product/proposal.md",
+          "openspec/changes/rename-widget-to-product/specs/products/spec.md",
+          "openspec/changes/rename-widget-to-product/specs/widgets/spec.md",
+          "openspec/changes/rename-widget-to-product/tasks.md",
+          "openspec/changes/remove-category-id-from-product/proposal.md",
+          "openspec/changes/remove-category-id-from-product/tasks.md",
+          "openspec/changes/remove-category-id-from-product/specs/products/spec.md",
+          "openspec/changes/remove-category-id-from-product/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 18,
+        "tokens": {
+          "fresh_input_tokens": 19274,
+          "cached_input_tokens": 338688,
+          "output_tokens": 145292
+        },
+        "wall_clock_ms": 1889206,
+        "spend_usd": 0.75432728,
+        "by_phase": {
+          "spec": {
+            "turns": 18,
+            "tokens": {
+              "fresh_input_tokens": 19274,
+              "cached_input_tokens": 338688,
+              "output_tokens": 145292
+            },
+            "wall_clock_ms": 1877309,
+            "spec_authoring_tokens": 16131,
+            "gate_protocol_interaction_tokens": 234,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 38
+          },
+          "implementation": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 1573,
+          "cached_input_tokens": 29824,
+          "output_tokens": 569
+        },
+        "spend_usd": 0.01246004
+      },
+      "snapshot": {
+        "hash": "4d09a4307b498aa0653f4de9ff4ea97d55ba06b7c8669d31fcd96e10e72ac020",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-3"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "smoke-6.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 7
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": null,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 3,
+      "op_kind": "noop_maintenance",
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "nl_request": "Do a quick review of current behavior against what's documented — flag anything that's actually broken."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 2,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 10,
+          "carried_total": 2,
+          "novel_red": 1,
+          "novel_records": [
+            {
+              "title": "Creating a Widget returns the stored entity",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with a non-date name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget with a non-decimal price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with a non-bool in_stock is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with an invalid price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Widget persists the change",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Deleting a Widget removes it",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget increases the list count",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Filtering widgets by category_id returns only matching rows",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget increases the reported count",
+              "pre_implementation": "green",
+              "failure_mode": null
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Widget returns the stored entity",
+            "Creating a Widget with a non-decimal price is rejected",
+            "Creating a Widget with a non-bool in_stock is rejected",
+            "Creating a Widget with an invalid price is rejected",
+            "Updating a Widget persists the change",
+            "Deleting a Widget removes it",
+            "Creating a Widget increases the list count",
+            "Filtering widgets by category_id returns only matching rows",
+            "Creating a Widget increases the reported count"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 2,
+        "cumulative_pass": 11,
+        "cumulative_total": 25
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 3,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "update-product-name-to-date",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 18,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-date name is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by category_id returns only matching rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:POST /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:PUT /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:DELETE /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/stats",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /products/stats"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/stats\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "{\"method\":\"POST\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/stats\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Product",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "expected": "{}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Widget",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.id",
+            "semantic_item_uid": "uid-base-field-widget-id",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.name",
+            "semantic_item_uid": "uid-base-field-widget-name",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.price",
+            "semantic_item_uid": "uid-base-field-widget-price",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.in_stock",
+            "semantic_item_uid": "uid-base-field-widget-in-stock",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.id",
+            "semantic_item_uid": "code-only:field:Widget.id",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.name",
+            "semantic_item_uid": "code-only:field:Widget.name",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.price",
+            "semantic_item_uid": "code-only:field:Widget.price",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.in_stock",
+            "semantic_item_uid": "code-only:field:Widget.in_stock",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Product.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "code-only:rule:Widget.price.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 12,
+            "stale_claim": 12
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 4,
+            "stale_claim": 5
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 18,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 18,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The task and PM brief refer to \"Product.name,\" but the actual entity in the current implementation is still \"Widget\" — the `rename-widget-to-product` change exists in `openspec/changes/` but was never applied or archived. The spec of record, schema, registry, and seed all still use \"Widget\" with `/widgets` paths and `category_id`. I correctly targeted the Widget entity to match the actual codebase, but the task's \"Product\" terminology didn't reflect the current state.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/update-product-name-to-date/tasks.md",
+          "openspec/changes/update-product-name-to-date/specs/widgets/spec.md",
+          "openspec/changes/update-product-name-to-date/proposal.md"
+        ]
+      },
+      "usage": {
+        "turns": 9,
+        "tokens": {
+          "fresh_input_tokens": 19215,
+          "cached_input_tokens": 127616,
+          "output_tokens": 38723
+        },
+        "wall_clock_ms": 441584,
+        "spend_usd": 0.23046235999999998,
+        "by_phase": {
+          "spec": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 14866,
+              "cached_input_tokens": 37056,
+              "output_tokens": 34135
+            },
+            "wall_clock_ms": 365100,
+            "spec_authoring_tokens": 5343,
+            "gate_protocol_interaction_tokens": 58,
+            "oracle_feedback_tokens": 122,
+            "pm_brief_tokens": 37
+          },
+          "implementation": {
+            "turns": 5,
+            "tokens": {
+              "fresh_input_tokens": 4349,
+              "cached_input_tokens": 90560,
+              "output_tokens": 4588
+            },
+            "wall_clock_ms": 65003,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 81,
+          "cached_input_tokens": 19776,
+          "output_tokens": 520
+        },
+        "spend_usd": 0.00754316
+      },
+      "snapshot": {
+        "hash": "2c4b51347074f25d7406361634dcfb5f54b176a3cadfcb01413aff6f40e75350",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-4"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 1
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 1,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 4,
+      "op_kind": "retype_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Update how Product's name is stored so it accepts the values the business now needs."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "spec",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 15,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 9,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 0,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:POST /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:PUT /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:DELETE /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/stats",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /products/stats"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/stats\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "{\"method\":\"POST\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/stats\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Product",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "expected": "{}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Widget",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.product_id",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Product\",\"required\":false,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.id",
+            "semantic_item_uid": "uid-base-field-widget-id",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.name",
+            "semantic_item_uid": "uid-base-field-widget-name",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.price",
+            "semantic_item_uid": "uid-base-field-widget-price",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.in_stock",
+            "semantic_item_uid": "uid-base-field-widget-in-stock",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.id",
+            "semantic_item_uid": "code-only:field:Widget.id",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.name",
+            "semantic_item_uid": "code-only:field:Widget.name",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.price",
+            "semantic_item_uid": "code-only:field:Widget.price",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.in_stock",
+            "semantic_item_uid": "code-only:field:Widget.in_stock",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Product.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "code-only:rule:Widget.price.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 12,
+            "stale_claim": 12
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 5,
+            "stale_claim": 5
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 18,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 18,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The pre-existing `openspec/changes/rename-widget-to-product/` change directory contained a proposal to **remove** `category_id` from Product, which directly contradicts this task's requirement that \"Every Category should be linkable to a Product going forward.\" That stale, unarchived change directory blocked the custody check (two change directories detected) and its content was at odds with the task goal.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/link-category-to-product/proposal.md",
+          "openspec/changes/link-category-to-product/tasks.md",
+          "openspec/changes/link-category-to-product/specs/widgets/spec.md",
+          "openspec/changes/link-category-to-product/specs/products/spec.md",
+          "openspec/changes/rename-widget-to-product/proposal.md",
+          "openspec/changes/rename-widget-to-product/tasks.md",
+          "openspec/changes/rename-widget-to-product/specs/widgets/spec.md",
+          "openspec/changes/rename-widget-to-product/specs/products/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 15,
+        "tokens": {
+          "fresh_input_tokens": 24946,
+          "cached_input_tokens": 376448,
+          "output_tokens": 100494
+        },
+        "wall_clock_ms": 1365636,
+        "spend_usd": 0.5749744799999998,
+        "by_phase": {
+          "spec": {
+            "turns": 15,
+            "tokens": {
+              "fresh_input_tokens": 24946,
+              "cached_input_tokens": 376448,
+              "output_tokens": 100494
+            },
+            "wall_clock_ms": 1355966,
+            "spec_authoring_tokens": 21689,
+            "gate_protocol_interaction_tokens": 303,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 0,
+            "tokens": {
+              "fresh_input_tokens": 0,
+              "cached_input_tokens": 0,
+              "output_tokens": 0
+            },
+            "wall_clock_ms": 0,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 84,
+          "cached_input_tokens": 38144,
+          "output_tokens": 558
+        },
+        "spend_usd": 0.01249024
+      },
+      "snapshot": {
+        "hash": "aa64d354a28e89d0696510207b792bb9a2d1b8c1bab7fcd0dc61d29c7142635e",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-5"
+      },
+      "executor_artifacts": [
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": null,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 5,
+      "op_kind": "add_relationship",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Every Category should be linkable to a Product going forward."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 3,
+          "carried_total": 6,
+          "novel_red": 3,
+          "novel_records": [
+            {
+              "title": "Creating a Category with an uppercase id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Category with a spaced id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Category with an invalid id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 10,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "stricten-category-id-input",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 18,
+          "scenarios_after": 21,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category with a spaced id is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category with an uppercase id is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Updating a Category",
+              "scenario": "Updating a Category with an invalid id is rejected"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Category:create",
+            "semantic_item_uid": "uid-base-endpoint-category-create",
+            "detail": {
+              "expected": "POST /categories",
+              "found": "scenario: Creating a Category with an uppercase id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Category:update",
+            "semantic_item_uid": "uid-base-endpoint-category-update",
+            "detail": {
+              "expected": "PUT /categories/{id}",
+              "found": "scenario: Updating a Category with an invalid id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:POST /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:PUT /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "scenario: Updating a Widget persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:DELETE /widgets/widget-spec-1",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "scenario: Deleting a Widget removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:GET /widgets/stats",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "scenario: Creating a Widget increases the reported count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /products/{id}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /products"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /products/stats"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "{\"method\":\"POST\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "{\"method\":\"PUT\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "{\"method\":\"DELETE\",\"path\":\"/products/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Product:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "{\"method\":\"GET\",\"path\":\"/products/stats\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "found": "{\"method\":\"POST\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "found": "{\"method\":\"PUT\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "found": "{\"method\":\"DELETE\",\"path\":\"/widgets/{id}\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets\"}"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "endpoint:Widget:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "found": "{\"method\":\"GET\",\"path\":\"/widgets/stats\"}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Product",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "expected": "{}"
+            }
+          },
+          {
+            "kind": "entity",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "entity:Widget",
+            "semantic_item_uid": "uid-base-entity-widget",
+            "detail": {
+              "found": "{}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.product_id",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Product\",\"required\":false,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.id",
+            "semantic_item_uid": "uid-base-field-widget-id",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.name",
+            "semantic_item_uid": "uid-base-field-widget-name",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.price",
+            "semantic_item_uid": "uid-base-field-widget-price",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Product.in_stock",
+            "semantic_item_uid": "uid-base-field-widget-in-stock",
+            "detail": {
+              "expected": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.id",
+            "semantic_item_uid": "code-only:field:Widget.id",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"string\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.name",
+            "semantic_item_uid": "code-only:field:Widget.name",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"date\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.price",
+            "semantic_item_uid": "code-only:field:Widget.price",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"decimal\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.in_stock",
+            "semantic_item_uid": "code-only:field:Widget.in_stock",
+            "detail": {
+              "found": "{\"ref_entity\":null,\"required\":true,\"type\":\"bool\"}"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Product.price.range",
+            "semantic_item_uid": "uid-base-rule-widget-price-range",
+            "detail": {
+              "expected": "{\"min\":0}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Category.id.format",
+            "semantic_item_uid": "uid-task-rule-2",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"^[a-z0-9]+(-[a-z0-9]+)*$\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Widget.price.range",
+            "semantic_item_uid": "code-only:rule:Widget.price.range",
+            "detail": {
+              "found": "{\"min\":0}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 2,
+            "coverage_gap": 12,
+            "stale_claim": 12
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 5,
+            "stale_claim": 5
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 1,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 21,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Category with an uppercase id is rejected",
+              "Creating a Category with a spaced id is rejected",
+              "Updating a Category with an invalid id is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category with an uppercase id is rejected",
+              "Creating a Category with a spaced id is rejected",
+              "Updating a Category persists the change",
+              "Updating a Category with an invalid id is rejected",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category with an uppercase id is rejected",
+              "Creating a Category with a spaced id is rejected",
+              "Updating a Category persists the change",
+              "Updating a Category with an invalid id is rejected",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category with an uppercase id is rejected",
+              "Creating a Category with a spaced id is rejected",
+              "Updating a Category persists the change",
+              "Updating a Category with an invalid id is rejected",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Creating a Category with an uppercase id is rejected",
+              "Creating a Category with a spaced id is rejected",
+              "Updating a Category persists the change",
+              "Updating a Category with an invalid id is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category with an uppercase id is rejected",
+              "Creating a Category with a spaced id is rejected",
+              "Updating a Category with an invalid id is rejected",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-date name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 21,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The spec of record and the code were consistent with each other — Category had `id` (string) and `name` (string) with CRUD/list operations, and the server's data-driven validation already supported `format` rules. The task accurately described the gap: Category's `id` accepted any string with no format constraint.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/stricten-category-id-input/proposal.md",
+          "openspec/changes/stricten-category-id-input/tasks.md",
+          "openspec/changes/stricten-category-id-input/specs/categories/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 6,
+        "tokens": {
+          "fresh_input_tokens": 17619,
+          "cached_input_tokens": 86336,
+          "output_tokens": 8870
+        },
+        "wall_clock_ms": 118439,
+        "spend_usd": 0.08614195999999999,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 15208,
+              "cached_input_tokens": 16832,
+              "output_tokens": 6779
+            },
+            "wall_clock_ms": 74451,
+            "spec_authoring_tokens": 1340,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 28,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 2411,
+              "cached_input_tokens": 69504,
+              "output_tokens": 2091
+            },
+            "wall_clock_ms": 33669,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 38,
+          "cached_input_tokens": 18368,
+          "output_tokens": 478
+        },
+        "spend_usd": 0.00693208
+      },
+      "snapshot": {
+        "hash": "6bed4d10ca4874ceee3cdb5920443df79be4a4f7b9e8c0eca3fec527587fb5d4",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-75/snapshots/e4_arm_p/task-6"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 1,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 6,
+      "op_kind": "add_validation_rule",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Category's id needs stricter input rules — bad data has been getting through."
+    }
+  ],
+  "usage_totals": {
+    "turns": 82,
+    "spend_usd": 3.12676592,
+    "wall_clock_ms": 8587271
+  },
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "status": "complete"
+}

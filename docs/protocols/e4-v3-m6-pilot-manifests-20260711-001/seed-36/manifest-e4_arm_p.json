@@ -1,0 +1,2742 @@
+{
+  "schema": "e4-v2-run-manifest",
+  "schema_version": "1",
+  "run_classification": "pilot",
+  "protocol_profile_id": "e4-openspec-workflow-v2",
+  "arm": "e4_arm_p",
+  "arm_mode": "executed",
+  "pairing_label": "pair-pilot-seed-36",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "glm-5.2",
+    "route_id": "direct-zhipu-api-key"
+  },
+  "compatibility_boundary": {
+    "constants_version": "0.3",
+    "constants_hash": "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1",
+    "substrate_config": {
+      "substrate_config_id": "v2-default",
+      "substrate_seed": 36,
+      "task_count": 6,
+      "op_mix": {
+        "weights": {
+          "drift_opportunity": 0.5,
+          "additive": 0.4,
+          "behavior_preserving": 0.1
+        }
+      }
+    },
+    "v3": {
+      "constants_version": "0.2",
+      "constants_hash": "aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a",
+      "determinacy_table_id": "e4-request-determinacy-v1",
+      "pm_brief_id": "e4-pm-brief-v1",
+      "reconciler_id": "e4-spec-code-reconciler-v1",
+      "mutation_harness_id": "e4-agent-boundary-mutation-v1",
+      "pm_review_id": "e4-pm-review-v1",
+      "product_gate_id": "e4-product-gate-v1",
+      "turn_protocol_id": "e4-turn-protocol-v2"
+    }
+  },
+  "initial_snapshot": {
+    "hash": "f6e4f974a36124afa0c44f2fe05693a1b5d9e766da5bff269d23d39a92cfd711",
+    "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-0"
+  },
+  "tasks": [
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": null
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 26,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": false,
+        "change_name": null,
+        "archive_ok": null,
+        "failure_reason": null,
+        "survival_ledger": null
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 17,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 17,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The spec/context files accurately reflected the implementation. The smoke verification passed, confirming the documented behavior (routes, validation rules, seed counts, filtering, and stats) all match the code.",
+      "spec_touch": {
+        "touched": false,
+        "paths": []
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 9425,
+          "cached_input_tokens": 27520,
+          "output_tokens": 543
+        },
+        "wall_clock_ms": 29875,
+        "spend_usd": 0.0227394,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 9227,
+              "cached_input_tokens": 9152,
+              "output_tokens": 395
+            },
+            "wall_clock_ms": 10617,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 26,
+            "oracle_feedback_tokens": 15,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 198,
+              "cached_input_tokens": 18368,
+              "output_tokens": 148
+            },
+            "wall_clock_ms": 10265,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 65,
+          "cached_input_tokens": 9280,
+          "output_tokens": 298
+        },
+        "spend_usd": 0.003815
+      },
+      "snapshot": {
+        "hash": "f6e4f974a36124afa0c44f2fe05693a1b5d9e766da5bff269d23d39a92cfd711",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-1"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "mutation-1.json",
+        "gate-scenarios-1.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 1,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 1,
+      "op_kind": "noop_maintenance",
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "nl_request": "Double-check that everything is still behaving as documented; no changes needed if it is."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 5,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 22,
+          "carried_total": 0,
+          "novel_red": 20,
+          "novel_records": [
+            {
+              "title": "Creating a Listing returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing with a non-bool in_stock is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Fetching a missing Listing returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Listing persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Deleting a Listing removes it",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Filtering listings by category_id returns only matching rows",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing with a non-bool in_stock is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Fetching a missing Listing returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Listing persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Deleting a Listing removes it",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Filtering listings by category_id returns only matching rows",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Listing increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [
+            "Fetching a missing Listing returns not found",
+            "Fetching a missing Listing returns not found"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 26,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 2,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "rename-widget-to-listing",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 28,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Fetching a Widget",
+              "scenario": "Fetching a missing Widget returns not found"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by category_id returns only matching rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing returns the stored entity"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-decimal price is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with an invalid price is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing without name is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Deleting a Listing",
+              "scenario": "Deleting a Listing removes it"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Fetching a Listing",
+              "scenario": "Fetching a missing Listing returns not found"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Listing Listing records",
+              "scenario": "Creating a Listing increases the list count"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Listing Listing records",
+              "scenario": "Filtering listings by category_id returns only matching rows"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Reporting Listing statistics",
+              "scenario": "Creating a Listing increases the reported count"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Updating a Listing",
+              "scenario": "Updating a Listing persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing without name is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Listing",
+              "scenario": "Deleting a Listing removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Fetching a Listing",
+              "scenario": "Fetching a missing Listing returns not found"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Listing records",
+              "scenario": "Creating a Listing increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Listing records",
+              "scenario": "Filtering listings by category_id returns only matching rows"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Listing statistics",
+              "scenario": "Creating a Listing increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Listing",
+              "scenario": "Updating a Listing persists the change"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 28,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering listings by category_id returns only matching rows",
+              "Filtering listings by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 28,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec and context files were accurate — the specs matched the implementation, the scenario grammar was correct, and the workflow proceeded as described. The only minor omission is that the README doesn't mention the `.feature` files that exist alongside the `spec.md` files, but they didn't affect the task.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/rename-widget-to-listing/proposal.md",
+          "openspec/changes/rename-widget-to-listing/tasks.md",
+          "openspec/changes/rename-widget-to-listing/specs/widgets/spec.md",
+          "openspec/changes/rename-widget-to-listing/specs/listings/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 10,
+        "tokens": {
+          "fresh_input_tokens": 23244,
+          "cached_input_tokens": 130752,
+          "output_tokens": 42199
+        },
+        "wall_clock_ms": 523868,
+        "spend_usd": 0.25221272,
+        "by_phase": {
+          "spec": {
+            "turns": 8,
+            "tokens": {
+              "fresh_input_tokens": 19875,
+              "cached_input_tokens": 88320,
+              "output_tokens": 40830
+            },
+            "wall_clock_ms": 491834,
+            "spec_authoring_tokens": 8132,
+            "gate_protocol_interaction_tokens": 137,
+            "oracle_feedback_tokens": 56,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 3369,
+              "cached_input_tokens": 42432,
+              "output_tokens": 1369
+            },
+            "wall_clock_ms": 21471,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 1259,
+          "cached_input_tokens": 22912,
+          "output_tokens": 372
+        },
+        "spend_usd": 0.00935652
+      },
+      "snapshot": {
+        "hash": "9550b19c90a9944745a3982040a1065883d830c7ff851049f4fc2999bb3e8d51",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-2"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-2.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 1,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 2,
+      "op_kind": "rename_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "The business now calls Widget \"Listing\" — update accordingly."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 6,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 2,
+          "carried_total": 0,
+          "novel_red": 2,
+          "novel_records": [
+            {
+              "title": "Creating a Listing with a non-existent category_id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Listing with a non-existent category_id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 24,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 8,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "associate-category-with-listing",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 28,
+          "scenarios_after": 30,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "listings",
+              "requirement": "Associating a Listing with a Category",
+              "scenario": "Creating a Listing with a non-existent category_id is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Associating a Listing with a Category",
+              "scenario": "Updating a Listing with a non-existent category_id is rejected"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /listings",
+              "found": "scenario: Creating a Listing with a non-existent category_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /listings/{id}",
+              "found": "scenario: Updating a Listing with a non-existent category_id is rejected"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.listing_id",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":false,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Listing.category_id.ref_exists",
+            "semantic_item_uid": "code-only:rule:Listing.category_id.ref_exists",
+            "detail": {
+              "found": "{}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 2,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 30,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Filtering listings by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 30,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The task said \"We need to associate Category records with a Listing,\" but the association already existed: `category_id` was already a `ref` field on Listing pointing to `Category`, seed data already linked listings to categories, and the list endpoint already filtered by `category_id`. The actual gap was missing referential integrity validation (rejecting non-existent category references), not the association itself.\n\nAdditionally, `openspec/specs/widgets/` still existed as a stale duplicate of the listings spec despite the archive showing widgets was removed.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/associate-category-with-listing/tasks.md",
+          "openspec/changes/associate-category-with-listing/specs/listings/spec.md",
+          "openspec/changes/associate-category-with-listing/proposal.md"
+        ]
+      },
+      "usage": {
+        "turns": 18,
+        "tokens": {
+          "fresh_input_tokens": 28997,
+          "cached_input_tokens": 402496,
+          "output_tokens": 71433
+        },
+        "wall_clock_ms": 1557273,
+        "spend_usd": 0.45954996000000004,
+        "by_phase": {
+          "spec": {
+            "turns": 7,
+            "tokens": {
+              "fresh_input_tokens": 19202,
+              "cached_input_tokens": 113088,
+              "output_tokens": 23620
+            },
+            "wall_clock_ms": 315769,
+            "spec_authoring_tokens": 1506,
+            "gate_protocol_interaction_tokens": 130,
+            "oracle_feedback_tokens": 28,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 11,
+            "tokens": {
+              "fresh_input_tokens": 9795,
+              "cached_input_tokens": 289408,
+              "output_tokens": 47813
+            },
+            "wall_clock_ms": 1227183,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 951,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 671,
+          "cached_input_tokens": 32576,
+          "output_tokens": 620
+        },
+        "spend_usd": 0.01213716
+      },
+      "snapshot": {
+        "hash": "80d7e9d01565cad2d445ac951819b2c17c67112fbf4e068c5fb859bcccd7441a",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-3"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "smoke-6.json",
+        "smoke-7.json",
+        "smoke-8.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 9,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 3,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 3,
+      "op_kind": "add_relationship",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "We need to associate Category records with a Listing."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 12,
+          "carried_total": 0,
+          "novel_red": 8,
+          "novel_records": [
+            {
+              "title": "Creating a Listing returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a non-decimal price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Listing with a non-bool in_stock is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Listing with an invalid price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Listing persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Listing removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Filtering listings by category_id returns only matching rows",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a non-existent category_id is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Listing with a non-existent category_id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Listing with a non-decimal price is rejected",
+            "Creating a Listing with a non-bool in_stock is rejected",
+            "Creating a Listing with an invalid price is rejected",
+            "Creating a Listing with a non-existent category_id is rejected"
+          ],
+          "prior_green": false
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 22,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 8,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "drop-name-from-listing",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 30,
+          "scenarios_after": 30,
+          "dropped_scenarios": [
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing without name is rejected"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a name is rejected"
+            }
+          ],
+          "changed_scenarios": [
+            {
+              "spec": "listings",
+              "requirement": "Associating a Listing with a Category",
+              "scenario": "Creating a Listing with a non-existent category_id is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Associating a Listing with a Category",
+              "scenario": "Updating a Listing with a non-existent category_id is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing returns the stored entity"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-decimal price is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with an invalid price is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Deleting a Listing",
+              "scenario": "Deleting a Listing removes it"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Listing Listing records",
+              "scenario": "Creating a Listing increases the list count"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Listing Listing records",
+              "scenario": "Filtering listings by category_id returns only matching rows"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Reporting Listing statistics",
+              "scenario": "Creating a Listing increases the reported count"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Updating a Listing",
+              "scenario": "Updating a Listing persists the change"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /listings",
+              "found": "scenario: Creating a Listing with a non-existent category_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /listings/{id}",
+              "found": "scenario: Updating a Listing with a non-existent category_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /listings/{id}",
+              "found": "scenario: Creating a Listing returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /listings/{id}",
+              "found": "scenario: Deleting a Listing removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /listings",
+              "found": "scenario: Creating a Listing increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /listings/stats",
+              "found": "scenario: Creating a Listing increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.listing_id",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":false,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Listing.category_id.ref_exists",
+            "semantic_item_uid": "code-only:rule:Listing.category_id.ref_exists",
+            "detail": {
+              "found": "{}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 30,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Listing with a name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 30,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes — the `openspec/specs/widgets/` spec of record is stale: it still contains Listing scenarios hitting `/listings` routes (the rename archive didn't fully remove it), and `openspec/specs/listings/spec.md` has a \"TBD\" placeholder Purpose that was never updated. These leftover widgets scenarios with `name` fields are what the product gate kept flagging.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/drop-name-from-listing/proposal.md",
+          "openspec/changes/drop-name-from-listing/tasks.md",
+          "openspec/changes/drop-name-from-listing/specs/listings/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 14,
+        "tokens": {
+          "fresh_input_tokens": 29945,
+          "cached_input_tokens": 338176,
+          "output_tokens": 148481
+        },
+        "wall_clock_ms": 4573728,
+        "spend_usd": 0.78316516,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 17814,
+              "cached_input_tokens": 19328,
+              "output_tokens": 17082
+            },
+            "wall_clock_ms": 188575,
+            "spec_authoring_tokens": 1882,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 88,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 12,
+            "tokens": {
+              "fresh_input_tokens": 12131,
+              "cached_input_tokens": 318848,
+              "output_tokens": 131399
+            },
+            "wall_clock_ms": 4370822,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 864,
+            "pm_brief_tokens": 43
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 1586,
+          "cached_input_tokens": 35072,
+          "output_tokens": 493
+        },
+        "spend_usd": 0.01350832
+      },
+      "snapshot": {
+        "hash": "0f6fdbfd942b282a6d94dd6a67d4c343d0d506d15b7aded9e5f7cd8e6c2ef08b",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-4"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "smoke-6.json",
+        "smoke-7.json",
+        "smoke-8.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 9
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 3,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 11,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 4,
+      "op_kind": "delete_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Drop the name detail from Listing — it's no longer collected."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 5,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 11,
+          "carried_total": 8,
+          "novel_red": 11,
+          "novel_records": [
+            {
+              "title": "Creating a Category without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Fetching a missing Category returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Category removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a non-bool in_stock is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Fetching a missing Listing returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Listing removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Listing with a non-existent category_id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Listing with a non-existent category_id is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": false
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 22,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 5,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "update-error-envelope",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 30,
+          "scenarios_after": 30,
+          "dropped_scenarios": [],
+          "added_scenarios": [],
+          "changed_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Creating a Category",
+              "scenario": "Creating a Category without name is rejected"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Deleting a Category",
+              "scenario": "Deleting a Category removes it"
+            },
+            {
+              "spec": "categories",
+              "requirement": "Fetching a Category",
+              "scenario": "Fetching a missing Category returns not found"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Associating a Listing with a Category",
+              "scenario": "Creating a Listing with a non-existent category_id is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Associating a Listing with a Category",
+              "scenario": "Updating a Listing with a non-existent category_id is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a name is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with a non-decimal price is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with an invalid price is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Deleting a Listing",
+              "scenario": "Deleting a Listing removes it"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Fetching a Listing",
+              "scenario": "Fetching a missing Listing returns not found"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /listings",
+              "found": "scenario: Creating a Listing with a non-existent category_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /listings/{id}",
+              "found": "scenario: Updating a Listing with a non-existent category_id is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /listings/{id}",
+              "found": "scenario: Creating a Listing returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /listings/{id}",
+              "found": "scenario: Deleting a Listing removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /listings",
+              "found": "scenario: Creating a Listing increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /listings/stats",
+              "found": "scenario: Creating a Listing increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.listing_id",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":false,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Listing.category_id.ref_exists",
+            "semantic_item_uid": "code-only:rule:Listing.category_id.ref_exists",
+            "detail": {
+              "found": "{}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 30,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Listing with a name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Deleting a Listing removes it"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Listing returns the stored entity",
+              "Updating a Listing persists the change",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 30,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The `openspec/specs/widgets/` spec of record is stale and inaccurate. It still contains Listing scenarios (with the dropped `name` field and old `error.code`/`error.message` format) even though the `rename-widget-to-listing` change archived a REMOVED block that should have eliminated the `widgets` capability entirely. This broken artifact caused the product gate to reject every done-claim, since those stale scenarios reference fields and error formats the implementation no longer carries.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/update-error-envelope/tasks.md",
+          "openspec/changes/update-error-envelope/specs/categories/spec.md",
+          "openspec/changes/update-error-envelope/specs/listings/spec.md",
+          "openspec/changes/update-error-envelope/proposal.md"
+        ]
+      },
+      "usage": {
+        "turns": 14,
+        "tokens": {
+          "fresh_input_tokens": 32240,
+          "cached_input_tokens": 370368,
+          "output_tokens": 131798
+        },
+        "wall_clock_ms": 3985256,
+        "spend_usd": 0.72134288,
+        "by_phase": {
+          "spec": {
+            "turns": 7,
+            "tokens": {
+              "fresh_input_tokens": 28422,
+              "cached_input_tokens": 142336,
+              "output_tokens": 22524
+            },
+            "wall_clock_ms": 592349,
+            "spec_authoring_tokens": 7473,
+            "gate_protocol_interaction_tokens": 102,
+            "oracle_feedback_tokens": 30,
+            "pm_brief_tokens": 71
+          },
+          "implementation": {
+            "turns": 7,
+            "tokens": {
+              "fresh_input_tokens": 3818,
+              "cached_input_tokens": 228032,
+              "output_tokens": 109274
+            },
+            "wall_clock_ms": 3381572,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 1440,
+            "pm_brief_tokens": 142
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 116,
+          "cached_input_tokens": 38400,
+          "output_tokens": 450
+        },
+        "spend_usd": 0.0121264
+      },
+      "snapshot": {
+        "hash": "f54c459964dcb683a15b015612973da4df8f85b866826b2e7e48a544696ccb36",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-5"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 1
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 5,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 11,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 5,
+      "op_kind": "modify_convention",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "We're revising how the API communicates certain details to clients — bring it up to date."
+    },
+    {
+      "termination": "budget_exhausted",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 2,
+          "carried_total": 6,
+          "novel_red": 2,
+          "novel_records": [
+            {
+              "title": "Creating a Listing with an invalid id format is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Listing with an invalid id format is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": false
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 23,
+        "cumulative_total": 27
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 4,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "strict-listing-id-format",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 30,
+          "scenarios_after": 32,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "listings",
+              "requirement": "Creating a Listing",
+              "scenario": "Creating a Listing with an invalid id format is rejected"
+            },
+            {
+              "spec": "listings",
+              "requirement": "Updating a Listing",
+              "scenario": "Updating a Listing with an invalid id format is rejected"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /listings",
+              "found": "scenario: Creating a Listing with an invalid id format is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PUT /listings/{id}",
+              "found": "scenario: Updating a Listing with an invalid id format is rejected"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /listings/{id}",
+              "found": "scenario: Creating a Listing returns the stored entity"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:delete",
+            "semantic_item_uid": "uid-base-endpoint-widget-delete",
+            "detail": {
+              "expected": "DELETE /listings/{id}",
+              "found": "scenario: Deleting a Listing removes it"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:list",
+            "semantic_item_uid": "uid-base-endpoint-widget-list",
+            "detail": {
+              "expected": "GET /listings",
+              "found": "scenario: Creating a Listing increases the list count"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Listing:analytics",
+            "semantic_item_uid": "uid-base-endpoint-widget-stats",
+            "detail": {
+              "expected": "GET /listings/stats",
+              "found": "scenario: Creating a Listing increases the reported count"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "coverage_gap",
+            "direction": "code_vs_truth",
+            "item_id": "field:Category.listing_id",
+            "semantic_item_uid": "uid-task-field-1",
+            "detail": {
+              "expected": "{\"ref_entity\":\"Listing\",\"required\":false,\"type\":\"ref\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "contradiction",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Listing.id.format",
+            "semantic_item_uid": "uid-task-rule-2",
+            "detail": {
+              "expected": "{\"pattern\":\"^[\\\\w -]{1,80}$\"}",
+              "found": "{\"pattern\":\"^[a-zA-Z0-9 -]{1,80}$\"}"
+            }
+          },
+          {
+            "kind": "validation_rule",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "rule:Listing.category_id.ref_exists",
+            "semantic_item_uid": "code-only:rule:Listing.category_id.ref_exists",
+            "detail": {
+              "found": "{}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 6,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 1,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 1,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 32,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Listing with a name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Creating a Listing with an invalid id format is rejected",
+              "Updating a Listing with an invalid id format is rejected",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Deleting a Listing removes it"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing with an invalid id format is rejected",
+              "Updating a Listing persists the change",
+              "Updating a Listing with an invalid id format is rejected",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing with an invalid id format is rejected",
+              "Updating a Listing persists the change",
+              "Updating a Listing with an invalid id format is rejected",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing with an invalid id format is rejected",
+              "Updating a Listing persists the change",
+              "Updating a Listing with an invalid id format is rejected",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing with an invalid id format is rejected",
+              "Updating a Listing persists the change",
+              "Updating a Listing with an invalid id format is rejected",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Listing with an invalid id format is rejected",
+              "Updating a Listing with an invalid id format is rejected",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing with a non-existent category_id is rejected",
+              "Updating a Listing with a non-existent category_id is rejected",
+              "Creating a Listing returns the stored entity",
+              "Creating a Listing without name is rejected",
+              "Creating a Listing with a non-decimal price is rejected",
+              "Creating a Listing with a non-bool in_stock is rejected",
+              "Creating a Listing with an invalid price is rejected",
+              "Fetching a missing Listing returns not found",
+              "Updating a Listing persists the change",
+              "Deleting a Listing removes it",
+              "Creating a Listing increases the list count",
+              "Filtering listings by category_id returns only matching rows",
+              "Creating a Listing increases the reported count"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 32,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes — the `openspec/specs/widgets/` spec of record is stale and inaccurate. It still contains old scenarios that reference the dropped `name` field, use the retired `error.code`/`error.message` envelope, and mix \"Widget\" requirement titles with `/listings` routes. It should have been fully removed when the rename-widget-to-listing change was archived, but it persists and causes reconciliation failures against the current implementation.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/strict-listing-id-format/proposal.md",
+          "openspec/changes/strict-listing-id-format/tasks.md",
+          "openspec/changes/strict-listing-id-format/specs/listings/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 12,
+        "tokens": {
+          "fresh_input_tokens": 30685,
+          "cached_input_tokens": 311488,
+          "output_tokens": 159092
+        },
+        "wall_clock_ms": 4366295,
+        "spend_usd": 0.8239506799999999,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 23145,
+              "cached_input_tokens": 24640,
+              "output_tokens": 17176
+            },
+            "wall_clock_ms": 220720,
+            "spec_authoring_tokens": 1364,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 30,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 10,
+            "tokens": {
+              "fresh_input_tokens": 7540,
+              "cached_input_tokens": 286848,
+              "output_tokens": 141916
+            },
+            "wall_clock_ms": 4133936,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 1175,
+            "pm_brief_tokens": 118
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 66,
+          "cached_input_tokens": 33088,
+          "output_tokens": 431
+        },
+        "spend_usd": 0.01059168
+      },
+      "snapshot": {
+        "hash": "5d5ef49c2028cfbf42eb7e4e037254fa07bb3773195818ea95e0464b3fae177d",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m6-pilot/seed-36/snapshots/e4_arm_p/task-6"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 5
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 4,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 11,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 6,
+      "op_kind": "add_validation_rule",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "Listing's id needs stricter input rules — bad data has been getting through."
+    }
+  ],
+  "usage_totals": {
+    "turns": 72,
+    "spend_usd": 3.12449588,
+    "wall_clock_ms": 15036295
+  },
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "status": "complete"
+}
