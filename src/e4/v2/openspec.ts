@@ -9,7 +9,7 @@
 import { cp, mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { runOpenSpecCommand, type E1OpenSpecCommandResult } from "../../e1-openspec-workflow";
+import { runOpenSpecArchive, runOpenSpecCommand, type E1OpenSpecCommandResult } from "../../e1-openspec-workflow";
 import { readOpenSpecSpecOfRecord, runE1OpenSpecArchiveStep, type E1OpenSpecArchiveStepRecord } from "../../e1-openspec-harness";
 import { parseOpenSpecScenarioBlocks } from "./converter";
 import { bindScenario } from "./step-table";
@@ -38,6 +38,19 @@ export async function runE4OpenSpecValidateSpecs(input: {
     args: ["validate", "--specs", "--strict", "--no-interactive"],
     timeoutMs: input.timeoutMs
   });
+}
+
+// [Phase-0 learning boundary] Agent-facing CLI detail: the pinned CLI prints validation errors
+// to STDERR while the harness historically relayed only stdout — the M6 adversarial review found
+// live agents looping on literally empty error feedback. Stderr first (the errors), then stdout
+// (progress/abort lines), blank lines dropped, bounded so a pathological dump cannot flood the
+// turn history. Arm-symmetric by construction: every arm's gate feedback flows through here.
+export function composeOpenSpecCliDetail(result: E1OpenSpecCommandResult): string {
+  const lines = [...result.normalized_stderr.split("\n"), ...result.normalized_stdout.split("\n")]
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  const detail = lines.slice(-12).join(" ");
+  return detail.length > 1000 ? detail.slice(detail.length - 1000) : detail;
 }
 
 // Validates one change (the gate's custody wiring, v2-M3): deltas parse and the change is
@@ -118,21 +131,50 @@ export async function previewE4V2MergedScenarios(input: {
   try {
     await cp(join(input.workspacePath, "openspec"), join(scratch, "openspec"), { recursive: true });
 
-    const record = await runE1OpenSpecArchiveStep({
+    // [Phase-0 learning boundary] The preview runs the raw archive command instead of the E1
+    // archive step so the failure reason can carry the CLI's own explanation (e.g. "Spec must
+    // have at least one requirement") — the E1 step collapses it to a fixed string and its
+    // record shape (shared with E1 manifests) stays untouched. Failure detection mirrors the E1
+    // three-branch logic verbatim: abort text / non-zero exit / change dir still present (the
+    // pinned CLI exits 0 on abort). No deterministic rename and no survival ledger — the scratch
+    // copy is discarded; the task-close archive keeps using the E1 step unchanged.
+    const result = await runOpenSpecArchive({
       repoRoot: input.repoRoot,
       workspacePath: scratch,
       changeName: input.changeName,
       timeoutMs: input.timeoutMs
     });
+    const failureReason = await detectPreviewArchiveFailure(scratch, input.changeName, result);
 
-    if (!record.archive_ok) {
-      return { ok: false, reason: record.failure_reason ?? "archive preview failed" };
+    if (failureReason !== undefined) {
+      return { ok: false, reason: failureReason };
     }
 
     const specs = await readOpenSpecSpecOfRecord(scratch);
     return { ok: true, scenarios: bindSpecOfRecordScenarios(specs), specs };
   } finally {
     await rm(scratch, { recursive: true, force: true });
+  }
+}
+
+async function detectPreviewArchiveFailure(
+  workspacePath: string,
+  changeName: string,
+  result: E1OpenSpecCommandResult
+): Promise<string | undefined> {
+  if (result.normalized_stdout.includes("Aborted. No files were changed.")) {
+    return `archive aborted without changes — CLI said: ${composeOpenSpecCliDetail(result)}`;
+  }
+
+  if (result.exit_code !== 0) {
+    return `archive exited ${result.exit_code} — CLI said: ${composeOpenSpecCliDetail(result)}`;
+  }
+
+  try {
+    await readdir(join(workspacePath, "openspec", "changes", changeName));
+    return "change directory still present after archive";
+  } catch {
+    return undefined;
   }
 }
 

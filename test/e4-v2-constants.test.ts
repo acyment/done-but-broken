@@ -29,7 +29,10 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 
 // The v2-M5 non-budget freeze pin. Changing ANY non-budget field of the sealed file — including
 // a code-twin hash — moves this value; update it only through a new recorded gate decision.
-const NON_BUDGET_PROJECTION_SHA256 = "7fd13e01e5ae82ae05f3dad9afb56dbcdd787aa4bf29eb3cd9a41845072c8fef";
+// Lineage: 7fd13e01… (v2-M5 → v0.3) → 8c6a4b54… (v0.4, 2026-07-11 Phase-0 learning boundary:
+// protocol_text.workspace_readme gained the capability-retirement/tombstone section — the
+// harness-feedback gap found by the M6 adversarial review; operator-approved plan).
+const NON_BUDGET_PROJECTION_SHA256 = "8c6a4b54b608d8a114932082093e00fb771273ac95d7d57d0759023b90fcc461";
 
 async function loadSealed() {
   return loadE4V2Constants(join(REPO_ROOT, E4_V2_CONSTANTS_PATH));
@@ -147,12 +150,20 @@ describe("v2-M5 — non-budget constants freeze", () => {
     // id they were ratified on (deepseek-v4-pro per v0.2 / glm-5.2 thinking-on per v0.3 — recorded
     // in docs/e4/E4V2-M6-BUDGET-CALIBRATION-NOTES.md and
     // docs/e4/E4V2-M8-GLM-BUDGET-CALIBRATION-NOTES.md, not a JSON field, same as the v1 M6.5 pin).
+    //   → v0.4 27/12/490000/5 (2026-07-11, Phase-0 learning boundary, operator-approved plan:
+    //     budgets UNTOUCHED; protocol_text.workspace_readme gained the capability-retirement
+    //     tombstone section after the M6 adversarial review found the harness fed agents empty
+    //     validate errors and undocumented retirement mechanics. v0.3 full-file hash was
+    //     2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c — the constants_hash
+    //     every v2-M8 AND v3-M6 evidence manifest stamps (historical; re-run those verdicts with
+    //     `--constants` pointing at the archived v0.3, e.g.
+    //     `git show 5ed1d87:docs/protocols/e4-v2-sealed-constants-v0.json`).
     const { constants } = await loadSealed();
 
     expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
-      "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c"
+      "3198ee1b9b2fc6c36861108018eee8aa9a243a4d57d58629ff71489a3afe9c56"
     );
-    expect(constants.version).toBe("0.3");
+    expect(constants.version).toBe("0.4");
     expect(constants.budgets).toEqual({
       turns_per_task: 27,
       verifications_per_task: 12,

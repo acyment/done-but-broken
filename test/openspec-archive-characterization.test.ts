@@ -124,6 +124,113 @@ describe("openspec archive characterization (pinned CLI)", () => {
     expect(firstSpec).toBe(secondSpec);
   });
 
+  // [Phase-0 learning boundary] The capability rename/retirement pattern the v2 README teaches:
+  // REMOVED (every prior requirement) + ADDED (a tombstone requirement) under the OLD capability,
+  // plus ADDED requirements under the NEW capability. Proven here against the real pinned CLI so
+  // the README documents behavior, not memory.
+  test("capability rename via whole-capability REMOVED + ADDED tombstone archives cleanly", async () => {
+    const workspace = await setupArchiveFixture({ modifiedDelta: MODIFIED_DELTA_DROPPING_SCENARIO });
+    await rm(join(workspace, "openspec", "changes", "drop-scenario"), { recursive: true, force: true });
+    await mkdir(join(workspace, "openspec", "changes", "rename-cart-to-basket", "specs", "cart"), {
+      recursive: true
+    });
+    await mkdir(join(workspace, "openspec", "changes", "rename-cart-to-basket", "specs", "basket"), {
+      recursive: true
+    });
+    await writeFile(
+      join(workspace, "openspec", "changes", "rename-cart-to-basket", "proposal.md"),
+      ["## Why", "Cart is being rebranded as basket across the product.", "", "## What Changes", "- Rename the cart capability to basket."].join("\n")
+    );
+    await writeFile(
+      join(workspace, "openspec", "changes", "rename-cart-to-basket", "tasks.md"),
+      ["## 1. Implementation", "- [x] 1.1 Move the endpoints"].join("\n")
+    );
+    await writeFile(
+      join(workspace, "openspec", "changes", "rename-cart-to-basket", "specs", "cart", "spec.md"),
+      [
+        "## REMOVED Requirements",
+        "",
+        "### Requirement: Cart totals",
+        "",
+        "## ADDED Requirements",
+        "",
+        "### Requirement: Retired cart endpoints",
+        "The service SHALL NOT serve the retired /cart endpoints.",
+        "",
+        "#### Scenario: Requests to retired /cart endpoints return not found",
+        "- **WHEN** GET /cart is requested",
+        "- **THEN** the response status is 404"
+      ].join("\n")
+    );
+    await writeFile(
+      join(workspace, "openspec", "changes", "rename-cart-to-basket", "specs", "basket", "spec.md"),
+      [
+        "## ADDED Requirements",
+        "",
+        "### Requirement: Basket totals",
+        "The basket SHALL compute totals from line items.",
+        "",
+        "#### Scenario: Line subtotal",
+        "- **GIVEN** a line item with unit price 250 cents and quantity 2",
+        "- **WHEN** the line subtotal is computed",
+        "- **THEN** the result is 500 cents"
+      ].join("\n")
+    );
+
+    const result = await runOpenSpecArchive({
+      repoRoot: REPO_ROOT,
+      workspacePath: workspace,
+      changeName: "rename-cart-to-basket"
+    });
+
+    expect(result.exit_code).toBe(0);
+    expect(result.normalized_stdout).not.toContain("Aborted. No files were changed.");
+
+    const oldSpec = await readFile(join(workspace, "openspec", "specs", "cart", "spec.md"), "utf8");
+    expect(oldSpec).toContain("Retired cart endpoints");
+    expect(oldSpec).not.toContain("Cart totals");
+
+    const newSpec = await readFile(join(workspace, "openspec", "specs", "basket", "spec.md"), "utf8");
+    expect(newSpec).toContain("Basket totals");
+
+    const archiveEntries = await readdir(join(workspace, "openspec", "changes", "archive"));
+    expect(archiveEntries.some((entry) => entry.endsWith("-rename-cart-to-basket"))).toBe(true);
+  });
+
+  // The abort branch the README warns about: REMOVED-only (no tombstone) rebuilds the capability
+  // to zero requirements — the pinned CLI aborts the WHOLE archive (exit 0) and prints the
+  // teaching hint the Phase-0 feedback passthrough must surface.
+  test("REMOVED-only capability retirement aborts the whole archive with the teaching hint", async () => {
+    const workspace = await setupArchiveFixture({ modifiedDelta: MODIFIED_DELTA_DROPPING_SCENARIO });
+    await rm(join(workspace, "openspec", "changes", "drop-scenario"), { recursive: true, force: true });
+    await mkdir(join(workspace, "openspec", "changes", "retire-cart", "specs", "cart"), { recursive: true });
+    await writeFile(
+      join(workspace, "openspec", "changes", "retire-cart", "proposal.md"),
+      ["## Why", "Cart is being retired from the product surface entirely.", "", "## What Changes", "- Remove the cart capability."].join("\n")
+    );
+    await writeFile(
+      join(workspace, "openspec", "changes", "retire-cart", "tasks.md"),
+      ["## 1. Implementation", "- [x] 1.1 Remove the endpoints"].join("\n")
+    );
+    await writeFile(
+      join(workspace, "openspec", "changes", "retire-cart", "specs", "cart", "spec.md"),
+      ["## REMOVED Requirements", "", "### Requirement: Cart totals"].join("\n")
+    );
+
+    const result = await runOpenSpecArchive({
+      repoRoot: REPO_ROOT,
+      workspacePath: workspace,
+      changeName: "retire-cart"
+    });
+
+    expect(result.exit_code).toBe(0);
+    expect(result.normalized_stdout).toContain("Aborted. No files were changed.");
+    expect(result.normalized_stdout.toLowerCase()).toContain("at least one requirement");
+
+    const untouchedSpec = await readFile(join(workspace, "openspec", "specs", "cart", "spec.md"), "utf8");
+    expect(untouchedSpec).toContain("Cart totals");
+  });
+
   test("normalizeCliOutput strips ANSI color and OSC sequences but keeps plain brackets", () => {
     expect(normalizeCliOutput("\u001b[32mok\u001b[0m done\r\n")).toBe("ok done");
     expect(normalizeCliOutput("plain [x] brackets survive")).toBe("plain [x] brackets survive");

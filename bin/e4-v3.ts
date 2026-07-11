@@ -61,6 +61,7 @@ const pricing = {
 const maxOutputTokens = Number(argValue("--max-output-tokens") ?? "32000");
 const extraBodyArg = argValue("--extra-body");
 const extraBody = extraBodyArg ? (JSON.parse(extraBodyArg) as Record<string, unknown>) : null;
+const budgetOverrideArg = argValue("--budget-override");
 
 // ---- classification gates (checked before any workspace/provider setup) ----
 if ((classification === "calibration" || classification === "pilot") && !live) {
@@ -75,7 +76,31 @@ if (live && !model) {
   throw new Error("--model is required for a live run");
 }
 
+// [Phase-0 learning boundary] Budget override: learning runs cap cost below the sealed budgets.
+// Calibration-only by construction — evidence (pilot) and dry runs always use the sealed values,
+// so an overridden run can never be reclassified into evidence without re-running.
+if (budgetOverrideArg && classification !== "calibration") {
+  throw new Error("--budget-override is calibration-only: sealed budgets are mandatory for every other classification");
+}
+
+const budgetOverride = budgetOverrideArg
+  ? (JSON.parse(budgetOverrideArg) as Partial<{
+      turns_per_task: number;
+      verifications_per_task: number;
+      token_budget: number;
+      spend_cap_usd: number;
+    }>)
+  : null;
+
 const { constants, hash } = await loadE4V2Constants(join(repoRoot, E4_V2_CONSTANTS_PATH));
+
+if (budgetOverride) {
+  const unknownKeys = Object.keys(budgetOverride).filter((key) => !(key in constants.budgets));
+  if (unknownKeys.length > 0) {
+    throw new Error(`--budget-override has unknown budget keys: ${unknownKeys.join(", ")}`);
+  }
+  constants.budgets = { ...constants.budgets, ...budgetOverride };
+}
 const { constants: v3Constants, hash: v3Hash } = await loadE4V3Constants({
   v3Path: join(repoRoot, E4_V3_CONSTANTS_PATH),
   v2Path: join(repoRoot, E4_V2_CONSTANTS_PATH)
@@ -90,6 +115,17 @@ const substrateConfig = {
 
 await rm(runRoot, { recursive: true, force: true });
 await mkdir(runRoot, { recursive: true });
+
+if (budgetOverride) {
+  // Provenance sidecar: manifests stamp the sealed constants identity while the run executed
+  // under these caps — the sidecar plus calibration classification keeps that honest.
+  const sidecarPath = join(runRoot, "budget-override.json");
+  await writeFile(
+    sidecarPath,
+    `${JSON.stringify({ sealed_budgets_overridden_for_learning_run: budgetOverride, effective_budgets: constants.budgets }, null, 2)}\n`
+  );
+  console.log(`budget override (calibration-only learning run): ${JSON.stringify(constants.budgets)} → ${sidecarPath}`);
+}
 
 let providerFactory: E4AgentProviderFactory;
 let modelIdentity: { preset: string; model_id: string; route_id: string };

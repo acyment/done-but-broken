@@ -1,6 +1,6 @@
 {
   "schema": "e4-v3-sealed-constants",
-  "version": "0.2",
+  "version": "0.3",
   "protocol_profile_id": "e4-openspec-workflow-v2",
   "arms": [
     "e4_arm_0",
@@ -9,7 +9,7 @@
   ],
   "extends": {
     "v2_constants_path": "docs/protocols/e4-v2-sealed-constants-v0.json",
-    "v2_constants_hash": "2f78f53479e300ef4eb7ee654283dba26a9095cf252b661d20deb51232b5e11c"
+    "v2_constants_hash": "3198ee1b9b2fc6c36861108018eee8aa9a243a4d57d58629ff71489a3afe9c56"
   },
   "compatibility_boundary": {
     "determinacy_table_id": "e4-request-determinacy-v1",
@@ -43,5 +43,5 @@
     "src/e4/v3/product-gate.ts": "88c69b90bfb74d8927057e3bbc473ba5fab5c197efaa0ca2650f24abefa6ee84",
     "src/e4/v3/turn-protocol.ts": "01b1eed1886b56e39cbe9d2319a0059b69c316b0ead5266f5062a540e419ef88"
   },
-  "budgets_note": "Budgets RATIFIED UNCHANGED at v3-M5 (2026-07-10): one full-length e4_arm_p calibration sequence (seed 37, 6 tasks, glm-5.2 thinking-on, z.ai paas/v4 route direct-zhipu-api-key) observed max 7/27 turns, 178400/490000 tokens, 2/12 verifications, $0.8175/$5 — no wall hit, the freeze rule's fits-with-headroom branch applies. Values remain the v2 v0.3 set (27 turns / 12 verifications / 490000 tokens / $5 cap), read from the frozen v2 file; version 0.1 -> 0.2 marks this ratification event. Model-id pin: these budgets transfer to a v3-M6 evidence run only on the exact model id glm-5.2, thinking-ON, on this route; any other model or thinking configuration repeats the ratification. Provenance: docs/protocols/e4-v3-m5-calibration-manifest-20260710-001.json + docs/protocols/e4-v3-m5-reasoning-observability-20260710-001.json; notes docs/e4/E4V3-M5-BUDGET-CALIBRATION-NOTES.md. The ASK_PM and product-gate protocol texts are sealed via the code_twins over turn-protocol.ts and product-gate.ts."
+  "budgets_note": "Budgets RATIFIED UNCHANGED at v3-M5 (2026-07-10): one full-length e4_arm_p calibration sequence (seed 37, 6 tasks, glm-5.2 thinking-on, z.ai paas/v4 route direct-zhipu-api-key) observed max 7/27 turns, 178400/490000 tokens, 2/12 verifications, $0.8175/$5 — no wall hit, the freeze rule's fits-with-headroom branch applies. Values remain the v2 v0.3 set (27 turns / 12 verifications / 490000 tokens / $5 cap), read from the frozen v2 file; version 0.1 -> 0.2 marks this ratification event. Model-id pin: these budgets transfer to a v3-M6 evidence run only on the exact model id glm-5.2, thinking-ON, on this route; any other model or thinking configuration repeats the ratification. Provenance: docs/protocols/e4-v3-m5-calibration-manifest-20260710-001.json + docs/protocols/e4-v3-m5-reasoning-observability-20260710-001.json; notes docs/e4/E4V3-M5-BUDGET-CALIBRATION-NOTES.md. The ASK_PM and product-gate protocol texts are sealed via the code_twins over turn-protocol.ts and product-gate.ts. v2 v0.3 -> v0.4 / v3 v0.2 -> v0.3 (2026-07-11, Phase-0 learning boundary): budgets UNCHANGED; the boundary moved for the harness-feedback fixes found by the M6 adversarial review (openspec validate stderr passthrough, archive-abort hint passthrough, README capability-retirement section) — budgets remain ratified on glm-5.2 thinking-on per the v3-M5 event; the v3-M6 evidence manifests stamp the historical v2 2f78f534... / v3 aec35e3d... hashes (re-run that verdict against the archived files via git show 5ed1d87:<path>)."
 }

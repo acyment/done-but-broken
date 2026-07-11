@@ -115,6 +115,13 @@ describe("v2-M1 — T0 workspace shape (§5.5)", () => {
     expect(readme).toContain("## ADDED Requirements");
     expect(readme).toContain("openspec archive");
 
+    // [Phase-0 learning boundary] The capability-retirement/tombstone section — the mechanic the
+    // M6 review found undocumented (no arm ever discovered it live; the archive characterization
+    // test proves the taught pattern against the pinned CLI).
+    expect(readme).toContain("## Renaming or retiring a capability");
+    expect(readme).toContain("least one requirement");
+    expect(readme).toContain("Retired <capability> endpoints");
+
     for (const pattern of [...E4_V2_REQUEST_STEP_PATTERNS, ...E4_V2_ASSERTION_STEP_PATTERNS]) {
       expect(readme).toContain(`- ${pattern}`);
     }

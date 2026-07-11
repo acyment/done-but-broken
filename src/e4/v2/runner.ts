@@ -23,7 +23,12 @@ import type { E4V2ArmPolicy } from "./arm-policy";
 import type { E4V2SealedConstants } from "./constants";
 import { E4V2TaskGate, type E4V2GateEvents } from "./gate";
 import { METER_VERSION_V2, readBoundSpecOfRecordScenarios, runE4V2DriftMeter } from "./meter";
-import { previewE4V2MergedScenarios, runE4OpenSpecArchiveStep, runE4OpenSpecValidateChange } from "./openspec";
+import {
+  composeOpenSpecCliDetail,
+  previewE4V2MergedScenarios,
+  runE4OpenSpecArchiveStep,
+  runE4OpenSpecValidateChange
+} from "./openspec";
 import { openSpecToFeature } from "./converter";
 import { runE4V2Scenario, runE4V2ScenarioSet } from "./scenario-executor";
 import {
@@ -211,7 +216,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
         workspacePath: input.workspace_dir,
         changeName
       });
-      return { ok: result.exit_code === 0, detail: result.normalized_stdout.split("\n").slice(-3).join(" ") };
+      return { ok: result.exit_code === 0, detail: composeOpenSpecCliDetail(result) };
     },
     previewMergedScenarios: (changeName: string | null) =>
       previewE4V2MergedScenarios({ repoRoot: input.repoRoot, workspacePath: input.workspace_dir, changeName }),
