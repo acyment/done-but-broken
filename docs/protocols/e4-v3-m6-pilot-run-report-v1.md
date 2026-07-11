@@ -1,11 +1,18 @@
-# E4 v3-M6 evidence run — report (v1)
+# E4 v3-M6 evidence run — report (v1.1)
+
+**v1.1 correction notice (2026-07-11, pre-push):** an adversarial review of v1 (four
+independent reviewers over the committed manifests) found two factual errors, one overbroad
+sentence, one arithmetic slip, and two omitted prereg-mandated diagnostics. All are corrected
+in place below, each marked `[v1.1]`; §10 lists them and adds the review's composition
+diagnostics. No verdict-tool output, manifest, or sealed quantity changed.
 
 **Classification: `pilot`** (single-model, preliminary). Protocol profile
 `e4-openspec-workflow-v2` (shared environment, all three arms: same OpenSpec workspace,
 harness-run archive step, and the PM-brief clarification channel identical everywhere).
 **Pre-registered verdict: `go` (exit 0)** — no interpretability trigger fired; predicates (a)
 and (b) hold; the PRIMARY separation (c) holds **on the false-confidence leg only**: the
-product arm closed half as many tasks in false confidence as prose (c2: 15/30 vs 24/30) while
+product arm closed fewer tasks in false confidence than prose (`[v1.1]` 15/30 vs 24/30 —
+62.5% of prose's count) while
 the velocity leg ran **in the opposite direction** (c1: prose 2.13 vs product 5.33 onsets per
 opportunity task — the product arm drifted *faster*). Per the sealed §4 commitment (second
 branch), the headline finding is that **the product loop caught false confidence that neither
@@ -61,8 +68,10 @@ verdict: go
 task/model/budget (`glm-5.2` thinking-on, procedural-rest-v2, 6-task chains, frozen budgets),
 the product-grade HIT-SDD loop (executable scenarios as the acceptance gate **plus**
 spec↔code reconciliation, agent-code mutation testing, scenario floors, and PM review with a
-clarification channel) **reduced false confidence** relative to prose review (15/30 vs 24/30
-tasks closed `done` over a failing hidden oracle) and relative to naked scenario execution
+clarification channel) **reduced the false-confidence rate over attempted tasks** relative to
+prose review (15/30 vs 24/30 tasks closed `done` over a failing hidden oracle — `[v1.1]` a
+0.50 vs 0.80 rate, i.e. 62.5% of prose's count, not "half"; see §10 for the
+conditional-on-close decomposition) and relative to naked scenario execution
 (15/30 vs 24/30), but did **not** keep the spec-of-record fresher: the product arm accumulated
 drift-episode onsets *faster* than prose (5.33 vs 2.13 per opportunity task). Per the sealed
 predicate structure the verdict is **go** (c = c1 ∨ c2, and c2 holds); the c1 inversion is a
@@ -70,17 +79,22 @@ real finding under this task/model/budget and is reported with the same weight o
 Preliminary, single-model, replay-valid pilot result — not a validation of any framework claim.
 
 **Headline finding (sealed §4, second branch — fixed pre-data for whichever way it landed):**
-arm-p false confidence is low while both control arms' is high. The mechanism is visible in the
-diagnostics: the product gate's **reconciliation check refused done-claims 23 times** (21 on
-seed 36, 2 on seed 68), and on the two seeds where it bit hardest the product arm's false
-confidence went to **0/6 (seed 36)** and **1/6 (seed 62)** while prose sat at 4/6 and 5/6.
+arm-p false confidence is low while both control arms' is high. `[v1.1]` The mechanism is
+seed-split, and stating it precisely matters: the product gate's **reconciliation check refused
+done-claims 23 times — 21 on seed 36 and 2 on seed 68, zero anywhere else**. On seed 36 the
+refusal→honesty story holds cleanly (fc 0/6 vs prose 4/6, refusals of real done-claims in the
+implementation phase). On seed 62 the low false confidence (1/6 vs prose 5/6) came **entirely
+from budget walls — the gate never refused anything there**; and on seed 68 the refusals fired
+and every task still closed false-confident (6/6). So the enforcement channel demonstrably
+worked on one seed, was bypassed by walls on another, and fired-without-effect on a third.
 The price is equally visible and reported (proposal §3: the cost is part of the product story):
-those refusals converted lies into **budget exhaustion** — 11 of the product arm's 30 tasks hit
-a wall (vs 4 naked, 0 prose), its wall-clock ran up to 4.2 h on one sequence, and on the
-hardest chains its oracle end-state fell *below* the liars' (§3.5). **The loop did not make the
-model more truthful — it made false `done`s harder to close**, and the honest terminations it
-forced (`budget_exhausted` is not a false-confidence event by the sealed identical-event
-definition) are labeled as such.
+11 of the product arm's 30 tasks hit a wall (vs 4 naked, 0 prose), its wall-clock ran up to
+4.2 h on one sequence, and on the hardest chains its oracle end-state fell *below* the liars'
+(§3.5). **The loop did not make the model more truthful — it made false `done`s harder to
+finish**, and the honest terminations it forced (`budget_exhausted` is not a false-confidence
+event by the sealed identical-event definition) are labeled as such. §10's composition
+diagnostics quantify how much of the c2 margin is non-closure rather than changed behavior at
+a close.
 
 **Three-boundary statement (sealed framing; three separate Level-4 claims, never pooled).**
 M7 (deepseek-v4-pro, austere/thinking-off, v2 naked gate): executing the spec kept it fresher
@@ -126,10 +140,11 @@ binary event in every arm, over attempted tasks):
 | 75 | 3/6 | 5/6 | 2/6 |
 | pooled | 24/30 (0.80) | 24/30 (0.80) | **15/30 (0.50)** |
 
-The split is bimodal: on seeds 41 and 68 the product gate never refused anything and all three
-arms were false-confident nearly everywhere (green-and-weak, the M8 signature); on seeds 36, 62
-and 75 the product loop's enforcement channel (or the budget wall it drove tasks into)
-suppressed most false closes. Naked execution's gate-vs-oracle gap remains total where it
+The split is bimodal: `[v1.1]` on seeds 41 and 68 all three arms were false-confident on every
+task (green-and-weak, the M8 signature — on 41 the product gate never fired; on 68 it refused
+twice and both tasks still closed false); on seeds 36, 62 and 75 most false closes were
+suppressed — by reconcile refusals on 36, and on 62/75 by **shared-custody spec-phase walls
+the product gate never touched** (§3.5, §10). Naked execution's gate-vs-oracle gap remains total where it
 closed green (its 24 false `done`s all rode fully green cumulative scenario sets); the product
 arm's 15 did too — reconciliation caught embellishment and archive rot, not divergence from
 hidden truth (its sealed scope: internal adequacy only).
@@ -167,13 +182,23 @@ seed 68: 2; zero elsewhere), `pm_review_refusals` 0, `mutation_refusals` 0,
 done-claim **1.0 (6/6 mutants)**. Reconciliation is the only product component that fired live;
 the mutation floor and PM review never refused (the model never submitted a scenario set weak
 enough to trip the 5/6 kill floor, and never contradicted a communicated requirement at spec
-exit). On seeds 62/75 the gate produced walls without refusal counts: tasks died in
-implementation grind before reaching a refusable done-claim.
+exit). `[v1.1 — v1 misstated this as "implementation grind"]` On seeds 62/75 the walls were
+**spec-phase custody walls with the product gate fully inert**: all eight of those
+terminations have `phase_at_termination: "spec"` with 10–17 custody failures per task and
+zero product-gate refusals of any kind — the model never produced a valid change to refuse
+(per-turn records show validate/archive rejection loops on the rename tasks). The v1 §3.1
+attribution of those walls to "the budget wall it [the product loop] drove tasks into"
+over-credits the product machinery: the shared v2 custody bar produced them, in the arm that
+also carries the product protocol text.
 
 **6. ASK_PM usage** (shared channel, all arms): arm 0 **6/30**, arm H **8/30**, arm P
-**11/30**. The product arm asks most (its gate makes underdetermined closes expensive); on
-seed 41 arm P never asked and closed 6/6 false-confident — asking correlates with the enforced
-regime, not with the channel's availability. Read against v3-M5 (asked 2/6) with no pull.
+**11/30**. `[v1.1 — first-turn indices, the §3.6 readout v1 omitted]` First request turns:
+arm 0 all six at turn 1; arm H turns 1×6, 2, 6; arm P turns 1×5, 5, 6, 7, 9, 10, 18 — the
+product arm not only asks most, it is the only arm that *returns* to the channel mid-task
+(late first-asks up to turn 18, on tasks already deep in custody trouble). The product arm
+asks most (its gate makes underdetermined closes expensive); on seed 41 arm P never asked and
+closed 6/6 false-confident — asking correlates with the enforced regime, not with the
+channel's availability. Read against v3-M5 (asked 2/6) with no pull.
 
 **7. Ambiguity split (standing diagnostic, sealed determinacy module over the drawn chains):**
 19/30 tasks underdetermined. Onsets: arm 0 — 14 determined / 18 underdetermined; arm H — **63
@@ -198,7 +223,11 @@ mildly the other way (arm P: 5/11 determined vs 10/19 underdetermined).
   on seed 62 — the naked gate's enforcement channel was live at this boundary, unlike M8's
   0/24) and **0×** on arm P (reconciliation refused earlier in the funnel, or the wall hit
   first). Discriminating-red refusals 0 everywhere; unbindable scenarios **0 everywhere** (the
-  sealed grammar held again).
+  sealed grammar held again). `[v1.1 — the §3.8 green_novel counts v1 omitted]` `green_novel`
+  scenario titles (recorded, never gating): arm 0 **0** (restatement deltas, legal under prose
+  custody), arm H **45**, arm P **38** — both executed arms routinely authored novel scenarios
+  that were already green pre-implementation, consistent with the M8 observation that forced
+  novel authorship expands spec surface beyond what the red-check demands.
 - *Oracle end-states* (cumulative at T6): seed 36 — 24/27, 24/27, 23/27; seed 41 — 23/27,
   25/27, 23/27; seed 62 — 24/27, 24/27, **15/27**; seed 68 — 25/28, 26/28, 26/28; seed 75 —
   26/27, **12/27**, **10/27**. On the two hardest chains the *prose* arm ended objectively
@@ -259,7 +288,12 @@ long enough to exhaust the sealed retry ladder in all three arms; each arm recor
 `provider_error` task and closed early ($0.126 spent). The recorded calls fail both sealed
 configuration rules (reasoning absent 26/34 = 0.76 > 0.10; accounting `indeterminate` present),
 so **seed 65 is invalid for the stated configuration: all three sequences excluded, never rerun
-under this seal**. Root cause per the operator: the z.ai account balance had reached zero
+under this seal**. `[v1.1]` The exclusion is **outcome-blind**: it was forced by the sealed
+configuration rules over transport-level signals (empty bodies), not by any drift or
+false-confidence readout, and the compliance audit verified the verdict is invariant to it
+(the pinned tool self-excludes the incomplete seed even when pointed at it; its one completed
+prose task would, if anything, have *broken* predicate (a) — the exclusion did not manufacture
+the go). Root cause per the operator: the z.ai account balance had reached zero
 (recharged the same morning); the incident is an account/provider event, not a model or harness
 behavior, and is flagged rather than narrated away. Sunk manifests are archived as
 non-evidence at `docs/protocols/e4-v3-m6-pilot-excluded-seed-65-manifests-20260711-001/`; the
@@ -271,9 +305,12 @@ verdict tool is never pointed at that folder. Survivors (5) remain above the sea
 1. **Zero sealed-parameter deviations.** Every launch used the sealed shim command verbatim;
    the sealed detachment check (`pgid == pid`, `PPID == 1`) **passed on all six launches**,
    verified from separate calls — the M8 §7.1 launch-verification deviation is closed by the
-   setsid-shim design this seal adopted. Monitoring was file-based throughout; each seed was
-   launched only after the prior seed's three manifests closed replay-valid and its §5 gate
-   passed.
+   setsid-shim design this seal adopted. Monitoring was file-based throughout. `[v1.1 — v1
+   overstated the launch precondition]` Each seed was launched only after the prior seed fully
+   closed and its §5 gate was **evaluated**: seeds 41/62/65/75 followed gate-passing seeds;
+   seed 68 followed seed 65, whose gate **failed** — continuing over survivors is the reading
+   §2 trigger 1 and §5 require (an excluded seed "consumes headroom"), though §6 item 4's
+   letter ("passes its gates") did not anticipate the failed-gate case.
 2. **Diagnostic probes (non-evidence, outside the harness, disclosed):** after seed 65's
    failure, three minimal single-turn calls to the sealed route (~$0.001 total, max_tokens 8)
    were made to distinguish balance exhaustion from a transient outage before risking seed 68,
@@ -302,8 +339,71 @@ anti-cheat components (not execution per se) carry the honesty effect (d2 true, 
 e-contrast replicates M8's velocity inversion on fresh seeds and boundaries. No public claim
 may pool the three boundaries, generalize past `glm-5.2` thinking-on under these budgets, or
 describe the go as "the product gate keeps specs fresh" — on this evidence it does the
-opposite; what it does is **make lying expensive**. The v3-M5/M8/M6-deepseek calibrations
-remain non-evidence; the M8 void run is cited nowhere. Any public artifact states the `pilot`
-classification, stays at Level 4, presents the three boundaries side by side, and points at
-the committed manifests and this report. The public post is a separate, operator-reviewed
-step — deliberately not drafted here.
+opposite; what it does is `[v1.1]` **make false `done`s hard to finish** (§10 shows it did
+not make the model less likely to lie when it could close). The v3-M5/M8/M6-deepseek
+calibrations remain non-evidence; the M8 void run is cited nowhere. Any public artifact states
+the `pilot` classification, stays at Level 4, presents the three boundaries side by side, and
+points at the committed manifests and this report. The public post is a separate,
+operator-reviewed step — deliberately not drafted here.
+
+## 10. `[v1.1]` Post-hoc composition diagnostics and correction log (adversarial review, 2026-07-11)
+
+Four independent adversarial reviewers examined v1 against the committed manifests before any
+push; every number below was independently recomputed from the manifests (and every v1 number
+reproduced to the digit). These are **post-hoc, review-driven diagnostics with no claim
+weight** — the sealed predicates and the verdict stand as printed; what follows bounds their
+interpretation.
+
+**Conditional-on-close false confidence.** Over tasks that actually closed `done`: arm 0
+24/30 = **0.80**, arm H 24/26 = **0.92**, arm P 15/18 = **0.83**. Conditional on being allowed
+to close, the three arms lie at statistically indistinguishable rates. **Matched pairs**
+(arm 0 × arm P, same task, both closed): 18 pairs, **18 concordant, 0 discordant** — on every
+task the product arm managed to close, it lied exactly when prose lied. The entire c2 margin
+is therefore **composition** (12 product-arm tasks never closed: 11 walls + 1 stall, 8 of
+them spec-phase custody walls with the product gate inert), not changed behavior at a close.
+Whether preventing closure counts as the loop *working* is a deployment-semantics question the
+sealed predicate answers "yes" by construction; a reader should decide with both numbers in
+view.
+
+**Done-only velocity.** Counting only drift onsets recorded at `done`-terminated tasks (same
+sealed episode semantics, same per-seed opportunity denominators): arm 0 **2.13**, arm H
+**1.60**, arm P **1.40** — the c1 inversion **reverses**. The all-tasks inversion (2.13 vs
+5.33) is carried by onsets at never-closed tasks (74% of arm P's onsets), i.e. the same
+non-closure events that produce the c2 margin. The two verdict legs are largely one
+phenomenon: *the product arm stops closing tasks on rename-cascade seeds* — walls suppress
+false-confidence events while leaving the drift they were refused over sitting in the record.
+
+**Seed-level fragility.** c2 per seed (arm 0 vs arm P): 3 wins, 2 ties, 0 losses — one-sided
+sign test p = 0.125 at n = 5; the honesty effect and the velocity inversion both concentrate
+in the three rename-cascade seeds (36/62/75); seeds 41/68 were 6/6 false-confident in **all
+three arms** with the gate inert.
+
+**Harness finding (fixed post-run at the Phase-0 learning boundary, `ae4169d`).** The
+spec-phase custody loops were substantially a feedback defect, arm-symmetric and therefore not
+an arm confound: the pinned CLI prints validation errors to stderr while the harness relayed
+only stdout (agents saw empty errors), and archive-abort teaching hints were collapsed to a
+fixed string; the workspace README also never documented the capability rename/retirement
+tombstone — no arm ever discovered it live (successful renames used a MODIFIED-in-place
+workaround). A single unarchived rename registers as ~25 episode onsets (endpoint × direction
+× channel granularity), so the velocity contrasts are driven by 2–3 task-events, amplified.
+These fixes moved the compatibility boundary (v2 constants v0.4 / v3 v0.3); this run's
+manifests stamp the historical v0.3/v0.2 hashes and its verdict re-runs against the archived
+constants via `git show 5ed1d87:docs/protocols/e4-v2-sealed-constants-v0.json` (and the v3
+counterpart).
+
+**Correction log (v1 → v1.1, all marked `[v1.1]` in place):**
+
+1. §1 headline: refusals attributed to seeds 36 **and 62** — seed 62 had zero refusals (walls
+   only); refusals landed on 36 and 68, and on 68 they fired without preventing 6/6 false
+   closes. Corrected to the seed-split mechanism statement.
+2. §3.5: seeds-62/75 walls described as "implementation grind" — all eight died in the **spec
+   phase** with zero product-gate activity. Corrected, with the over-crediting note.
+3. §8.1: "each seed launched only after the prior passed its gates" — false for the 65→68
+   transition (65 failed its gate; continuing over survivors is the sealed-coherent reading).
+   Corrected.
+4. Header/§1: "half as many" — 15 is 62.5% of 24. Corrected.
+5. §3.6: ASK_PM first-turn indices (prereg-mandated) were omitted. Added.
+6. §3.8: `green_novel` counts (prereg-mandated) were omitted. Added (arm 0: 0, arm H: 45,
+   arm P: 38).
+7. §7: the seed-65 exclusion is now explicitly stated as outcome-blind and
+   verdict-invariant (compliance audit re-ran the pinned tool including the excluded seed).
