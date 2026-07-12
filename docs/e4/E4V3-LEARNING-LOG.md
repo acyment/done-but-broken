@@ -331,3 +331,23 @@ honesty-at-close. Pre-seal REQUIRED: one rename-free two-arm full-budget calibra
 budgets on the new boundary and answers GLM F3 (were the learning-run stalls a budget
 artifact). Sealing and the evidence spend are separate operator acts; the verdict tool +
 harness-commit stamp are gate-commit actions at the seal.
+
+### Pre-seal calibration rung EXECUTED (2026-07-12, operator-authorized, $1.17): FREEZE-UNCHANGED
+
+Seed 144, both arms, 6 tasks, FULL sealed budgets, first live run on the naturalized
+boundary. Both sequences complete + replay-valid; §5 thinking-on checks clean (82/82 active,
+all folded, zero truncation); detachment properties held (pgid==pid, PPID==1). **No wall
+approached** (max 12/27 turns, 183.8k/490k tokens, 0/12 verifications, $0.63/$5 per
+sequence) ⇒ **budgets 27/12/490k/$5 ratify unchanged; the prereg §1 budget row stands and
+sealing is unblocked on this axis.** GLM F3 answered: product arm closed 6/6 at full budgets
+(the learning 240k cap was depressing product closes), while prose still stalled once
+(add_endpoint, 3 turns — behavioral, not budget censoring). Mechanism observation
+(calibration class, no claim weight): **product arm = zero false confidence with a fully
+green hidden oracle at every close and burden AUC 0.67 vs prose fc|done 4/5 and AUC 1.67** —
+the ladder's predicted direction, now visible without the convention-trap channel. Known
+residual (arm-symmetric, flagged for the seal gate): both arms seed demo rows for a freshly
+added entity and pin list-count scenarios on them, which the meter's spec channel scores as
+2 contradictions against gold's empty store (oracle agnostic, zero fc) — either disclose
+"new entity starts empty" in the brief (v3 twin re-pin) or accept as measured invented-data
+behavior. Full record: docs/e4/E4V3-M7-PRECAL-NOTES.md; provenance
+docs/protocols/e4-v3-m7-precal-calibration-manifests-20260712-001/. Seed 144 consumed.
