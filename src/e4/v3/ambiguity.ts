@@ -50,7 +50,8 @@ const CONTENT_DETERMINACY: Partial<Record<E4ChangeOpKind, Partial<Record<E4V3Fac
     entity_operation_surface: "underdetermined", // "a Promotion list" does not pin full CRUD
     field_required: "underdetermined",
     field_type: "underdetermined",
-    validation_rule_detail: "underdetermined"
+    validation_rule_detail: "underdetermined",
+    fixture_migration: "underdetermined" // whether the new entity ships with data is never stated
   },
   delete_entity: {
     removal_scope: "determined" // "remove it from the product entirely"
@@ -119,6 +120,9 @@ export function tagE4RequestDeterminacy(input: {
   for (const entity of delta.added_entities) {
     add("entity_field_set", entity.name);
     add("entity_operation_surface", entity.name);
+    // §5.7 + v3-M7 pre-seal rung: gold's new entities start EMPTY; both live arms invented seed
+    // rows and pinned scenarios on them — a residual-ambiguity fact the brief must cover.
+    add("fixture_migration", entity.name);
     for (const field of entity.fields) {
       add("field_type", `${entity.name}.${field.name}`);
       add("field_required", `${entity.name}.${field.name}`);

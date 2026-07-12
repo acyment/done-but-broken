@@ -42,6 +42,12 @@ export type E4V3SealedConstants = {
   };
   code_twins: Record<string, string>; // repo-relative sealed v3 module path → sha256
   budgets_note: string;
+  // v3-M7 evidence seal (pre-registration §2): the composition-proof primary's sealed
+  // parameters — the close-rate guard gap and the fixed scheduled-task denominator.
+  m7_evidence?: {
+    close_rate_guard_max_gap: number;
+    scheduled_tasks_per_sequence: number;
+  };
 };
 
 const KNOWN_CHECKS: ReadonlySet<string> = new Set([
@@ -113,6 +119,18 @@ export function validateE4V3Constants(raw: unknown): E4V3SealedConstants {
 
   if (typeof constants.code_twins !== "object" || constants.code_twins === null || Object.keys(constants.code_twins).length === 0) {
     throw new E4V2ConstantsValidationError("v3 code_twins must be a non-empty map");
+  }
+
+  if (constants.m7_evidence !== undefined) {
+    const m7 = constants.m7_evidence;
+
+    if (!(typeof m7.close_rate_guard_max_gap === "number" && m7.close_rate_guard_max_gap >= 0 && m7.close_rate_guard_max_gap < 1)) {
+      throw new E4V2ConstantsValidationError("v3 m7_evidence.close_rate_guard_max_gap must be in [0, 1)");
+    }
+
+    if (!(Number.isInteger(m7.scheduled_tasks_per_sequence) && m7.scheduled_tasks_per_sequence > 0)) {
+      throw new E4V2ConstantsValidationError("v3 m7_evidence.scheduled_tasks_per_sequence must be a positive integer");
+    }
   }
 
   return constants;

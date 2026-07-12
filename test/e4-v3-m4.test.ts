@@ -20,6 +20,11 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // [v3-M4] v0 FREEZE: the full-file sha256 of the v3 constants file. Any edit is a new gate.
 // [v3-M5] budgets RATIFIED UNCHANGED on glm-5.2 thinking-on (seed-37 e4_arm_p calibration, no
 // wall hit); version 0.1 -> 0.2 marks that ratification event.
+// [v3-M7 gate commit, 2026-07-12] version 0.4 -> 0.5: disclosure/instrument-only delta — the
+// add_entity "starts with no records" brief line, the sealed m7_evidence block (close-rate
+// guard 0.15, denominator 6), and the tombstone-disclosure note; budgets unchanged, the
+// seed-144 ratification carries (recorded judgment; see budgets_note). The v0.4 hash was
+// 8dc130219b58b84c3c8df017b7a72d63c9da05ef871c09bd8a77b9590911722e.
 // [§5.7 Amendment 3, 2026-07-12] version 0.3 -> 0.4: substrate naturalization boundary (v2 v0.5,
 // extends-hash re-pin, v3 twins re-hashed for the fixture_migration disclosure changes). The v0.3
 // hash was recorded in git history at 01f7942.
@@ -28,7 +33,7 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // fixes). The v0.2 hash was aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a —
 // the compatibility_boundary.v3 stamp on every v3-M6 evidence manifest (historical; re-run that
 // verdict against `git show 5ed1d87:docs/protocols/e4-v3-sealed-constants-v0.json`).
-const FROZEN_V3_CONSTANTS_SHA256 = "8dc130219b58b84c3c8df017b7a72d63c9da05ef871c09bd8a77b9590911722e";
+const FROZEN_V3_CONSTANTS_SHA256 = "2dee8973726c5b3a8b2313ae7efcbc1b12b38695451b1b35340e24bd0595d7ee";
 
 describe("v3-M4: constants freeze", () => {
   test("[FREEZE] the v3 constants file hash is pinned", () => {
@@ -43,7 +48,7 @@ describe("v3-M4: constants freeze", () => {
       v2Path: join(REPO_ROOT, E4_V2_CONSTANTS_PATH)
     });
 
-    expect(constants.version).toBe("0.4");
+    expect(constants.version).toBe("0.5");
     expect(constants.product_gate.mutation_kill_floor).toBeCloseTo(5 / 6, 10);
     expect(constants.product_gate.blocking_checks).not.toContain("field_never_exercised");
     // the sealed ids match the modules' own exported ids

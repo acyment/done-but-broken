@@ -49,6 +49,11 @@ export type E4V2RunManifest = {
   arm_mode: "prose" | "executed";
   pairing_label: string;
   model: { preset: string; model_id: string; route_id: string };
+  // v3-M7 gate commit (external-audit design input 2): the harness git commit the run executed
+  // at. Additive + permissive here (historical manifests predate it — the M6 verdict must stay
+  // re-runnable); the orchestrator refuses to CREATE a pilot manifest without it, and the v3-M7
+  // evidence tool's predicate (b) requires one identical nonempty value across all manifests.
+  harness_commit?: string;
   compatibility_boundary: {
     constants_version: string;
     constants_hash: string;

@@ -47,6 +47,16 @@ const runRoot = resolve(argValue("--run-root") ?? join(repoRoot, "tmp", "e4-v3-d
 const useGamer = process.argv.includes("--gamer");
 const live = process.argv.includes("--live");
 const classification = (argValue("--classification") ?? "dry_run") as E4RunClassification;
+// v3-M7 gate commit: stamp the harness git commit into every manifest (evidence predicate (b)
+// binds the run to the sealed code identity; dry runs carry it too so fixtures exercise it).
+const harnessCommit = new TextDecoder()
+  .decode(Bun.spawnSync(["git", "rev-parse", "HEAD"], { cwd: repoRoot }).stdout)
+  .trim();
+
+if (!/^[0-9a-f]{40}$/.test(harnessCommit)) {
+  throw new Error("cannot resolve harness git commit (git rev-parse HEAD failed)");
+}
+
 const arms = argValue("--arms")
   ? (argValue("--arms")!.split(",").map((arm) => arm.trim()) as E4V2ArmId[])
   : undefined;
@@ -176,6 +186,7 @@ const result = await runE4V2Sequences({
   providerFactory,
   executor_config: constants.executor,
   model: modelIdentity,
+  harness_commit: harnessCommit,
   v3: {
     product_config: v3Constants.product_gate,
     // v3-M6 gate commit (M5 flag 1): every v3 manifest stamps the v3 constants identity —

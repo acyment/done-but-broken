@@ -94,8 +94,11 @@ export function renderE4PmBrief(input: { opKind: E4ChangeOpKind; delta: E4TaskDe
       lines.push(`Validation on ${entity.name}.${rule.field}: ${ruleDetailText(rule)}.`);
     }
 
+    lines.push(`${entity.name} starts with no records; do not preload sample data.`);
+
     cover("entity_field_set", entity.name);
     cover("entity_operation_surface", entity.name);
+    cover("fixture_migration", entity.name);
 
     for (const field of entity.fields) {
       cover("field_type", `${entity.name}.${field.name}`);

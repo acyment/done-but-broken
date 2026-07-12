@@ -23,7 +23,7 @@ calibration reopens budget ratification as its own gate act before sealing.
 ## 0. Boundary context
 
 This run is the first evidence act on the **naturalized substrate boundary** (v2 constants
-v0.5 / v3 constants v0.4, substrate `procedural-rest-v2.1`, design §5.7 Amendment 3). The
+v0.5 / v3 constants v0.5, substrate `procedural-rest-v2.1`, design §5.7 Amendment 3). The
 boundary moved because the fixture-migration verification
 (`docs/protocols/e4-v3-fc-convention-classification-20260712.json`; learning-log audit section)
 showed **41/63 M6 and 9/13 learning-run false-confidence events were fully explained by
@@ -57,11 +57,11 @@ weight. The M8 void run stays void.
 | Protocol profile | `e4-openspec-workflow-v2` (shared environment, BOTH arms: same OpenSpec workspace, harness-run archive step, PM-brief clarification channel `ASK_PM`; never a condition ID) |
 | Substrate | `procedural-rest-v2.1` / `v2-default` (§5.7 Amendment 3) |
 | Constants (v2 base) | **v0.5**: full-file sha256 `93d0bf88a49729f02adc8322b6367212da77bfe45548e7354d3b7277d3e67a72` — stamped as `compatibility_boundary.constants_hash` in every manifest |
-| Constants (v3 extension) | **v0.4**: full-file sha256 `8dc130219b58b84c3c8df017b7a72d63c9da05ef871c09bd8a77b9590911722e`, pinned by `test/e4-v3-m4.test.ts` — stamped as `compatibility_boundary.v3.constants_hash` |
+| Constants (v3 extension) | **v0.5**: full-file sha256 `2dee8973726c5b3a8b2313ae7efcbc1b12b38695451b1b35340e24bd0595d7ee`, pinned by `test/e4-v3-m4.test.ts` — stamped as `compatibility_boundary.v3.constants_hash`. (Gate-commit delta v0.4→v0.5: the add_entity "starts with no records" brief disclosure, the sealed `m7_evidence` block {close_rate_guard_max_gap 0.15, scheduled_tasks_per_sequence 6}, and the §9.5 tombstone-disclosure note — disclosure/instrument-only, no budget-relevant surface) |
 | Harness identity | the harness **git commit hash stamped in every manifest** (§9 gate action; external-audit design input) — the run is invalid if manifests stamp different commits |
 | Arms | `e4_arm_0` (prose: custody floors only, scenarios never executed) · `e4_arm_p` (product loop: scenarios green + reconciliation + agent-code boundary-mutation kill floor 5/6 + scenario floors + PM review). `[SEAL-CONFIRM]` **`e4_arm_h` is dropped**: the product claim is arm 0 vs arm p; M6 already measured the anti-cheat-marginal (d) contrast on 90 task-runs, the learning ladder ran two-arm throughout, and the third arm would add ~50% spend while contributing no predicate input. Accepted cost, stated: this run reports NO armH replication contrast; cross-boundary comparison to M6's armH stays prose-only |
-| Product gate config | sealed in v3 constants v0.4 (carried): `mutation_kill_floor` 5/6, blocking checks = all reconcile checks except advisory `field_never_exercised` |
-| Budgets | 27 turns / 12 verifications / 490,000 tokens per task; $5 cap per sequence — **v3 v0.4 values, conditional on the §1.1 calibration rung's freeze-unchanged branch** `[SEAL-CONFIRM]` |
+| Product gate config | sealed in v3 constants v0.5 (carried): `mutation_kill_floor` 5/6, blocking checks = all reconcile checks except advisory `field_never_exercised` |
+| Budgets | 27 turns / 12 verifications / 490,000 tokens per task; $5 cap per sequence — **CONFIRMED: the §1.1 rung executed 2026-07-12 (seed 144, $1.17) and landed FREEZE-UNCHANGED** (max 12/27 turns, 183.8k/490k tokens, $0.63/$5; `docs/e4/E4V3-M7-PRECAL-NOTES.md`). The ratification carries across the disclosure-only v3 v0.4→v0.5 delta (recorded judgment: budget values live in the untouched v2 file) |
 | Model | `glm-5.2`, z.ai `https://api.z.ai/api/paas/v4/chat/completions` (paas/v4, preset `direct-openai-compatible`, route_id `direct-zhipu-api-key`, key env `ZHIPU_API_KEY`) |
 | Thinking configuration | **ON** — empty request extras, provider default effort (`max`); configuration label **realistic / thinking-on** |
 | `max_tokens` | 32000 |
@@ -73,12 +73,15 @@ weight. The M8 void run stays void.
 | Run roots | `tmp/e4-v3-m7-evidence/seed-<N>` (fresh, disjoint from every prior root) |
 | Expected spend | ≈ **$8–20** total (M8 two-arm seeds ran $1.07–1.78; post-fix product-arm learning sequences ran $0.27–0.48 per 3 tasks at half budgets — full-budget 6-task product sequences estimated $1–3; the §1.1 calibration re-checks this). Structural ceiling: 12 × $5 = **$60**. `[SEAL-CONFIRM]` |
 
-### 1.1 Pre-seal calibration rung (separate authorization, ~$1.5 — REQUIRED before sealing)
+### 1.1 Pre-seal calibration rung — EXECUTED 2026-07-12 (operator-authorized, $1.17): FREEZE-UNCHANGED
 
 External-audit design input 4 (GLM F3) + the learning ladder's own caveat: L2–L4 close rates
 ran ~78%, plausibly an artifact of the halved 240k learning budget; and the naturalized
-substrate has never run live. Before this document may be sealed, ONE two-arm, full-length,
-FULL-SEALED-BUDGET calibration runs on the new boundary:
+substrate had never run live. **Outcome (run record `docs/e4/E4V3-M7-PRECAL-NOTES.md`,
+provenance `docs/protocols/e4-v3-m7-precal-calibration-manifests-20260712-001/`):** seed 144
+ran both arms to completion (replay-valid, §5 config checks clean), NO wall approached ⇒
+freeze-unchanged; product arm closed 6/6 at full budgets while prose stalled once at 3 turns
+(behavioral, not budget censoring). Seed 144 is consumed and excluded. The rung as sealed:
 
 - **Composition:** `e4_arm_0` + `e4_arm_p`, 6 tasks, classification `calibration`
   (structurally non-evidence), exact §1 route/model/thinking configuration, NO budget
@@ -243,11 +246,16 @@ Carried from M6 §4 and extended by the M6 §10 reframe + the naturalization:
 - No resume path: a mid-chain crash excludes the seed, never rerun under this seal.
 - Aborted records excluded per the ADR-005 pin.
 - **Hash-pinned surfaces that may not change between seal and run:** the v2 constants file
-  (v0.5, `93d0bf88…`) and its seventeen code twins; the v3 constants file (v0.4,
-  `8dc13021…`) and its eight code twins; the evidence verdict tool + CLI (§9, hashes recorded
-  at the gate commit); `bin/e4-v3.ts`; the launch shim `bin/e4-v3-detach-shim.py`
+  (v0.5, `93d0bf88a49729f02adc8322b6367212da77bfe45548e7354d3b7277d3e67a72`) and its seventeen
+  code twins; the v3 constants file (v0.5,
+  `2dee8973726c5b3a8b2313ae7efcbc1b12b38695451b1b35340e24bd0595d7ee`) and its eight code
+  twins; the evidence verdict tool `src/e4/v3/evidence-gonogo.ts`
+  (`304e3c5dee215aac20b0a01b44d7474cd8305f6eaa62fb94c8847a5d32377449`) and CLI
+  `bin/e4-v3-m7-gonogo.ts` (`cda581b1fb277dd6a2ceef41c798a0d7a63bfaf4c318eb12154c11b90db220a8`);
+  the run CLI `bin/e4-v3.ts` (`65d1f5bfa2c3c6f424f5933fe8828be6c99da6b9f16b6ea8d775e8ca2da181a1`,
+  now stamping the harness commit); the launch shim `bin/e4-v3-detach-shim.py`
   (`e871bbe6b92e0adcf4f99273d6c51a7144d68a311ffdedff5ea5afd1f4f1c934`, unchanged since M6).
-  The harness commit at launch must equal the sealed gate commit (stamped per §2b).
+  The harness commit stamped in every manifest must be one identical value (§2b).
 - The §1.1 calibration, all prior calibrations, dry runs, learning-ladder runs, and the M8
   void run are structurally non-evidence (classification) and share no seed with this run.
 
@@ -305,27 +313,31 @@ whichever way it lands.
 - Every public artifact points to replayable evidence: committed manifests, both constants
   hashes, the harness commit, and the verdict tool's printed report as sole claim source.
 
-## 9. Gate-commit actions required at the seal (none executed by this draft)
+## 9. Gate-commit actions — EXECUTED at the gate commit preceding the seal
 
-The sealing commit (or a gate commit immediately preceding it) must, per the M6 `3571a08`
-pattern — built and tested on dry-run manifests BEFORE any live evidence manifest exists:
+All built and tested on dry-run manifests BEFORE any live evidence manifest exists (the M6
+`3571a08` pattern):
 
-1. **Evidence verdict tool** (`src/e4/v3/evidence-gonogo.ts` + `bin/e4-v3-m7-gonogo.ts`, or
-   an extension of the M6 tool behind a new mode): the §2 predicates exactly — burden-AUC c1
-   with the sealed 0.15 close-rate guard, two-arm pairing, the fc|done + matched-pair +
-   disposition-table readouts, per-checkpoint burden series, triggers, exit semantics 0/1/2/3.
-   Tests: go / no-go / guard-void / inconclusive / stamp-tamper fixtures over fake-agent
-   dry-run manifests.
-2. **Harness-commit manifest stamp**: `bin/e4-v3.ts` records the repo HEAD commit at launch
-   into every manifest (additive field, validation required for pilot classification), so §2b
-   can bind the run to the sealed code identity.
-3. **Budget confirmation**: the §1.1 calibration's freeze-unchanged (or re-ratified) budget
-   values reflected in this document's §1 row before the header flips.
-4. Record the verdict tool + CLI hashes into §5's pin list at the seal.
-5. **README-tombstone disclosure note** (external-audit design input 5): the sealing commit's
-   constants note must state that the workspace README's capability-retirement section teaches
-   gold's canonical retirement shape (ADDED-tombstone + REMOVED-all) as a shared-environment
-   delta present in BOTH arms since the Phase-0 boundary — a disclosed affordance, not a leak
-   of gold's paths or data.
+1. **Evidence verdict tool** — DONE: `src/e4/v3/evidence-gonogo.ts` + `bin/e4-v3-m7-gonogo.ts`
+   implement the §2 predicates exactly (burden-AUC c1 with the sealed guard read from the v3
+   constants `m7_evidence` block, two-arm pairing, fc|done + matched-pair + disposition-table
+   readouts, per-checkpoint burden series, triggers, exit 0/1/2/3);
+   `test/e4-v3-m7-gonogo.test.ts` covers go / guard-void / inconclusive / harness-stamp-tamper
+   / calibration-exclusion over fake-agent dry-run manifests.
+2. **Harness-commit manifest stamp** — DONE: `bin/e4-v3.ts` resolves the repo HEAD at launch
+   and stamps `harness_commit` into every manifest; the ORCHESTRATOR refuses to create a
+   pilot manifest without it, while `validateE4V2Manifest` stays permissive so historical
+   (pre-field) M6 manifests remain re-validatable — predicate §2b enforces at verdict time.
+   (Refinement of this draft's original "validation required" wording, recorded here: same
+   protection, no historical breakage.)
+3. **Budget confirmation** — DONE: §1.1 executed, freeze-unchanged; §1 budget row updated
+   before the header flip.
+4. **Pin hashes** — DONE: recorded in §5.
+5. **README-tombstone disclosure note** — DONE: recorded in the v3 constants `budgets_note`
+   (v0.5) verbatim: the workspace README's capability-retirement section teaches gold's
+   canonical retirement shape as a shared-environment affordance present in BOTH arms since
+   the Phase-0 boundary; it does not leak gold's paths or data. The same v0.5 delta adds the
+   add_entity "starts with no records" brief line (the §1.1 rung's flagged residual, resolved
+   per the operator-approved disclose-residuals policy).
 
 The v2 verdict tool and the M6 v3 tool stay byte-untouched as their boundaries' instruments.

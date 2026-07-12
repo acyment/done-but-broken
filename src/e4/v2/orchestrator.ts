@@ -53,6 +53,9 @@ export type E4V2RunInput = {
   // (fixture tests with draft configs) keep working; bin/e4-v3.ts always passes it, and pilot
   // manifests without it fail validation.
   v3?: { product_config: E4V3ProductGateConfig; constants_stamp?: E4V3BoundaryStamp };
+  // v3-M7 gate commit: the harness git commit stamped into every manifest; REQUIRED for pilot
+  // classification at creation time (validation stays permissive for historical manifests).
+  harness_commit?: string;
 };
 
 const DRY_RUN_MODEL_IDENTITY = { preset: "fake-deterministic", model_id: "e4-fake-agent-v1", route_id: "none" };
@@ -67,6 +70,11 @@ function manifestPath(runRoot: string, arm: E4V2ArmId): string {
 }
 
 export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResult> {
+  // v3-M7 gate commit: evidence manifests must carry the harness identity from birth.
+  if (input.run_classification === "pilot" && !input.harness_commit) {
+    throw new Error("pilot runs must stamp harness_commit (v3-M7 gate commit; pass the repo HEAD at launch)");
+  }
+
   const arms =
     input.arms ??
     (input.v3 ? (["e4_arm_0", "e4_arm_h", "e4_arm_p"] as E4V2ArmId[]) : (["e4_arm_0", "e4_arm_h"] as E4V2ArmId[]));
@@ -140,6 +148,7 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
       arm_mode: policy.arm_mode,
       pairing_label: input.pairing_label,
       model: input.model ?? DRY_RUN_MODEL_IDENTITY,
+      ...(input.harness_commit ? { harness_commit: input.harness_commit } : {}),
       compatibility_boundary: {
         constants_version: input.constants.version,
         constants_hash: input.constants_hash,
