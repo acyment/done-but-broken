@@ -96,6 +96,31 @@ describe("learning report", () => {
     expect(report.matched_pairs_concordant).toBe(1);
   });
 
+  test("velocity_done_only reproduces the M6 report §10 numbers exactly (audit pinning test)", async () => {
+    // The external audits proved the original subsequence implementation inflated these to
+    // 2.13/5.50/7.11 by re-counting settled onsets. §10's numbers are the pin.
+    const { readdir, readFile } = await import("node:fs/promises");
+    const { join } = await import("node:path");
+    const root = join(REPO_ROOT, "docs", "protocols", "e4-v3-m6-pilot-manifests-20260711-001");
+    const manifests: E4V2RunManifest[] = [];
+
+    for (const seedDir of (await readdir(root)).sort()) {
+      for (const file of (await readdir(join(root, seedDir))).filter((name) => name.startsWith("manifest-"))) {
+        manifests.push(JSON.parse(await readFile(join(root, seedDir, file), "utf8")) as E4V2RunManifest);
+      }
+    }
+
+    const report = computeE4V3LearningReport(manifests);
+    const pooled = (arm: string): number => {
+      const rows = report.arms.filter((row) => row.arm === arm);
+      return rows.reduce((sum, row) => sum + (row.velocity_done_only ?? 0), 0) / rows.length;
+    };
+
+    expect(pooled("e4_arm_0")).toBeCloseTo(32 / 15, 10);
+    expect(pooled("e4_arm_h")).toBeCloseTo(24 / 15, 10);
+    expect(pooled("e4_arm_p")).toBeCloseTo(21 / 15, 10);
+  });
+
   test("zero closes yields undefined fc|done (never coerced) and a spend-cap label from aborted records", () => {
     const walled = fakeManifest("e4_arm_p", 9, [
       fakeTask(1, { termination: "budget_exhausted", fc: false, phase: "spec" }),

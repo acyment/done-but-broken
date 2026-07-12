@@ -64,17 +64,31 @@ describe("composeOpenSpecCliDetail", () => {
     expect(detail).toBe("Aborted. No files were changed.");
   });
 
-  test("detail is bounded: last 12 non-blank lines, max 1000 chars", () => {
+  test("detail is bounded: last 8 stderr + last 4 stdout lines, max 1000 chars front-kept", () => {
     const manyLines = Array.from({ length: 40 }, (_, index) => `line-${index}`).join("\n");
     const bounded = composeOpenSpecCliDetail(cliResult({ normalized_stderr: manyLines }));
 
-    expect(bounded).toBe(
-      Array.from({ length: 12 }, (_, index) => `line-${index + 28}`).join(" ")
-    );
+    expect(bounded).toBe(Array.from({ length: 8 }, (_, index) => `line-${index + 32}`).join(" "));
 
-    const huge = composeOpenSpecCliDetail(cliResult({ normalized_stderr: "x".repeat(5000) }));
+    const huge = composeOpenSpecCliDetail(cliResult({ normalized_stderr: `IMPORTANT-ERROR\n${"x".repeat(5000)}` }));
 
     expect(huge.length).toBeLessThanOrEqual(1000);
+    expect(huge).toContain("IMPORTANT-ERROR");
+  });
+
+  test("verbose stdout can never crowd out stderr (the audit's mixed-stream case)", () => {
+    const detail = composeOpenSpecCliDetail(
+      cliResult({
+        normalized_stderr: "[ERROR] the one line that matters",
+        normalized_stdout: Array.from({ length: 30 }, (_, index) => `progress-${index}`).join("\n")
+      })
+    );
+
+    expect(detail).toContain("the one line that matters");
+    expect(detail.startsWith("[ERROR]")).toBe(true);
+    // stdout is budgeted, not dropped
+    expect(detail).toContain("progress-29");
+    expect(detail).not.toContain("progress-25");
   });
 });
 

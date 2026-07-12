@@ -256,7 +256,8 @@ zero-denominator per-passing quantities pooled); advisory (vi) fired (arm-0 seed
 ## 5. Observation outside the predicates (diagnostic narrative, no claim weight)
 
 The run reproduces both M7/M8 regimes *within one boundary, split by seed*: green-and-weak
-(seeds 41/68 — zero refusals anywhere, near-total false confidence in all arms, product gate
+(seeds 41/68 — near-total false confidence in all arms; `[v1.2]` on 41 the product gate never
+fired, on 68 it refused twice and both tasks still closed false — fired-without-effect, not
 inert) and enforced-and-expensive (seeds 36/62/75 — refusals or walls, honesty up, spend and
 wall-clock up 3–10×, oracle end-state down on the hardest chains). Which regime a seed lands in
 tracks its op draw (rename-cascade seeds enforce; rename-free seeds sail), not the gate design
@@ -376,7 +377,7 @@ false-confidence events while leaving the drift they were refused over sitting i
 **Seed-level fragility.** c2 per seed (arm 0 vs arm P): 3 wins, 2 ties, 0 losses — one-sided
 sign test p = 0.125 at n = 5; the honesty effect and the velocity inversion both concentrate
 in the three rename-cascade seeds (36/62/75); seeds 41/68 were 6/6 false-confident in **all
-three arms** with the gate inert.
+three arms** (`[v1.2]` gate inert on 41; fired-without-effect on 68).
 
 **Harness finding (fixed post-run at the Phase-0 learning boundary, `ae4169d`).** The
 spec-phase custody loops were substantially a feedback defect, arm-symmetric and therefore not
@@ -407,3 +408,13 @@ counterpart).
    arm P: 38).
 7. §7: the seed-65 exclusion is now explicitly stated as outcome-blind and
    verdict-invariant (compliance audit re-ran the pinned tool including the excluded seed).
+
+**`[v1.2]` addendum (2026-07-12, after two external model audits — ChatGPT + GLM-5.2 — over
+the committed artifacts):** two residual "gate inert on 41/68" phrasings in §5 and §10
+corrected (seed 68's gate fired twice without effect — manifest seed-68 arm-p task 4); the
+audits independently reproduced every §10 number, confirmed the pluralization forensic and
+the seed-65 counterfactual, and root-caused their own failing-test reports to a repo-state
+issue (bun test's project scan over a 10k-directory tmp/ silently emptying child pipes —
+fixed at `89f898d`, not a defect in any evidence run). Their design recommendations for the
+next pre-registration (non-closure gaming guards, module hash-sealing, fixture-migration
+conventions in the oracle) are recorded in `docs/e4/E4V3-LEARNING-LOG.md`.

@@ -29,6 +29,7 @@ the learning level; stop spending and redesign.
 ## Seeds consumed for learning — EXCLUDED from any future evidence pre-registration
 
 - 7, 12 (Phase-0 dry-run rehearsals; zero spend)
+- 7 (L1 live), 17 (L2 live), 13 (L3 live), 15 (L4 live), 1 (L5 live)
 
 ## Rungs
 
@@ -130,12 +131,15 @@ the learning level; stop spending and redesign.
   delete_entity retirement archived cleanly in both arms post-fix — the second retirement op
   is covered, with no counter-signal (freshness tied at zero; nothing to separate when both
   are perfect).
-- **Final ladder tallies (5 rungs, $3.02 of $8):** matched pairs 9 — 8 concordant, 1
+- **Final ladder tallies (5 rungs, $3.01 of $8):** matched pairs 9 — 8 concordant, 1
   honest-direction discordant (L2 rename, truth-repair); close rates arm 0 **10/12 (83%)**,
   arm p **10/12 (83%)**; refusal→revision cycles 2; freshness: product fresher on all 3 rungs
   where separation was possible, tied on L5; spec-phase walls post-fix: product arm **0 in 15
-  live tasks** (M6: 8 in 30). **All four graduation criteria are met** (≥80% closes both arms,
-  ≥1 refusal→revision, ≥1 honest-direction discordant pair, cost ≤$1.5/rung).
+  live tasks** (M6: 8 in 30). **Graduation criteria: three of four met strictly** (≥1
+  refusal→revision, ≥1 honest-direction discordant pair, cost ≤$1.5/rung); the close-rate
+  criterion is met only POOLED (10/12 = 83% both arms) — read per-rung as written, L2–L4 each
+  have one arm at 2/3, so calling the ladder graduated is an operator-visible judgment call
+  (pooling + the halved-budget explanation), recorded as such per the external audit.
 - **GRADUATION DECISION: the ladder recommends writing the new evidence pre-registration on
   the v0.4/v0.3 boundary** — hierarchical predicates (freshness/velocity as PRIMARY at sealed
   budgets, conditional-on-close false confidence + matched-pair concordance as first-class
@@ -167,7 +171,7 @@ failing hidden checks behind every post-fix false-confident close:
   (correct English); the hidden gold pins `/entrys` (the sealed naive `lower(name)+"s"` path
   rule). Every failure is that one divergence. The agent did NOT ask the PM — and the PM
   brief spells out exact paths, so asking eliminates this class entirely.
-- **Seed 17 rename (the L2 "truth-repair" pair) is pluralization-SAFE** (Widget→Item →
+- **Seed 17 rename (the L2 "truth-repair" pair) is pluralization-SAFE** (Promotion→Item →
   `items`, naive and English coincide) — which is part of why the product arm could close it
   fully green. The honest-discordant pair stands, but its generality is narrower than v1 of
   the story.
@@ -190,3 +194,35 @@ than a spelling-convention trap — recommended; a skeptical reviewer will call 
 gotcha design; or (b) keep it deliberately as ask-the-PM bait, in which case ASK_PM usage
 must be a first-class readout of the honesty axis and the claim language must say the gate
 is measuring clarification discipline.
+
+## External adversarial audits (2026-07-12, ChatGPT + GLM-5.2 via codex; adjudicated)
+
+Both models independently reproduced every M6 §10 number, the pluralization forensic, the
+PM-brief path disclosure, arm-symmetry of the Phase-0 fixes, and the seed-65 exclusion's
+outcome-blindness. Adjudicated outcomes:
+
+- **Their failing-test blocker was real but environmental**: `bun test` scans the whole
+  project tree even for one named file, and tmp/ had reached 10,641 directories — past that,
+  child pipes silently return empty (exit codes intact). Fixed at `89f898d` (tmp/** ignored);
+  `ae4169d`'s 798/798 vindicated.
+- **Fixed this commit (both audits, confirmed):** stderr-crowding in
+  `composeOpenSpecCliDetail` (per-stream budgets, front-kept cap);
+  `velocity_done_only` rewritten to §10 semantics (full-timeline scan, onsets-at-done, full
+  denominator) with an M6 pinning test (2.13/1.60/1.40); exp04 report JSON regenerated
+  (prose done-only 7→0, exactly the audit's example); report v1.2 residuals (seed-68
+  "inert" phrasings); log minors (seed registry, Promotion→Item, $3.01, graduation restated
+  as an operator-visible judgment call).
+- **Recorded for the next pre-registration (design inputs, not yet applied):**
+  1. Non-closure gaming guards — velocity-primary alone rewards not closing; candidates:
+     all-checkpoint burden AUC over a fixed scheduled-task denominator, a paired close-rate
+     gap guard, and publishing the full {truthful close, false close, nonclose} table.
+  2. Seal the feedback-behavior modules (openspec/runner/gate/workspace) as code twins and
+     stamp the harness commit in manifests — the current boundary does not pin them.
+  3. Verify ChatGPT's fixture-migration finding before sealing: the hidden oracle
+     regenerates seed fixture ids on entity renames (`seedIdV2`) and hardcodes literal dates
+     (2026-01-01) — undisclosed conventions in the pluralization family; the determinacy
+     table has no fixture-migration or literal-value fact kind.
+  4. Run one rename-free two-arm calibration at FULL sealed budgets before sealing, to test
+     whether prose's learning-run stalls were the halved-budget artifact (GLM F3).
+  5. Disclose the README-tombstone shape as a shared-environment delta in the next seal's
+     constants note (it teaches gold's canonical retirement shape, though not its paths).

@@ -46,11 +46,16 @@ export async function runE4OpenSpecValidateSpecs(input: {
 // (progress/abort lines), blank lines dropped, bounded so a pathological dump cannot flood the
 // turn history. Arm-symmetric by construction: every arm's gate feedback flows through here.
 export function composeOpenSpecCliDetail(result: E1OpenSpecCommandResult): string {
-  const lines = [...result.normalized_stderr.split("\n"), ...result.normalized_stdout.split("\n")]
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-  const detail = lines.slice(-12).join(" ");
-  return detail.length > 1000 ? detail.slice(detail.length - 1000) : detail;
+  // Per-stream budgets so stderr can never be crowded out by verbose stdout (the external
+  // audits caught the original tail-slice doing exactly that); stderr leads, and the length
+  // cap keeps the FRONT so stderr also survives truncation.
+  const nonBlank = (text: string): string[] =>
+    text
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+  const detail = [...nonBlank(result.normalized_stderr).slice(-8), ...nonBlank(result.normalized_stdout).slice(-4)].join(" ");
+  return detail.length > 1000 ? detail.slice(0, 1000) : detail;
 }
 
 // Validates one change (the gate's custody wiring, v2-M3): deltas parse and the change is

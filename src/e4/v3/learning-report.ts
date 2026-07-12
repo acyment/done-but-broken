@@ -22,7 +22,7 @@ export type E4V3LearningArmReadout = {
   fc_over_attempted: number | null;
   fc_over_closed: number | null; // the composition-aware honesty readout
   velocity_all_tasks: number | null; // sealed episode semantics over the full sequence
-  velocity_done_only: number | null; // same function restricted to closed tasks — the review's F4 readout
+  velocity_done_only: number | null; // full-timeline scan, onsets counted at done tasks only, full opportunity denominator (§10 semantics)
   custody_failures: number;
   refused_done_over_red: number;
   product_refusals: { pm_review: number; reconcile: number; mutation: number } | null;
@@ -70,11 +70,22 @@ function armReadout(manifest: E4V2RunManifest): E4V3LearningArmReadout {
 
   const closed = tasks.filter((task) => task.termination === "done");
   const fcEvents = tasks.filter((task) => task.false_confidence.event).length;
-  const doneVelocity = computeE4DriftVelocity(
-    asV1TaskRecords(closed),
-    CONVENTION_AGGREGATION
-  ).velocity;
-  const allVelocity = computeE4DriftVelocity(asV1TaskRecords(tasks), CONVENTION_AGGREGATION).velocity;
+  // Done-only velocity, §10 semantics (external audits caught the original subsequence
+  // filtering re-counting settled onsets): scan the FULL timeline once via sealed prefix
+  // differences, attribute each onset to its actual task, count only those landing at
+  // done-terminated tasks, over the full drift-opportunity denominator.
+  const fullResult = computeE4DriftVelocity(asV1TaskRecords(tasks), CONVENTION_AGGREGATION);
+  let previousOnsets = 0;
+  let onsetsAtDone = 0;
+  for (let k = 1; k <= tasks.length; k++) {
+    const prefix = computeE4DriftVelocity(asV1TaskRecords(tasks.slice(0, k)), CONVENTION_AGGREGATION);
+    const delta = prefix.episode_onset_count - previousOnsets;
+    previousOnsets = prefix.episode_onset_count;
+    if (tasks[k - 1].termination === "done") onsetsAtDone += delta;
+  }
+  const doneVelocity =
+    fullResult.drift_opportunity_task_count > 0 ? onsetsAtDone / fullResult.drift_opportunity_task_count : null;
+  const allVelocity = fullResult.velocity;
   const withProduct = tasks.filter((task) => task.product_gate);
   const archivesAttempted = tasks.filter((task) => task.archive.attempted);
 
