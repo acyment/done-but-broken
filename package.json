@@ -12,7 +12,7 @@
     "inspect:run": "bun run bin/inspect-run.ts",
     "pilot:run": "bun run bin/run-fake-pilot.ts",
     "pilot:fake": "bun run bin/run-fake-pilot.ts",
-    "test": "bun test --path-ignore-patterns='runs/**'",
+    "test": "bun test --path-ignore-patterns='runs/**' --path-ignore-patterns='tmp/**'",
     "spec": "bun test"
   },
   "dependencies": {
