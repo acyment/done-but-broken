@@ -1,11 +1,12 @@
 # E4 v3-M7 evidence run — pre-registration (v1)
 
-**Status: DRAFT — explicitly UNSEALED (2026-07-12).** Sealing is a separate operator commit
-flipping only this header (the `f1894f9`/`7e9d84d`/`5ed1d87` pattern). The evidence run's spend
-requires its own separate explicit operator authorization and is NOT authorized by the seal.
-The §1.1 pre-seal calibration rung requires its own separate authorization too (~$1.5) and must
-complete BEFORE sealing. Nothing below changes after sealing; deviations, if any, are recorded
-in the run report as deviations — never edited in here.
+**Status: SEALED 2026-07-12 (operator directive "Proceed to all 3" — gate commit, seal, and
+evidence run all explicitly authorized in one act; this commit is the sealing act, flipping
+only this header per the `f1894f9`/`7e9d84d`/`5ed1d87` pattern). The §1.1 pre-seal calibration
+rung was executed and landed freeze-unchanged BEFORE this seal ($1.17, separately confirmed
+spend); the gate-commit actions (§9) were executed at `29dd8c0`. Nothing below changes after
+sealing; deviations, if any, are recorded in the run report as deviations — never edited in
+here.**
 
 **Authorization record.** Operator directive (2026-07-12): after the substrate design decision
 (naturalize pluralization + naturalize fixture semantics — both chosen), "implement it, then
