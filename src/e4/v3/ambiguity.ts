@@ -29,6 +29,7 @@ export type E4V3FactKind =
   | "relationship_field_shape" // ref-field name/required/list-filter behavior
   | "removal_scope" // what a delete removes
   | "rename_mapping" // old name -> new name
+  | "fixture_migration" // §5.7.4: what happens to EXISTING stored records under this change
   | "no_change";
 
 export type E4V3Determinacy = "determined" | "underdetermined";
@@ -59,13 +60,15 @@ const CONTENT_DETERMINACY: Partial<Record<E4ChangeOpKind, Partial<Record<E4V3Fac
   },
   add_field: {
     field_type: "underdetermined",
-    field_required: "underdetermined"
+    field_required: "underdetermined",
+    fixture_migration: "underdetermined" // requests never state what existing records get
   },
   rename_field: {
     rename_mapping: "determined"
   },
   retype_field: {
-    field_type: "underdetermined" // "a wider range of values" pins direction, not the type
+    field_type: "underdetermined", // "a wider range of values" pins direction, not the type
+    fixture_migration: "underdetermined" // representation-changing conversions are never stated
   },
   delete_field: {
     removal_scope: "determined"
@@ -85,7 +88,8 @@ const CONTENT_DETERMINACY: Partial<Record<E4ChangeOpKind, Partial<Record<E4V3Fac
   add_relationship: {
     relationship_field_shape: "underdetermined", // field name/required/filterability unstated
     field_required: "underdetermined",
-    field_type: "determined" // "linkable to a <Entity>" pins a reference
+    field_type: "determined", // "linkable to a <Entity>" pins a reference
+    fixture_migration: "underdetermined" // how existing rows get linked is never stated
   },
   noop_maintenance: {
     no_change: "determined"
@@ -135,6 +139,8 @@ export function tagE4RequestDeterminacy(input: {
     }
     add("field_type", `${entity}.${field.name}`);
     add("field_required", `${entity}.${field.name}`);
+    // §5.7.4: existing rows must gain the field somehow; the request never says how.
+    add("fixture_migration", `${entity}.${field.name}`);
   }
 
   for (const { entity, field } of delta.removed_fields) {
@@ -147,6 +153,10 @@ export function tagE4RequestDeterminacy(input: {
 
   for (const retype of delta.retyped_fields) {
     add("field_type", `${retype.entity}.${retype.field_name}`);
+
+    if (retypeChangesStoredRepresentation(retype.old_type, retype.new_type)) {
+      add("fixture_migration", `${retype.entity}.${retype.field_name}`);
+    }
   }
 
   for (const endpoint of delta.added_endpoints) {
@@ -206,6 +216,19 @@ export function tagE4RequestDeterminacy(input: {
   }
 
   return facts;
+}
+
+// §5.7.2 sealed conversion table: these directions change what a stored value looks like, so
+// the PM brief must state the outcome (int→decimal and date→string are JSON-identity).
+export function retypeChangesStoredRepresentation(
+  oldType: E4TaskDelta["retyped_fields"][number]["old_type"],
+  newType: E4TaskDelta["retyped_fields"][number]["new_type"]
+): boolean {
+  return (
+    (oldType === "decimal" && newType === "int") ||
+    (oldType === "string" && newType === "date") ||
+    (oldType === "bool" && newType === "string")
+  );
 }
 
 export function underdeterminedFacts(facts: E4V3RequestFact[]): E4V3RequestFact[] {

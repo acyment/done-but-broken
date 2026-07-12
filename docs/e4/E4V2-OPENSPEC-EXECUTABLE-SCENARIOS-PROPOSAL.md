@@ -362,6 +362,76 @@ that FAILS against the pre-op gold implementation, and the full post-op derived 
 passes 100% against the post-op gold implementation. Build-time test, never a run-time gate;
 it is the acceptance criterion for this amendment.
 
+### 5.7 Substrate naturalization (`procedural-rest-v2.1`, sealed — Amendment 3, 2026-07-12)
+
+**Motivation.** The fixture-migration verification (learning-log audit section;
+`docs/protocols/e4-v3-fc-convention-classification-20260712.json`) showed 41/63 M6 and 9/13
+learning-run false-confidence events were FULLY explained by undisclosed convention traps:
+the hidden oracle regenerated seed fixtures from the post-op IR (id migration on renames,
+values re-derived from field names, exact backfill values, a pinned date literal, ref-field
+names required sticky while their values migrated) and gold paths used a naive plural that
+contradicted both natural English and the T0 workspace's own visible style. Operator decision
+(2026-07-12, recorded): naturalize both. M6/M7/M8 and the learning runs remain historical at
+their stamped boundaries; this is a new compatibility boundary.
+
+1. **English pluralizer (sealed).** Every minted collection segment uses: lowercase the
+   entity name; consonant+`y` → `ies`; ending in `s/x/z/ch/sh` → `es`; else `+s`. Applies to
+   `add_entity` CRUD+list paths, `rename_entity` path moves (supersedes §5.6.2's
+   `lowercase(newName)+"s"`), and `add_endpoint` analytics paths (v2 now overrides the v1 op,
+   whose naive rule could mint `/categorys/stats` beside the entity's own T0 `/categories`).
+   Reproduces the T0 baseline byte-identically. All sealed name pools verified unambiguous
+   under the rule (entries, listings, suppliers, warehouses, …).
+2. **Seed data carries forward (data-migration semantics).** The seed fixture is generated
+   once at T0 and migrated per op by sealed rules, uid-keyed against the IR delta; the
+   fixture map is keyed by the current entity name:
+   - `rename_entity`: rows untouched — stored ids keep their creation-time prefix
+     (`category-seed-1` survives Category→Listing) and ref values elsewhere stay valid; the
+     fixture key follows the entity; referencing ref-field KEYS cascade (pin 3).
+   - `rename_field`: the row key renames, the stored value is unchanged (no more
+     "Sample alias 1" re-derivation).
+   - `add_field`: rows gain the field with value `null` (add_field mints optional fields
+     only, so writes stay legal); disclosed per pin 4.
+   - `add_relationship`: rows gain the ref field linked row-*n* → parent row *n* by carried
+     parent ids (preserves §5.6.6 filtered-list killability); a row with no parent
+     counterpart gets `null`; disclosed per pin 4.
+   - `retype_field`: stored values convert by sealed rule — int→decimal identity,
+     decimal→int truncation toward zero, string→date the sealed literal `2026-01-01`,
+     bool→string `String(v)`, date→string identity; representation-changing conversions
+     disclosed per pin 4.
+   - `delete_field` / `delete_entity`: keys/rows dropped (plus whatever ref-field drops the
+     IR delta itself records).
+   - `add_entity`: NO seed rows — new entities start empty; GT coverage re-anchors on
+     oracle-created fixtures (create `-new-1`, read/update it, create `-new-2`, delete it,
+     read-after-delete 404, list ≥1) so CRUD coverage survives without inventing data the
+     workspace never had.
+3. **Ref-key cascade on entity rename.** Ref-typed fields named exactly
+   `lowercase(oldName)+"_id"` whose `ref_entity` is the renamed entity rename to
+   `lowercase(newName)+"_id"` (a field custom-renamed earlier no longer matches and keeps its
+   name). Emits field-level rename-lineage entries (uid preserved) so the meter merges
+   identity instead of scoring delete+add. This inverts the punished-cascade trap: the brief's
+   "rename … everywhere" and gold now agree.
+4. **Disclosure.** The v3 determinacy table gains a `fixture_migration` fact kind and the PM
+   brief renders determined "existing records" lines for: add_field null backfill,
+   add_relationship linking (first-to-first, second-to-second, null when no counterpart), and
+   representation-changing retype conversions (including the string→date literal). The v3-M0
+   census asserts coverage.
+5. **GT testgen consumes the carried fixture** for seed-row paths, expected bodies, filter
+   values, and list counts. Oracle-authored fixtures (ordinals 9/20, `-new-`/`-invalid-` ids)
+   still derive from current names/types — they are writes the oracle itself makes, echoed
+   back, so no hidden convention is imposed on the agent.
+6. **§5.5 template derivation becomes a pure function of (post-op IR, carried fixture)** —
+   list counts and filtered-list parent ids bind to carried rows. T0 output is byte-identical
+   to v2.0 (T0 fixture equals the carried fixture at T0).
+7. **Version/boundary.** `substrate_version = "procedural-rest-v2.1"` (`substrate_kind`
+   unchanged); v2 constants v0.5, v3 constants v0.4; substrate/testgen/gold-spec twins
+   re-pinned. Fixture migration is byte-deterministic (pure function of the drawn chain).
+8. **Census extension (acceptance criterion of this amendment):** per-facet cases — stored
+   ids stable through renames (oracle requests old-prefix ids at new paths and passes on
+   gold); values stable through field renames; ref keys cascade with lineage; null backfill;
+   disclosed retype literals; filtered-list killability at T0 and post-rename; add_entity
+   fresh-data coverage; T0 workspace byte-identical to v2.0; plus the unchanged v2-M0
+   red-pre/green-post sweep over all op variants.
+
 ## 6. Gate mechanics (executed arm)
 
 Per task: spec phase → implementation phase, as v1, with these changes:

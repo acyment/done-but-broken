@@ -20,12 +20,15 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // [v3-M4] v0 FREEZE: the full-file sha256 of the v3 constants file. Any edit is a new gate.
 // [v3-M5] budgets RATIFIED UNCHANGED on glm-5.2 thinking-on (seed-37 e4_arm_p calibration, no
 // wall hit); version 0.1 -> 0.2 marks that ratification event.
+// [§5.7 Amendment 3, 2026-07-12] version 0.3 -> 0.4: substrate naturalization boundary (v2 v0.5,
+// extends-hash re-pin, v3 twins re-hashed for the fixture_migration disclosure changes). The v0.3
+// hash was recorded in git history at 01f7942.
 // [Phase-0 learning boundary, 2026-07-11] version 0.2 -> 0.3: budgets untouched; the extends
 // pin follows the v2 v0.4 README/tombstone re-seal (M6 adversarial-review harness-feedback
 // fixes). The v0.2 hash was aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a —
 // the compatibility_boundary.v3 stamp on every v3-M6 evidence manifest (historical; re-run that
 // verdict against `git show 5ed1d87:docs/protocols/e4-v3-sealed-constants-v0.json`).
-const FROZEN_V3_CONSTANTS_SHA256 = "c6aee2eb7f3f20da4acc1471178a8e3d7e6a84c4ee9f04d3a2c602b96907fe5f";
+const FROZEN_V3_CONSTANTS_SHA256 = "8dc130219b58b84c3c8df017b7a72d63c9da05ef871c09bd8a77b9590911722e";
 
 describe("v3-M4: constants freeze", () => {
   test("[FREEZE] the v3 constants file hash is pinned", () => {
@@ -40,7 +43,7 @@ describe("v3-M4: constants freeze", () => {
       v2Path: join(REPO_ROOT, E4_V2_CONSTANTS_PATH)
     });
 
-    expect(constants.version).toBe("0.3");
+    expect(constants.version).toBe("0.4");
     expect(constants.product_gate.mutation_kill_floor).toBeCloseTo(5 / 6, 10);
     expect(constants.product_gate.blocking_checks).not.toContain("field_never_exercised");
     // the sealed ids match the modules' own exported ids

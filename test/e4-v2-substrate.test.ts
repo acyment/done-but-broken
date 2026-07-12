@@ -179,10 +179,12 @@ describe("§5.6 v2 op pins", () => {
     expect(E4_OPS_V2.modify_convention.isEligible(ir, createSequenceState())).toBe(false);
   });
 
-  test("ops outside the §5.6 pins are reused from the v1 registry object, not forked", () => {
-    for (const kind of ["add_field", "rename_field", "add_endpoint", "modify_endpoint", "add_validation_rule", "add_relationship", "noop_maintenance", "delete_entity"] as const) {
+  test("ops outside the §5.6/§5.7 pins are reused from the v1 registry object, not forked", () => {
+    // §5.7.1 moved add_endpoint into the v2 overrides (pluralized analytics path).
+    for (const kind of ["add_field", "rename_field", "modify_endpoint", "add_validation_rule", "add_relationship", "noop_maintenance", "delete_entity"] as const) {
       expect(E4_OPS_V2[kind]).toBe(E4_OPS[kind]);
     }
+    expect(E4_OPS_V2.add_endpoint).not.toBe(E4_OPS.add_endpoint);
   });
 
   test("retype_field excludes id fields in v2 (census-forced pin: fixture policies hardcode string ids)", () => {

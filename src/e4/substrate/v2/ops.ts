@@ -20,15 +20,19 @@ import {
   cloneIr,
   renderEndpointItemId,
   renderEntityItemId,
+  renderFieldItemId,
   type E4Entity,
   type E4EntityField,
   type E4SchemaIR
 } from "../ir";
 import { E4_OPS, type E4ChangeOpKind, type E4OpDefinition, type E4OpResult, type E4SequenceState } from "../ops";
 import type { E4Prng } from "../prng";
+import { pluralizeEntityName } from "./pluralize";
 
 export const SUBSTRATE_KIND_V2 = "procedural-rest-v2" as const;
-export const SUBSTRATE_VERSION_V2 = "procedural-rest-v2";
+// §5.7 Amendment 3 (naturalization): English pluralizer for minted paths, ref-key cascade on
+// entity renames, add_endpoint override, seed-data carry-forward (see ./fixture.ts).
+export const SUBSTRATE_VERSION_V2 = "procedural-rest-v2.1";
 
 // Same name pool as v1's add_entity (v1 keeps its copy private; the two substrates version
 // their text surfaces independently — this one seals under the v2 constants lineage at v2-M5).
@@ -53,7 +57,7 @@ function unusedName(pool: readonly string[], existing: ReadonlySet<string>, prng
 }
 
 export function collectionSegment(entityName: string): string {
-  return `${entityName.toLowerCase()}s`;
+  return pluralizeEntityName(entityName); // §5.7.1: sealed English pluralizer (supersedes lower+"s")
 }
 
 function replaceCollectionSegment(path: string, newSegment: string): string {
@@ -149,10 +153,27 @@ function applyRenameEntityV2(ir: E4SchemaIR, _minter: UidMinter, prng: E4Prng, s
     state.addedEntityNames.add(newName);
   }
 
+  // §5.7.3 ref-key cascade: a referencing field named exactly lower(oldName)+"_id" follows the
+  // rename to lower(newName)+"_id" (a field custom-renamed earlier no longer matches and keeps
+  // its name). Emits field-level lineage (uid preserved) so the meter merges identity instead of
+  // scoring delete+add. Stored VALUES never move — that is the fixture carry-forward's contract.
+  const cascadedFieldLineage: Array<{ old_item_id: string; new_item_id: string; semantic_item_uid: string }> = [];
+  const conventionalRefKey = `${oldName.toLowerCase()}_id`;
+  const cascadedRefKey = `${newName.toLowerCase()}_id`;
+
   for (const other of next.entities) {
     for (const field of other.fields) {
       if (field.type === "ref" && field.ref_entity === oldName) {
         field.ref_entity = newName;
+
+        if (field.name === conventionalRefKey) {
+          cascadedFieldLineage.push({
+            old_item_id: renderFieldItemId(other.name, field.name),
+            new_item_id: renderFieldItemId(other.name, cascadedRefKey),
+            semantic_item_uid: field.semantic_item_uid
+          });
+          field.name = cascadedRefKey;
+        }
       }
     }
   }
@@ -177,9 +198,40 @@ function applyRenameEntityV2(ir: E4SchemaIR, _minter: UidMinter, prng: E4Prng, s
     touched_item_uids: [entity.semantic_item_uid],
     rename_lineage: [
       { old_item_id: renderEntityItemId(oldName), new_item_id: renderEntityItemId(newName), semantic_item_uid: entity.semantic_item_uid },
-      ...endpointLineage
+      ...endpointLineage,
+      ...cascadedFieldLineage
     ],
     render_context: { old_name: oldName, new_name: newName }
+  };
+}
+
+// ---- add_endpoint (§5.7.1 override: pluralized analytics path) ----------------------------------
+
+// v1's applyAddEndpoint mints `/${lower(name)}s/stats`, which under the naive rule could sit
+// beside the entity's own existing collection path with a DIFFERENT spelling (/categorys/stats
+// vs /categories) — the seed-41 trap. v2.1 anchors the analytics path on the entity's pluralized
+// collection segment.
+function applyAddEndpointV2(ir: E4SchemaIR, minter: UidMinter, prng: E4Prng): E4OpResult {
+  const next = cloneIr(ir);
+  const candidates = next.entities.flatMap((entity) => {
+    const existingKinds = new Set(
+      next.endpoints.filter((endpoint) => endpoint.entity === entity.name).map((endpoint) => endpoint.kind)
+    );
+    return (["analytics"] as const).filter((kind) => !existingKinds.has(kind)).map((kind) => ({ entity, kind }));
+  });
+  const { entity, kind } = prng.pick(candidates);
+  const endpointUid = minter.mint("endpoint");
+  const path = `/${collectionSegment(entity.name)}/stats`;
+
+  next.endpoints.push({ semantic_item_uid: endpointUid, entity: entity.name, kind, method: "GET", path });
+
+  return {
+    op_kind: "add_endpoint",
+    ir: next,
+    opportunity_label: "additive",
+    touched_item_uids: [endpointUid],
+    rename_lineage: [],
+    render_context: { entity: entity.name, kind }
   };
 }
 
@@ -280,6 +332,13 @@ export const E4_OPS_V2: Record<E4ChangeOpKind, E4OpDefinition> = {
   ...E4_OPS,
   add_entity: { isEligible: () => true, apply: applyAddEntityV2 },
   rename_entity: { isEligible: (ir) => ir.entities.length > 0, apply: applyRenameEntityV2 },
+  add_endpoint: {
+    isEligible: (ir) =>
+      ir.entities.some(
+        (entity) => !ir.endpoints.some((endpoint) => endpoint.entity === entity.name && endpoint.kind === "analytics")
+      ),
+    apply: (ir, minter, prng) => applyAddEndpointV2(ir, minter, prng)
+  },
   delete_field: {
     isEligible: (ir) => deletableFieldsV2(ir).length > 0,
     apply: (ir, minter, prng) => applyDeleteFieldV2(ir, minter, prng)

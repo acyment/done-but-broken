@@ -31,8 +31,11 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // a code-twin hash — moves this value; update it only through a new recorded gate decision.
 // Lineage: 7fd13e01… (v2-M5 → v0.3) → 8c6a4b54… (v0.4, 2026-07-11 Phase-0 learning boundary:
 // protocol_text.workspace_readme gained the capability-retirement/tombstone section — the
-// harness-feedback gap found by the M6 adversarial review; operator-approved plan).
-const NON_BUDGET_PROJECTION_SHA256 = "8c6a4b54b608d8a114932082093e00fb771273ac95d7d57d0759023b90fcc461";
+// harness-feedback gap found by the M6 adversarial review; operator-approved plan) → 79b43417…
+// (v0.5, 2026-07-12 §5.7 Amendment 3 substrate naturalization: substrate_version
+// procedural-rest-v2.1, re-pinned substrate/gold-spec/bank twins, + the feedback-behavior
+// modules sealed as twins per the external-audit design inputs).
+const NON_BUDGET_PROJECTION_SHA256 = "79b4341708cb7119a43da277c0b1690b65dcdc03aad4a80e16851fa941c710bd";
 
 async function loadSealed() {
   return loadE4V2Constants(join(REPO_ROOT, E4_V2_CONSTANTS_PATH));
@@ -59,16 +62,23 @@ describe("v2-M5 — non-budget constants freeze", () => {
     const twins = Object.keys(constants.code_twins).toSorted();
 
     expect(twins).toEqual([
+      "src/e4/substrate/v2/fixture.ts",
       "src/e4/substrate/v2/ops.ts",
+      "src/e4/substrate/v2/pluralize.ts",
       "src/e4/substrate/v2/scaffold.ts",
       "src/e4/substrate/v2/testgen.ts",
       "src/e4/substrate/v2/values.ts",
       "src/e4/v2/bank.ts",
       "src/e4/v2/converter.ts",
+      "src/e4/v2/fake-provider.ts",
+      "src/e4/v2/gate.ts",
       "src/e4/v2/gold-spec.ts",
+      "src/e4/v2/openspec.ts",
+      "src/e4/v2/runner.ts",
       "src/e4/v2/scenario-executor.ts",
       "src/e4/v2/scenario.ts",
-      "src/e4/v2/step-table.ts"
+      "src/e4/v2/step-table.ts",
+      "src/e4/v2/workspace.ts"
     ]);
 
     for (const twin of twins) {
@@ -158,12 +168,18 @@ describe("v2-M5 — non-budget constants freeze", () => {
     //     every v2-M8 AND v3-M6 evidence manifest stamps (historical; re-run those verdicts with
     //     `--constants` pointing at the archived v0.3, e.g.
     //     `git show 5ed1d87:docs/protocols/e4-v2-sealed-constants-v0.json`).
+    //   → v0.5 27/12/490000/5 (2026-07-12, §5.7 Amendment 3 substrate naturalization: budgets
+    //     UNTOUCHED; substrate_version → procedural-rest-v2.1, twins re-pinned + feedback-behavior
+    //     modules sealed. v0.4 full-file hash was
+    //     3198ee1b9b2fc6c36861108018eee8aa9a243a4d57d58629ff71489a3afe9c56 — recorded at 01f7942;
+    //     the pre-seal calibration rung must re-check budget headroom on the new substrate before
+    //     any evidence run).
     const { constants } = await loadSealed();
 
     expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
-      "3198ee1b9b2fc6c36861108018eee8aa9a243a4d57d58629ff71489a3afe9c56"
+      "93d0bf88a49729f02adc8322b6367212da77bfe45548e7354d3b7277d3e67a72"
     );
-    expect(constants.version).toBe("0.4");
+    expect(constants.version).toBe("0.5");
     expect(constants.budgets).toEqual({
       turns_per_task: 27,
       verifications_per_task: 12,

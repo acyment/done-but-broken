@@ -14,8 +14,9 @@
 // channel.
 import type { E4ChangeOpKind } from "../substrate/ops";
 import type { E4EntityField, E4ValidationRule } from "../substrate/ir";
+import { RETYPE_DATE_LITERAL_V2 } from "../substrate/v2/fixture";
 import type { E4TaskDelta } from "./task-delta";
-import type { E4V3FactKind } from "./ambiguity";
+import { retypeChangesStoredRepresentation, type E4V3FactKind } from "./ambiguity";
 
 export const E4_V3_PM_BRIEF_ID = "e4-pm-brief-v1";
 
@@ -141,11 +142,18 @@ export function renderE4PmBrief(input: { opKind: E4ChangeOpKind; delta: E4TaskDe
           (filteredList ? ` via ${filteredList.method} ${filteredList.path}` : ` via its query string`) +
           `.`
       );
+      lines.push(
+        `Link existing records by position: the first ${entity} to the first ${field.ref_entity}, the second to the second; a ${entity} with no counterpart gets null.`
+      );
       cover("relationship_field_shape", `${entity}.${field.name}`);
+    } else {
+      // §5.7.4: what existing stored records get for the new field.
+      lines.push(`Existing ${entity} records carry ${field.name} = null until they are updated.`);
     }
 
     cover("field_type", `${entity}.${field.name}`);
     cover("field_required", `${entity}.${field.name}`);
+    cover("fixture_migration", `${entity}.${field.name}`);
   }
 
   for (const { entity, field } of delta.removed_fields) {
@@ -163,6 +171,18 @@ export function renderE4PmBrief(input: { opKind: E4ChangeOpKind; delta: E4TaskDe
       `Change ${retype.entity}.${retype.field_name} from ${retype.old_type} to ${retype.new_type}.`
     );
     cover("field_type", `${retype.entity}.${retype.field_name}`);
+
+    // §5.7.4: representation-changing conversions state what existing values become.
+    if (retypeChangesStoredRepresentation(retype.old_type, retype.new_type)) {
+      if (retype.old_type === "decimal" && retype.new_type === "int") {
+        lines.push(`Existing ${retype.entity}.${retype.field_name} values are truncated toward zero.`);
+      } else if (retype.old_type === "string" && retype.new_type === "date") {
+        lines.push(`Existing ${retype.entity}.${retype.field_name} values are reset to ${RETYPE_DATE_LITERAL_V2}.`);
+      } else {
+        lines.push(`Existing ${retype.entity}.${retype.field_name} values become the strings "true"/"false".`);
+      }
+      cover("fixture_migration", `${retype.entity}.${retype.field_name}`);
+    }
   }
 
   for (const endpoint of delta.added_endpoints) {

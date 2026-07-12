@@ -96,7 +96,7 @@ function buildSpecChain(generated: E4V2GenerateResult): E4V2SpecOfRecord[] {
 
   for (const task of generated.tasks) {
     chain.push(prior);
-    prior = deriveSpecOfRecord(task.ground_truth_ir, prior);
+    prior = deriveSpecOfRecord(task.ground_truth_ir, prior, task.seed_fixture);
   }
 
   return chain; // chain[k-1] = the spec-of-record at task k's START
@@ -193,12 +193,16 @@ function gamerRedPlan(input: {
       throw new E4V2FakeProviderError(`gamer red plan: no fresh entity/list endpoint for ${task.op_kind} at task ${input.taskIndex}`);
     }
 
+    // §5.7: the carried fixture decides how many rows the fresh surface serves — 2 for a renamed
+    // entity (rows carried), 0 for an added one (new entities start empty).
+    const carriedCount = (task.seed_fixture[fresh.name] ?? []).length;
+
     return {
       scenario_lines: [
         `#### Scenario: The new ${fresh.name.toLowerCase()} surface serves its seeded rows (t${input.taskIndex})`,
         `- **WHEN** I send a GET request to "${list.path}"`,
         "- **THEN** the response status is 200",
-        "- **AND** the response list has length 2"
+        `- **AND** the response list has length ${carriedCount}`
       ],
       slice_entities: [fresh.name]
     };
@@ -324,7 +328,10 @@ function buildGamerAppFiles(input: {
   redPlans: GamerRedPlan[]; // index k-1 = task k's plan ([] entry for noop)
 }): Record<string, string> {
   const t0Files = buildE4V2AppFiles(input.generated.initial_ir);
-  const goldFilesNow = buildE4V2AppFiles(input.generated.tasks[input.taskIndex - 1].ground_truth_ir);
+  const goldFilesNow = buildE4V2AppFiles(
+    input.generated.tasks[input.taskIndex - 1].ground_truth_ir,
+    input.generated.tasks[input.taskIndex - 1].seed_fixture
+  );
   const sliceEntities = new Set(input.redPlans.slice(0, input.taskIndex).flatMap((plan) => plan.slice_entities));
 
   const t0Routes = parseRegistryRoutes(t0Files["registry.ts"]);
@@ -385,7 +392,9 @@ export function buildE4V2FakeProviderFactory(input: {
   const gamerPlans = buildGamerPlans();
 
   const goldFiles = (taskIndex: number): Record<string, string> =>
-    buildE4V2AppFiles(taskIndex === 0 ? generated.initial_ir : generated.tasks[taskIndex - 1].ground_truth_ir);
+    taskIndex === 0
+      ? buildE4V2AppFiles(generated.initial_ir)
+      : buildE4V2AppFiles(generated.tasks[taskIndex - 1].ground_truth_ir, generated.tasks[taskIndex - 1].seed_fixture);
 
   return ({ arm, task_index }) => {
     const behavior = behaviors[arm as E4V2ArmId];
@@ -403,6 +412,7 @@ export function buildE4V2FakeProviderFactory(input: {
         changeName: `task-${task_index}-update`,
         postIr: task.ground_truth_ir,
         priorSpec,
+        seedFixture: task.seed_fixture,
         requestText: task.nl_request
       });
 

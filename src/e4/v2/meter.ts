@@ -29,6 +29,7 @@ import { extractSurfaceDump, surfaceDumpToInventory, truthInventory } from "../m
 import type { E4Endpoint, E4SchemaIR } from "../substrate/ir";
 import { renderEndpointItemId } from "../substrate/ir";
 import { buildE4V2AppFiles, envelopeKeysForStatement } from "../substrate/v2/scaffold";
+import type { E4SeedFixtureV2 } from "../substrate/v2/fixture";
 import type { E4ExecutorConfig } from "../oracle-executor";
 import type { E4Discrepancy, E4DriftClass, E4DriftItemKind, E4DriftReport, E4ExecutorEvidence } from "../types";
 import { parseOpenSpecScenarioBlocks } from "./converter";
@@ -271,6 +272,7 @@ export function classifyE4V2SpecChannel(input: {
 export type E4V2DriftMeterInput = {
   workspaceDir: string; // the agent workspace (openspec/specs read; registry/schema dump read)
   groundTruthIr: E4SchemaIR;
+  seedFixture?: E4SeedFixtureV2; // §5.7: the carried fixture the gold scratch seeds from
   executorEvidence: E4ExecutorEvidence;
   renameLineage: E4RenameLineageLookupEntry[];
   executorConfig: E4ExecutorConfig;
@@ -297,7 +299,7 @@ export async function runE4V2DriftMeter(input: E4V2DriftMeterInput): Promise<E4D
   let specDiscrepancies: E4Discrepancy[] = [];
 
   try {
-    for (const [path, contents] of Object.entries(buildE4V2AppFiles(input.groundTruthIr))) {
+    for (const [path, contents] of Object.entries(buildE4V2AppFiles(input.groundTruthIr, input.seedFixture))) {
       await writeFile(join(goldDir, path), contents);
     }
 

@@ -10,7 +10,8 @@
 // same derivation on post-op IRs to build its change deltas.
 import type { E4Endpoint, E4Entity, E4SchemaIR, E4ValidationRule } from "../substrate/ir";
 import { errorEnvelopeKeysV2 } from "../substrate/v2/scaffold";
-import { defaultValueForFieldV2, generateSeedFixtureV2, seedIdV2 } from "../substrate/v2/testgen";
+import { defaultValueForFieldV2, generateSeedFixtureV2 } from "../substrate/v2/testgen";
+import type { E4SeedFixtureV2 } from "../substrate/v2/fixture";
 import { TYPE_VIOLATING_VALUES, ruleViolatingValue } from "../substrate/v2/values";
 import { canonicalScenarioBody, type E4V2Scenario, type E4V2Step } from "./scenario";
 
@@ -77,22 +78,23 @@ function pathWithId(path: string, id: string): string {
 // One fresh fixture per entity, reused across that entity's templates: every field present,
 // values from the GT generator's sealed derivation at ordinal 5; id = the spec-reserved fixture
 // id; ref fields reference seed row 1 of the referenced entity.
-export function buildFreshBody(ir: E4SchemaIR, entity: E4Entity): Record<string, unknown> {
+export function buildFreshBody(ir: E4SchemaIR, entity: E4Entity, fixture?: E4SeedFixtureV2): Record<string, unknown> {
   const body: Record<string, unknown> = {};
 
   for (const field of entity.fields) {
-    body[field.name] = field.name === "id" ? specFixtureId(entity.name) : defaultValueForFieldV2(ir, field, SPEC_FRESH_ORDINAL);
+    body[field.name] =
+      field.name === "id" ? specFixtureId(entity.name) : defaultValueForFieldV2(ir, field, SPEC_FRESH_ORDINAL, fixture);
   }
 
   return body;
 }
 
-function buildChangedBody(ir: E4SchemaIR, entity: E4Entity): Record<string, unknown> {
-  const body = buildFreshBody(ir, entity);
+function buildChangedBody(ir: E4SchemaIR, entity: E4Entity, fixture?: E4SeedFixtureV2): Record<string, unknown> {
+  const body = buildFreshBody(ir, entity, fixture);
   const firstNonIdField = entity.fields.find((field) => field.name !== "id");
 
   if (firstNonIdField) {
-    body[firstNonIdField.name] = defaultValueForFieldV2(ir, firstNonIdField, SPEC_CHANGED_ORDINAL);
+    body[firstNonIdField.name] = defaultValueForFieldV2(ir, firstNonIdField, SPEC_CHANGED_ORDINAL, fixture);
   }
 
   return body;
@@ -132,11 +134,11 @@ function rejectionAssertions(k1: string, k2: string): E4V2Step[] {
   ];
 }
 
-function createScenarios(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind): E4V2Scenario[] {
+function createScenarios(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind, fixture: E4SeedFixtureV2): E4V2Scenario[] {
   const [k1, k2] = errorEnvelopeKeysV2(ir);
   const create = requireEndpoint(endpoints, "create", entity.name);
   const read = requireEndpoint(endpoints, "read", entity.name);
-  const fresh = buildFreshBody(ir, entity);
+  const fresh = buildFreshBody(ir, entity, fixture);
   const freshJson = jsonLine(fresh);
   const scenarios: E4V2Scenario[] = [];
 
@@ -219,12 +221,12 @@ function readScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKi
   };
 }
 
-function updateScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind): E4V2Scenario {
+function updateScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind, fixture: E4SeedFixtureV2): E4V2Scenario {
   const create = requireEndpoint(endpoints, "create", entity.name);
   const read = requireEndpoint(endpoints, "read", entity.name);
   const update = requireEndpoint(endpoints, "update", entity.name);
-  const freshJson = jsonLine(buildFreshBody(ir, entity));
-  const changedJson = jsonLine(buildChangedBody(ir, entity));
+  const freshJson = jsonLine(buildFreshBody(ir, entity, fixture));
+  const changedJson = jsonLine(buildChangedBody(ir, entity, fixture));
 
   return {
     title: `Updating a ${entity.name} persists the change`,
@@ -242,12 +244,12 @@ function updateScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsBy
   };
 }
 
-function deleteScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind): E4V2Scenario {
+function deleteScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind, fixture: E4SeedFixtureV2): E4V2Scenario {
   const [k1] = errorEnvelopeKeysV2(ir);
   const create = requireEndpoint(endpoints, "create", entity.name);
   const read = requireEndpoint(endpoints, "read", entity.name);
   const del = requireEndpoint(endpoints, "delete", entity.name);
-  const freshJson = jsonLine(buildFreshBody(ir, entity));
+  const freshJson = jsonLine(buildFreshBody(ir, entity, fixture));
 
   return {
     title: `Deleting a ${entity.name} removes it`,
@@ -263,11 +265,11 @@ function deleteScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsBy
   };
 }
 
-function listScenarios(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind): E4V2Scenario[] {
+function listScenarios(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind, fixture: E4SeedFixtureV2): E4V2Scenario[] {
   const create = requireEndpoint(endpoints, "create", entity.name);
   const list = requireEndpoint(endpoints, "list", entity.name);
-  const freshJson = jsonLine(buildFreshBody(ir, entity));
-  const seedRows = generateSeedFixtureV2(ir)[entity.name] ?? [];
+  const freshJson = jsonLine(buildFreshBody(ir, entity, fixture));
+  const seedRows = fixture[entity.name] ?? [];
   const scenarios: E4V2Scenario[] = [
     {
       title: `Creating a ${entity.name} increases the list count`,
@@ -285,9 +287,10 @@ function listScenarios(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByK
   // heterogeneous seed refs: matching-seed-count is computed from the actual seed fixture, and
   // under heterogeneous seeding it is strictly below the unfiltered count.
   const refField = entity.fields.find((field) => field.type === "ref" && field.ref_entity);
+  const parentId = refField?.ref_entity ? ((fixture[refField.ref_entity]?.[0]?.id as string | undefined) ?? null) : null;
 
-  if (refField?.ref_entity) {
-    const parentId = seedIdV2(refField.ref_entity, 1);
+  // §5.7: filter by the CARRIED parent row-1 id; no template when the parent has no carried rows.
+  if (refField?.ref_entity && parentId !== null) {
     const matchingSeedCount = seedRows.filter((row) => row[refField.name] === parentId).length;
 
     scenarios.push({
@@ -305,11 +308,11 @@ function listScenarios(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByK
   return scenarios;
 }
 
-function analyticsScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind): E4V2Scenario {
+function analyticsScenario(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind, fixture: E4SeedFixtureV2): E4V2Scenario {
   const create = requireEndpoint(endpoints, "create", entity.name);
   const analytics = requireEndpoint(endpoints, "analytics", entity.name);
-  const freshJson = jsonLine(buildFreshBody(ir, entity));
-  const seedCount = (generateSeedFixtureV2(ir)[entity.name] ?? []).length;
+  const freshJson = jsonLine(buildFreshBody(ir, entity, fixture));
+  const seedCount = (fixture[entity.name] ?? []).length;
 
   return {
     title: `Creating a ${entity.name} increases the reported count`,
@@ -351,26 +354,33 @@ const REQUIREMENT_TEMPLATES: Record<E4Endpoint["kind"], { title: (name: string) 
   }
 };
 
-function scenariosForEndpoint(ir: E4SchemaIR, entity: E4Entity, endpoints: EndpointsByKind, kind: E4Endpoint["kind"]): E4V2Scenario[] {
+function scenariosForEndpoint(
+  ir: E4SchemaIR,
+  entity: E4Entity,
+  endpoints: EndpointsByKind,
+  kind: E4Endpoint["kind"],
+  fixture: E4SeedFixtureV2
+): E4V2Scenario[] {
   switch (kind) {
     case "create":
-      return createScenarios(ir, entity, endpoints);
+      return createScenarios(ir, entity, endpoints, fixture);
     case "read":
       return [readScenario(ir, entity, endpoints)];
     case "update":
-      return [updateScenario(ir, entity, endpoints)];
+      return [updateScenario(ir, entity, endpoints, fixture)];
     case "delete":
-      return [deleteScenario(ir, entity, endpoints)];
+      return [deleteScenario(ir, entity, endpoints, fixture)];
     case "list":
-      return listScenarios(ir, entity, endpoints);
+      return listScenarios(ir, entity, endpoints, fixture);
     case "analytics":
-      return [analyticsScenario(ir, entity, endpoints)];
+      return [analyticsScenario(ir, entity, endpoints, fixture)];
   }
 }
 
-export function deriveEntityCapability(ir: E4SchemaIR, entity: E4Entity): E4V2SpecCapability {
+export function deriveEntityCapability(ir: E4SchemaIR, entity: E4Entity, fixture?: E4SeedFixtureV2): E4V2SpecCapability {
   const byKind = endpointsByKind(ir, entity);
   const requirements: E4V2SpecRequirement[] = [];
+  const seedFixture = fixture ?? generateSeedFixtureV2(ir);
 
   // One `### Requirement:` per endpoint of this entity, in IR endpoint order.
   for (const endpoint of ir.endpoints.filter((candidate) => candidate.entity === entity.name)) {
@@ -378,7 +388,7 @@ export function deriveEntityCapability(ir: E4SchemaIR, entity: E4Entity): E4V2Sp
     requirements.push({
       title: template.title(entity.name),
       shall: template.shall(entity.name),
-      scenarios: scenariosForEndpoint(ir, entity, byKind, endpoint.kind)
+      scenarios: scenariosForEndpoint(ir, entity, byKind, endpoint.kind, seedFixture)
     });
   }
 
@@ -425,8 +435,9 @@ export function deriveTombstoneCapability(ir: E4SchemaIR, capabilityName: string
 // segment of NO current endpoint, the retirement tombstone (in prior order). A re-added entity's
 // derivation replaces its tombstone with the full template set by construction. Pass prior=null
 // for the T0 baseline.
-export function deriveSpecOfRecord(ir: E4SchemaIR, prior: E4V2SpecOfRecord | null): E4V2SpecOfRecord {
-  const live = ir.entities.map((entity) => deriveEntityCapability(ir, entity));
+export function deriveSpecOfRecord(ir: E4SchemaIR, prior: E4V2SpecOfRecord | null, fixture?: E4SeedFixtureV2): E4V2SpecOfRecord {
+  const seedFixture = fixture ?? generateSeedFixtureV2(ir);
+  const live = ir.entities.map((entity) => deriveEntityCapability(ir, entity, seedFixture));
   const liveSegments = new Set(ir.endpoints.map((endpoint) => firstPathSegment(endpoint.path).toLowerCase()));
   const tombstones = (prior?.capabilities ?? [])
     .filter((capability) => !liveSegments.has(capability.name))
@@ -458,8 +469,8 @@ export type E4V2ChangeDelta = {
 
 // The §5.5 pair-derivation: templates over the post-op IR + the retirement-tombstone rule,
 // diffed against the pre-task spec-of-record under the §6 canonicalizer novelty semantics.
-export function deriveChangeDelta(postIr: E4SchemaIR, priorSpec: E4V2SpecOfRecord): E4V2ChangeDelta {
-  const spec = deriveSpecOfRecord(postIr, priorSpec);
+export function deriveChangeDelta(postIr: E4SchemaIR, priorSpec: E4V2SpecOfRecord, fixture?: E4SeedFixtureV2): E4V2ChangeDelta {
+  const spec = deriveSpecOfRecord(postIr, priorSpec, fixture);
   const priorRefs = allScenarioRefs(priorSpec);
   const priorCanonical = new Set(priorRefs.map((ref) => canonicalScenarioBody(ref.scenario)));
   const postRefs = allScenarioRefs(spec);

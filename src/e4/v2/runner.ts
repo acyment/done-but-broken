@@ -588,6 +588,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
     drift = await runE4V2DriftMeter({
       workspaceDir: input.workspace_dir,
       groundTruthIr: input.task.ground_truth_ir,
+      seedFixture: input.task.seed_fixture,
       executorEvidence,
       renameLineage: input.rename_lineage,
       executorConfig: input.executor_config
@@ -603,6 +604,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
   const recordScenarios = await readBoundSpecOfRecordScenarios(input.workspace_dir);
   const killScore = await runE4V2KillScore({
     groundTruthIr: input.task.ground_truth_ir,
+    seedFixture: input.task.seed_fixture,
     scenarios: recordScenarios.scenarios,
     executorConfig: input.executor_config,
     concurrency: 4

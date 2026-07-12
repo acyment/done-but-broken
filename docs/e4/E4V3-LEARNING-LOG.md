@@ -286,3 +286,48 @@ every failing check at the close was classified by proximate cause. Per-event ta
   resolved. The determinacy-table gap stands confirmed. This section supersedes the
   post-ladder forensics' "dominated by pluralization" attribution: pluralization dominates
   seed-7 only; the wider family dominates overall.
+
+### Substrate naturalization + evidence prereg draft (2026-07-12, operator decision recorded)
+
+**Operator chose BOTH naturalizations** (AskUserQuestion, recorded): (a) English pluralizer,
+(b) naturalized fixture semantics with brief disclosure of residuals. Implemented as design
+**§5.7 Amendment 3 (`procedural-rest-v2.1`)** — zero spend, new compatibility boundary
+**v2 constants v0.5 (`93d0bf88…`) / v3 v0.4 (`8dc13021…`)**:
+
+- Sealed English pluralizer for every minted collection segment (add_entity, rename_entity,
+  and a new v2 add_endpoint override — `/categories/stats`, never `/categorys/stats`);
+  reproduces T0 byte-identically.
+- Seed data carries forward per op like a real migration (`src/e4/substrate/v2/fixture.ts`):
+  ids/values survive renames, ref keys cascade with field-level lineage, added fields
+  backfill null, add_relationship links row-n→parent-n, retype converts by a sealed table;
+  added entities start EMPTY (GT suite re-anchors on oracle-created fixtures). The oracle,
+  meter gold scratch, kill-score bank, §5.5 template derivation, and diligent fake agent all
+  consume the carried fixture.
+- The PM brief now discloses every fixture-migration duty (`fixture_migration` fact kind in
+  the determinacy table; "existing records" lines for backfill/linking/representation-changing
+  retypes incl. the disclosed `2026-01-01` literal).
+- The unchanged v2-M0 red/green census passes on the naturalized substrate (28/28); a new
+  §5.7.8 facet census (`test/e4-v2-naturalization.test.ts`) pins ids-stable-through-rename,
+  value stability, ref-key cascade + lineage, null backfill, disclosed retype literals,
+  add-entity fresh-data coverage, and gold+carried-fixture self-consistency at every
+  checkpoint of drawn chains covering the drift-relevant op kinds.
+- External-audit design input 2 applied structurally: the v2 twin set now seals the
+  feedback-behavior modules (openspec/runner/gate/workspace/fake-provider) — any edit breaks
+  the pin suite; the harness-commit manifest stamp is a prereg §9 gate action.
+- The seed draw consumes no new PRNG draws: every previously sealed seed composition
+  (36/41/62/65/68/75, 3/60, 37) re-verified byte-identical across the boundary move.
+
+**Evidence prereg DRAFTED (explicitly UNSEALED):
+`docs/protocols/e4-v3-m7-evidence-preregistration-v1.md`** — 2 arms (arm h dropped,
+SEAL-CONFIRM) × 6 fresh seeds (**89/117/121/123/139/140** by the M6 mechanical rule under the
+26-seed exclusion set incl. learning seeds {1,7,12,13,15,17}; all 13 op kinds covered) × 6
+tasks at FULL sealed budgets; PRIMARY = composition-proof freshness (all-checkpoint drift-
+burden AUC over fixed 6-task denominators + a sealed 0.15 close-rate guard — the M6 §10
+lesson made structural); fc|done + matched-pair concordance + the mandatory
+{truthful-close/false-close/non-close} disposition table as first-class no-verdict-weight
+secondaries; binding rule: no rate-over-attempted figure may ever be presented as
+honesty-at-close. Pre-seal REQUIRED: one rename-free two-arm full-budget calibration rung
+(seed 144 by mechanical rule, ~$1.5, **separate operator authorization**) that re-ratifies
+budgets on the new boundary and answers GLM F3 (were the learning-run stalls a budget
+artifact). Sealing and the evidence spend are separate operator acts; the verdict tool +
+harness-commit stamp are gate-commit actions at the seal.

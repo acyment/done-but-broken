@@ -7,6 +7,7 @@
 // + ADDED (the §5.5 tombstone) — the pinned CLI refuses to rebuild a spec to zero requirements,
 // so the tombstone keeps every retirement archivable.
 import type { E4SchemaIR } from "../substrate/ir";
+import type { E4SeedFixtureV2 } from "../substrate/v2/fixture";
 import { deriveChangeDelta, type E4V2SpecCapability, type E4V2SpecOfRecord, type E4V2SpecRequirement } from "./gold-spec";
 import { canonicalScenarioBody, scenarioBulletLines } from "./scenario";
 
@@ -87,9 +88,10 @@ export function renderE4V2ChangeFiles(input: {
   changeName: string;
   postIr: E4SchemaIR;
   priorSpec: E4V2SpecOfRecord;
+  seedFixture?: E4SeedFixtureV2; // §5.7: the carried fixture the template derivation binds to
   requestText: string; // the task's NL request, quoted in proposal.md's Why section
 }): E4V2RenderedChange {
-  const delta = deriveChangeDelta(input.postIr, input.priorSpec);
+  const delta = deriveChangeDelta(input.postIr, input.priorSpec, input.seedFixture);
   const priorByName = new Map(input.priorSpec.capabilities.map((capability) => [capability.name, capability]));
   const files: Record<string, string> = {};
   const root = `openspec/changes/${input.changeName}`;

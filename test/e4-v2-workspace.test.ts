@@ -203,7 +203,7 @@ describe("v2-M1 — procedural-rest-v2 provider", () => {
 
     expect(JSON.stringify(a)).toBe(JSON.stringify(b));
     expect(e4ProceduralRestV2Provider.substrate_kind).toBe("procedural-rest-v2");
-    expect(e4ProceduralRestV2Provider.substrate_version).toBe("procedural-rest-v2");
+    expect(e4ProceduralRestV2Provider.substrate_version).toBe("procedural-rest-v2.1"); // §5.7 Amendment 3
   });
 
   test("different seeds differ; every task carries labels; ≥1 behavior_preserving task guaranteed across seeds", async () => {

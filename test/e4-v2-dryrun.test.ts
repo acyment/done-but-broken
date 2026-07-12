@@ -85,7 +85,7 @@ describe("v2-M5 — dry run: diligent executed arm vs drifting prose arm", () =>
     for (const manifest of [prose, executed]) {
       expect(manifest.run_classification).toBe("dry_run");
       expect(manifest.usage_totals.spend_usd).toBe(0);
-      expect(manifest.compatibility_boundary.substrate_version).toBe("procedural-rest-v2");
+      expect(manifest.compatibility_boundary.substrate_version).toBe("procedural-rest-v2.1"); // §5.7
       expect(manifest.tasks).toHaveLength(TASKS);
       expect(manifest.tasks.every((task) => task.termination === "done")).toBe(true);
       // Chain replay valid ACROSS the archive seam (≥1 archive actually ran in every sequence).

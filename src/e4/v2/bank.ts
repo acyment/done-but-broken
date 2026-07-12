@@ -14,6 +14,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { E4SchemaIR } from "../substrate/ir";
 import { buildE4V2AppFiles } from "../substrate/v2/scaffold";
+import type { E4SeedFixtureV2 } from "../substrate/v2/fixture";
 import type { E4ExecutorConfig } from "../oracle-executor";
 import type { E4V2Scenario } from "./scenario";
 import { runE4V2ScenarioSet } from "./scenario-executor";
@@ -109,8 +110,8 @@ function applyAnchoredReplacements(source: string, mutations: AnchoredReplacemen
 }
 
 // The variant workspace: the gold app files with the variant's sealed server mutation applied.
-export function buildE4V2BankVariantFiles(ir: E4SchemaIR, variantId: E4V2BankVariantId): Record<string, string> {
-  const files = buildE4V2AppFiles(ir);
+export function buildE4V2BankVariantFiles(ir: E4SchemaIR, variantId: E4V2BankVariantId, seedFixture?: E4SeedFixtureV2): Record<string, string> {
+  const files = buildE4V2AppFiles(ir, seedFixture);
 
   return { ...files, "server.ts": applyAnchoredReplacements(files["server.ts"], VARIANT_MUTATIONS[variantId], variantId) };
 }
@@ -130,6 +131,7 @@ export type E4V2KillScoreReport = {
 // Harness-side and hidden — the report is recorded in the manifest, never fed back to the agent.
 export async function runE4V2KillScore(input: {
   groundTruthIr: E4SchemaIR;
+  seedFixture?: E4SeedFixtureV2;
   scenarios: E4V2Scenario[];
   executorConfig: E4ExecutorConfig;
   concurrency?: number;
@@ -140,7 +142,7 @@ export async function runE4V2KillScore(input: {
     const dir = await mkdtemp(join(tmpdir(), `e4-v2-bank-${variantId}-`));
 
     try {
-      for (const [path, contents] of Object.entries(buildE4V2BankVariantFiles(input.groundTruthIr, variantId))) {
+      for (const [path, contents] of Object.entries(buildE4V2BankVariantFiles(input.groundTruthIr, variantId, input.seedFixture))) {
         await writeFile(join(dir, path), contents);
       }
 

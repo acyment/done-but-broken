@@ -8,6 +8,7 @@
 //
 // The delta is derived from ground truth, but everything the review SAYS is bounded by what was
 // already communicated to this agent through the request or the delivered brief.
+import { pluralizeEntityName } from "../substrate/v2/pluralize";
 import type { E4V2Scenario } from "../v2/scenario";
 import { scenarioRequests } from "../v2/meter";
 import type { E4TaskDelta } from "./task-delta";
@@ -97,7 +98,7 @@ export function reviewE4ProposedScenarios(input: {
 
   // (ii) contradicted renames — request-determined (rename phrasings state old and new names).
   for (const rename of delta.renamed_entities) {
-    const oldSegment = `${rename.old_name.toLowerCase()}s`;
+    const oldSegment = pluralizeEntityName(rename.old_name); // §5.7.1 sealed pluralizer
 
     for (const scenario of scenarios) {
       if (expectsNotFound(scenario)) {

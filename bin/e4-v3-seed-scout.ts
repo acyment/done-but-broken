@@ -13,7 +13,9 @@ import { e4ProceduralRestV2Provider } from "../src/e4/substrate/v2/provider";
 // Every seed ever used as evidence, calibration, dry-run/test fixture, or void — reused seeds
 // would flavor learning with known outcomes and contaminate any future evidence pre-registration.
 export const E4_LEARNING_EXCLUDED_SEEDS = new Set([
-  0, 3, 4, 22, 36, 37, 41, 42, 43, 45, 46, 49, 50, 52, 60, 62, 63, 65, 68, 75
+  0, 3, 4, 22, 36, 37, 41, 42, 43, 45, 46, 49, 50, 52, 60, 62, 63, 65, 68, 75,
+  // learning-ladder seeds (L1-L5 live + dry-run rehearsals, 2026-07-11) — consumed
+  1, 7, 12, 13, 15, 17
 ]);
 
 function argValue(flag: string): string | null {

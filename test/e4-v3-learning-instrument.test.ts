@@ -196,7 +196,7 @@ function fakeManifest(arm: string, seed: number, tasks: E4V2TaskRecord[]): E4V2R
       constants_version: "0.4",
       constants_hash: "x",
       substrate_kind: "procedural-rest-v2",
-      substrate_version: "procedural-rest-v2",
+      substrate_version: "procedural-rest-v2.1",
       meter_version: "e4-drift-meter-v2",
       converter_id: "e4-openspec-gherkin-v1",
       step_table_id: "e4-step-table-v1",
