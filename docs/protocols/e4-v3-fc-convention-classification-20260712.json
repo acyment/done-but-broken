@@ -1,0 +1,962 @@
+{
+ "schema": "e4-v3-fc-convention-classification",
+ "generated": "2026-07-12",
+ "method": "For every false-confident close in the M6 evidence run (docs/protocols/e4-v3-m6-pilot-manifests-20260711-001, 63 events) and the learning-ladder runs exp01-exp05 (13 events), the hidden-oracle transcript (records/<arm>/task-k/hidden-oracle.json) was joined against the gold suite regenerated from the sealed substrate draw (e4ProceduralRestV2Provider + generateCumulativeTestsV2, v2 constants op_mix). Each failing check at the close was classified by proximate cause; an event is fully_convention_explained when EVERY failing check is a convention-family or pluralization trap.",
+ "convention_family_classes": {
+  "fixture_id_migration": "oracle requests seed ids re-derived from the renamed entity name (seedIdV2)",
+  "fixture_ref_value_migration": "oracle expects stored ref values re-derived after the referenced entity's rename",
+  "ref_field_name_stickiness": "gold keeps the referencing field's OLD name after an entity rename while migrating its values; the natural full cascade is scored as drift",
+  "sample_value_regen_after_field_rename": "oracle expects stored string values re-derived from the NEW field name (Sample <field> N)",
+  "seed_row_backfill_regen": "fields added mid-chain must be backfilled into pre-existing seed rows with the exact derived value",
+  "date_literal": "oracle pins every date value to the literal 2026-01-01 (defaultValueForFieldV2)",
+  "pluralization_route": "gold path uses the sealed naive plural (lower(name)+'s') where natural English differs, incl. /categorys/stats vs the T0 entity's own /categories"
+ },
+ "summary": {
+  "m6": {
+   "fc_events": 63,
+   "fully_convention_explained": 41,
+   "fully_family_alone": 24,
+   "fully_pluralization_alone": 9,
+   "fully_both": 8,
+   "partial": 18,
+   "none": 4,
+   "fully_by_arm": {
+    "e4_arm_0": "16/24",
+    "e4_arm_h": "15/24",
+    "e4_arm_p": "10/15"
+   },
+   "fully_by_seed": {
+    "36": "0/7",
+    "41": "12/18",
+    "62": "9/10",
+    "68": "17/18",
+    "75": "3/10"
+   }
+  },
+  "learning": {
+   "fc_events": 13,
+   "fully_convention_explained": 9,
+   "fully_family_alone": 6,
+   "fully_pluralization_alone": 3,
+   "partial": 3,
+   "none": 1
+  }
+ },
+ "events": [
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_0",
+   "task_index": 3,
+   "op_kind": "add_relationship",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_0",
+   "task_index": 4,
+   "op_kind": "delete_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_0",
+   "task_index": 5,
+   "op_kind": "modify_convention",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_0",
+   "task_index": 6,
+   "op_kind": "add_validation_rule",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_h",
+   "task_index": 3,
+   "op_kind": "add_relationship",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_h",
+   "task_index": 4,
+   "op_kind": "delete_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-36",
+   "arm": "e4_arm_h",
+   "task_index": 6,
+   "op_kind": "add_validation_rule",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:listing_id"
+   ]
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_0",
+   "task_index": 1,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_0",
+   "task_index": 2,
+   "op_kind": "add_relationship",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_0",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_0",
+   "task_index": 4,
+   "op_kind": "modify_endpoint",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen",
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "seed_id_404_unrenamed"
+   ]
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_0",
+   "task_index": 5,
+   "op_kind": "retype_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen",
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "\"mes",
+    "body_diff:in_stock",
+    "reject_gold_body:{\"error\":{\"code\":\"validation_error\"",
+    "seed_id_404_unrenamed"
+   ]
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_0",
+   "task_index": 6,
+   "op_kind": "rename_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename",
+    "seed_row_backfill_regen",
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "seed_id_404_unrenamed"
+   ]
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_h",
+   "task_index": 1,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_h",
+   "task_index": 2,
+   "op_kind": "add_relationship",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_h",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_h",
+   "task_index": 4,
+   "op_kind": "modify_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_h",
+   "task_index": 5,
+   "op_kind": "retype_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "body_diff:in_stock"
+   ]
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_h",
+   "task_index": 6,
+   "op_kind": "rename_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_p",
+   "task_index": 1,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_p",
+   "task_index": 2,
+   "op_kind": "add_relationship",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_p",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_p",
+   "task_index": 4,
+   "op_kind": "modify_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_p",
+   "task_index": 5,
+   "op_kind": "retype_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "\"mes",
+    "body_diff:in_stock",
+    "reject_gold_body:{\"error\":{\"code\":\"validation_error\""
+   ]
+  },
+  {
+   "run": "M6-seed-41",
+   "arm": "e4_arm_p",
+   "task_index": 6,
+   "op_kind": "rename_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename",
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "\"mes",
+    "reject_gold_body:{\"error\":{\"code\":\"validation_error\""
+   ]
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_0",
+   "task_index": 2,
+   "op_kind": "rename_entity",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_0",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_0",
+   "task_index": 4,
+   "op_kind": "delete_entity",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_0",
+   "task_index": 5,
+   "op_kind": "rename_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_0",
+   "task_index": 6,
+   "op_kind": "add_relationship",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_h",
+   "task_index": 2,
+   "op_kind": "rename_entity",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_h",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_h",
+   "task_index": 4,
+   "op_kind": "delete_entity",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_h",
+   "task_index": 5,
+   "op_kind": "rename_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-62",
+   "arm": "e4_arm_p",
+   "task_index": 4,
+   "op_kind": "delete_entity",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration"
+   ],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_0",
+   "task_index": 1,
+   "op_kind": "rename_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_0",
+   "task_index": 2,
+   "op_kind": "delete_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_0",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_0",
+   "task_index": 4,
+   "op_kind": "add_validation_rule",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_0",
+   "task_index": 5,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_0",
+   "task_index": 6,
+   "op_kind": "retype_field",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "date_literal",
+    "pluralization_route"
+   ],
+   "other_checks": [
+    "got 201|got=201",
+    "other:status: expected 400"
+   ]
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_h",
+   "task_index": 1,
+   "op_kind": "rename_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_h",
+   "task_index": 2,
+   "op_kind": "delete_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_h",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_h",
+   "task_index": 4,
+   "op_kind": "add_validation_rule",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_h",
+   "task_index": 5,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_h",
+   "task_index": 6,
+   "op_kind": "retype_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_p",
+   "task_index": 1,
+   "op_kind": "rename_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_p",
+   "task_index": 2,
+   "op_kind": "delete_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_p",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_p",
+   "task_index": 4,
+   "op_kind": "add_validation_rule",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_p",
+   "task_index": 5,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "sample_value_regen_after_field_rename",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-68",
+   "arm": "e4_arm_p",
+   "task_index": 6,
+   "op_kind": "retype_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal",
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_0",
+   "task_index": 4,
+   "op_kind": "retype_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_0",
+   "task_index": 5,
+   "op_kind": "add_relationship",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_0",
+   "task_index": 6,
+   "op_kind": "add_validation_rule",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_h",
+   "task_index": 2,
+   "op_kind": "delete_field",
+   "bucket": "no_convention_involvement",
+   "convention_checks": [],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_h",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "no_convention_involvement",
+   "convention_checks": [],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_h",
+   "task_index": 4,
+   "op_kind": "retype_field",
+   "bucket": "no_convention_involvement",
+   "convention_checks": [],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_h",
+   "task_index": 5,
+   "op_kind": "add_relationship",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_h",
+   "task_index": 6,
+   "op_kind": "add_validation_rule",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_p",
+   "task_index": 4,
+   "op_kind": "retype_field",
+   "bucket": "no_convention_involvement",
+   "convention_checks": [],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "M6-seed-75",
+   "arm": "e4_arm_p",
+   "task_index": 6,
+   "op_kind": "add_validation_rule",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": [
+    "reject_gold_body:product_id",
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "exp01-L1-seed-7",
+   "arm": "e4_arm_p",
+   "task_index": 1,
+   "op_kind": "rename_entity",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp01-L1-seed-7",
+   "arm": "e4_arm_p",
+   "task_index": 2,
+   "op_kind": "add_endpoint",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp01-L1-seed-7",
+   "arm": "e4_arm_p",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "pluralization_route"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp02-L2-seed-17",
+   "arm": "e4_arm_0",
+   "task_index": 2,
+   "op_kind": "rename_entity",
+   "bucket": "no_convention_involvement",
+   "convention_checks": [],
+   "other_checks": [
+    "route_absent_drift"
+   ]
+  },
+  {
+   "run": "exp03-L3-seed-13",
+   "arm": "e4_arm_0",
+   "task_index": 2,
+   "op_kind": "rename_entity",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": [
+    "body_missing_field:description"
+   ]
+  },
+  {
+   "run": "exp03-L3-seed-13",
+   "arm": "e4_arm_0",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "fixture_ref_value_migration",
+    "ref_field_name_stickiness"
+   ],
+   "other_checks": [
+    "body_missing_field:description"
+   ]
+  },
+  {
+   "run": "exp03-L3-seed-13",
+   "arm": "e4_arm_p",
+   "task_index": 1,
+   "op_kind": "add_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "seed_row_backfill_regen"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp03-L3-seed-13",
+   "arm": "e4_arm_p",
+   "task_index": 2,
+   "op_kind": "rename_entity",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_id_migration",
+    "fixture_ref_value_migration"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp03-L3-seed-13",
+   "arm": "e4_arm_p",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "fixture_id_migration",
+    "fixture_ref_value_migration"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp04-L4-seed-15",
+   "arm": "e4_arm_0",
+   "task_index": 1,
+   "op_kind": "retype_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp04-L4-seed-15",
+   "arm": "e4_arm_0",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "partially_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": [
+    "\"mes",
+    "body_extra_field:category_id",
+    "reject_gold_body:{\"error\":{\"code\":\"validation_error\""
+   ]
+  },
+  {
+   "run": "exp04-L4-seed-15",
+   "arm": "e4_arm_p",
+   "task_index": 1,
+   "op_kind": "retype_field",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": []
+  },
+  {
+   "run": "exp04-L4-seed-15",
+   "arm": "e4_arm_p",
+   "task_index": 3,
+   "op_kind": "noop_maintenance",
+   "bucket": "fully_convention_explained",
+   "convention_checks": [
+    "date_literal"
+   ],
+   "other_checks": []
+  }
+ ]
+}
