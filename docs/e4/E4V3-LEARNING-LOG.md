@@ -410,3 +410,30 @@ spec+code staleness passing every internal check** — the gate verifies self-co
 truth; and the substrate still contains one falsely-disclosed convention, so absolute
 burden/fc numbers stay uninterpretable until fixed. Next-boundary fix list: PATCH semantics,
 id-stability disclosure on rename, modify_endpoint phrasing variant, commitment-sheet design.
+
+### Root-cause forensics adjudicated + ARC CLOSED (2026-07-13, operator decision)
+
+Two external root-cause reports (DeepSeek; fresh Fable/codex) explained the agent's behavior
+from transcripts; a read-only code verification settled their disagreements: stalls = model
+delimiter-glue tic × a harness diagnostic HOLE (prose-glued openers silently ignored,
+`src/e1-l1-parser.ts` line-start matching; the instructive template fires only on zero-block
+turns); ASK_PM "buried" refuted (last base instruction; the limiter is a one-shot,
+parameter-scoped asking policy); context dilution refuted (fresh conversation per task);
+Fable's "gate forced the 121/6 contract rewrite" refuted (novelty/red refusals are skipped
+on behavior-preserving tasks); PM review confirmed to have NO on-topic rule. NEW structural
+fact both reports missed: custody's exactly-one-change-dir rule + the protocol's lack of any
+delete primitive make absorbing a stalled predecessor's leftover change near-compulsory —
+the "silently swapped task" was substantially rule-trapped. Honest-close tallies accepted:
+(b)=0 across 26 sampled episodes — the model closes truthfully against everything it can
+see.
+
+**Operator question "are we just patching, or is the design brittle?" answered and the arc
+CLOSED:** the absolute-measurement half is structurally brittle (disclosure closure
+unfalsifiable — four audit rounds, four new convention families; artifact floor > effect
+size at n=6 on one stochastic model; metric-fix treadmill voids cross-boundary
+comparability), while the mechanism/contrast half produced robust findings (self-consistency
+blind spot; honest-but-wrong; gates relocate failure, not truth; the audit methodology
+itself). Full statement, forensic adjudication with file:line grounding, quantified artifact
+inventory, parked v4 sketch, and public claim-language guardrails:
+**`docs/e4/E4-ARC-CLOSEOUT-v1.md`**. Nothing beyond that document is authorized; v4 is
+parked; the public post remains a separate operator-gated act.
