@@ -49,6 +49,9 @@ export type E4V3LearningArmReadout = {
   // secondary e4-root-cause-burden-v1) — published side by side, never one instead of the other.
   burden_series_raw: number[];
   burden_series_clustered: number[];
+  // [P0V.1: D5] per checkpoint, each cluster's item_count (descending) — printed so a reader
+  // sees when one cluster collapses many independent same-family mistakes.
+  burden_cluster_sizes: number[][];
   burden_auc_raw: number | null; // fixed scheduled-task denominator (M7 evidence-tool semantics)
   burden_auc_clustered: number | null;
   product_refusals: { pm_review: number; reconcile: number; mutation: number } | null;
@@ -139,8 +142,13 @@ function armReadout(manifest: E4V2RunManifest): E4V3LearningArmReadout {
   };
 
   // E5 P0-V item 6: raw + root-cause-clustered burden per checkpoint, both published.
-  const burdenSeriesRaw = tasks.map((task) => computeE4V3RootCauseBurden(task.drift).raw_burden);
-  const burdenSeriesClustered = tasks.map((task) => computeE4V3RootCauseBurden(task.drift).clustered_burden);
+  // [P0V.1: D5] cluster sizes ride along so the collapse is inspectable per checkpoint.
+  const burdenPerTask = tasks.map((task) => computeE4V3RootCauseBurden(task.drift));
+  const burdenSeriesRaw = burdenPerTask.map((burden) => burden.raw_burden);
+  const burdenSeriesClustered = burdenPerTask.map((burden) => burden.clustered_burden);
+  const burdenClusterSizes = burdenPerTask.map((burden) =>
+    burden.clusters.map((cluster) => cluster.item_count).toSorted((a, b) => b - a)
+  );
   const auc = (series: number[]): number | null =>
     scheduled > 0 ? series.reduce((sum, value) => sum + value, 0) / scheduled : null;
 
@@ -165,6 +173,7 @@ function armReadout(manifest: E4V2RunManifest): E4V3LearningArmReadout {
     disposition,
     burden_series_raw: burdenSeriesRaw,
     burden_series_clustered: burdenSeriesClustered,
+    burden_cluster_sizes: burdenClusterSizes,
     burden_auc_raw: auc(burdenSeriesRaw),
     burden_auc_clustered: auc(burdenSeriesClustered),
     product_refusals:
@@ -259,9 +268,19 @@ export function renderE4V3LearningReport(report: E4V3LearningReport): string {
           ? ` [on-topic unavailable on ${arm.disposition.on_topic_unavailable} close(s)]`
           : "")
     );
+    // [P0V.1: D5] the clustered readout prints each checkpoint's cluster sizes and is labeled
+    // by its mechanism ("family-collapsed") so 5-mistakes-1-family never silently reads better
+    // than 2-mistakes-2-families. Raw stays primary.
+    const clusteredWithSizes = arm.burden_series_clustered
+      .map((count, index) => {
+        const sizes = arm.burden_cluster_sizes[index] ?? [];
+        return sizes.length > 0 ? `${count}(${sizes.join("+")})` : `${count}`;
+      })
+      .join(", ");
+
     lines.push(
       `  burden/checkpoint raw [${arm.burden_series_raw.join(", ")}] AUC ${arm.burden_auc_raw?.toFixed(2) ?? "null"}` +
-        ` | root-cause-clustered [${arm.burden_series_clustered.join(", ")}] AUC ${arm.burden_auc_clustered?.toFixed(2) ?? "null"}`
+        ` | family-collapsed [${clusteredWithSizes}] AUC ${arm.burden_auc_clustered?.toFixed(2) ?? "null"}`
     );
     lines.push(
       `  custody_failures ${arm.custody_failures}, refused_done_over_red ${arm.refused_done_over_red}` +

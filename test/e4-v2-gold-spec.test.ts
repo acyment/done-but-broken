@@ -225,12 +225,22 @@ describe("§5.5 retirement tombstone + delta derivation", () => {
     const specNextTask = deriveSpecOfRecord(deleted.ir, specAfterDelete);
     expect(specNextTask.capabilities.some((capability) => capability.name === "suppliers" && capability.retired)).toBe(true);
 
-    // …and a re-added entity replaces it with the full template set (delete-then-re-add coherence).
-    const readded = E4_OPS_V2.add_entity.apply(deleted.ir, minter, indexQueuePrng([0]), state);
+    // …and the DERIVATION still supports delete-then-re-add coherence: a re-used name replaces
+    // the tombstone with the full template set. Pinned with a FRESH sequence state, because…
+    const readded = E4_OPS_V2.add_entity.apply(deleted.ir, minter, indexQueuePrng([0]), createSequenceState());
     const specAfterReadd = deriveSpecOfRecord(readded.ir, specAfterDelete);
     const revived = specAfterReadd.capabilities.find((capability) => capability.name === "suppliers")!;
     expect(revived.retired).toBe(false);
     expect(revived.requirements.length).toBeGreaterThan(1);
+
+    // …[P0V.1: V7] within ONE drawn sequence the collision is undrawable: the ever-used-name
+    // draw-guard makes the re-add pick a different name, so the tombstone persists against gold
+    // (the record's retirement requirement can no longer be failed by a name-recycling draw).
+    const guarded = E4_OPS_V2.add_entity.apply(deleted.ir, minter, indexQueuePrng([0]), state);
+
+    expect(guarded.render_context.entity).not.toBe("Supplier");
+    const specGuarded = deriveSpecOfRecord(guarded.ir, specAfterDelete);
+    expect(specGuarded.capabilities.some((capability) => capability.name === "suppliers" && capability.retired)).toBe(true);
   });
 
   test("novelty is canonical-form membership, not block position (§6 pinned semantics)", () => {

@@ -24,7 +24,11 @@ import { retypeChangesStoredRepresentation, type E4V3FactKind } from "./ambiguit
 // PATCH alike), and the entity-rename line replaces the false "everywhere" scope with the true
 // one — stored records keep their ids and values (the M7 id-migration mirror trap, disclosed
 // here because the brief is precisely the channel that answers the id-policy knob).
-export const E4_V3_PM_BRIEF_ID = "e4-pm-brief-v2";
+// v3 [P0V.1: V4]: the analytics line now pins the RESPONSE SHAPE it claims to answer (gold
+// returns {"count": <n>}; the panel verified the old line pinned method/path/purpose only, so
+// an honest agent inventing {"total": n} passed the status-only hidden test yet drew a
+// drift-meter CONTRADICTION — inventory row 11's coverage claim was false as written).
+export const E4_V3_PM_BRIEF_ID = "e4-pm-brief-v3";
 
 export type E4V3BriefCoverage = { fact_kind: E4V3FactKind; subject: string };
 
@@ -208,8 +212,9 @@ export function renderE4PmBrief(input: { opKind: E4ChangeOpKind; delta: E4TaskDe
     }
 
     if (endpoint.kind === "analytics") {
+      // [P0V.1: V4] the shape literal makes the analytics_endpoint_shape coverage real.
       lines.push(
-        `New endpoint ${endpoint.method} ${endpoint.path}: returns summary counts over ${endpoint.entity} records.`
+        `New endpoint ${endpoint.method} ${endpoint.path}: returns summary counts over ${endpoint.entity} records as a JSON body of exactly {"count": <number of records>}.`
       );
       cover("analytics_endpoint_shape", `${endpoint.method} ${endpoint.path}`);
     } else if (endpoint.kind === "list") {

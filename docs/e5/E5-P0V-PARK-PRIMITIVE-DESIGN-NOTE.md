@@ -54,9 +54,16 @@ earlier tasks may be parked by writing `PARKED.md` into them; parked changes are
 the workflow. Both texts are already being re-sealed at this boundary (P0-V items 1–2), so
 this rides the same constants version bump.
 
-**Interplay with item 5 (off-topic scoring).** Parking makes leftover handling lawful and
-*visible*; absorbing a leftover as one's task change remains possible and now lands in the
-off-topic close category instead of masquerading as a truthful close.
+**Interplay with item 5 (off-topic scoring).** [P0V.1: V6 — the original sentence here
+("absorbing a leftover … now lands in the off-topic close category") was verified FALSE for
+empty-delta tasks: the classifier returns `not_applicable` unconditionally on maintenance
+tasks, exactly where absorption is most tempting.] Corrected statement: parking makes
+leftover handling lawful and *visible*. On tasks with a non-empty delta, absorbing a
+leftover as one's task change is scorable by the off-topic close category (classifier v2,
+`e4-on-topic-close-v2`). On maintenance (empty-delta) tasks the topic classification remains
+`not_applicable` by construction, and the classifier instead flags authored non-marker work
+via `unexpected_change_work`, scored diagnostically against the prior tasks' subjects (the
+possible leftovers).
 
 ## Alternative considered: `<<<PARK change-name>>>` turn token
 

@@ -1,6 +1,8 @@
 # E5 P0-V External Review — Adjudicated Backlog (v1)
 
-**Status: open, PROPOSED — awaiting operator gate decision. Created 2026-07-13** from the
+**Status: Tiers 1–3 WORKED and closed as the P0-V.1 boundary (2026-07-13, operator-ratified;
+fix tracks V1a/V2a/V7a chosen by the operator at kickoff). Tier 4 items remain open as
+probe-design inputs. Created 2026-07-13** from the
 adjudication of seven external adversarial reviews (Gemini, ChatGPT, DeepSeek, Qwen, Kimi,
 GLM, Claude) of the P0-V rig-repair diff (`784e0ff`), run per the P0 acceptance clause
 (proposal v2 §2: "one external adversarial pass over the P0 diff and ALL brief/README text
@@ -13,9 +15,10 @@ itself, `tmp/e5-p0v-review-prompt.md`, is operator-held and gitignored by design
 
 ## How to work these items (read first, zero-context agents)
 
-- **Nothing here is authorized yet.** Tier 1–3 items become a repair boundary ("P0-V.1",
-  v2/v3 constants → v0.7) only on explicit operator ratification; Tier 4 items are probe
-  design inputs, not repo changes. All items are zero-spend.
+- **Tiers 1–3 were ratified and WORKED 2026-07-13** as the P0-V.1 repair boundary (v2/v3
+  constants → v0.7; item-by-item record in the Changelog below). Tier 4 items are probe-design
+  inputs, not repo changes, and remain open for the probe-design sessions. All items are
+  zero-spend.
 - Several items touch **sealed surfaces** (workflow protocol text, workspace README, PM
   brief, the v2 phrasing pool, the off-topic module). Any such edit requires: constants
   version bump + full-file hash re-pin, code-twin re-pins, census/facet-test updates, and a
@@ -256,3 +259,30 @@ fix** (V8; R5/R6 close the substantiation attacks).
 - 2026-07-13 — per-tier model/effort markers added (operator request): Tier 1 Fable/high,
   Tier 2 inherits (standalone Opus/medium), Tier 3 Opus/medium, Tier 4 Fable/high via the
   probe-design sessions.
+- 2026-07-13 — **Tiers 1–3 worked as ONE boundary session ("P0-V.1", v2 v0.6→v0.7 / v3
+  v0.6→v0.7, zero spend, Fable/high)**. Operator kickoff ratified the tracks: V1(a), V2(a),
+  Tier 3 included, V7(a). Items closed, with `[P0V.1: <id>]` markers at every point of change:
+  - **V1(a)** — classifier v2 (`e4-on-topic-close-v2`, `src/e4/v3/on-topic.ts` rewritten):
+    word-boundary matching; novel-occurrence rule (runner/turns now carry per-file task-start
+    content); delta-spec channel scored by scenario-block predominance; `unexpected_change_work`
+    flag on empty-delta closes, scored against prior-task subjects supplied by the orchestrator.
+  - **V2(a)** — variants 0 and 2 reworded direction-neutral (`src/e4/substrate/v2/render.ts`);
+    no variant mentions partial updates or asserts a direction; substrate → procedural-rest-v2.3.
+  - **V4** — analytics brief line pins `{"count": <number of records>}` (`e4-pm-brief-v3`);
+    inventory row 11 corrected.
+  - **V3** — workflow-protocol write-rule bullet now states the enforced rule ("change
+    directories … single active change directory").
+  - **V5** — inventory closing note rewritten as per-family dispositions.
+  - **V6** — park-note interplay paragraph corrected (maintenance hole stated; v2 flag named).
+  - **V8** — budgets_note v0.7 entry carries the correction of record (nominal caps retained;
+    effective turn economics improved by design; no cross-boundary turn-metric comparisons).
+  - **S1** — README: "The PARKED.md marker alone suffices…" (corner disclosed, not carved out).
+  - **S4** — glue feedback made conditional ("if this was meant as a protocol command…").
+  - **D5** — learning report prints per-cluster item counts; readout renamed "family-collapsed".
+  - **V7(a)** — add_entity ever-used-name draw-guard (+ eligibility mirror); the
+    add→delete/rename→re-add tombstone-revival collision is undrawable within a sequence.
+  - **D6** — `src/e4/substrate/prng.ts` twin-pinned. **D7** — v3 validator requires the P0-V
+    sealed ids for version ≥ 0.6.
+  Acceptance: facet suites extended/added in `test/e5-p0v-rig-repair.test.ts` (+ the gold-spec
+  delete-then-re-add test now pins both derivation coherence and the guard); full suite green.
+  Tier 4 (D1–D4, D9, D10, S3) remains open for the probe-design sessions.

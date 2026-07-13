@@ -35,7 +35,13 @@ export const SUBSTRATE_KIND_V2 = "procedural-rest-v2" as const;
 // v2.2 (E5 P0-V item 2): modify_endpoint phrasing variant 1 corrected in the v2-owned pool
 // (./render.ts) — a phrasing-text edit is a substrate_version change by the sealed M1 rule.
 // Draw semantics, PRNG consumption, and every other rendered text are byte-identical to v2.1.
-export const SUBSTRATE_VERSION_V2 = "procedural-rest-v2.2";
+// v2.3 (E5 P0-V.1, external-review repair boundary): [P0V.1: V2] modify_endpoint variants 0/2
+// reworded direction-neutral in ./render.ts (the panel verified direction-falsity on PATCH→PUT
+// re-draws plus a contradiction with the README's full-replace disclosure); [P0V.1: V7]
+// add_entity gains the ever-used-name draw-guard below (the add→delete/rename→re-add name
+// recycling collision revived tombstoned collection paths). PRNG stream consumption is
+// unchanged (one draw per pick); picked VALUES differ only in collision-risk states.
+export const SUBSTRATE_VERSION_V2 = "procedural-rest-v2.3";
 
 // Same name pool as v1's add_entity (v1 keeps its copy private; the two substrates version
 // their text surfaces independently — this one seals under the v2 constants lineage at v2-M5).
@@ -71,12 +77,39 @@ function replaceCollectionSegment(path: string, newSegment: string): string {
 
 type UidMinter = { mint(kind: string): string };
 
+// [P0V.1: V7] Ever-used entity-name ledger, v2-owned (the shared E4SequenceState in the sealed
+// v1 module is untouched — the property rides the same state object, lazily initialized). Names
+// are recorded at add_entity mint time and NEVER removed: a name freed by delete_entity or
+// rename_entity has retired collection paths (tombstones) behind it, and re-minting it would
+// revive those paths — the record's tombstone requirement would then fail against gold through
+// no fault of the agent. Only add_entity consults the ledger; the add pool is disjoint from the
+// baseline and rename pools, so recording mint-time names is complete.
+type E4SequenceStateV2 = E4SequenceState & { everUsedEntityNamesV2?: Set<string> };
+
+function everUsedEntityNames(state: E4SequenceState): Set<string> {
+  const extended = state as E4SequenceStateV2;
+  extended.everUsedEntityNamesV2 ??= new Set();
+  return extended.everUsedEntityNamesV2;
+}
+
+function availableEntityNamesV2(ir: E4SchemaIR, state: E4SequenceState): string[] {
+  const blocked = new Set([...ir.entities.map((entity) => entity.name), ...everUsedEntityNames(state)]);
+  return NEW_ENTITY_NAME_POOL_V2.filter((name) => !blocked.has(name));
+}
+
 // ---- add_entity (§5.6.3: full CRUD + list) ------------------------------------------------------
 
 function applyAddEntityV2(ir: E4SchemaIR, minter: UidMinter, prng: E4Prng, state: E4SequenceState): E4OpResult {
   const next = cloneIr(ir);
-  const existingNames = new Set(next.entities.map((entity) => entity.name));
-  const name = unusedName(NEW_ENTITY_NAME_POOL_V2, existingNames, prng);
+  // [P0V.1: V7] the draw-guard: candidates exclude ever-used names, not just currently-live ones.
+  const available = availableEntityNamesV2(next, state);
+
+  if (available.length === 0) {
+    throw new Error(`add_entity (v2): name pool exhausted (all of [${NEW_ENTITY_NAME_POOL_V2.join(", ")}] were used this sequence)`);
+  }
+
+  const name = prng.pick(available);
+  everUsedEntityNames(state).add(name);
   const collection = `/${collectionSegment(name)}`;
 
   const entityUid = minter.mint("entity");
@@ -333,7 +366,9 @@ function applyModifyConventionV2(ir: E4SchemaIR, _minter: UidMinter, prng: E4Prn
 
 export const E4_OPS_V2: Record<E4ChangeOpKind, E4OpDefinition> = {
   ...E4_OPS,
-  add_entity: { isEligible: () => true, apply: applyAddEntityV2 },
+  // [P0V.1: V7] eligibility mirrors the draw-guard so a guarded-empty pool redirects the draw
+  // instead of crashing it.
+  add_entity: { isEligible: (ir, state) => availableEntityNamesV2(ir, state).length > 0, apply: applyAddEntityV2 },
   rename_entity: { isEligible: (ir) => ir.entities.length > 0, apply: applyRenameEntityV2 },
   add_endpoint: {
     isEligible: (ir) =>

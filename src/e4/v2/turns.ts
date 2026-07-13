@@ -81,7 +81,9 @@ export async function renderE4V2TaskMessage(input: { nl_request: string; workspa
 // Write application (v2): the gate's shared workflow guards apply in BOTH arms.
 // ---------------------------------------------------------------------------------------------
 
-export type E4V2AppliedReplacement = { path: string; content: string };
+// [P0V.1: V1] prior_content is the file's bytes immediately before this write (null = the file
+// did not exist) — the off-topic classifier's novel-occurrence rule compares against it.
+export type E4V2AppliedReplacement = { path: string; content: string; prior_content: string | null };
 export type E4V2RejectedReplacement = { path: string; reason: string };
 
 export type E4V2ApplyResult = {
@@ -119,9 +121,17 @@ export async function applyE4V2Replacements(input: {
     }
 
     const absolute = join(input.workspaceDir, normalized);
+    let priorContent: string | null = null;
+
+    try {
+      priorContent = await readFile(absolute, "utf8");
+    } catch {
+      priorContent = null; // new file
+    }
+
     await mkdir(dirname(absolute), { recursive: true });
     await writeFile(absolute, replacement.content);
-    applied.push({ path: replacement.path, content: replacement.content });
+    applied.push({ path: replacement.path, content: replacement.content, prior_content: priorContent });
     confirmations.push(`applied: ${replacement.path}`);
   }
 
@@ -208,10 +218,13 @@ export function detectE4V2GluedDelimiters(rawOutput: string): E4V2GluedDelimiter
         const glued = gluedToken(delimiter);
 
         if (glued && glued.token === E4_V2_GLUE_END_LITERAL) {
+          // [P0V.1: S4] conditional wording: the prose arm accepts done-claims unconditionally,
+          // so an imperative "put X on its own line" could induce the very protocol action a
+          // merely-narrated delimiter never intended.
           pendingInBlock.push({
             code: "delimiter_glued",
             line,
-            detail: `text precedes the delimiter ${glued.token} on line ${line}; delimiters are recognized only at the start of a line — put ${glued.token} on its own line to close the block`
+            detail: `text precedes the delimiter ${glued.token} on line ${line}; delimiters are recognized only at the start of a line — if this was meant to close the block, put ${glued.token} on its own line`
           });
         }
       }
@@ -230,10 +243,11 @@ export function detectE4V2GluedDelimiters(rawOutput: string): E4V2GluedDelimiter
     const glued = gluedToken(delimiter);
 
     if (glued) {
+      // [P0V.1: S4] conditional wording — see above.
       violations.push({
         code: "delimiter_glued",
         line,
-        detail: `text precedes the delimiter ${glued.token} on line ${line}; delimiters are recognized only at the start of a line — put the delimiter on its own line`
+        detail: `text precedes the delimiter ${glued.token} on line ${line}; delimiters are recognized only at the start of a line — if this was meant as a protocol command, put it on its own line`
       });
     }
   }

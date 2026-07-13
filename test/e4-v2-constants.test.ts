@@ -38,8 +38,12 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // E5 P0-V rig repair, operator-ratified: PATCH/update-semantics + parking README sections,
 // workflow_protocol parking bullets, substrate_version procedural-rest-v2.2 [modify_endpoint
 // phrasing variant 2 corrected in the v2-owned pool], twins re-pinned + render.ts/turns.ts
-// sealed as twins).
-const NON_BUDGET_PROJECTION_SHA256 = "303cf4c6b879c6b3bb32c44e36434c72b53d4c2472cbdb07321c48ce755aca14";
+// sealed as twins) → 871a98ea… (v0.7, 2026-07-13 E5 P0-V.1 review-repair boundary,
+// operator-ratified backlog Tiers 1-3: substrate_version procedural-rest-v2.3 [variants 0/2
+// direction-neutral + add_entity ever-used-name draw-guard], workflow_protocol write-rule
+// bullet corrected, README parked-content sentence, conditional glue wording, novel-occurrence
+// plumbing in runner/turns, prng.ts sealed as a twin).
+const NON_BUDGET_PROJECTION_SHA256 = "871a98ea640df78a78d0bce86ddc4a405e11761140ab9e2b7d144ea2c7fbd8a5";
 
 async function loadSealed() {
   return loadE4V2Constants(join(REPO_ROOT, E4_V2_CONSTANTS_PATH));
@@ -66,6 +70,7 @@ describe("v2-M5 — non-budget constants freeze", () => {
     const twins = Object.keys(constants.code_twins).toSorted();
 
     expect(twins).toEqual([
+      "src/e4/substrate/prng.ts", // [P0V.1: D6] de-facto guard made de-jure
       "src/e4/substrate/v2/fixture.ts",
       "src/e4/substrate/v2/ops.ts",
       "src/e4/substrate/v2/pluralize.ts",
@@ -188,12 +193,18 @@ describe("v2-M5 — non-budget constants freeze", () => {
     //     v3-M7 evidence manifest's extends block pins (historical; re-run that verdict with
     //     `--constants` on the archived v0.5, e.g.
     //     `git show 9d2dd8b:docs/protocols/e4-v2-sealed-constants-v0.json`).
+    //   → v0.7 27/12/490000/5 (2026-07-13, E5 P0-V.1 review-repair boundary, operator-ratified
+    //     backlog Tiers 1-3 with fix tracks V1a/V2a/V7a: budgets UNTOUCHED; instrument/text
+    //     repairs only — see the v3 budgets_note entry for the item list and the V8 correction
+    //     of record. v0.6 full-file hash was
+    //     4ea57eefcc37bac3f31531a0748894afcc48c6ca2a7edec2e44cdd404b45cbcd (historical; re-run
+    //     against `git show 784e0ff:docs/protocols/e4-v2-sealed-constants-v0.json`).
     const { constants } = await loadSealed();
 
     expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
-      "4ea57eefcc37bac3f31531a0748894afcc48c6ca2a7edec2e44cdd404b45cbcd"
+      "32c6c25e8d7a74cbd58176e753c76186bc028f5088ad17c67e9dd91721590060"
     );
-    expect(constants.version).toBe("0.6");
+    expect(constants.version).toBe("0.7");
     expect(constants.budgets).toEqual({
       turns_per_task: 27,
       verifications_per_task: 12,

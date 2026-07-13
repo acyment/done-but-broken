@@ -12,9 +12,12 @@ unconditionally disclosed.
 
 The mechanical guarantee behind this table: the determinacy tagger
 (`e4-request-determinacy-v2`, `src/e4/v3/ambiguity.ts`) marks each fact underdetermined, and
-the census (`test/e4-v3-m0.test.ts`) asserts the PM brief (`e4-pm-brief-v2`) covers every
+the census (`test/e4-v3-m0.test.ts`) asserts the PM brief (`e4-pm-brief-v3`) covers every
 underdetermined fact. Changing any row is a sealed-surface change (twin re-pin + constants
-version bump).
+version bump). [P0V.1: V4] Caveat recorded by the external panel: this guarantee is
+per-fact-KIND coverage, not informational sufficiency — a brief line can name a fact without
+determining every assertion the hidden suite or drift meter makes about it (row 11 was the
+instance). The candidate assertion-level census is design input D10.
 
 | # | Knob | Fact kind | What gold actually does | Brief line that answers it |
 |---|------|-----------|-------------------------|----------------------------|
@@ -28,7 +31,7 @@ version bump).
 | 8 | **Required-ness of new/changed fields** | `field_required` | Generator-drawn | field lines state required/optional |
 | 9 | **Validation-rule literals** | `validation_rule_detail` | Sealed exact literals (pattern/range/enum) | "Validation on X.f: … (verbatim literal)" |
 | 10 | **Update method form (direction of the flip)** | `endpoint_method_form` | `modify_endpoint` flips the update endpoint PUT↔PATCH; semantics stay full-replace either way | "The X update operation becomes METHOD /path …" |
-| 11 | **Analytics endpoint shape** | `analytics_endpoint_shape` | `GET /<collection>/stats` returning summary counts | "New endpoint GET /… returns summary counts …" |
+| 11 | **Analytics endpoint shape** | `analytics_endpoint_shape` | `GET /<collection>/stats` returning `{"count": <n>}` (the hidden test asserts status only; the T0 visible spec asserts `count` on the existing analytics endpoint) | [P0V.1: V4] "New endpoint GET /…: returns summary counts … as a JSON body of exactly {\"count\": <number of records>}" — the shape literal was ADDED at P0-V.1; the pre-P0V.1 line pinned method/path/purpose only, so this row's coverage claim was false as written |
 | 12 | **Convention statement text** | `convention_statement` | Statement flips between the two sealed error-envelope forms | "The new rule, verbatim: …" |
 
 Notes recorded with the inventory:
@@ -42,7 +45,22 @@ Notes recorded with the inventory:
   replaces the stored record" is now disclosed unconditionally (README `## Update semantics` +
   the brief's PATCH line) because the old brief line actively promised the opposite — that was
   a false disclosure, not a PM-plausible knob.
-- **The E4 record behind each row:** rows 1–5 are the five convention families the E4 audits
-  surfaced one at a time (pluralization → fixture regeneration → PATCH → id-stability →
-  required-ness/backfill; `E4-ARC-CLOSEOUT-v1.md` §4). P0-V converts them from undisclosed
-  traps into brief-answerable knobs — the ask levers are measured against exactly this list.
+- **The E4 record behind each row** [P0V.1: V5 — the earlier "rows 1–5 are the five
+  convention families" note claimed a one-to-one mapping that does not exist; per-family
+  dispositions replace it]. The five convention families the E4 audits surfaced
+  (`E4-ARC-CLOSEOUT-v1.md` §4), each with its actual disposition:
+  - *Naive pluralization* — **structurally eliminated** at substrate v2.1 (sealed English
+    pluralizer); never an inventory row.
+  - *Seed-fixture regeneration* — **structurally eliminated** at substrate v2.1 (seed-data
+    carry-forward); the per-op migration questions it hid survive as **brief-answerable**
+    rows 1–5.
+  - *PATCH/update semantics* — **disclosed unconditionally** at P0-V (README + brief);
+    excluded from this table by design (the old brief line was a false disclosure, not a
+    PM-plausible knob).
+  - *Id stability on renames* — **brief-answerable** (row 1).
+  - *Required-ness/backfill* — **brief-answerable** (rows 3 and 8).
+
+  Rows 4 (retype conversion) and 5 (positional linking) are NEW v3-era knobs, not E4-audit
+  families; row 10 moved determined → underdetermined at the P0-V boundary and is
+  brief-answerable (see the row-10 note above); the remaining rows are brief-answerable by
+  construction. The ask levers are measured against this list under these dispositions.

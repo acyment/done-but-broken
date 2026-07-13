@@ -74,6 +74,11 @@ export function renderE4V2Readme(): string {
     "why is enough). Parked changes are ignored by the workflow: they are never validated,",
     "merged, or archived, and they do not count against the one-change-per-task rule. Parking",
     "is one-way — to resume parked work, copy what you need into a fresh change directory.",
+    // [P0V.1: S1] the irreversible corner: a NEW file created inside a leftover on a maintenance
+    // task makes the byte-unchanged affirmation unreachable (no delete primitive). Disclosed
+    // rather than carved out — parked dirs stay exactly as the marker found them.
+    "The `PARKED.md` marker alone suffices — do not edit or add any other files in a parked",
+    "change directory (files cannot be deleted, so extra files there cannot be undone).",
     "",
     "## Renaming or retiring a capability",
     "",

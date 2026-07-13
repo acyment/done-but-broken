@@ -3,6 +3,12 @@
 // (2) false disclosures corrected + determinacy consequences, (3) glue-aware protocol feedback,
 // (4) lawful PARKED.md park primitive, (5) off-topic close scoring, (6) root-cause-clustered
 // burden, (7) commitment-vs-gold scorer.
+//
+// [P0V.1] Extended at the P0-V.1 review-repair boundary (operator-ratified Tiers 1-3 of
+// docs/e5/E5-P0V-REVIEW-BACKLOG-v1.md): item 2 now pins all three direction-neutral variants
+// (V2a); item 5 pins classifier v2 (V1a: word-boundary, novel-occurrence, scenario-block
+// predominance, the maintenance unexpected_change_work flag); plus new facet suites for the V7a
+// draw-guard, the V4 analytics shape literal, and the V3/S1/S4 sealed-text repairs.
 import { afterAll, describe, expect, test } from "bun:test";
 import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -28,7 +34,7 @@ import { renderE4PmBrief } from "../src/e4/v3/pm-brief";
 import { buildE4OnTopicSubjects, classifyE4TaskCloseTopic } from "../src/e4/v3/on-topic";
 import { computeE4V3RootCauseBurden } from "../src/e4/v3/root-cause";
 import { scoreE4V3CommitmentSheet, type E4V3CommitmentSheet } from "../src/e4/v3/commitment";
-import { computeE4V3LearningReport } from "../src/e4/v3/learning-report";
+import { computeE4V3LearningReport, renderE4V3LearningReport } from "../src/e4/v3/learning-report";
 import type { E4TaskDelta } from "../src/e4/v3/task-delta";
 import type { E4V2RunManifest, E4V2TaskRecord } from "../src/e4/v2/manifest";
 import { indexQueuePrng } from "./support/e4-v2-helpers";
@@ -88,7 +94,7 @@ describe("P0-V item 1 — PATCH full-replace disclosure", () => {
 // Item 2 — false disclosures corrected; v2 render override; v1 substrate untouched.
 // ---------------------------------------------------------------------------------------------
 
-describe("P0-V item 2 — modify_endpoint phrasing variant 2 corrected in a v2-owned pool", () => {
+describe("P0-V item 2 (+[P0V.1: V2]) — modify_endpoint pool corrected in a v2-owned pool", () => {
   const RENDER_CONTEXTS: Partial<Record<E4ChangeOpKind, Record<string, string>>> = {
     add_entity: { entity: "Review" },
     delete_entity: { entity: "Widget" },
@@ -107,7 +113,7 @@ describe("P0-V item 2 — modify_endpoint phrasing variant 2 corrected in a v2-o
 
   test("PRNG stream and every non-modify_endpoint text are byte-identical to the v1 renderer", () => {
     const kinds = Object.keys(RENDER_CONTEXTS) as E4ChangeOpKind[];
-    let divergences = 0;
+    const variantsSeen = new Set<number>();
 
     for (let seed = 0; seed < 25; seed += 1) {
       const v1Prng = createE4Prng(seed);
@@ -128,20 +134,29 @@ describe("P0-V item 2 — modify_endpoint phrasing variant 2 corrected in a v2-o
           expect(v2.pool_id).toBe(MODIFY_ENDPOINT_POOL_ID_V2);
           expect(v2.names_item_verbatim).toBe(v1.names_item_verbatim);
 
-          if (v1.text.includes("match the rest of the API")) {
-            divergences += 1;
+          // [P0V.1: V2] all three variants are corrected; index selection stays aligned with
+          // the v1 pool (same single PRNG draw), so the v1 text identifies the drawn index.
+          if (v1.text.includes("the API now uses")) {
+            variantsSeen.add(0);
+            expect(v2.text).toBe(
+              "The way clients update a Widget is changing — use a different request method for those updates from now on."
+            );
+          } else if (v1.text.includes("match the rest of the API")) {
+            variantsSeen.add(1);
             expect(v2.text).toBe("Switch how clients update a Widget record — the request method for updates is changing.");
           } else {
-            expect(v2.text).toBe(v1.text);
+            variantsSeen.add(2);
+            expect(v1.text).toContain("One of our update endpoints");
+            expect(v2.text).toBe("One of our update endpoints needs its request method changed.");
           }
         }
       }
     }
 
-    expect(divergences).toBeGreaterThan(0); // the corrected variant was actually exercised
+    expect([...variantsSeen].toSorted()).toEqual([0, 1, 2]); // every corrected variant exercised
   });
 
-  test("no v2 modify_endpoint render ever points at 'the rest of the API'", () => {
+  test("[P0V.1: V2] no v2 modify_endpoint render is direction-false or contradicts the README", () => {
     const prng = createE4Prng(7);
 
     for (let index = 0; index < 200; index += 1) {
@@ -151,6 +166,13 @@ describe("P0-V item 2 — modify_endpoint phrasing variant 2 corrected in a v2-o
       );
 
       expect(rendered.text).not.toContain("match the rest of the API");
+      // No variant may claim which convention is the newer one (direction-false on PATCH→PUT
+      // re-draws) or mention partial updates (contradicts the README's full-replace disclosure).
+      expect(rendered.text.toLowerCase()).not.toContain("partial update");
+      expect(rendered.text.toLowerCase()).not.toContain("partial-update");
+      expect(rendered.text).not.toContain("now uses");
+      expect(rendered.text).not.toContain("PATCH");
+      expect(rendered.text).not.toContain("PUT");
     }
   });
 });
@@ -166,6 +188,10 @@ describe("P0-V item 3 — glued-delimiter detection", () => {
     expect(violations).toHaveLength(1);
     expect(violations[0]).toMatchObject({ code: "delimiter_glued", line: 2 });
     expect(violations[0].detail).toContain("text precedes the delimiter <<<DONE>>> on line 2");
+    // [P0V.1: S4] conditional, not imperative: the feedback must never read as an instruction
+    // to emit the delimiter (the prose arm accepts done-claims unconditionally).
+    expect(violations[0].detail).toContain("if this was meant as a protocol command");
+    expect(violations[0].detail).not.toMatch(/— put .* on its own line$/);
   });
 
   test("a prose-glued FILE opener is reported; the feedback channel renders it", () => {
@@ -197,7 +223,8 @@ describe("P0-V item 3 — glued-delimiter detection", () => {
     const violations = detectE4V2GluedDelimiters(text);
 
     expect(violations).toHaveLength(1);
-    expect(violations[0].detail).toContain("close the block");
+    // [P0V.1: S4] the in-block variant is conditional too.
+    expect(violations[0].detail).toContain("if this was meant to close the block");
   });
 
   test("lines starting with <<< are left to the sealed parser; clean protocol turns are silent", () => {
@@ -364,7 +391,11 @@ describe("P0-V item 4 — PARKED.md park primitive", () => {
   });
 
   test("the README and the workflow protocol document the affordance", async () => {
-    expect(renderE4V2Readme()).toContain("## Parking a leftover change");
+    const readme = renderE4V2Readme();
+
+    expect(readme).toContain("## Parking a leftover change");
+    // [P0V.1: S1] the irreversible corner is disclosed: marker only, no other files.
+    expect(readme).toContain("The `PARKED.md` marker alone suffices");
 
     const constants = JSON.parse(
       await readFile(join(REPO_ROOT, "docs/protocols/e4-v2-sealed-constants-v0.json"), "utf8")
@@ -372,6 +403,11 @@ describe("P0-V item 4 — PARKED.md park primitive", () => {
 
     expect(constants.protocol_text.workflow_protocol).toContain("PARKED.md");
     expect(constants.protocol_text.workflow_protocol).toContain("exactly one active (non-parked) change directory");
+    // [P0V.1: V3] the write-rule bullet states the ENFORCED rule: writes are lawful in any
+    // change directory; custody demands a single active change at exit.
+    expect(constants.protocol_text.workflow_protocol).toContain("Only files inside change directories under openspec/changes/");
+    expect(constants.protocol_text.workflow_protocol).not.toContain("Only files inside one change directory");
+    expect(constants.protocol_text.workflow_protocol).toContain("single active change directory");
   });
 });
 
@@ -415,8 +451,15 @@ const CONVENTION_DELTA = emptyDelta({
   ]
 });
 
-describe("P0-V item 5 — off-topic close classification", () => {
-  test("a close addressing the rename is on_topic; a close about something else is off_topic", () => {
+describe("P0-V item 5 (+[P0V.1: V1]) — off-topic close classification, classifier v2", () => {
+  const RENAME_SCENARIO_ON_TOPIC =
+    "## ADDED Requirements\n### Requirement: Items are served at the new paths\n" +
+    '#### Scenario: read a renamed record\n- **WHEN** I send a GET request to "/items/widget-spec-1"\n- **THEN** the response status is 200\n';
+  const UNRELATED_SCENARIO =
+    "## MODIFIED Requirements\n### Requirement: Categories validate names\n" +
+    '#### Scenario: reject a bad category name\n- **WHEN** I send a POST request to "/categories" with body {}\n- **THEN** the response status is 400\n';
+
+  test("scenarios that address the rename are on_topic; unrelated work is off_topic", () => {
     const subjects = buildE4OnTopicSubjects(RENAME_DELTA);
 
     expect(subjects).toContain("Item");
@@ -425,24 +468,134 @@ describe("P0-V item 5 — off-topic close classification", () => {
     const onTopic = classifyE4TaskCloseTopic({
       delta_is_empty: false,
       subjects,
-      change_spec_contents: ["## ADDED Requirements\n### Requirement: Items are served at /items\n"],
-      code_write_contents: []
+      change_spec_contents: [RENAME_SCENARIO_ON_TOPIC],
+      code_writes: []
     });
 
     expect(onTopic.classification).toBe("on_topic");
+    expect(onTopic.spec_channel).toMatchObject({ scenario_blocks: 1, matched_blocks: 1, predominant: true });
 
     const offTopic = classifyE4TaskCloseTopic({
       delta_is_empty: false,
       subjects,
-      change_spec_contents: ["## MODIFIED Requirements\n### Requirement: Categories validate names\n"],
-      code_write_contents: ["registerRoute('GET', '/categories', listCategories);"]
+      change_spec_contents: [UNRELATED_SCENARIO],
+      code_writes: [{ path: "server.ts", content: "registerRoute('GET', '/categories', listCategories);", task_start_content: null }]
     });
 
     expect(offTopic.classification).toBe("off_topic");
     expect(offTopic.matched_subjects).toHaveLength(0);
   });
 
-  test("convention tasks match on the NEW statement's quoted keys, not prose narration", () => {
+  test("[P0V.1: V1] a subject mention in a heading alone no longer classifies on_topic", () => {
+    // Classifier v1's verified blindness: one mention anywhere — a change-title heading was
+    // enough — laundered any off-topic close. v2 scores the scenario blocks (the behavioral
+    // payload) by predominance.
+    const report = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects: buildE4OnTopicSubjects(RENAME_DELTA),
+      change_spec_contents: [
+        "## ADDED Requirements\n### Requirement: Item work\n" +
+          '#### Scenario: tidy the category list\n- **WHEN** I send a GET request to "/categories"\n- **THEN** the response status is 200\n'
+      ],
+      code_writes: []
+    });
+
+    expect(report.classification).toBe("off_topic");
+    expect(report.spec_channel).toMatchObject({ scenario_blocks: 1, matched_blocks: 0, predominant: false });
+  });
+
+  test("[P0V.1: V1] a minority on-topic scenario does not launder a predominantly off-topic change", () => {
+    const report = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects: buildE4OnTopicSubjects(RENAME_DELTA),
+      change_spec_contents: [RENAME_SCENARIO_ON_TOPIC, UNRELATED_SCENARIO, UNRELATED_SCENARIO],
+      code_writes: []
+    });
+
+    expect(report.classification).toBe("off_topic");
+    expect(report.spec_channel).toMatchObject({ scenario_blocks: 3, matched_blocks: 1, predominant: false });
+  });
+
+  test("[P0V.1: V1] code writes count only NOVEL occurrences, word-bounded", () => {
+    const subjects = buildE4OnTopicSubjects(RENAME_DELTA); // Widget → Item
+    const startContent = "registerRoute('GET', '/widgets', listWidgets);\n";
+
+    // Rewriting a file that already mentioned the old name is NOT evidence of addressing it.
+    const rewriteOnly = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: [],
+      code_writes: [{ path: "server.ts", content: `${startContent}const unrelated = 1;\n`, task_start_content: startContent }]
+    });
+
+    expect(rewriteOnly.classification).toBe("off_topic");
+    expect(rewriteOnly.code_channel.novel_matched_subjects).toHaveLength(0);
+
+    // Introducing the NEW collection path is.
+    const novel = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: [],
+      code_writes: [
+        { path: "server.ts", content: "registerRoute('GET', '/items', listWidgets);\n", task_start_content: startContent }
+      ]
+    });
+
+    expect(novel.classification).toBe("on_topic");
+    expect(novel.code_channel.novel_matched_subjects).toContain("items");
+
+    // Word boundary: an embedded identifier is not a mention.
+    const embedded = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: [],
+      code_writes: [{ path: "report.ts", content: "const ItemizedReport = 1;", task_start_content: null }]
+    });
+
+    expect(embedded.classification).toBe("off_topic");
+  });
+
+  test("[P0V.1: V1] modify_endpoint blindness closed: a pre-existing method verb no longer matches", () => {
+    const methodFlipDelta = emptyDelta({
+      changed_endpoints: [
+        {
+          semantic_item_uid: "ep-1",
+          entity: "Widget",
+          kind: "update",
+          old: { method: "PUT", path: "/widgets/{id}" },
+          new: { method: "PATCH", path: "/widgets/{id}" }
+        }
+      ]
+    });
+    const subjects = buildE4OnTopicSubjects(methodFlipDelta);
+
+    expect(subjects).toContain("PATCH");
+
+    // v1's verified hole: "PATCH" appeared somewhere in virtually every server file, so any
+    // whole-file rewrite matched. Under the novel-occurrence rule it no longer does.
+    const startContent = "// supports PATCH already\nregisterRoute('PATCH', '/other', handler);\n";
+    const rewrite = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: [],
+      code_writes: [{ path: "server.ts", content: `${startContent}const unrelated = 1;\n`, task_start_content: startContent }]
+    });
+
+    expect(rewrite.classification).toBe("off_topic");
+
+    const addressed = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: [],
+      code_writes: [
+        { path: "server.ts", content: `${startContent}registerRoute('PATCH', '/widgets/{id}', updateWidget);\n`, task_start_content: startContent }
+      ]
+    });
+
+    expect(addressed.classification).toBe("on_topic");
+  });
+
+  test("convention tasks match on the NEW statement's quoted keys, novel in code", () => {
     const subjects = buildE4OnTopicSubjects(CONVENTION_DELTA);
 
     expect(subjects).toContain('"detail"');
@@ -451,7 +604,13 @@ describe("P0-V item 5 — off-topic close classification", () => {
       delta_is_empty: false,
       subjects,
       change_spec_contents: [],
-      code_write_contents: ['res.end(JSON.stringify({ error: { "type": kind, "detail": message } }));']
+      code_writes: [
+        {
+          path: "server.ts",
+          content: 'res.end(JSON.stringify({ error: { "type": kind, "detail": message } }));',
+          task_start_content: 'res.end(JSON.stringify({ error: { "code": kind, "message": message } }));'
+        }
+      ]
     });
 
     expect(addressed.classification).toBe("on_topic");
@@ -460,21 +619,49 @@ describe("P0-V item 5 — off-topic close classification", () => {
       delta_is_empty: false,
       subjects,
       change_spec_contents: ["## ADDED Requirements\nsomething unrelated entirely\n"],
-      code_write_contents: ["const unrelated = true;"]
+      code_writes: [{ path: "server.ts", content: "const unrelated = true;", task_start_content: null }]
     });
 
     expect(swapped.classification).toBe("off_topic");
   });
 
-  test("maintenance tasks (empty delta) are not_applicable", () => {
-    const report = classifyE4TaskCloseTopic({
+  test("[P0V.1: V1] maintenance closes stay not_applicable, but authored work is flagged", () => {
+    const clean = classifyE4TaskCloseTopic({
       delta_is_empty: true,
       subjects: [],
       change_spec_contents: [],
-      code_write_contents: []
+      code_writes: []
     });
 
-    expect(report.classification).toBe("not_applicable");
+    expect(clean.classification).toBe("not_applicable");
+    expect(clean.unexpected_change_work).toBe(false);
+
+    // Byte-identical rewrites are not work.
+    const byteIdentical = classifyE4TaskCloseTopic({
+      delta_is_empty: true,
+      subjects: [],
+      change_spec_contents: [],
+      code_writes: [{ path: "server.ts", content: "same bytes", task_start_content: "same bytes" }]
+    });
+
+    expect(byteIdentical.unexpected_change_work).toBe(false);
+
+    // The absorption scenario: a full change authored under a no-change task, matching a
+    // stalled predecessor's subjects — v1 was blind here by construction.
+    const absorbed = classifyE4TaskCloseTopic({
+      delta_is_empty: true,
+      subjects: [],
+      change_spec_contents: [
+        "## ADDED Requirements\n### Requirement: Suppliers list\n" +
+          '#### Scenario: list suppliers\n- **WHEN** I send a GET request to "/suppliers"\n- **THEN** the response status is 200\n'
+      ],
+      code_writes: [{ path: "server.ts", content: "registerRoute('GET', '/suppliers', listSuppliers);", task_start_content: null }],
+      prior_task_subjects: ["Supplier", "suppliers"]
+    });
+
+    expect(absorbed.classification).toBe("not_applicable");
+    expect(absorbed.unexpected_change_work).toBe(true);
+    expect(absorbed.prior_task_subject_matches).toEqual(["suppliers"]);
   });
 
   test("the disposition table scores off-topic closes as their own category", () => {
@@ -568,6 +755,97 @@ describe("P0-V item 6 — root-cause-clustered burden", () => {
     expect(arm.burden_series_clustered).toEqual([1]);
     expect(arm.burden_auc_raw).toBeCloseTo(2, 10);
     expect(arm.burden_auc_clustered).toBeCloseTo(1, 10);
+
+    // [P0V.1: D5] cluster sizes are carried and printed, and the readout is labeled by its
+    // mechanism so a reader sees how many items each cluster collapsed.
+    expect(arm.burden_cluster_sizes).toEqual([[2]]);
+
+    const rendered = renderE4V3LearningReport(report);
+
+    expect(rendered).toContain("family-collapsed [1(2)]");
+    expect(rendered).not.toContain("root-cause-clustered [");
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// [P0V.1: V7] add_entity ever-used-name draw-guard.
+// ---------------------------------------------------------------------------------------------
+
+describe("P0-V.1 item V7 — add_entity never recycles an ever-used entity name", () => {
+  test("add(X) → delete(X) → add draws a DIFFERENT name (tombstone revival undrawable)", () => {
+    const state = createSequenceState();
+    const minter = createUidMinter();
+
+    const added = E4_OPS_V2.add_entity.apply(buildBaselineIr(), minter, indexQueuePrng([0]), state);
+    const addedName = added.render_context.entity;
+
+    const deleted = E4_OPS_V2.delete_entity.apply(added.ir, minter, indexQueuePrng([0]), state);
+
+    expect(deleted.render_context.entity).toBe(addedName);
+
+    const readded = E4_OPS_V2.add_entity.apply(deleted.ir, minter, indexQueuePrng([0]), state);
+
+    expect(readded.render_context.entity).not.toBe(addedName);
+  });
+
+  test("add(X) → rename(X→Y) → add draws a DIFFERENT name (retired paths stay retired)", () => {
+    const state = createSequenceState();
+    const minter = createUidMinter();
+
+    const added = E4_OPS_V2.add_entity.apply(buildBaselineIr(), minter, indexQueuePrng([0]), state);
+    const addedName = added.render_context.entity;
+    const entityIndex = added.ir.entities.findIndex((entity) => entity.name === addedName);
+
+    const renamed = E4_OPS_V2.rename_entity.apply(added.ir, minter, indexQueuePrng([entityIndex, 0]), state);
+
+    expect(renamed.render_context.old_name).toBe(addedName);
+
+    const readded = E4_OPS_V2.add_entity.apply(renamed.ir, minter, indexQueuePrng([0]), state);
+
+    expect(readded.render_context.entity).not.toBe(addedName);
+  });
+
+  test("eligibility mirrors the guard: an exhausted pool disables add_entity instead of crashing", () => {
+    const state = createSequenceState();
+    const minter = createUidMinter();
+    let ir = buildBaselineIr();
+
+    for (let index = 0; index < 5; index += 1) {
+      ir = E4_OPS_V2.add_entity.apply(ir, minter, indexQueuePrng([0]), state).ir;
+    }
+
+    expect(E4_OPS_V2.add_entity.isEligible(ir, state)).toBe(false);
+
+    // Deleting one frees the IR slot but NOT the ledger — the name stays retired.
+    const deleted = E4_OPS_V2.delete_entity.apply(ir, minter, indexQueuePrng([0]), state);
+
+    expect(E4_OPS_V2.add_entity.isEligible(deleted.ir, state)).toBe(false);
+    expect(() => E4_OPS_V2.add_entity.apply(deleted.ir, minter, indexQueuePrng([0]), state)).toThrow(/name pool exhausted/);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// [P0V.1: V4] analytics brief line pins the response shape it claims to answer.
+// ---------------------------------------------------------------------------------------------
+
+describe("P0-V.1 item V4 — analytics brief shape literal", () => {
+  test("the analytics line carries the count-shape literal and covers analytics_endpoint_shape", () => {
+    const delta = emptyDelta({
+      added_endpoints: [
+        {
+          semantic_item_uid: "ep-stats",
+          entity: "Widget",
+          kind: "analytics",
+          method: "GET",
+          path: "/widgets/stats"
+        } as E4TaskDelta["added_endpoints"][number]
+      ]
+    });
+    const brief = renderE4PmBrief({ opKind: "add_endpoint", delta });
+
+    expect(brief.brief_id).toBe("e4-pm-brief-v3");
+    expect(brief.text).toContain('{"count": <number of records>}');
+    expect(brief.covered.some((entry) => entry.fact_kind === "analytics_endpoint_shape")).toBe(true);
   });
 });
 
@@ -690,7 +968,7 @@ function fakeTask(
     on_topic:
       input.on_topic === undefined || input.on_topic === null
         ? null
-        : { on_topic_id: "e4-on-topic-close-v1", classification: input.on_topic, matched_subjects: [], subject_count: 3 }
+        : { on_topic_id: "e4-on-topic-close-v2", classification: input.on_topic, matched_subjects: [], subject_count: 3 }
   } as unknown as E4V2TaskRecord;
 }
 
@@ -705,10 +983,10 @@ function fakeManifest(arm: string, seed: number, tasks: E4V2TaskRecord[]): E4V2R
     pairing_label: `pair-p0v-seed-${seed}`,
     model: { preset: "fake", model_id: "fake", route_id: "none" },
     compatibility_boundary: {
-      constants_version: "0.6",
+      constants_version: "0.7",
       constants_hash: "x",
       substrate_kind: "procedural-rest-v2",
-      substrate_version: "procedural-rest-v2.2",
+      substrate_version: "procedural-rest-v2.3",
       meter_version: "e4-drift-meter-v2",
       converter_id: "e4-openspec-gherkin-v1",
       step_table_id: "e4-step-table-v1",

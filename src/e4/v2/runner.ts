@@ -142,6 +142,9 @@ export type E4V2RunTaskInput = {
     // E5 P0-V item 5: the task's gold delta for ALL arms (referee-side only — never enters the
     // workspace or the prompt); enables the off-topic close classification at task close.
     task_delta?: E4TaskDelta;
+    // [P0V.1: V1] subjects of every PRIOR task in the sequence (the possible leftovers) —
+    // consulted only by the classifier's maintenance-task unexpected_change_work diagnostic.
+    prior_task_subjects?: string[];
   };
 };
 
@@ -207,7 +210,11 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
   let smokeFeedbackRuns = 0;
   let smokeReadinessFailures = 0;
   const specTouchPaths: string[] = [];
-  const taskCodeWriteContents: string[] = [];
+  // [P0V.1: V1] code writes feed the off-topic classifier v2 with each file's TASK-START content
+  // (novel-occurrence rule). The first write to a path records the pre-write bytes as that
+  // path's task-start state; later rewrites keep comparing against it.
+  const taskCodeWrites: Array<{ path: string; content: string; task_start_content: string | null }> = [];
+  const taskStartCodeContents = new Map<string, string | null>();
   const executorArtifacts: string[] = [];
   let gateRunCounter = 0;
   let mutationRunCounter = 0;
@@ -358,8 +365,16 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
         specTouchPaths.push(appliedReplacement.path);
         componentTokens[phaseAtTurnStart].spec_authoring += countE1Tokens(appliedReplacement.content);
       } else {
-        // E5 P0-V item 5: the task's code writes feed the off-topic close classification.
-        taskCodeWriteContents.push(appliedReplacement.content);
+        // E5 P0-V item 5 [P0V.1: V1]: the task's code writes feed the off-topic classification.
+        if (!taskStartCodeContents.has(appliedReplacement.path)) {
+          taskStartCodeContents.set(appliedReplacement.path, appliedReplacement.prior_content);
+        }
+
+        taskCodeWrites.push({
+          path: appliedReplacement.path,
+          content: appliedReplacement.content,
+          task_start_content: taskStartCodeContents.get(appliedReplacement.path) ?? null
+        });
       }
     }
 
@@ -539,7 +554,8 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
       delta_is_empty: input.v3.task_delta.is_empty,
       subjects: buildE4OnTopicSubjects(input.v3.task_delta),
       change_spec_contents: changeSpecContents,
-      code_write_contents: taskCodeWriteContents
+      code_writes: taskCodeWrites,
+      prior_task_subjects: input.v3.prior_task_subjects ?? []
     });
     await writeRecordFile("on-topic.json", `${JSON.stringify(onTopic, null, 2)}\n`);
   }

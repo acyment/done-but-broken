@@ -25,6 +25,7 @@ import {
 import { buildBaselineIr } from "../substrate/ir";
 import type { E4ChangeOpKind } from "../substrate/ops";
 import { computeE4TaskDelta, type E4TaskDelta } from "../v3/task-delta";
+import { buildE4OnTopicSubjects } from "../v3/on-topic";
 import { renderE4PmBrief } from "../v3/pm-brief";
 import { E4_V3_PRODUCT_GATE_PROTOCOL_TEXT, type E4V3ProductGateConfig } from "../v3/product-gate";
 import { E4_V3_ASK_PM_PROTOCOL_TEXT } from "../v3/turn-protocol";
@@ -82,17 +83,29 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
   const secrets = input.secrets ?? [];
 
   // v3: the per-task PM briefs are a pure function of the drawn sequence (task-delta over the
-  // ground-truth chain) — identical text in every arm by construction.
-  const v3TaskExtras = new Map<number, { delta: E4TaskDelta; brief_text: string }>();
+  // ground-truth chain) — identical text in every arm by construction. [P0V.1: V1] each task
+  // also carries the subjects of every PRIOR task (the possible leftovers), consumed only by
+  // the off-topic classifier's maintenance-task diagnostic — referee-side, never prompted.
+  const v3TaskExtras = new Map<number, { delta: E4TaskDelta; brief_text: string; prior_task_subjects: string[] }>();
 
   if (input.v3) {
     let previousIr = buildBaselineIr();
+    const priorSubjects = new Set<string>();
 
     for (const task of generated.tasks) {
       const delta = computeE4TaskDelta(previousIr, task.ground_truth_ir);
       const brief = renderE4PmBrief({ opKind: task.op_kind as E4ChangeOpKind, delta });
 
-      v3TaskExtras.set(task.task_index, { delta, brief_text: brief.text });
+      v3TaskExtras.set(task.task_index, {
+        delta,
+        brief_text: brief.text,
+        prior_task_subjects: [...priorSubjects].toSorted()
+      });
+
+      for (const subject of buildE4OnTopicSubjects(delta)) {
+        priorSubjects.add(subject);
+      }
+
       previousIr = task.ground_truth_ir;
     }
   }
@@ -210,7 +223,9 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
                 product: arm === "e4_arm_p" ? { delta: extras.delta, config: input.v3.product_config } : null,
                 // E5 P0-V item 5: the gold delta reaches the runner in EVERY arm (referee-side
                 // off-topic close classification; never enters the workspace or the prompt).
-                task_delta: extras.delta
+                task_delta: extras.delta,
+                // [P0V.1: V1] prior-task subjects for the maintenance-task diagnostic.
+                prior_task_subjects: extras.prior_task_subjects
               }
             }
           : {})

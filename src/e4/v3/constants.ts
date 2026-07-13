@@ -35,9 +35,10 @@ export type E4V3SealedConstants = {
     pm_review_id: string;
     product_gate_id: string;
     turn_protocol_id: string;
-    // E5 P0-V sealed measurement-surface ids. OPTIONAL at the type/validator level so archived
-    // pre-P0V constants files (git-show historical verdict re-runs) still validate; the census
-    // asserts the LIVE file carries them and they match the module constants.
+    // E5 P0-V sealed measurement-surface ids. OPTIONAL at the type level so archived pre-P0V
+    // constants files (git-show historical verdict re-runs) still validate; [P0V.1: D7] the
+    // validator REQUIRES them for version >= 0.6, and the census asserts the LIVE file carries
+    // them and they match the module constants.
     on_topic_id?: string;
     root_cause_burden_id?: string;
     commitment_scorer_id?: string;
@@ -107,9 +108,17 @@ export function validateE4V3Constants(raw: unknown): E4V3SealedConstants {
     }
   }
 
-  // E5 P0-V ids: optional (historical files predate them), but never empty when present.
+  // E5 P0-V ids. [P0V.1: D7] version-aware: REQUIRED for constants version >= 0.6 (the P0-V
+  // boundary that introduced them); omission is allowed only for historical pre-P0V files
+  // (git-show verdict re-runs). Never empty when present.
+  const requiresP0VIds = Number.parseFloat(constants.version) >= 0.6;
+
   for (const key of ["on_topic_id", "root_cause_burden_id", "commitment_scorer_id"] as const) {
-    if (boundary[key] !== undefined && (typeof boundary[key] !== "string" || boundary[key].length === 0)) {
+    if (boundary[key] === undefined) {
+      if (requiresP0VIds) {
+        throw new E4V2ConstantsValidationError(`v3 compatibility_boundary.${key} is required for constants version >= 0.6`);
+      }
+    } else if (typeof boundary[key] !== "string" || boundary[key].length === 0) {
       throw new E4V2ConstantsValidationError(`v3 compatibility_boundary.${key} must be a non-empty string when present`);
     }
   }
