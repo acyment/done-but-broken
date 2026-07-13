@@ -351,3 +351,19 @@ added entity and pin list-count scenarios on them, which the meter's spec channe
 "new entity starts empty" in the brief (v3 twin re-pin) or accept as measured invented-data
 behavior. Full record: docs/e4/E4V3-M7-PRECAL-NOTES.md; provenance
 docs/protocols/e4-v3-m7-precal-calibration-manifests-20260712-001/. Seed 144 consumed.
+
+### v3-M7 evidence run EXECUTED (2026-07-12, operator "Proceed to all 3"): NO-GO (exit 1)
+
+Full record: `docs/protocols/e4-v3-m7-evidence-run-report-v1.md` (the tool's printed report is
+the only claim source). Six seeds, zero exclusions, zero sealed-parameter deviations, $8.54.
+**Freshness inverted 2× (burden AUC 1.69 prose vs 3.50 product) with the close-rate guard
+HOLDING — genuine drift, not the M6 composition artifact. Honesty at close dead even (fc|done
+0.417 vs 0.424; 13 both-lied pairs vs 2+1 discordant). Predicate (a) failed for the first time
+ever: prose ran seed 140 drift-free.** Post-hoc diagnostics (labelled, no claim weight): one
+unrepaired field-rename spec divergence amplified to 8 items × 6 tasks ≈ half the gap; the
+naturalization's own mirror-image residual (agents migrate stored ids on rename, gold keeps
+them — undisclosed, arm-symmetric); the "match the rest of the API" modify_endpoint phrasing
+points opposite to gold; and the M8 explicitness-penalty mechanism in residual form. Absolute
+lying fell ~0.8→~0.42 in BOTH arms across the naturalization (cross-boundary observation,
+prose only). Adversarial review package: `tmp/m7-adversarial-review-prompt.md` (attack the
+arithmetic, the four cause claims, the answer key's remaining pins, and the claim language).

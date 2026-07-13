@@ -1,0 +1,2546 @@
+{
+  "schema": "e4-v2-run-manifest",
+  "schema_version": "1",
+  "run_classification": "pilot",
+  "protocol_profile_id": "e4-openspec-workflow-v2",
+  "arm": "e4_arm_p",
+  "arm_mode": "executed",
+  "pairing_label": "pair-pilot-seed-117",
+  "model": {
+    "preset": "direct-openai-compatible",
+    "model_id": "glm-5.2",
+    "route_id": "direct-zhipu-api-key"
+  },
+  "harness_commit": "9d2dd8b12bd057b7a7269099e0dfa0df4ba332d6",
+  "compatibility_boundary": {
+    "constants_version": "0.5",
+    "constants_hash": "93d0bf88a49729f02adc8322b6367212da77bfe45548e7354d3b7277d3e67a72",
+    "substrate_kind": "procedural-rest-v2",
+    "substrate_version": "procedural-rest-v2.1",
+    "meter_version": "e4-drift-meter-v2",
+    "converter_id": "e4-openspec-gherkin-v1",
+    "step_table_id": "e4-step-table-v1",
+    "t0_gold_spec_id": "e4-t0-gold-spec-v1",
+    "bank_id": "e4-adversarial-bank-v1",
+    "substrate_config": {
+      "substrate_config_id": "v2-default",
+      "substrate_seed": 117,
+      "task_count": 6,
+      "op_mix": {
+        "weights": {
+          "drift_opportunity": 0.5,
+          "additive": 0.4,
+          "behavior_preserving": 0.1
+        }
+      }
+    },
+    "v3": {
+      "constants_version": "0.5",
+      "constants_hash": "2dee8973726c5b3a8b2313ae7efcbc1b12b38695451b1b35340e24bd0595d7ee",
+      "determinacy_table_id": "e4-request-determinacy-v1",
+      "pm_brief_id": "e4-pm-brief-v1",
+      "reconciler_id": "e4-spec-code-reconciler-v1",
+      "mutation_harness_id": "e4-agent-boundary-mutation-v1",
+      "pm_review_id": "e4-pm-review-v1",
+      "product_gate_id": "e4-product-gate-v1",
+      "turn_protocol_id": "e4-turn-protocol-v2"
+    }
+  },
+  "initial_snapshot": {
+    "hash": "81eac475ed042e5e458fc971a99fd3f4c8f80e146406d90ca95957eedda2cccd",
+    "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-0"
+  },
+  "tasks": [
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 5,
+          "carried_total": 0,
+          "novel_red": 4,
+          "novel_records": [
+            {
+              "title": "Updating a Widget via PATCH persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Widget via PATCH preserves unmentioned fields",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a missing Widget via PATCH returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Widget via PATCH with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [
+            "Updating a missing Widget via PATCH returns not found"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 26,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "widget-patch-update",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 17,
+          "scenarios_after": 21,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget persists the change"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a missing Widget via PATCH returns not found"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH preserves unmentioned fields"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with an invalid price is rejected"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PATCH /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 21,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Filtering widgets by category_id returns only matching rows",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Filtering widgets by category_id returns only matching rows"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 21,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. Everything in the provided spec/context files was accurate and consistent. The PUT-based Widget update was correctly shown as the starting state, the scenario grammar documented PATCH as a valid method, and the registry/server/schema files all agreed with each other.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/widget-patch-update/proposal.md",
+          "openspec/changes/widget-patch-update/tasks.md",
+          "openspec/changes/widget-patch-update/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 13241,
+          "cached_input_tokens": 38848,
+          "output_tokens": 29925
+        },
+        "wall_clock_ms": 328037,
+        "spend_usd": 0.16030788,
+        "by_phase": {
+          "spec": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 9544,
+              "cached_input_tokens": 18752,
+              "output_tokens": 24298
+            },
+            "wall_clock_ms": 259839,
+            "spec_authoring_tokens": 958,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 49,
+            "pm_brief_tokens": 50
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 3697,
+              "cached_input_tokens": 20096,
+              "output_tokens": 5627
+            },
+            "wall_clock_ms": 60067,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 169,
+          "cached_input_tokens": 13120,
+          "output_tokens": 240
+        },
+        "spend_usd": 0.0047038
+      },
+      "snapshot": {
+        "hash": "0b377ad8504f8cfbd7eb60fd4ae465cf26334305d4dc39d605db4c9921bc6537",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-1"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 1
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 1,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 1,
+      "op_kind": "modify_endpoint",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Switch how clients update a Widget record to match the rest of the API."
+    },
+    {
+      "termination": "agent_stalled",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 12,
+          "carried_total": 1,
+          "novel_red": 8,
+          "novel_records": [
+            {
+              "title": "Creating a Widget returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget without name is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with a non-decimal price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with a non-bool in_stock is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Creating a Widget with an invalid price is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Widget via PATCH persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Widget via PATCH preserves unmentioned fields",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Widget via PATCH with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Deleting a Widget removes it",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Widget without name is rejected",
+            "Creating a Widget with a non-decimal price is rejected",
+            "Creating a Widget with a non-bool in_stock is rejected",
+            "Creating a Widget with an invalid price is rejected"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 22,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": null
+      },
+      "smoke_feedback_runs": 7,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "widget-remove-category-id",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 21,
+          "scenarios_after": 20,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Filtering widgets by category_id returns only matching rows"
+            }
+          ],
+          "added_scenarios": [],
+          "changed_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH preserves unmentioned fields"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with an invalid price is rejected"
+            }
+          ]
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PATCH /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "field",
+            "class": "stale_claim",
+            "direction": "code_vs_truth",
+            "item_id": "field:Widget.category_id",
+            "semantic_item_uid": "code-only:field:Widget.category_id",
+            "detail": {
+              "found": "{\"ref_entity\":\"Category\",\"required\":true,\"type\":\"ref\"}"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 1
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 20,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 20,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, the provided spec/context files were accurate and consistent — `category_id` was correctly present as a `ref` field on Widget in schema.ts, seed.ts, and all spec scenarios. The task to remove it was clear.\n\nHowever, I was unable to complete the implementation: every `<<<FILE>>>` block I emitted after entering the implementation phase was rejected with `protocol violation (orphan_end)`, while `<<<VERIFY>>>` blocks worked. The `schema.ts` file was never successfully updated (only `seed.ts` was applied), so `category_id` is still in the schema and the full scenario set would not pass. The protocol parsing issue prevented me from finishing.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/widget-remove-category-id/proposal.md",
+          "openspec/changes/widget-remove-category-id/tasks.md",
+          "openspec/changes/widget-remove-category-id/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 13,
+        "tokens": {
+          "fresh_input_tokens": 16759,
+          "cached_input_tokens": 182784,
+          "output_tokens": 27539
+        },
+        "wall_clock_ms": 325713,
+        "spend_usd": 0.19215804,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 10773,
+              "cached_input_tokens": 12352,
+              "output_tokens": 13622
+            },
+            "wall_clock_ms": 135793,
+            "spec_authoring_tokens": 1843,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 82,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 11,
+            "tokens": {
+              "fresh_input_tokens": 5986,
+              "cached_input_tokens": 170432,
+              "output_tokens": 13917
+            },
+            "wall_clock_ms": 173414,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 497,
+          "cached_input_tokens": 17152,
+          "output_tokens": 1051
+        },
+        "spend_usd": 0.00977972
+      },
+      "snapshot": {
+        "hash": "8b5710da50f713194e018d5a7150810b2212585257c0aa9d7f5853fc500148ee",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-2"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "smoke-6.json",
+        "smoke-7.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": null,
+        "last_kill_score": null,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 2,
+      "op_kind": "delete_field",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "We stopped tracking category_id for Widget; remove it."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 1,
+        "red_check": {
+          "mode": "skipped_behavior_preserving",
+          "novel_total": 1,
+          "carried_total": 0,
+          "novel_red": 1,
+          "novel_records": [
+            {
+              "title": "Creating a Widget without category_id succeeds and omits the field",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": false
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 24,
+        "cumulative_total": 24
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 6,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "fix-widget-schema-category-id",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 20,
+          "scenarios_after": 21,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Widget category_id field removed",
+              "scenario": "Creating a Widget without category_id succeeds and omits the field"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PATCH /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 21,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget without category_id succeeds and omits the field"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 21,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "Yes. The archived `widget-remove-category-id` change's `tasks.md` listed \"Update schema.ts: remove category_id field from Widget entity\" as a task, but it was never actually done — `schema.ts` still had `category_id` as a required ref field on Widget. The spec of record and `seed.ts` were updated, but the schema wasn't, causing every Widget creation to fail validation with a 400 instead of the expected 201. That was the core breakage I fixed.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/fix-widget-schema-category-id/tasks.md",
+          "openspec/changes/fix-widget-schema-category-id/specs/widgets/spec.md",
+          "openspec/changes/fix-widget-schema-category-id/proposal.md"
+        ]
+      },
+      "usage": {
+        "turns": 17,
+        "tokens": {
+          "fresh_input_tokens": 16371,
+          "cached_input_tokens": 234368,
+          "output_tokens": 25035
+        },
+        "wall_clock_ms": 335895,
+        "spend_usd": 0.19400908,
+        "by_phase": {
+          "spec": {
+            "turns": 7,
+            "tokens": {
+              "fresh_input_tokens": 13485,
+              "cached_input_tokens": 81408,
+              "output_tokens": 19754
+            },
+            "wall_clock_ms": 247438,
+            "spec_authoring_tokens": 252,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 30,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 10,
+            "tokens": {
+              "fresh_input_tokens": 2886,
+              "cached_input_tokens": 152960,
+              "output_tokens": 5281
+            },
+            "wall_clock_ms": 81086,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 203,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 117,
+          "cached_input_tokens": 16704,
+          "output_tokens": 364
+        },
+        "spend_usd": 0.00610844
+      },
+      "snapshot": {
+        "hash": "c091dc49dd7a80c118fc6a57341e2b36e4c61f321a32932521679484ed41b93e",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-3"
+      },
+      "executor_artifacts": [
+        "smoke-1.json",
+        "smoke-2.json",
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "smoke-5.json",
+        "smoke-6.json",
+        "mutation-2.json",
+        "gate-scenarios-4.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 0.8333333333333334,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 3,
+      "op_kind": "noop_maintenance",
+      "opportunity_labels": [
+        "behavior_preserving"
+      ],
+      "nl_request": "Do a quick review of current behavior against what's documented — flag anything that's actually broken."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 5,
+          "carried_total": 11,
+          "novel_red": 3,
+          "novel_records": [
+            {
+              "title": "Creating a Widget with discount_pct returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Creating a Widget with a non-integer discount_pct is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Existing Widget records carry null discount_pct",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Widget via PATCH with discount_pct persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            },
+            {
+              "title": "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "pre_implementation": "green",
+              "failure_mode": null
+            }
+          ],
+          "green_novel_titles": [
+            "Creating a Widget with a non-integer discount_pct is rejected",
+            "Updating a Widget via PATCH with a non-integer discount_pct is rejected"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 25,
+        "cumulative_total": 25
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 5,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "widget-add-discount-pct",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 21,
+          "scenarios_after": 26,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-integer discount_pct is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with discount_pct returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Fetching a Widget",
+              "scenario": "Existing Widget records carry null discount_pct"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with a non-integer discount_pct is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with discount_pct persists the change"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PATCH /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 26,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with a non-integer discount_pct is rejected",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget without category_id succeeds and omits the field"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with discount_pct persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with discount_pct persists the change"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 26,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No, nothing was inaccurate. The workspace snapshot, spec files, and code were all consistent with each other. The only ambiguity was the task description itself (\"a new detail the business wants captured\"), which the PM brief clarified precisely (optional integer `discount_pct` field on Widget, existing records carry null).",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/widget-add-discount-pct/proposal.md",
+          "openspec/changes/widget-add-discount-pct/tasks.md",
+          "openspec/changes/widget-add-discount-pct/specs/widgets/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 12,
+        "tokens": {
+          "fresh_input_tokens": 19237,
+          "cached_input_tokens": 179136,
+          "output_tokens": 44306
+        },
+        "wall_clock_ms": 522111,
+        "spend_usd": 0.26845356,
+        "by_phase": {
+          "spec": {
+            "turns": 4,
+            "tokens": {
+              "fresh_input_tokens": 13861,
+              "cached_input_tokens": 40704,
+              "output_tokens": 32153
+            },
+            "wall_clock_ms": 358530,
+            "spec_authoring_tokens": 2254,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 67,
+            "pm_brief_tokens": 55
+          },
+          "implementation": {
+            "turns": 8,
+            "tokens": {
+              "fresh_input_tokens": 5376,
+              "cached_input_tokens": 138432,
+              "output_tokens": 12153
+            },
+            "wall_clock_ms": 155146,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 68,
+          "cached_input_tokens": 18816,
+          "output_tokens": 248
+        },
+        "spend_usd": 0.00607856
+      },
+      "snapshot": {
+        "hash": "4facdd82d28520b47426847bba72aa687d1d1889876b406c635fe12f26f00fd7",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-4"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "smoke-2.json",
+        "smoke-3.json",
+        "smoke-4.json",
+        "smoke-5.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": true,
+        "first_turn": 1
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 0.8333333333333334,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 4,
+      "op_kind": "add_field",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "There's a new detail the business wants captured that isn't tracked yet."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 1,
+          "carried_total": 0,
+          "novel_red": 1,
+          "novel_records": [
+            {
+              "title": "Creating a Category increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            }
+          ],
+          "green_novel_titles": [],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 1,
+        "delta_total": 1,
+        "cumulative_pass": 26,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": false,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "category-stats",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 26,
+          "scenarios_after": 27,
+          "dropped_scenarios": [],
+          "added_scenarios": [
+            {
+              "spec": "categories",
+              "requirement": "Reporting Category statistics",
+              "scenario": "Creating a Category increases the reported count"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /widgets",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PATCH /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Widget:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /widgets/{id}",
+              "found": "scenario: Updating a Widget via PATCH persists the change"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 27,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Widget without name is rejected",
+              "Creating a Widget with a non-decimal price is rejected",
+              "Creating a Widget with a non-bool in_stock is rejected",
+              "Creating a Widget with an invalid price is rejected",
+              "Creating a Widget with a non-integer discount_pct is rejected",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Category increases the reported count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count",
+              "Creating a Widget without category_id succeeds and omits the field"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Category increases the reported count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Category increases the reported count",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with an invalid price is rejected",
+              "Updating a Widget via PATCH with a non-decimal price is rejected",
+              "Updating a Widget via PATCH with discount_pct persists the change",
+              "Updating a Widget via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Widget removes it",
+              "Creating a Widget increases the list count",
+              "Creating a Widget increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Widget returns the stored entity",
+              "Creating a Widget with discount_pct returns the stored entity",
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with discount_pct persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Updating a Widget via PATCH persists the change",
+              "Updating a Widget via PATCH preserves unmentioned fields",
+              "Updating a Widget via PATCH with discount_pct persists the change"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 27,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec/context files were accurate and internally consistent. The categories spec of record lacked a stats requirement (matching the absence of the route in registry.ts), the widgets spec already documented `/widgets/stats`, and server.ts's generic `analytics` handler returned `{ count: table.size }` as the scenarios expected. The seed counts (2 categories, 2 widgets) reconciled with the list/stats assertions expecting length/count of 3 after one create.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/category-stats/proposal.md",
+          "openspec/changes/category-stats/tasks.md",
+          "openspec/changes/category-stats/specs/categories/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 5,
+        "tokens": {
+          "fresh_input_tokens": 17762,
+          "cached_input_tokens": 71296,
+          "output_tokens": 3210
+        },
+        "wall_clock_ms": 60520,
+        "spend_usd": 0.05752776,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 16610,
+              "cached_input_tokens": 18176,
+              "output_tokens": 2436
+            },
+            "wall_clock_ms": 33589,
+            "spec_authoring_tokens": 252,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 28,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 3,
+            "tokens": {
+              "fresh_input_tokens": 1152,
+              "cached_input_tokens": 53120,
+              "output_tokens": 774
+            },
+            "wall_clock_ms": 18713,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 83,
+          "cached_input_tokens": 18432,
+          "output_tokens": 244
+        },
+        "spend_usd": 0.00598212
+      },
+      "snapshot": {
+        "hash": "437879fe75f6466f4d53b7fd956666e0c26daf03b0f37f26fc3bb684ec1eb03f",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-5"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 0.8333333333333334,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 5,
+      "op_kind": "add_endpoint",
+      "opportunity_labels": [
+        "additive"
+      ],
+      "nl_request": "The team wants a quick summary view over all Category records."
+    },
+    {
+      "termination": "done",
+      "phase_at_termination": "implementation",
+      "status": "complete",
+      "classification_rationale": null,
+      "gate_events": {
+        "custody_failures": 0,
+        "discriminating_red_refusals": 0,
+        "refused_done_over_red": 0,
+        "red_check": {
+          "mode": "executed",
+          "novel_total": 21,
+          "carried_total": 0,
+          "novel_red": 19,
+          "novel_records": [
+            {
+              "title": "Creating a Product returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product without name is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product with a non-bool in_stock is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product with discount_pct returns the stored entity",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product with a non-integer discount_pct is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Fetching a missing Product returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Existing Product records carry null discount_pct",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Product via PATCH persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Product via PATCH preserves unmentioned fields",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a missing Product via PATCH returns not found",
+              "pre_implementation": "green",
+              "failure_mode": null
+            },
+            {
+              "title": "Updating a Product via PATCH with an invalid price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Product via PATCH with a non-decimal price is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Product via PATCH with discount_pct persists the change",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Updating a Product via PATCH with a non-integer discount_pct is rejected",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Deleting a Product removes it",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product increases the list count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product increases the reported count",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "Creating a Product without category_id succeeds and omits the field",
+              "pre_implementation": "red",
+              "failure_mode": "route_absent"
+            },
+            {
+              "title": "The retired widgets collection path returns not found",
+              "pre_implementation": "red",
+              "failure_mode": "assertion"
+            }
+          ],
+          "green_novel_titles": [
+            "Fetching a missing Product returns not found",
+            "Updating a missing Product via PATCH returns not found"
+          ],
+          "prior_green": true
+        }
+      },
+      "oracle": {
+        "delta_pass": 0,
+        "delta_total": 0,
+        "cumulative_pass": 23,
+        "cumulative_total": 26
+      },
+      "false_confidence": {
+        "event": true,
+        "enforcement_outcome": "accepted"
+      },
+      "smoke_feedback_runs": 1,
+      "smoke_readiness_failures": 0,
+      "archive": {
+        "attempted": true,
+        "change_name": "widget-rebrand-as-product",
+        "archive_ok": true,
+        "failure_reason": null,
+        "survival_ledger": {
+          "metric_role": "secondary_descriptive",
+          "scenarios_before": 27,
+          "scenarios_after": 28,
+          "dropped_scenarios": [
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with a non-integer discount_pct is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget with discount_pct returns the stored entity"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Creating a Widget",
+              "scenario": "Creating a Widget without name is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Deleting a Widget",
+              "scenario": "Deleting a Widget removes it"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Fetching a Widget",
+              "scenario": "Existing Widget records carry null discount_pct"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Fetching a Widget",
+              "scenario": "Fetching a missing Widget returns not found"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Listing Widget records",
+              "scenario": "Creating a Widget increases the list count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Reporting Widget statistics",
+              "scenario": "Creating a Widget increases the reported count"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a missing Widget via PATCH returns not found"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH preserves unmentioned fields"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with a non-decimal price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with a non-integer discount_pct is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with an invalid price is rejected"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Updating a Widget",
+              "scenario": "Updating a Widget via PATCH with discount_pct persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Widget category_id field removed",
+              "scenario": "Creating a Widget without category_id succeeds and omits the field"
+            }
+          ],
+          "added_scenarios": [
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product returns the stored entity"
+            },
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product with a non-bool in_stock is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product with a non-decimal price is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product with a non-integer discount_pct is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product with an invalid price is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product with discount_pct returns the stored entity"
+            },
+            {
+              "spec": "products",
+              "requirement": "Creating a Product",
+              "scenario": "Creating a Product without name is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Deleting a Product",
+              "scenario": "Deleting a Product removes it"
+            },
+            {
+              "spec": "products",
+              "requirement": "Fetching a Product",
+              "scenario": "Existing Product records carry null discount_pct"
+            },
+            {
+              "spec": "products",
+              "requirement": "Fetching a Product",
+              "scenario": "Fetching a missing Product returns not found"
+            },
+            {
+              "spec": "products",
+              "requirement": "Listing Product records",
+              "scenario": "Creating a Product increases the list count"
+            },
+            {
+              "spec": "products",
+              "requirement": "Product category_id field removed",
+              "scenario": "Creating a Product without category_id succeeds and omits the field"
+            },
+            {
+              "spec": "products",
+              "requirement": "Reporting Product statistics",
+              "scenario": "Creating a Product increases the reported count"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a missing Product via PATCH returns not found"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a Product via PATCH persists the change"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a Product via PATCH preserves unmentioned fields"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a Product via PATCH with a non-decimal price is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a Product via PATCH with a non-integer discount_pct is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a Product via PATCH with an invalid price is rejected"
+            },
+            {
+              "spec": "products",
+              "requirement": "Updating a Product",
+              "scenario": "Updating a Product via PATCH with discount_pct persists the change"
+            },
+            {
+              "spec": "widgets",
+              "requirement": "Retired widgets endpoints",
+              "scenario": "The retired widgets collection path returns not found"
+            }
+          ],
+          "changed_scenarios": []
+        }
+      },
+      "drift": {
+        "meter_version": "e4-drift-meter-v2",
+        "discrepancies": [
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:read",
+            "semantic_item_uid": "uid-base-endpoint-widget-read",
+            "detail": {
+              "expected": "GET /products/{id}",
+              "found": "scenario: Existing Product records carry null discount_pct"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:create",
+            "semantic_item_uid": "uid-base-endpoint-widget-create",
+            "detail": {
+              "expected": "POST /products",
+              "found": "scenario: Updating a Product via PATCH persists the change"
+            }
+          },
+          {
+            "kind": "endpoint",
+            "class": "contradiction",
+            "direction": "spec_vs_truth",
+            "item_id": "endpoint:Product:update",
+            "semantic_item_uid": "uid-base-endpoint-widget-update",
+            "detail": {
+              "expected": "PATCH /products/{id}",
+              "found": "scenario: Updating a Product via PATCH persists the change"
+            }
+          }
+        ],
+        "spec_unparseable": false,
+        "extraction_failed": false,
+        "registry_bypass": [],
+        "counts": {
+          "endpoint": {
+            "contradiction": 3,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "entity": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "field": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "validation_rule": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          },
+          "convention": {
+            "contradiction": 0,
+            "coverage_gap": 0,
+            "stale_claim": 0
+          }
+        }
+      },
+      "kill_score": {
+        "bank_id": "e4-adversarial-bank-v1",
+        "kill_score": 1,
+        "scenarios_total": 28,
+        "variants": [
+          {
+            "variant_id": "validation-dropped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category without name is rejected",
+              "Creating a Product without name is rejected",
+              "Creating a Product with a non-decimal price is rejected",
+              "Creating a Product with a non-bool in_stock is rejected",
+              "Creating a Product with an invalid price is rejected",
+              "Creating a Product with a non-integer discount_pct is rejected",
+              "Existing Product records carry null discount_pct",
+              "Updating a Product via PATCH persists the change",
+              "Updating a Product via PATCH preserves unmentioned fields",
+              "Updating a Product via PATCH with an invalid price is rejected",
+              "Updating a Product via PATCH with a non-decimal price is rejected",
+              "Updating a Product via PATCH with discount_pct persists the change",
+              "Updating a Product via PATCH with a non-integer discount_pct is rejected"
+            ]
+          },
+          {
+            "variant_id": "status-swapped",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Category increases the reported count",
+              "Creating a Product returns the stored entity",
+              "Creating a Product with discount_pct returns the stored entity",
+              "Existing Product records carry null discount_pct",
+              "Updating a Product via PATCH persists the change",
+              "Updating a Product via PATCH preserves unmentioned fields",
+              "Updating a Product via PATCH with an invalid price is rejected",
+              "Updating a Product via PATCH with a non-decimal price is rejected",
+              "Updating a Product via PATCH with discount_pct persists the change",
+              "Updating a Product via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Product removes it",
+              "Creating a Product increases the list count",
+              "Creating a Product increases the reported count",
+              "Creating a Product without category_id succeeds and omits the field"
+            ]
+          },
+          {
+            "variant_id": "no-op-write",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Category increases the reported count",
+              "Creating a Product returns the stored entity",
+              "Creating a Product with discount_pct returns the stored entity",
+              "Existing Product records carry null discount_pct",
+              "Updating a Product via PATCH persists the change",
+              "Updating a Product via PATCH preserves unmentioned fields",
+              "Updating a Product via PATCH with an invalid price is rejected",
+              "Updating a Product via PATCH with a non-decimal price is rejected",
+              "Updating a Product via PATCH with discount_pct persists the change",
+              "Updating a Product via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Product removes it",
+              "Creating a Product increases the list count",
+              "Creating a Product increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "seed-echo",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Deleting a Category removes it",
+              "Creating a Category increases the list count",
+              "Creating a Category increases the reported count",
+              "Creating a Product returns the stored entity",
+              "Creating a Product with discount_pct returns the stored entity",
+              "Existing Product records carry null discount_pct",
+              "Updating a Product via PATCH persists the change",
+              "Updating a Product via PATCH preserves unmentioned fields",
+              "Updating a Product via PATCH with an invalid price is rejected",
+              "Updating a Product via PATCH with a non-decimal price is rejected",
+              "Updating a Product via PATCH with discount_pct persists the change",
+              "Updating a Product via PATCH with a non-integer discount_pct is rejected",
+              "Deleting a Product removes it",
+              "Creating a Product increases the list count",
+              "Creating a Product increases the reported count"
+            ]
+          },
+          {
+            "variant_id": "field-leak",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Creating a Category returns the stored entity",
+              "Updating a Category persists the change",
+              "Creating a Product returns the stored entity",
+              "Creating a Product with discount_pct returns the stored entity",
+              "Existing Product records carry null discount_pct",
+              "Updating a Product via PATCH persists the change",
+              "Updating a Product via PATCH preserves unmentioned fields",
+              "Updating a Product via PATCH with discount_pct persists the change"
+            ]
+          },
+          {
+            "variant_id": "wrong-filter",
+            "killed": true,
+            "failing_scenario_titles": [
+              "Existing Product records carry null discount_pct",
+              "Updating a Product via PATCH persists the change",
+              "Updating a Product via PATCH preserves unmentioned fields",
+              "Updating a Product via PATCH with discount_pct persists the change"
+            ]
+          }
+        ]
+      },
+      "scenario_census": {
+        "spec_of_record_scenarios": 28,
+        "unbindable_scenarios": 0
+      },
+      "noticing_probe_answer": "No. The provided spec/context files were accurate and internally consistent: the spec of record matched the implementation, the archived changes told a coherent history, and the code files (registry, schema, seed, server) were all aligned with each other and with the documented scenario grammar.",
+      "spec_touch": {
+        "touched": true,
+        "paths": [
+          "openspec/changes/widget-rebrand-as-product/proposal.md",
+          "openspec/changes/widget-rebrand-as-product/tasks.md",
+          "openspec/changes/widget-rebrand-as-product/specs/widgets/spec.md",
+          "openspec/changes/widget-rebrand-as-product/specs/products/spec.md"
+        ]
+      },
+      "usage": {
+        "turns": 4,
+        "tokens": {
+          "fresh_input_tokens": 24407,
+          "cached_input_tokens": 60736,
+          "output_tokens": 16565
+        },
+        "wall_clock_ms": 185481,
+        "spend_usd": 0.12284716000000001,
+        "by_phase": {
+          "spec": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 17203,
+              "cached_input_tokens": 18816,
+              "output_tokens": 14771
+            },
+            "wall_clock_ms": 151152,
+            "spec_authoring_tokens": 5602,
+            "gate_protocol_interaction_tokens": 22,
+            "oracle_feedback_tokens": 57,
+            "pm_brief_tokens": 0
+          },
+          "implementation": {
+            "turns": 2,
+            "tokens": {
+              "fresh_input_tokens": 7204,
+              "cached_input_tokens": 41920,
+              "output_tokens": 1794
+            },
+            "wall_clock_ms": 24299,
+            "spec_authoring_tokens": 0,
+            "gate_protocol_interaction_tokens": 0,
+            "oracle_feedback_tokens": 0,
+            "pm_brief_tokens": 0
+          }
+        }
+      },
+      "probe_usage": {
+        "tokens": {
+          "fresh_input_tokens": 179,
+          "cached_input_tokens": 25152,
+          "output_tokens": 410
+        },
+        "spend_usd": 0.00859412
+      },
+      "snapshot": {
+        "hash": "c88699f278e09ba984823db82dceb5f07a36a07e0f42fff2fe15ecf7a45cb353",
+        "path": "/Users/acyment/dev/hit-sdd-bench/tmp/e4-v3-m7-evidence/seed-117/snapshots/e4_arm_p/task-6"
+      },
+      "executor_artifacts": [
+        "gate-scenarios-1.json",
+        "gate-scenarios-2.json",
+        "smoke-1.json",
+        "mutation-1.json",
+        "gate-scenarios-3.json",
+        "hidden-oracle.json"
+      ],
+      "pm_brief": {
+        "requested": false,
+        "first_turn": null
+      },
+      "product_gate": {
+        "pm_review_refusals": 0,
+        "reconcile_refusals": 0,
+        "mutation_refusals": 0,
+        "pm_review_flags_total": 0,
+        "last_reconcile_finding_count": 0,
+        "last_kill_score": 0.8333333333333334,
+        "reconcile_unavailable_count": 0
+      },
+      "task_index": 6,
+      "op_kind": "rename_entity",
+      "opportunity_labels": [
+        "drift_opportunity"
+      ],
+      "nl_request": "Rebrand Widget as Product everywhere it appears to customers."
+    }
+  ],
+  "usage_totals": {
+    "turns": 56,
+    "spend_usd": 1.03655024,
+    "wall_clock_ms": 1757757
+  },
+  "replay_validity": {
+    "substrate_regeneration_ok": true,
+    "per_task_replay_ok": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "chain_replay_valid": true
+  },
+  "status": "complete"
+}
