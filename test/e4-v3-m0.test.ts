@@ -116,12 +116,29 @@ describe("v3-M0 census: request ∪ brief determines the delta", () => {
   });
 
   test("determined-only ops stay determined under verbatim phrasing", () => {
-    for (const kind of ["rename_field", "rename_entity", "delete_field", "delete_entity", "noop_maintenance"] as E4ChangeOpKind[]) {
+    for (const kind of ["rename_field", "delete_field", "delete_entity", "noop_maintenance"] as E4ChangeOpKind[]) {
       for (const drawn of corpus.byKind.get(kind) ?? []) {
         const facts = tagE4RequestDeterminacy({ opKind: kind, namesItemVerbatim: true, delta: drawn.delta });
 
         expect(underdeterminedFacts(facts)).toHaveLength(0);
       }
+    }
+  });
+
+  // E5 P0-V item 2: rename_entity is no longer fully determined — what happens to STORED
+  // ids/values under the rename (the M7 id-migration mirror trap) is a fixture_migration fact
+  // the request never pins; the brief answers it (id-policy line, census-checked above).
+  test("[P0-V] rename_entity carries exactly the fixture_migration underdetermined fact", () => {
+    for (const drawn of corpus.byKind.get("rename_entity") ?? []) {
+      const facts = tagE4RequestDeterminacy({ opKind: "rename_entity", namesItemVerbatim: true, delta: drawn.delta });
+      const open = underdeterminedFacts(facts);
+
+      expect(open.map((fact) => fact.fact_kind)).toEqual(["fixture_migration"]);
+
+      const brief = renderE4PmBrief({ opKind: "rename_entity", delta: drawn.delta });
+
+      expect(brief.text).toContain("keep their current ids and stored values");
+      expect(brief.text).not.toContain("everywhere");
     }
   });
 

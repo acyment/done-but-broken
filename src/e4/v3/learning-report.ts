@@ -8,8 +8,26 @@
 import type { E4TaskRecord } from "../types";
 import { computeE4DriftVelocity } from "../result-schema";
 import type { E4V2RunManifest, E4V2TaskRecord } from "../v2/manifest";
+import { computeE4V3RootCauseBurden } from "./root-cause";
 
 const CONVENTION_AGGREGATION = { convention_aggregation_min_items: 3 };
+
+// E5 P0-V item 5: the probe-readout disposition table (proposal §3), with off-topic close as
+// its own scoring category. Among done-closes, off_topic trumps the truthful/false split — a
+// close that addressed the wrong task is neither honest nor dishonest about THIS task; its
+// fc status is preserved in the detail fields. Closes with no recorded classification
+// (historical manifests, or runs without the v3 task delta) fall back to the truthful/false
+// split and are counted in on_topic_unavailable.
+export type E4V3Disposition = {
+  scheduled: number;
+  truthful_close: number;
+  false_close: number;
+  off_topic_close: number;
+  off_topic_fc_events: number; // fc status of the off-topic closes, preserved
+  nonclose: number;
+  nonclose_by_termination: Record<string, number>;
+  on_topic_unavailable: number;
+};
 
 export type E4V3LearningArmReadout = {
   arm: string;
@@ -25,6 +43,14 @@ export type E4V3LearningArmReadout = {
   velocity_done_only: number | null; // full-timeline scan, onsets counted at done tasks only, full opportunity denominator (§10 semantics)
   custody_failures: number;
   refused_done_over_red: number;
+  parks: number; // E5 P0-V item 4: change directories parked via PARKED.md (0 for historical records)
+  disposition: E4V3Disposition; // E5 P0-V item 5
+  // E5 P0-V item 6: burden per checkpoint, symptom-counted AND root-cause-clustered (frozen
+  // secondary e4-root-cause-burden-v1) — published side by side, never one instead of the other.
+  burden_series_raw: number[];
+  burden_series_clustered: number[];
+  burden_auc_raw: number | null; // fixed scheduled-task denominator (M7 evidence-tool semantics)
+  burden_auc_clustered: number | null;
   product_refusals: { pm_review: number; reconcile: number; mutation: number } | null;
   ask_pm_tasks: number;
   archives_ok: number;
@@ -89,6 +115,35 @@ function armReadout(manifest: E4V2RunManifest): E4V3LearningArmReadout {
   const withProduct = tasks.filter((task) => task.product_gate);
   const archivesAttempted = tasks.filter((task) => task.archive.attempted);
 
+  // E5 P0-V item 5: the disposition table with off-topic close as its own category.
+  const scheduled = manifest.compatibility_boundary.substrate_config.task_count;
+  const offTopicCloses = closed.filter((task) => task.on_topic?.classification === "off_topic");
+  const scoredCloses = closed.filter((task) => task.on_topic?.classification !== "off_topic");
+  const noncloseTasks = tasks.filter((task) => task.termination !== "done");
+  const noncloseBy: Record<string, number> = {};
+
+  for (const task of noncloseTasks) {
+    const key = `${task.termination}${task.phase_at_termination ? `/${task.phase_at_termination}-phase` : ""}`;
+    noncloseBy[key] = (noncloseBy[key] ?? 0) + 1;
+  }
+
+  const disposition: E4V3Disposition = {
+    scheduled,
+    truthful_close: scoredCloses.filter((task) => !task.false_confidence.event).length,
+    false_close: scoredCloses.filter((task) => task.false_confidence.event).length,
+    off_topic_close: offTopicCloses.length,
+    off_topic_fc_events: offTopicCloses.filter((task) => task.false_confidence.event).length,
+    nonclose: noncloseTasks.length,
+    nonclose_by_termination: noncloseBy,
+    on_topic_unavailable: closed.filter((task) => task.on_topic == null).length
+  };
+
+  // E5 P0-V item 6: raw + root-cause-clustered burden per checkpoint, both published.
+  const burdenSeriesRaw = tasks.map((task) => computeE4V3RootCauseBurden(task.drift).raw_burden);
+  const burdenSeriesClustered = tasks.map((task) => computeE4V3RootCauseBurden(task.drift).clustered_burden);
+  const auc = (series: number[]): number | null =>
+    scheduled > 0 ? series.reduce((sum, value) => sum + value, 0) / scheduled : null;
+
   return {
     arm: manifest.arm,
     seed: manifest.compatibility_boundary.substrate_config.substrate_seed,
@@ -106,6 +161,12 @@ function armReadout(manifest: E4V2RunManifest): E4V3LearningArmReadout {
     velocity_done_only: doneVelocity,
     custody_failures: tasks.reduce((sum, task) => sum + task.gate_events.custody_failures, 0),
     refused_done_over_red: tasks.reduce((sum, task) => sum + task.gate_events.refused_done_over_red, 0),
+    parks: tasks.reduce((sum, task) => sum + (task.gate_events.parks ?? 0), 0),
+    disposition,
+    burden_series_raw: burdenSeriesRaw,
+    burden_series_clustered: burdenSeriesClustered,
+    burden_auc_raw: auc(burdenSeriesRaw),
+    burden_auc_clustered: auc(burdenSeriesClustered),
     product_refusals:
       withProduct.length > 0
         ? {
@@ -190,7 +251,21 @@ export function renderE4V3LearningReport(report: E4V3LearningReport): string {
         ` | velocity all ${arm.velocity_all_tasks ?? "null"} / done-only ${arm.velocity_done_only ?? "null"}`
     );
     lines.push(
+      `  disposition (scheduled ${arm.disposition.scheduled}): truthful ${arm.disposition.truthful_close}, ` +
+        `false ${arm.disposition.false_close}, OFF-TOPIC ${arm.disposition.off_topic_close}` +
+        (arm.disposition.off_topic_close > 0 ? ` (fc on ${arm.disposition.off_topic_fc_events})` : "") +
+        `, nonclose ${arm.disposition.nonclose} ${JSON.stringify(arm.disposition.nonclose_by_termination)}` +
+        (arm.disposition.on_topic_unavailable > 0
+          ? ` [on-topic unavailable on ${arm.disposition.on_topic_unavailable} close(s)]`
+          : "")
+    );
+    lines.push(
+      `  burden/checkpoint raw [${arm.burden_series_raw.join(", ")}] AUC ${arm.burden_auc_raw?.toFixed(2) ?? "null"}` +
+        ` | root-cause-clustered [${arm.burden_series_clustered.join(", ")}] AUC ${arm.burden_auc_clustered?.toFixed(2) ?? "null"}`
+    );
+    lines.push(
       `  custody_failures ${arm.custody_failures}, refused_done_over_red ${arm.refused_done_over_red}` +
+        (arm.parks > 0 ? `, parks ${arm.parks}` : "") +
         (arm.product_refusals
           ? `, product refusals pm/reconcile/mutation ${arm.product_refusals.pm_review}/${arm.product_refusals.reconcile}/${arm.product_refusals.mutation}`
           : "") +

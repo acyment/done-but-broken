@@ -156,3 +156,87 @@ export function assertV2ConstantsRunnable(constants: E4V2SealedConstants): void 
     throw new E4TurnProtocolError("v2 constants are not runnable: budgets/protocol_text must be present");
   }
 }
+
+// ---------------------------------------------------------------------------------------------
+// Glue-aware protocol feedback (E5 P0-V item 3). The sealed E1 parser recognizes delimiters only
+// at the start of a line and flags lines that START with "<<<" but match no token — the one
+// SILENT case (E4-ARC-CLOSEOUT §5.1, ≈85 wasted turns + all 3 stalls) is a delimiter glued
+// AFTER prose ("Here's the file: <<<FILE x>>>"), which parses as ignorable text. This detector
+// mirrors the parser's block-span walk (same line split, same trailing-whitespace strip, same
+// sealed opener/closer forms) so file/verify block CONTENT is never flagged, and reports the
+// glued line as a synthetic protocol violation merged into the ordinary feedback channel. The
+// sealed parser core (src/e1-l1-parser.ts) is byte-untouched; parse results, the no-op rule,
+// and the stall rule are unchanged — this adds feedback text only.
+// ---------------------------------------------------------------------------------------------
+
+const E4_V2_GLUE_FILE_OPEN_RE = /^<<<FILE ([^>]+)>>>$/;
+const E4_V2_GLUE_VERIFY_LITERAL = "<<<VERIFY>>>";
+const E4_V2_GLUE_END_LITERAL = "<<<END>>>";
+const E4_V2_GLUE_TOKENS = ["<<<FILE ", "<<<VERIFY>>>", "<<<END>>>", "<<<DONE>>>"] as const;
+
+export type E4V2GluedDelimiterViolation = { code: "delimiter_glued"; line: number; detail: string };
+
+export function detectE4V2GluedDelimiters(rawOutput: string): E4V2GluedDelimiterViolation[] {
+  const lines = rawOutput.split("\n");
+  const violations: E4V2GluedDelimiterViolation[] = [];
+  // In-block glued END candidates are reported only if the block never closes (otherwise they
+  // are legitimate verbatim content of a properly closed block).
+  let pendingInBlock: E4V2GluedDelimiterViolation[] = [];
+  let inBlock = false;
+
+  const gluedToken = (delimiter: string): { token: string; at: number } | null => {
+    for (const token of E4_V2_GLUE_TOKENS) {
+      const at = delimiter.indexOf(token);
+
+      if (at > 0) {
+        return { token: token === "<<<FILE " ? "<<<FILE …>>>" : token, at };
+      }
+    }
+
+    return null;
+  };
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = index + 1;
+    const delimiter = lines[index].replace(/[ \t\r]+$/, "");
+
+    if (inBlock) {
+      if (delimiter === E4_V2_GLUE_END_LITERAL) {
+        inBlock = false;
+        pendingInBlock = [];
+      } else {
+        const glued = gluedToken(delimiter);
+
+        if (glued && glued.token === E4_V2_GLUE_END_LITERAL) {
+          pendingInBlock.push({
+            code: "delimiter_glued",
+            line,
+            detail: `text precedes the delimiter ${glued.token} on line ${line}; delimiters are recognized only at the start of a line — put ${glued.token} on its own line to close the block`
+          });
+        }
+      }
+      continue;
+    }
+
+    if (E4_V2_GLUE_FILE_OPEN_RE.test(delimiter) || delimiter === E4_V2_GLUE_VERIFY_LITERAL) {
+      inBlock = true;
+      continue;
+    }
+
+    if (delimiter.startsWith("<<<")) {
+      continue; // the sealed parser already reports these (unrecognized_protocol_line / orphan_end)
+    }
+
+    const glued = gluedToken(delimiter);
+
+    if (glued) {
+      violations.push({
+        code: "delimiter_glued",
+        line,
+        detail: `text precedes the delimiter ${glued.token} on line ${line}; delimiters are recognized only at the start of a line — put the delimiter on its own line`
+      });
+    }
+  }
+
+  return [...violations, ...(inBlock ? pendingInBlock : [])].toSorted((a, b) => a.line - b.line);
+}

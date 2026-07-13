@@ -32,7 +32,10 @@ import { pluralizeEntityName } from "./pluralize";
 export const SUBSTRATE_KIND_V2 = "procedural-rest-v2" as const;
 // §5.7 Amendment 3 (naturalization): English pluralizer for minted paths, ref-key cascade on
 // entity renames, add_endpoint override, seed-data carry-forward (see ./fixture.ts).
-export const SUBSTRATE_VERSION_V2 = "procedural-rest-v2.1";
+// v2.2 (E5 P0-V item 2): modify_endpoint phrasing variant 1 corrected in the v2-owned pool
+// (./render.ts) — a phrasing-text edit is a substrate_version change by the sealed M1 rule.
+// Draw semantics, PRNG consumption, and every other rendered text are byte-identical to v2.1.
+export const SUBSTRATE_VERSION_V2 = "procedural-rest-v2.2";
 
 // Same name pool as v1's add_entity (v1 keeps its copy private; the two substrates version
 // their text surfaces independently — this one seals under the v2 constants lineage at v2-M5).

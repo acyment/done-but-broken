@@ -18,7 +18,13 @@ import { RETYPE_DATE_LITERAL_V2 } from "../substrate/v2/fixture";
 import type { E4TaskDelta } from "./task-delta";
 import { retypeChangesStoredRepresentation, type E4V3FactKind } from "./ambiguity";
 
-export const E4_V3_PM_BRIEF_ID = "e4-pm-brief-v1";
+// v2 (E5 P0-V items 1+2): the PATCH parenthetical now states gold's true full-replace
+// semantics (the v3-M7 adjudication verified the "partial update" promise was false — the
+// scaffold's update handler validates the full body and replaces the stored record for PUT and
+// PATCH alike), and the entity-rename line replaces the false "everywhere" scope with the true
+// one — stored records keep their ids and values (the M7 id-migration mirror trap, disclosed
+// here because the brief is precisely the channel that answers the id-policy knob).
+export const E4_V3_PM_BRIEF_ID = "e4-pm-brief-v2";
 
 export type E4V3BriefCoverage = { fact_kind: E4V3FactKind; subject: string };
 
@@ -125,11 +131,17 @@ export function renderE4PmBrief(input: { opKind: E4ChangeOpKind; delta: E4TaskDe
       .map((change) => `${change.new.method} ${change.new.path}`);
 
     lines.push(
-      `Rename entity ${rename.old_name} to ${rename.new_name} everywhere` +
+      `Rename entity ${rename.old_name} to ${rename.new_name}` +
         (movedPaths.length > 0 ? `; endpoint paths follow the new name: ${movedPaths.join("; ")}` : "") +
         `.`
     );
+    // P0-V: the id-policy disclosure that replaces the false "everywhere" scope. Cascading ref
+    // FIELD names are stated by their own renamed-field lines when the delta carries them.
+    lines.push(
+      `Existing ${rename.old_name} records keep their current ids and stored values under the new name; do not rewrite stored identifiers.`
+    );
     cover("rename_mapping", `${rename.old_name} -> ${rename.new_name}`);
+    cover("fixture_migration", `${rename.old_name} -> ${rename.new_name}`);
   }
 
   for (const { entity, field } of delta.added_fields) {
@@ -221,7 +233,9 @@ export function renderE4PmBrief(input: { opKind: E4ChangeOpKind; delta: E4TaskDe
     if (change.old.method !== change.new.method) {
       lines.push(
         `The ${change.entity} ${change.kind} operation becomes ${change.new.method} ${change.new.path}` +
-          (change.new.method === "PATCH" ? ` (partial update: only the provided fields change)` : ``) +
+          (change.new.method === "PATCH"
+            ? ` (method change only: the request body must still be the complete record, and it replaces the stored record in full)`
+            : ``) +
           `.`
       );
     } else if (!delta.renamed_entities.some((rename) => rename.new_name === change.entity)) {

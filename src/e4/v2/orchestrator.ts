@@ -207,7 +207,10 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
                 pm_brief_text: extras.brief_text,
                 base_extra: E4_V3_ASK_PM_PROTOCOL_TEXT,
                 channel_extra: arm === "e4_arm_p" ? E4_V3_PRODUCT_GATE_PROTOCOL_TEXT : null,
-                product: arm === "e4_arm_p" ? { delta: extras.delta, config: input.v3.product_config } : null
+                product: arm === "e4_arm_p" ? { delta: extras.delta, config: input.v3.product_config } : null,
+                // E5 P0-V item 5: the gold delta reaches the runner in EVERY arm (referee-side
+                // off-topic close classification; never enters the workspace or the prompt).
+                task_delta: extras.delta
               }
             }
           : {})

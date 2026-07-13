@@ -41,7 +41,8 @@ export type E4V3ReconcileReport = {
 
 type DumpRoute = E4SurfaceDump["routes"][number];
 
-function pathSegmentsMatch(patternPath: string, requestPath: string): boolean {
+// Exported for the commitment-vs-gold scorer (E5 P0-V item 7) — same sealed §7.5 segment rules.
+export function pathSegmentsMatch(patternPath: string, requestPath: string): boolean {
   const patternSegments = patternPath.split("/").filter(Boolean);
   const requestSegments = requestPath.split("?")[0].split("/").filter(Boolean);
 

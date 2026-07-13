@@ -37,6 +37,7 @@ import {
   applyE4V2Replacements,
   assertV2ConstantsRunnable,
   createE4TurnParser,
+  detectE4V2GluedDelimiters,
   readE4V2OpenSpecTree,
   renderE4TurnFeedback,
   renderE4V2SystemPromptParts,
@@ -52,6 +53,7 @@ import { E4V3ProductTaskGate, type E4V3ProductGateConfig, type E4V3ProductGateSu
 import { runE4AgentMutationAnalysis } from "../v3/mutation";
 import { extractAskPm } from "../v3/turn-protocol";
 import type { E4TaskDelta } from "../v3/task-delta";
+import { buildE4OnTopicSubjects, classifyE4TaskCloseTopic, type E4V3OnTopicReport } from "../v3/on-topic";
 
 export type E4V2SequenceSpendLedger = { spent_usd: number };
 
@@ -105,6 +107,9 @@ export type E4V2TaskRunResult = {
   // v3 additive fields (E4V3-PRODUCT-LOOP-PROPOSAL.md §3); null in every v2 run.
   pm_brief: { requested: boolean; first_turn: number | null } | null;
   product_gate: E4V3ProductGateSummary | null;
+  // E5 P0-V item 5: on/off-topic classification of a done-close against the task's gold delta
+  // (measurement-side; null when the run carries no v3 task delta or the task did not close).
+  on_topic: E4V3OnTopicReport | null;
 };
 
 export type E4V2RunTaskInput = {
@@ -134,6 +139,9 @@ export type E4V2RunTaskInput = {
     base_extra: string;
     channel_extra: string | null;
     product: { delta: E4TaskDelta; config: E4V3ProductGateConfig } | null;
+    // E5 P0-V item 5: the task's gold delta for ALL arms (referee-side only — never enters the
+    // workspace or the prompt); enables the off-topic close classification at task close.
+    task_delta?: E4TaskDelta;
   };
 };
 
@@ -199,6 +207,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
   let smokeFeedbackRuns = 0;
   let smokeReadinessFailures = 0;
   const specTouchPaths: string[] = [];
+  const taskCodeWriteContents: string[] = [];
   const executorArtifacts: string[] = [];
   let gateRunCounter = 0;
   let mutationRunCounter = 0;
@@ -348,6 +357,9 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
       if (appliedReplacement.path === "openspec" || appliedReplacement.path.startsWith("openspec/")) {
         specTouchPaths.push(appliedReplacement.path);
         componentTokens[phaseAtTurnStart].spec_authoring += countE1Tokens(appliedReplacement.content);
+      } else {
+        // E5 P0-V item 5: the task's code writes feed the off-topic close classification.
+        taskCodeWriteContents.push(appliedReplacement.content);
       }
     }
 
@@ -439,14 +451,21 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
     }
 
     const gateAndBrief = [gateFeedback, pmBriefFeedback].filter((part): part is string => part !== null);
+    // E5 P0-V item 3: glue-aware feedback — prose-glued delimiters are the sealed parser's one
+    // SILENT ignore case; the detector's synthetic violations ride the ordinary channel. Parse
+    // results, the no-op rule, and the stall rule are unchanged.
+    const gluedViolations = detectE4V2GluedDelimiters(prePass.text);
     const feedback = renderE4TurnFeedback({
       confirmations: applyResult.confirmations,
       rejections: applyResult.rejected,
-      violations: parsed.violations.map((violation) => ({
-        code: violation.code,
-        line: violation.line,
-        detail: violation.detail
-      })),
+      violations: [
+        ...parsed.violations.map((violation) => ({
+          code: violation.code,
+          line: violation.line,
+          detail: violation.detail
+        })),
+        ...gluedViolations
+      ],
       verification: verificationFeedback,
       gate: gateAndBrief.length === 0 ? null : gateAndBrief.join("\n\n"),
       no_op: effectiveNoOp
@@ -501,6 +520,30 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
   // ---- snapshot → probe ----
 
   const acceptedChange = gate.changeName();
+
+  // E5 P0-V item 5: on/off-topic classification of a done-close, computed BEFORE the archive
+  // step moves the change files. Delta-spec files only (never proposal.md/tasks.md narration)
+  // plus every code file the agent wrote this task.
+  let onTopic: E4V3OnTopicReport | null = null;
+
+  if (input.v3?.task_delta && termination === "done") {
+    const closeTree = await readE4V2OpenSpecTree(input.workspace_dir);
+    const changeSpecContents =
+      acceptedChange === null
+        ? []
+        : Object.entries(closeTree)
+            .filter(([path]) => path.startsWith(`openspec/changes/${acceptedChange}/specs/`) && path.endsWith(".md"))
+            .map(([, content]) => content);
+
+    onTopic = classifyE4TaskCloseTopic({
+      delta_is_empty: input.v3.task_delta.is_empty,
+      subjects: buildE4OnTopicSubjects(input.v3.task_delta),
+      change_spec_contents: changeSpecContents,
+      code_write_contents: taskCodeWriteContents
+    });
+    await writeRecordFile("on-topic.json", `${JSON.stringify(onTopic, null, 2)}\n`);
+  }
+
   let archive: E4V2ArchiveOutcome = {
     attempted: false,
     change_name: acceptedChange,
@@ -695,6 +738,7 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
     snapshot,
     executor_artifacts: executorArtifacts,
     pm_brief: input.v3 ? { requested: askPmRequested, first_turn: askPmFirstTurn } : null,
-    product_gate: gate instanceof E4V3ProductTaskGate ? gate.productSummary() : null
+    product_gate: gate instanceof E4V3ProductTaskGate ? gate.productSummary() : null,
+    on_topic: onTopic
   };
 }

@@ -53,7 +53,9 @@ export type E4V2GateEventRecord =
   | { type: "discriminating_red_refusal"; novel_total: number; green_novel_titles: string[] }
   | { type: "red_check"; record: E4V2RedCheckRecord }
   | { type: "done_refused"; failing_scenario_titles: string[] }
-  | { type: "done_accepted" };
+  | { type: "done_accepted" }
+  // E5 P0-V item 4: a change directory newly parked this task (PARKED.md marker written).
+  | { type: "change_parked"; change_name: string };
 
 // The manifest projection (v2 analog of E4GateEvents; wired into the v2 manifest at M5).
 export type E4V2GateEvents = {
@@ -61,6 +63,7 @@ export type E4V2GateEvents = {
   discriminating_red_refusals: number;
   refused_done_over_red: number;
   red_check: E4V2RedCheckRecord | null; // null when the task never left the spec phase
+  parks: number; // E5 P0-V item 4: change directories newly parked this task (additive field)
 };
 
 export type E4V2SpecExitResult =
@@ -108,6 +111,19 @@ function isUnder(normalized: string, prefix: string): boolean {
 
 const CHANGE_PATH_PATTERN = /^openspec\/changes\/([^/]+)\//;
 
+// E5 P0-V item 4: the lawful park marker. A change directory containing PARKED.md at its top
+// level is PARKED — excluded from the exactly-one-active-change custody count, never bound,
+// never merged, never archived. Writing the marker is an ordinary spec-phase FILE write; parking
+// is one-way per directory (the protocol has no delete primitive — resuming parked work means
+// copying it into a fresh change). This repairs the verified rule trap (E4-ARC-CLOSEOUT §5.3:
+// a stalled predecessor's leftover could not be lawfully set aside, so absorbing it — the
+// silently swapped task — was near-forced) while keeping the leftover mess in the tree.
+const PARKED_MARKER_FILE = "PARKED.md";
+
+function parkedMarkerPath(changeName: string): string {
+  return `openspec/changes/${changeName}/${PARKED_MARKER_FILE}`;
+}
+
 // Extracts the scenarios an OpenSpec change delta CONTRIBUTES: every scenario under an ADDED or
 // MODIFIED requirements section. Scenarios under REMOVED (or RENAMED) sections play no role in
 // the red check (§6.2.iv — removed coverage is the meter's business).
@@ -150,6 +166,7 @@ export class E4V2TaskGate {
   private refusedDoneOverRed = 0;
   private redCheckRecord: E4V2RedCheckRecord | null = null;
   private acceptedChangeName: string | null = null;
+  private readonly parkedThisTask = new Set<string>();
   private affirmationExit = false;
   private smokeInvocations: Record<E4TaskPhase, number> = { spec: 0, implementation: 0 };
   private readonly eventLog: E4V2GateEventRecord[] = [];
@@ -173,7 +190,8 @@ export class E4V2TaskGate {
       custody_failures: this.custodyFailures,
       discriminating_red_refusals: this.discriminatingRedRefusals,
       refused_done_over_red: this.refusedDoneOverRed,
-      red_check: this.redCheckRecord
+      red_check: this.redCheckRecord,
+      parks: this.parkedThisTask.size
     };
   }
 
@@ -220,9 +238,37 @@ export class E4V2TaskGate {
     }
 
     const behaviorPreserving = this.input.opportunity_labels.includes("behavior_preserving");
-    const changedPaths = this.diffOpenSpecPaths(currentOpenspec);
+    const allChangedPaths = this.diffOpenSpecPaths(currentOpenspec);
 
-    // §3.3 byte-unchanged affirmation path (both arms, behavior-preserving tasks only).
+    // E5 P0-V item 4: PARKED.md markers absent at task start are park acts. Every new marker is
+    // recorded as a change_parked event; markers written into PRE-EXISTING change directories
+    // (the leftover case the primitive exists for) are additionally carved out of the diff so a
+    // marker-only tidy-up still reaches the behavior-preserving affirmation path below.
+    const newMarkerPaths = allChangedPaths.filter((path) => {
+      const match = path.match(CHANGE_PATH_PATTERN);
+      return match !== null && path === parkedMarkerPath(match[1]) && this.input.task_start_openspec[path] === undefined;
+    });
+
+    for (const markerPath of newMarkerPaths) {
+      const changeName = markerPath.match(CHANGE_PATH_PATTERN)![1];
+
+      if (!this.parkedThisTask.has(changeName)) {
+        this.parkedThisTask.add(changeName);
+        this.eventLog.push({ type: "change_parked", change_name: changeName });
+      }
+    }
+
+    const affirmationExemptPaths = newMarkerPaths.filter((path) => {
+      const changeName = path.match(CHANGE_PATH_PATTERN)![1];
+      const dirPrefix = `openspec/changes/${changeName}/`;
+
+      return Object.keys(this.input.task_start_openspec).some((startPath) => startPath.startsWith(dirPrefix));
+    });
+
+    const changedPaths = allChangedPaths.filter((path) => !affirmationExemptPaths.includes(path));
+
+    // §3.3 byte-unchanged affirmation path (both arms, behavior-preserving tasks only; P0-V:
+    // a marker-only diff still qualifies — parking a leftover is not change work).
     if (behaviorPreserving && changedPaths.length === 0) {
       if (this.bindCurrentSpecOfRecord(currentOpenspec) === null) {
         return this.custodyFailure(
@@ -243,11 +289,15 @@ export class E4V2TaskGate {
       return { outcome: "advanced", custody_via: "behavior_preserving_affirmation", change_name: null, red_check: null };
     }
 
-    // Ordinary custody: the change must be exactly one openspec/changes/<name>/ directory.
+    // Ordinary custody: the change must be exactly one ACTIVE (non-parked) change directory.
     if (changedPaths.length === 0) {
       return this.custodyFailure(
-        "custody check failed: the openspec/ tree is unchanged since task start. Propose the change under " +
-          "openspec/changes/<change-name>/ (proposal.md, tasks.md, and delta specs), then request the gate check again."
+        newMarkerPaths.length > 0
+          ? "custody check failed: only PARKED.md markers were written — parked changes carry no work. Propose the " +
+              "current task's change under openspec/changes/<change-name>/ (proposal.md, tasks.md, and delta specs), " +
+              "then request the gate check again."
+          : "custody check failed: the openspec/ tree is unchanged since task start. Propose the change under " +
+              "openspec/changes/<change-name>/ (proposal.md, tasks.md, and delta specs), then request the gate check again."
       );
     }
 
@@ -266,14 +316,28 @@ export class E4V2TaskGate {
       return this.custodyFailure("custody check failed: openspec/changes/archive/ is harness-owned and never a task change.");
     }
 
-    if (changeNames.length !== 1) {
+    // E5 P0-V item 4: parked directories (PARKED.md present in the current tree) are excluded
+    // from the exactly-one count — writes into them are lawful but carry no change work.
+    const parkedNames = changeNames.filter((name) => currentOpenspec[parkedMarkerPath(name)] !== undefined);
+    const activeNames = changeNames.filter((name) => !parkedNames.includes(name));
+
+    if (activeNames.length === 0) {
       return this.custodyFailure(
-        `custody check failed: expected exactly one change directory for this task, found ${changeNames.length} ` +
-          `(${changeNames.join(", ")}).`
+        `custody check failed: every changed directory is parked (${parkedNames.join(", ")}); parked changes are ` +
+          "ignored by the workflow. Open a change for the current task under openspec/changes/<change-name>/."
       );
     }
 
-    const changeName = changeNames[0];
+    if (activeNames.length !== 1) {
+      return this.custodyFailure(
+        `custody check failed: expected exactly one active change directory for this task, found ${activeNames.length} ` +
+          `(${activeNames.join(", ")})` +
+          (parkedNames.length > 0 ? `; parked and ignored: ${parkedNames.join(", ")}` : "") +
+          `. To set a leftover aside, write a PARKED.md file into it.`
+      );
+    }
+
+    const changeName = activeNames[0];
     const deltaSpecPaths = Object.keys(currentOpenspec)
       .filter((path) => path.startsWith(`openspec/changes/${changeName}/specs/`) && path.endsWith(".md"))
       .toSorted();

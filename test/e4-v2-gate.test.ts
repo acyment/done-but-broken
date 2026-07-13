@@ -284,7 +284,7 @@ describe("v2-M3 — custody failures (arm-uniform floors)", () => {
     const twoChanges = await harness.gate.attemptSpecExit(await harness.currentTree());
     expect(twoChanges.outcome).toBe("custody_failed");
     if (twoChanges.outcome === "custody_failed") {
-      expect(twoChanges.feedback).toContain("exactly one change directory");
+      expect(twoChanges.feedback).toContain("exactly one active change directory"); // P0-V parking wording
     }
     await rm(join(harness.dir, "openspec", "changes", "change-b"), { recursive: true });
 

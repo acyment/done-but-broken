@@ -34,8 +34,12 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // harness-feedback gap found by the M6 adversarial review; operator-approved plan) → 79b43417…
 // (v0.5, 2026-07-12 §5.7 Amendment 3 substrate naturalization: substrate_version
 // procedural-rest-v2.1, re-pinned substrate/gold-spec/bank twins, + the feedback-behavior
-// modules sealed as twins per the external-audit design inputs).
-const NON_BUDGET_PROJECTION_SHA256 = "79b4341708cb7119a43da277c0b1690b65dcdc03aad4a80e16851fa941c710bd";
+// modules sealed as twins per the external-audit design inputs) → 303cf4c6… (v0.6, 2026-07-13
+// E5 P0-V rig repair, operator-ratified: PATCH/update-semantics + parking README sections,
+// workflow_protocol parking bullets, substrate_version procedural-rest-v2.2 [modify_endpoint
+// phrasing variant 2 corrected in the v2-owned pool], twins re-pinned + render.ts/turns.ts
+// sealed as twins).
+const NON_BUDGET_PROJECTION_SHA256 = "303cf4c6b879c6b3bb32c44e36434c72b53d4c2472cbdb07321c48ce755aca14";
 
 async function loadSealed() {
   return loadE4V2Constants(join(REPO_ROOT, E4_V2_CONSTANTS_PATH));
@@ -65,6 +69,7 @@ describe("v2-M5 — non-budget constants freeze", () => {
       "src/e4/substrate/v2/fixture.ts",
       "src/e4/substrate/v2/ops.ts",
       "src/e4/substrate/v2/pluralize.ts",
+      "src/e4/substrate/v2/render.ts",
       "src/e4/substrate/v2/scaffold.ts",
       "src/e4/substrate/v2/testgen.ts",
       "src/e4/substrate/v2/values.ts",
@@ -78,6 +83,7 @@ describe("v2-M5 — non-budget constants freeze", () => {
       "src/e4/v2/scenario-executor.ts",
       "src/e4/v2/scenario.ts",
       "src/e4/v2/step-table.ts",
+      "src/e4/v2/turns.ts",
       "src/e4/v2/workspace.ts"
     ]);
 
@@ -174,12 +180,20 @@ describe("v2-M5 — non-budget constants freeze", () => {
     //     3198ee1b9b2fc6c36861108018eee8aa9a243a4d57d58629ff71489a3afe9c56 — recorded at 01f7942;
     //     the pre-seal calibration rung must re-check budget headroom on the new substrate before
     //     any evidence run).
+    //   → v0.6 27/12/490000/5 (2026-07-13, E5 P0-V rig repair, operator-ratified §7 gate:
+    //     budgets UNTOUCHED; disclosure/feedback/scoring repairs only — README update-semantics +
+    //     parking sections, workflow parking bullets, substrate_version procedural-rest-v2.2,
+    //     PARKED.md custody primitive, glue-aware feedback, twins extended. v0.5 full-file hash
+    //     was 93d0bf88a49729f02adc8322b6367212da77bfe45548e7354d3b7277d3e67a72 — the base every
+    //     v3-M7 evidence manifest's extends block pins (historical; re-run that verdict with
+    //     `--constants` on the archived v0.5, e.g.
+    //     `git show 9d2dd8b:docs/protocols/e4-v2-sealed-constants-v0.json`).
     const { constants } = await loadSealed();
 
     expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
-      "93d0bf88a49729f02adc8322b6367212da77bfe45548e7354d3b7277d3e67a72"
+      "4ea57eefcc37bac3f31531a0748894afcc48c6ca2a7edec2e44cdd404b45cbcd"
     );
-    expect(constants.version).toBe("0.5");
+    expect(constants.version).toBe("0.6");
     expect(constants.budgets).toEqual({
       turns_per_task: 27,
       verifications_per_task: 12,

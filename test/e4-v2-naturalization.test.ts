@@ -116,8 +116,8 @@ describe("§5.7.1 — sealed English pluralizer", () => {
     expect(stats?.path).toBe("/categories/stats"); // NOT /categorys/stats (the seed-41 trap)
   });
 
-  test("the version string marks the naturalization boundary", () => {
-    expect(SUBSTRATE_VERSION_V2).toBe("procedural-rest-v2.1");
+  test("the version string marks the naturalization boundary (v2.2 = E5 P0-V phrasing repair)", () => {
+    expect(SUBSTRATE_VERSION_V2).toBe("procedural-rest-v2.2");
   });
 });
 

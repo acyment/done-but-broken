@@ -14,7 +14,12 @@
 import type { E4ChangeOpKind } from "../substrate/ops";
 import type { E4TaskDelta } from "./task-delta";
 
-export const E4_V3_DETERMINACY_TABLE_ID = "e4-request-determinacy-v1";
+// v2 (E5 P0-V item 2): rename_entity gains a fixture_migration fact (stored-id policy — the M7
+// id-migration mirror trap; the brief now answers it), and modify_endpoint's
+// endpoint_method_form drops to underdetermined — after the phrasing-pool correction the pool
+// no longer uniformly states PATCH semantics, and the table's own rule ("determined only when
+// every variant states it") forces the honest entry. The brief covers both facts.
+export const E4_V3_DETERMINACY_TABLE_ID = "e4-request-determinacy-v2";
 
 export type E4V3FactKind =
   | "target_identity" // WHICH item the request is about
@@ -57,7 +62,8 @@ const CONTENT_DETERMINACY: Partial<Record<E4ChangeOpKind, Partial<Record<E4V3Fac
     removal_scope: "determined" // "remove it from the product entirely"
   },
   rename_entity: {
-    rename_mapping: "determined" // both variants state old and new names
+    rename_mapping: "determined", // both variants state old and new names
+    fixture_migration: "underdetermined" // whether stored ids/values move is never stated (P0-V)
   },
   add_field: {
     field_type: "underdetermined",
@@ -78,7 +84,7 @@ const CONTENT_DETERMINACY: Partial<Record<E4ChangeOpKind, Partial<Record<E4V3Fac
     analytics_endpoint_shape: "underdetermined" // "a quick summary view" pins nothing concrete
   },
   modify_endpoint: {
-    endpoint_method_form: "determined" // "partial-update convention" names PATCH semantics
+    endpoint_method_form: "underdetermined" // post-P0-V pool no longer uniformly states the form
   },
   add_validation_rule: {
     validation_rule_detail: "underdetermined" // "tighten up what counts as valid" pins no literal
@@ -135,6 +141,9 @@ export function tagE4RequestDeterminacy(input: {
 
   for (const rename of delta.renamed_entities) {
     add("rename_mapping", `${rename.old_name} -> ${rename.new_name}`);
+    // P0-V: what happens to stored ids/values under the rename (gold keeps them) is a fact the
+    // request never pins — the M7 id-migration mirror trap, now brief-answerable.
+    add("fixture_migration", `${rename.old_name} -> ${rename.new_name}`);
   }
 
   for (const { entity, field } of delta.added_fields) {

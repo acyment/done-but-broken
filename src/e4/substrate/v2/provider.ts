@@ -5,7 +5,8 @@
 // rename-lineage map + difficulty diagnostics.
 import { buildBaselineIr, type E4SchemaIR } from "../ir";
 import { createE4Prng } from "../prng";
-import { renderTaskText, type E4RenderedTask } from "../render";
+import type { E4RenderedTask } from "../render";
+import { renderTaskTextV2 } from "./render";
 import type { E4ChangeOpKind } from "../ops";
 import type { E4OpportunityLabel } from "../../types";
 import type { E4SubstrateConfig, E4DifficultyDiagnostics } from "../provider";
@@ -92,7 +93,7 @@ export const e4ProceduralRestV2Provider: E4V2SubstrateProvider = {
 
     const rendered: E4RenderedTask[] = [];
     const tasks: E4V2GeneratedTask[] = drawnTasks.map((drawn, index) => {
-      const renderedTask = renderTaskText({ opKind: drawn.op_kind, renderContext: drawn.render_context }, prng);
+      const renderedTask = renderTaskTextV2({ opKind: drawn.op_kind, renderContext: drawn.render_context }, prng);
       rendered.push(renderedTask);
       const seedFixture = carriedFixtures[index];
 

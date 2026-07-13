@@ -35,6 +35,12 @@ export type E4V3SealedConstants = {
     pm_review_id: string;
     product_gate_id: string;
     turn_protocol_id: string;
+    // E5 P0-V sealed measurement-surface ids. OPTIONAL at the type/validator level so archived
+    // pre-P0V constants files (git-show historical verdict re-runs) still validate; the census
+    // asserts the LIVE file carries them and they match the module constants.
+    on_topic_id?: string;
+    root_cause_burden_id?: string;
+    commitment_scorer_id?: string;
   };
   product_gate: {
     mutation_kill_floor: number;
@@ -98,6 +104,13 @@ export function validateE4V3Constants(raw: unknown): E4V3SealedConstants {
   ] as const) {
     if (typeof boundary?.[key] !== "string" || boundary[key].length === 0) {
       throw new E4V2ConstantsValidationError(`v3 compatibility_boundary.${key} missing`);
+    }
+  }
+
+  // E5 P0-V ids: optional (historical files predate them), but never empty when present.
+  for (const key of ["on_topic_id", "root_cause_burden_id", "commitment_scorer_id"] as const) {
+    if (boundary[key] !== undefined && (typeof boundary[key] !== "string" || boundary[key].length === 0)) {
+      throw new E4V2ConstantsValidationError(`v3 compatibility_boundary.${key} must be a non-empty string when present`);
     }
   }
 
