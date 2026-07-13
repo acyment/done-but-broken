@@ -9,12 +9,13 @@ import { assertE1NoSecretsInJson, type E1RedactionSecret } from "../../e1-redact
 import { captureE4Snapshot } from "../snapshot";
 import type { E4ExecutorConfig } from "../oracle-executor";
 import type { E4RunClassification } from "../types";
-import { e4ProceduralRestV2Provider, type E4SubstrateConfig } from "../substrate/v2/provider";
+import { e4ProceduralRestV2Provider, type E4SubstrateConfig, type E4V2GeneratedTask } from "../substrate/v2/provider";
 import { E4_V2_ARM_POLICIES, validateE4V2RuntimeArmParity, type E4V2ArmRuntime } from "./arm-policy";
 import type { E4V2ArmId, E4V2SealedConstants } from "./constants";
 import { inspectE4V2Sequence } from "./inspect";
 import type { E4V2RunManifest, E4V2TaskRecord, E4V3BoundaryStamp } from "./manifest";
-import { runE4V2Task, type E4V2SequenceSpendLedger } from "./runner";
+import { runE4V2Task, type E4V2SequenceSpendLedger, type E4V2TaskRunResult } from "./runner";
+import type { E4TokenUsage } from "../types";
 import {
   E4_PROVIDER_RETRY_POLICY_TEXT,
   renderE4V2SystemPromptParts,
@@ -57,7 +58,23 @@ export type E4V2RunInput = {
   // v3-M7 gate commit: the harness git commit stamped into every manifest; REQUIRED for pilot
   // classification at creation time (validation stays permissive for historical manifests).
   harness_commit?: string;
+  // [E5 P1.1] probe-layer seam: called after each COMPLETE task's record is written. The hook
+  // may mutate the workspace (post-close repair cycles) — a probe run therefore reads
+  // chain_replay_valid=false from the sealed inspector by construction (declared in the probe
+  // prereg; probe layers retain their own state). Returned usage is added to the manifest
+  // totals and the arm spend ledger so the sealed cap still binds. Never set on evidence runs.
+  post_task_hook?: E4V2PostTaskHook;
 };
+
+export type E4V2PostTaskHook = (ctx: {
+  arm: E4V2ArmId;
+  task: E4V2GeneratedTask;
+  result: E4V2TaskRunResult;
+  workspace_dir: string;
+  records_dir: string;
+  provider: ReturnType<E4AgentProviderFactory>;
+  executor_config: E4ExecutorConfig;
+}) => Promise<{ tokens: E4TokenUsage; spend_usd: number } | null>;
 
 const DRY_RUN_MODEL_IDENTITY = { preset: "fake-deterministic", model_id: "e4-fake-agent-v1", route_id: "none" };
 
@@ -242,6 +259,25 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
       manifest.usage_totals.turns += result.usage.turns;
       manifest.usage_totals.spend_usd += result.usage.spend_usd + (result.probe_usage?.spend_usd ?? 0);
       manifest.usage_totals.wall_clock_ms += result.usage.wall_clock_ms;
+
+      // [E5 P1.1] probe-layer post-task cycle (see the E4V2RunInput seam note).
+      if (input.post_task_hook && record.status === "complete") {
+        const hookUsage = await input.post_task_hook({
+          arm,
+          task,
+          result,
+          workspace_dir: workspaceDir,
+          records_dir: join(input.runRoot, "records", arm, `task-${task.task_index}`),
+          provider,
+          executor_config: input.executor_config
+        });
+
+        if (hookUsage) {
+          manifest.usage_totals.spend_usd += hookUsage.spend_usd;
+          spendLedger.spent_usd += hookUsage.spend_usd;
+        }
+      }
+
       await writeManifest();
 
       if (record.status === "aborted") {

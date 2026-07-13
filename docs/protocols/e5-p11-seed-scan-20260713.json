@@ -1,0 +1,8744 @@
+{
+  "schema": "e5-p11-seed-scan-v1",
+  "rule": "docs/e5/E5-P11-TRUTH-VISIBLE-CLOSE-PREREG-v1.md §2.4",
+  "range": [
+    200,
+    999
+  ],
+  "constants_version": "0.7",
+  "passed_floor": 579,
+  "top3": [
+    {
+      "seed": 220,
+      "score": 22,
+      "op_kinds": [
+        "modify_convention",
+        "add_field",
+        "modify_convention",
+        "add_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 636,
+      "score": 22,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "modify_convention",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 829,
+      "score": 22,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "add_entity",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    }
+  ],
+  "all": [
+    {
+      "seed": 220,
+      "score": 22,
+      "op_kinds": [
+        "modify_convention",
+        "add_field",
+        "modify_convention",
+        "add_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 636,
+      "score": 22,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "modify_convention",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 829,
+      "score": 22,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "add_entity",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 999,
+      "score": 21,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_endpoint",
+        "add_entity",
+        "add_entity",
+        "retype_field",
+        "retype_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 413,
+      "score": 20,
+      "op_kinds": [
+        "add_entity",
+        "noop_maintenance",
+        "retype_field",
+        "rename_field",
+        "add_entity",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 449,
+      "score": 20,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "add_relationship",
+        "add_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 855,
+      "score": 20,
+      "op_kinds": [
+        "add_entity",
+        "add_entity",
+        "retype_field",
+        "noop_maintenance",
+        "modify_endpoint",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 941,
+      "score": 20,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "rename_field",
+        "add_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 243,
+      "score": 19,
+      "op_kinds": [
+        "rename_field",
+        "retype_field",
+        "add_entity",
+        "add_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 398,
+      "score": 19,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "noop_maintenance",
+        "modify_convention",
+        "add_entity",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 426,
+      "score": 19,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_convention",
+        "add_entity",
+        "add_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 714,
+      "score": 19,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_entity",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance",
+        "delete_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 728,
+      "score": 19,
+      "op_kinds": [
+        "add_field",
+        "retype_field",
+        "add_field",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 787,
+      "score": 19,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "add_entity",
+        "noop_maintenance",
+        "add_field",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 937,
+      "score": 19,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "rename_field",
+        "add_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 311,
+      "score": 18,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "retype_field",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 497,
+      "score": 18,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "add_endpoint",
+        "add_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 566,
+      "score": 18,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "modify_convention",
+        "add_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 626,
+      "score": 18,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "delete_field",
+        "add_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 920,
+      "score": 18,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "add_entity",
+        "add_relationship",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 928,
+      "score": 18,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_relationship",
+        "add_entity",
+        "modify_convention",
+        "modify_convention",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 957,
+      "score": 18,
+      "op_kinds": [
+        "add_field",
+        "retype_field",
+        "modify_convention",
+        "noop_maintenance",
+        "retype_field",
+        "add_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 215,
+      "score": 17,
+      "op_kinds": [
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_field",
+        "retype_field",
+        "modify_convention",
+        "add_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 320,
+      "score": 17,
+      "op_kinds": [
+        "add_entity",
+        "rename_field",
+        "add_entity",
+        "delete_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 350,
+      "score": 17,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "modify_convention",
+        "add_relationship",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 507,
+      "score": 17,
+      "op_kinds": [
+        "add_entity",
+        "retype_field",
+        "delete_field",
+        "delete_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 729,
+      "score": 17,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "rename_entity",
+        "add_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 836,
+      "score": 17,
+      "op_kinds": [
+        "add_entity",
+        "modify_endpoint",
+        "delete_entity",
+        "add_endpoint",
+        "noop_maintenance",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 844,
+      "score": 17,
+      "op_kinds": [
+        "add_field",
+        "modify_convention",
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 848,
+      "score": 17,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "add_entity",
+        "delete_entity",
+        "add_field",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 908,
+      "score": 17,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "rename_entity",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 950,
+      "score": 17,
+      "op_kinds": [
+        "add_field",
+        "add_entity",
+        "modify_convention",
+        "noop_maintenance",
+        "retype_field",
+        "retype_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 998,
+      "score": 17,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "retype_field",
+        "add_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 249,
+      "score": 16,
+      "op_kinds": [
+        "add_field",
+        "add_entity",
+        "rename_entity",
+        "retype_field",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 250,
+      "score": 16,
+      "op_kinds": [
+        "add_entity",
+        "delete_field",
+        "rename_entity",
+        "add_relationship",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 338,
+      "score": 16,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_entity",
+        "noop_maintenance",
+        "rename_entity",
+        "modify_convention",
+        "add_relationship"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 371,
+      "score": 16,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_relationship",
+        "add_entity",
+        "retype_field",
+        "add_field",
+        "delete_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 372,
+      "score": 16,
+      "op_kinds": [
+        "rename_field",
+        "add_entity",
+        "retype_field",
+        "add_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 378,
+      "score": 16,
+      "op_kinds": [
+        "add_endpoint",
+        "retype_field",
+        "retype_field",
+        "add_relationship",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 405,
+      "score": 16,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "add_relationship",
+        "retype_field",
+        "add_entity",
+        "retype_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 416,
+      "score": 16,
+      "op_kinds": [
+        "rename_entity",
+        "modify_convention",
+        "noop_maintenance",
+        "add_entity",
+        "add_relationship",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 427,
+      "score": 16,
+      "op_kinds": [
+        "retype_field",
+        "add_relationship",
+        "add_validation_rule",
+        "add_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 482,
+      "score": 16,
+      "op_kinds": [
+        "rename_entity",
+        "rename_field",
+        "add_entity",
+        "noop_maintenance",
+        "add_entity",
+        "rename_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 531,
+      "score": 16,
+      "op_kinds": [
+        "modify_convention",
+        "add_entity",
+        "retype_field",
+        "rename_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 542,
+      "score": 16,
+      "op_kinds": [
+        "retype_field",
+        "add_field",
+        "rename_entity",
+        "add_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 549,
+      "score": 16,
+      "op_kinds": [
+        "delete_field",
+        "add_entity",
+        "noop_maintenance",
+        "add_entity",
+        "rename_entity",
+        "delete_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 589,
+      "score": 16,
+      "op_kinds": [
+        "add_entity",
+        "delete_field",
+        "add_relationship",
+        "modify_endpoint",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 596,
+      "score": 16,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "modify_endpoint",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 608,
+      "score": 16,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance",
+        "modify_convention"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 620,
+      "score": 16,
+      "op_kinds": [
+        "add_relationship",
+        "rename_field",
+        "add_entity",
+        "add_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 624,
+      "score": 16,
+      "op_kinds": [
+        "retype_field",
+        "add_entity",
+        "modify_convention",
+        "noop_maintenance",
+        "add_relationship",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 630,
+      "score": 16,
+      "op_kinds": [
+        "retype_field",
+        "retype_field",
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 648,
+      "score": 16,
+      "op_kinds": [
+        "add_relationship",
+        "noop_maintenance",
+        "add_entity",
+        "modify_convention",
+        "retype_field",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 692,
+      "score": 16,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_entity",
+        "add_relationship",
+        "rename_entity",
+        "delete_field",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 739,
+      "score": 16,
+      "op_kinds": [
+        "add_relationship",
+        "add_entity",
+        "add_field",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 819,
+      "score": 16,
+      "op_kinds": [
+        "add_entity",
+        "add_field",
+        "noop_maintenance",
+        "add_relationship",
+        "rename_entity",
+        "delete_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 904,
+      "score": 16,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "add_relationship",
+        "delete_field",
+        "add_entity",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 911,
+      "score": 16,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "add_field",
+        "modify_convention",
+        "noop_maintenance",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 241,
+      "score": 15,
+      "op_kinds": [
+        "retype_field",
+        "add_endpoint",
+        "add_field",
+        "add_entity",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 246,
+      "score": 15,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "rename_entity",
+        "add_relationship",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 266,
+      "score": 15,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "rename_entity",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 273,
+      "score": 15,
+      "op_kinds": [
+        "add_field",
+        "add_entity",
+        "delete_field",
+        "retype_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 300,
+      "score": 15,
+      "op_kinds": [
+        "add_entity",
+        "add_entity",
+        "delete_field",
+        "delete_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 317,
+      "score": 15,
+      "op_kinds": [
+        "add_entity",
+        "add_endpoint",
+        "rename_entity",
+        "add_relationship",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 348,
+      "score": 15,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "retype_field",
+        "retype_field",
+        "add_entity",
+        "add_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 374,
+      "score": 15,
+      "op_kinds": [
+        "add_field",
+        "add_relationship",
+        "add_entity",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 514,
+      "score": 15,
+      "op_kinds": [
+        "add_relationship",
+        "add_entity",
+        "noop_maintenance",
+        "delete_field",
+        "modify_convention",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 533,
+      "score": 15,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_entity",
+        "add_field",
+        "modify_endpoint",
+        "retype_field",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 538,
+      "score": 15,
+      "op_kinds": [
+        "add_validation_rule",
+        "noop_maintenance",
+        "modify_endpoint",
+        "add_entity",
+        "retype_field",
+        "modify_convention"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 551,
+      "score": 15,
+      "op_kinds": [
+        "add_field",
+        "rename_entity",
+        "add_entity",
+        "modify_endpoint",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 567,
+      "score": 15,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "add_relationship",
+        "rename_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 657,
+      "score": 15,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_relationship",
+        "rename_entity",
+        "add_field",
+        "add_entity",
+        "rename_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 684,
+      "score": 15,
+      "op_kinds": [
+        "rename_entity",
+        "add_field",
+        "modify_convention",
+        "add_endpoint",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 732,
+      "score": 15,
+      "op_kinds": [
+        "noop_maintenance",
+        "rename_field",
+        "add_entity",
+        "add_relationship",
+        "modify_endpoint",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 754,
+      "score": 15,
+      "op_kinds": [
+        "modify_convention",
+        "rename_field",
+        "add_entity",
+        "add_field",
+        "noop_maintenance",
+        "retype_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 759,
+      "score": 15,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "rename_field",
+        "add_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 805,
+      "score": 15,
+      "op_kinds": [
+        "add_relationship",
+        "noop_maintenance",
+        "rename_entity",
+        "delete_field",
+        "add_entity",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 834,
+      "score": 15,
+      "op_kinds": [
+        "modify_convention",
+        "add_entity",
+        "add_relationship",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 874,
+      "score": 15,
+      "op_kinds": [
+        "retype_field",
+        "add_endpoint",
+        "add_field",
+        "add_entity",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 945,
+      "score": 15,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "modify_endpoint",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 948,
+      "score": 15,
+      "op_kinds": [
+        "add_field",
+        "delete_field",
+        "modify_convention",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 964,
+      "score": 15,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "retype_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 986,
+      "score": 15,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_relationship",
+        "modify_endpoint",
+        "modify_endpoint",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 997,
+      "score": 15,
+      "op_kinds": [
+        "retype_field",
+        "rename_field",
+        "add_entity",
+        "modify_endpoint",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 213,
+      "score": 14,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_entity",
+        "modify_endpoint",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 229,
+      "score": 14,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "add_entity",
+        "modify_endpoint",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 251,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "add_entity",
+        "rename_entity",
+        "modify_convention",
+        "noop_maintenance",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 256,
+      "score": 14,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "modify_endpoint",
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 285,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "modify_endpoint",
+        "rename_entity",
+        "add_entity",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 301,
+      "score": 14,
+      "op_kinds": [
+        "rename_field",
+        "add_relationship",
+        "add_field",
+        "add_entity",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 306,
+      "score": 14,
+      "op_kinds": [
+        "add_entity",
+        "retype_field",
+        "add_validation_rule",
+        "modify_convention",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 325,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "retype_field",
+        "add_validation_rule",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 329,
+      "score": 14,
+      "op_kinds": [
+        "add_field",
+        "noop_maintenance",
+        "rename_entity",
+        "add_entity",
+        "rename_entity",
+        "rename_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 340,
+      "score": 14,
+      "op_kinds": [
+        "rename_field",
+        "noop_maintenance",
+        "modify_endpoint",
+        "modify_endpoint",
+        "add_entity",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 341,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "add_validation_rule",
+        "add_endpoint",
+        "retype_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 367,
+      "score": 14,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "rename_field",
+        "add_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 369,
+      "score": 14,
+      "op_kinds": [
+        "add_relationship",
+        "noop_maintenance",
+        "add_endpoint",
+        "delete_field",
+        "retype_field",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 381,
+      "score": 14,
+      "op_kinds": [
+        "retype_field",
+        "noop_maintenance",
+        "rename_entity",
+        "modify_endpoint",
+        "modify_convention",
+        "add_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 396,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "modify_convention",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance",
+        "delete_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 397,
+      "score": 14,
+      "op_kinds": [
+        "retype_field",
+        "add_entity",
+        "rename_entity",
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 424,
+      "score": 14,
+      "op_kinds": [
+        "retype_field",
+        "noop_maintenance",
+        "rename_entity",
+        "rename_field",
+        "add_relationship",
+        "add_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 442,
+      "score": 14,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "modify_endpoint",
+        "modify_convention",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 458,
+      "score": 14,
+      "op_kinds": [
+        "add_field",
+        "noop_maintenance",
+        "add_endpoint",
+        "modify_convention",
+        "add_entity",
+        "delete_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 463,
+      "score": 14,
+      "op_kinds": [
+        "add_entity",
+        "rename_entity",
+        "modify_convention",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 477,
+      "score": 14,
+      "op_kinds": [
+        "add_endpoint",
+        "noop_maintenance",
+        "add_entity",
+        "add_field",
+        "retype_field",
+        "delete_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 518,
+      "score": 14,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance",
+        "add_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 528,
+      "score": 14,
+      "op_kinds": [
+        "add_entity",
+        "modify_convention",
+        "rename_entity",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 580,
+      "score": 14,
+      "op_kinds": [
+        "delete_field",
+        "modify_endpoint",
+        "add_entity",
+        "retype_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 581,
+      "score": 14,
+      "op_kinds": [
+        "delete_field",
+        "add_relationship",
+        "add_entity",
+        "add_validation_rule",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 582,
+      "score": 14,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_field",
+        "retype_field",
+        "retype_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 588,
+      "score": 14,
+      "op_kinds": [
+        "add_relationship",
+        "modify_endpoint",
+        "add_field",
+        "modify_endpoint",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 602,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "modify_endpoint",
+        "add_field",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 609,
+      "score": 14,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 647,
+      "score": 14,
+      "op_kinds": [
+        "add_relationship",
+        "noop_maintenance",
+        "add_entity",
+        "delete_field",
+        "modify_convention",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 663,
+      "score": 14,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "add_entity",
+        "delete_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 673,
+      "score": 14,
+      "op_kinds": [
+        "rename_field",
+        "add_relationship",
+        "add_validation_rule",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 680,
+      "score": 14,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_relationship",
+        "delete_field",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 691,
+      "score": 14,
+      "op_kinds": [
+        "add_relationship",
+        "retype_field",
+        "add_entity",
+        "delete_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 694,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "add_relationship",
+        "rename_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 698,
+      "score": 14,
+      "op_kinds": [
+        "modify_endpoint",
+        "noop_maintenance",
+        "modify_convention",
+        "add_entity",
+        "delete_entity",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 701,
+      "score": 14,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "rename_field",
+        "modify_endpoint",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 799,
+      "score": 14,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "add_validation_rule",
+        "retype_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 839,
+      "score": 14,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "add_field",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 867,
+      "score": 14,
+      "op_kinds": [
+        "add_entity",
+        "rename_field",
+        "add_field",
+        "delete_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 869,
+      "score": 14,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_convention",
+        "delete_field",
+        "add_entity",
+        "add_validation_rule",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 871,
+      "score": 14,
+      "op_kinds": [
+        "rename_field",
+        "add_relationship",
+        "modify_endpoint",
+        "add_entity",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 873,
+      "score": 14,
+      "op_kinds": [
+        "modify_convention",
+        "add_field",
+        "add_relationship",
+        "retype_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 893,
+      "score": 14,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "delete_field",
+        "delete_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 899,
+      "score": 14,
+      "op_kinds": [
+        "delete_field",
+        "add_entity",
+        "add_validation_rule",
+        "add_relationship",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 912,
+      "score": 14,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_entity",
+        "add_relationship",
+        "add_endpoint",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 927,
+      "score": 14,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "add_relationship",
+        "rename_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 933,
+      "score": 14,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "add_entity",
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 981,
+      "score": 14,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_entity",
+        "add_endpoint",
+        "add_endpoint",
+        "modify_convention",
+        "retype_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 248,
+      "score": 13,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_convention",
+        "add_validation_rule",
+        "modify_convention",
+        "add_entity",
+        "delete_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 252,
+      "score": 13,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_endpoint",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_entity",
+        "retype_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 275,
+      "score": 13,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "add_validation_rule",
+        "noop_maintenance",
+        "modify_endpoint",
+        "delete_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 315,
+      "score": 13,
+      "op_kinds": [
+        "noop_maintenance",
+        "rename_field",
+        "add_endpoint",
+        "retype_field",
+        "add_entity",
+        "modify_convention"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 327,
+      "score": 13,
+      "op_kinds": [
+        "delete_field",
+        "add_relationship",
+        "rename_entity",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 337,
+      "score": 13,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance",
+        "add_relationship"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 377,
+      "score": 13,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "modify_convention",
+        "add_validation_rule",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 385,
+      "score": 13,
+      "op_kinds": [
+        "retype_field",
+        "add_entity",
+        "noop_maintenance",
+        "add_validation_rule",
+        "retype_field",
+        "delete_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 401,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_entity",
+        "modify_convention",
+        "modify_convention",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 420,
+      "score": 13,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "rename_entity",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 441,
+      "score": 13,
+      "op_kinds": [
+        "add_relationship",
+        "modify_endpoint",
+        "add_entity",
+        "rename_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 457,
+      "score": 13,
+      "op_kinds": [
+        "add_entity",
+        "add_validation_rule",
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance",
+        "rename_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 460,
+      "score": 13,
+      "op_kinds": [
+        "add_entity",
+        "modify_convention",
+        "rename_field",
+        "add_endpoint",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 461,
+      "score": 13,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "add_entity",
+        "add_validation_rule",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 478,
+      "score": 13,
+      "op_kinds": [
+        "delete_field",
+        "retype_field",
+        "add_endpoint",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 499,
+      "score": 13,
+      "op_kinds": [
+        "add_entity",
+        "noop_maintenance",
+        "add_field",
+        "modify_endpoint",
+        "add_endpoint",
+        "rename_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 500,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_relationship",
+        "rename_field",
+        "noop_maintenance",
+        "add_validation_rule",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 522,
+      "score": 13,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "add_relationship",
+        "rename_entity",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 534,
+      "score": 13,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "modify_endpoint",
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 572,
+      "score": 13,
+      "op_kinds": [
+        "retype_field",
+        "delete_field",
+        "rename_field",
+        "add_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 610,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "add_field",
+        "rename_field",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 638,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance",
+        "modify_convention"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 659,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "add_endpoint",
+        "rename_field",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 669,
+      "score": 13,
+      "op_kinds": [
+        "add_field",
+        "modify_endpoint",
+        "add_field",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 683,
+      "score": 13,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_field",
+        "modify_endpoint",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 689,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_entity",
+        "retype_field",
+        "rename_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 704,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_field",
+        "add_entity",
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 707,
+      "score": 13,
+      "op_kinds": [
+        "modify_convention",
+        "rename_field",
+        "delete_field",
+        "add_field",
+        "noop_maintenance",
+        "add_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 716,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_entity",
+        "rename_field",
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 736,
+      "score": 13,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "noop_maintenance",
+        "retype_field",
+        "add_entity",
+        "add_relationship"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 744,
+      "score": 13,
+      "op_kinds": [
+        "modify_convention",
+        "rename_entity",
+        "add_entity",
+        "modify_endpoint",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 760,
+      "score": 13,
+      "op_kinds": [
+        "modify_convention",
+        "add_entity",
+        "noop_maintenance",
+        "retype_field",
+        "delete_entity",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 768,
+      "score": 13,
+      "op_kinds": [
+        "delete_field",
+        "noop_maintenance",
+        "add_entity",
+        "modify_convention",
+        "retype_field",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 770,
+      "score": 13,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "noop_maintenance",
+        "retype_field",
+        "add_field",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 779,
+      "score": 13,
+      "op_kinds": [
+        "retype_field",
+        "add_entity",
+        "add_endpoint",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 809,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "rename_field",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 821,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "rename_field",
+        "add_relationship",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 826,
+      "score": 13,
+      "op_kinds": [
+        "modify_convention",
+        "modify_convention",
+        "add_relationship",
+        "modify_convention",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 846,
+      "score": 13,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "rename_entity",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 862,
+      "score": 13,
+      "op_kinds": [
+        "delete_field",
+        "modify_convention",
+        "rename_entity",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 866,
+      "score": 13,
+      "op_kinds": [
+        "retype_field",
+        "add_entity",
+        "delete_field",
+        "add_relationship",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 870,
+      "score": 13,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_field",
+        "add_field",
+        "rename_entity",
+        "add_field",
+        "modify_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 914,
+      "score": 13,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "add_entity",
+        "delete_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 917,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "add_entity",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 919,
+      "score": 13,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "add_validation_rule",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 931,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "add_validation_rule",
+        "add_endpoint",
+        "modify_convention",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 944,
+      "score": 13,
+      "op_kinds": [
+        "add_entity",
+        "add_relationship",
+        "rename_field",
+        "delete_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 946,
+      "score": 13,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_relationship",
+        "rename_field",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 979,
+      "score": 13,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "delete_field",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 209,
+      "score": 12,
+      "op_kinds": [
+        "modify_convention",
+        "retype_field",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_field",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 212,
+      "score": 12,
+      "op_kinds": [
+        "modify_convention",
+        "add_validation_rule",
+        "add_entity",
+        "rename_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 217,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "rename_field",
+        "add_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 218,
+      "score": 12,
+      "op_kinds": [
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance",
+        "rename_field",
+        "rename_entity",
+        "add_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 225,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance",
+        "modify_endpoint",
+        "add_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 233,
+      "score": 12,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "add_entity",
+        "add_validation_rule",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 234,
+      "score": 12,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "retype_field",
+        "add_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 242,
+      "score": 12,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "modify_endpoint",
+        "rename_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 253,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "rename_entity",
+        "add_field",
+        "retype_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 263,
+      "score": 12,
+      "op_kinds": [
+        "add_field",
+        "modify_convention",
+        "retype_field",
+        "add_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 282,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "delete_field",
+        "modify_endpoint",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 284,
+      "score": 12,
+      "op_kinds": [
+        "delete_field",
+        "delete_field",
+        "add_field",
+        "add_validation_rule",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 309,
+      "score": 12,
+      "op_kinds": [
+        "modify_convention",
+        "add_relationship",
+        "modify_endpoint",
+        "delete_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 379,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "add_entity",
+        "noop_maintenance",
+        "delete_field",
+        "rename_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 387,
+      "score": 12,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "rename_entity",
+        "add_relationship",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 417,
+      "score": 12,
+      "op_kinds": [
+        "add_field",
+        "retype_field",
+        "add_field",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 435,
+      "score": 12,
+      "op_kinds": [
+        "add_relationship",
+        "rename_field",
+        "add_entity",
+        "delete_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 447,
+      "score": 12,
+      "op_kinds": [
+        "delete_field",
+        "rename_entity",
+        "rename_entity",
+        "modify_endpoint",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 452,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "add_endpoint",
+        "add_entity",
+        "noop_maintenance",
+        "modify_convention",
+        "delete_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 496,
+      "score": 12,
+      "op_kinds": [
+        "delete_field",
+        "modify_endpoint",
+        "delete_field",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 543,
+      "score": 12,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_validation_rule",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 553,
+      "score": 12,
+      "op_kinds": [
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_entity",
+        "rename_field",
+        "modify_endpoint",
+        "add_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 569,
+      "score": 12,
+      "op_kinds": [
+        "add_entity",
+        "modify_endpoint",
+        "delete_entity",
+        "modify_endpoint",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 578,
+      "score": 12,
+      "op_kinds": [
+        "add_field",
+        "modify_endpoint",
+        "add_field",
+        "add_relationship",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 599,
+      "score": 12,
+      "op_kinds": [
+        "modify_convention",
+        "rename_field",
+        "add_entity",
+        "noop_maintenance",
+        "add_endpoint",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 611,
+      "score": 12,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_field",
+        "add_entity",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 616,
+      "score": 12,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 631,
+      "score": 12,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "add_field",
+        "add_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 676,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "noop_maintenance",
+        "add_entity",
+        "rename_field",
+        "add_field",
+        "delete_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 679,
+      "score": 12,
+      "op_kinds": [
+        "add_endpoint",
+        "delete_field",
+        "add_entity",
+        "add_endpoint",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 720,
+      "score": 12,
+      "op_kinds": [
+        "add_entity",
+        "retype_field",
+        "rename_entity",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 724,
+      "score": 12,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "add_field",
+        "modify_convention",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 727,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance",
+        "retype_field",
+        "add_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 764,
+      "score": 12,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "rename_field",
+        "modify_endpoint",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 777,
+      "score": 12,
+      "op_kinds": [
+        "add_entity",
+        "delete_entity",
+        "modify_endpoint",
+        "add_validation_rule",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 784,
+      "score": 12,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_entity",
+        "retype_field",
+        "rename_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 814,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "retype_field",
+        "retype_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 816,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "add_validation_rule",
+        "retype_field",
+        "add_entity",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 828,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "rename_field",
+        "rename_entity",
+        "noop_maintenance",
+        "rename_entity",
+        "add_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 830,
+      "score": 12,
+      "op_kinds": [
+        "delete_field",
+        "retype_field",
+        "modify_endpoint",
+        "add_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 842,
+      "score": 12,
+      "op_kinds": [
+        "retype_field",
+        "add_entity",
+        "modify_convention",
+        "noop_maintenance",
+        "delete_field",
+        "delete_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 857,
+      "score": 12,
+      "op_kinds": [
+        "add_entity",
+        "modify_convention",
+        "add_endpoint",
+        "rename_entity",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 858,
+      "score": 12,
+      "op_kinds": [
+        "add_relationship",
+        "add_endpoint",
+        "add_entity",
+        "rename_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 875,
+      "score": 12,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_endpoint",
+        "rename_field",
+        "add_entity",
+        "add_validation_rule",
+        "retype_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 883,
+      "score": 12,
+      "op_kinds": [
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance",
+        "add_validation_rule",
+        "add_entity",
+        "rename_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 884,
+      "score": 12,
+      "op_kinds": [
+        "modify_convention",
+        "modify_convention",
+        "add_relationship",
+        "modify_convention",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 895,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance",
+        "rename_entity",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 932,
+      "score": 12,
+      "op_kinds": [
+        "add_field",
+        "add_endpoint",
+        "modify_convention",
+        "modify_convention",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 960,
+      "score": 12,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "delete_entity",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 975,
+      "score": 12,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "rename_entity",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 205,
+      "score": 11,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "add_relationship",
+        "modify_convention",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 207,
+      "score": 11,
+      "op_kinds": [
+        "modify_convention",
+        "add_entity",
+        "rename_field",
+        "delete_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 211,
+      "score": 11,
+      "op_kinds": [
+        "retype_field",
+        "add_field",
+        "add_validation_rule",
+        "rename_entity",
+        "noop_maintenance",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 262,
+      "score": 11,
+      "op_kinds": [
+        "add_endpoint",
+        "add_field",
+        "retype_field",
+        "add_relationship",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 264,
+      "score": 11,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "add_entity",
+        "modify_endpoint",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 277,
+      "score": 11,
+      "op_kinds": [
+        "add_endpoint",
+        "retype_field",
+        "add_field",
+        "add_validation_rule",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 281,
+      "score": 11,
+      "op_kinds": [
+        "retype_field",
+        "add_field",
+        "retype_field",
+        "modify_convention",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 304,
+      "score": 11,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "add_entity",
+        "delete_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 310,
+      "score": 11,
+      "op_kinds": [
+        "add_entity",
+        "modify_endpoint",
+        "delete_field",
+        "rename_entity",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 321,
+      "score": 11,
+      "op_kinds": [
+        "delete_field",
+        "noop_maintenance",
+        "add_endpoint",
+        "rename_entity",
+        "add_validation_rule",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 328,
+      "score": 11,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "rename_entity",
+        "rename_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 355,
+      "score": 11,
+      "op_kinds": [
+        "add_entity",
+        "add_endpoint",
+        "modify_endpoint",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 380,
+      "score": 11,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "add_field",
+        "modify_convention",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 383,
+      "score": 11,
+      "op_kinds": [
+        "add_entity",
+        "rename_field",
+        "modify_convention",
+        "add_endpoint",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 423,
+      "score": 11,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "add_relationship",
+        "rename_field",
+        "add_field",
+        "add_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 451,
+      "score": 11,
+      "op_kinds": [
+        "add_relationship",
+        "add_field",
+        "add_endpoint",
+        "rename_entity",
+        "noop_maintenance",
+        "retype_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 455,
+      "score": 11,
+      "op_kinds": [
+        "add_relationship",
+        "add_endpoint",
+        "add_field",
+        "rename_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 465,
+      "score": 11,
+      "op_kinds": [
+        "rename_field",
+        "rename_entity",
+        "rename_entity",
+        "add_entity",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 479,
+      "score": 11,
+      "op_kinds": [
+        "add_field",
+        "rename_entity",
+        "retype_field",
+        "add_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 493,
+      "score": 11,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_endpoint",
+        "modify_convention",
+        "add_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 521,
+      "score": 11,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "delete_field",
+        "add_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 523,
+      "score": 11,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance",
+        "rename_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 526,
+      "score": 11,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "add_relationship",
+        "modify_endpoint",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 527,
+      "score": 11,
+      "op_kinds": [
+        "add_field",
+        "retype_field",
+        "modify_convention",
+        "noop_maintenance",
+        "add_validation_rule",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 559,
+      "score": 11,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "delete_field",
+        "add_field",
+        "noop_maintenance",
+        "modify_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 568,
+      "score": 11,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "add_validation_rule",
+        "add_entity",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 601,
+      "score": 11,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_entity",
+        "modify_endpoint",
+        "delete_field",
+        "modify_endpoint",
+        "rename_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 621,
+      "score": 11,
+      "op_kinds": [
+        "noop_maintenance",
+        "rename_entity",
+        "add_relationship",
+        "rename_entity",
+        "add_validation_rule",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 655,
+      "score": 11,
+      "op_kinds": [
+        "rename_field",
+        "modify_convention",
+        "add_field",
+        "add_relationship",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 665,
+      "score": 11,
+      "op_kinds": [
+        "retype_field",
+        "add_field",
+        "add_endpoint",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 690,
+      "score": 11,
+      "op_kinds": [
+        "add_relationship",
+        "modify_endpoint",
+        "add_field",
+        "rename_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 700,
+      "score": 11,
+      "op_kinds": [
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance",
+        "add_relationship",
+        "delete_field",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 702,
+      "score": 11,
+      "op_kinds": [
+        "delete_field",
+        "modify_convention",
+        "add_validation_rule",
+        "rename_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 706,
+      "score": 11,
+      "op_kinds": [
+        "rename_entity",
+        "delete_field",
+        "modify_convention",
+        "noop_maintenance",
+        "rename_field",
+        "add_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 730,
+      "score": 11,
+      "op_kinds": [
+        "delete_field",
+        "rename_entity",
+        "add_endpoint",
+        "add_validation_rule",
+        "noop_maintenance",
+        "add_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 733,
+      "score": 11,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "modify_convention",
+        "add_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 771,
+      "score": 11,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "rename_field",
+        "add_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 808,
+      "score": 11,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "retype_field",
+        "add_endpoint",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 856,
+      "score": 11,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "rename_field",
+        "noop_maintenance",
+        "modify_endpoint",
+        "add_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 878,
+      "score": 11,
+      "op_kinds": [
+        "add_field",
+        "noop_maintenance",
+        "retype_field",
+        "rename_entity",
+        "rename_field",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 913,
+      "score": 11,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "delete_field",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 935,
+      "score": 11,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "modify_convention",
+        "modify_convention",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 966,
+      "score": 11,
+      "op_kinds": [
+        "delete_field",
+        "delete_field",
+        "rename_field",
+        "add_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 989,
+      "score": 11,
+      "op_kinds": [
+        "add_entity",
+        "rename_field",
+        "modify_endpoint",
+        "rename_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 201,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "rename_entity",
+        "add_relationship",
+        "add_validation_rule",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 214,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "noop_maintenance",
+        "rename_field",
+        "modify_endpoint",
+        "add_entity",
+        "add_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 216,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "modify_endpoint",
+        "add_relationship",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 222,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "delete_field",
+        "rename_entity",
+        "rename_entity",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 230,
+      "score": 10,
+      "op_kinds": [
+        "rename_entity",
+        "add_endpoint",
+        "rename_entity",
+        "add_relationship",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 265,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "add_relationship",
+        "modify_endpoint",
+        "add_validation_rule",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 271,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "rename_entity",
+        "add_validation_rule",
+        "add_relationship",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 283,
+      "score": 10,
+      "op_kinds": [
+        "add_field",
+        "modify_endpoint",
+        "retype_field",
+        "rename_entity",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 302,
+      "score": 10,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance",
+        "add_field",
+        "modify_endpoint",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 330,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "modify_endpoint",
+        "add_entity",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 343,
+      "score": 10,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "delete_field",
+        "add_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 344,
+      "score": 10,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "modify_endpoint",
+        "modify_convention",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 353,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "rename_field",
+        "add_relationship",
+        "modify_convention",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 421,
+      "score": 10,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "delete_field",
+        "modify_convention",
+        "rename_entity",
+        "add_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 440,
+      "score": 10,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "rename_entity",
+        "rename_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 486,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "modify_convention",
+        "delete_field",
+        "modify_convention",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 490,
+      "score": 10,
+      "op_kinds": [
+        "modify_endpoint",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance",
+        "rename_field",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 508,
+      "score": 10,
+      "op_kinds": [
+        "add_field",
+        "noop_maintenance",
+        "retype_field",
+        "rename_field",
+        "add_endpoint",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 509,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "rename_entity",
+        "add_field",
+        "rename_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 525,
+      "score": 10,
+      "op_kinds": [
+        "add_relationship",
+        "add_field",
+        "rename_field",
+        "modify_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 530,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "modify_convention",
+        "add_entity",
+        "delete_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 556,
+      "score": 10,
+      "op_kinds": [
+        "add_endpoint",
+        "delete_field",
+        "add_validation_rule",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 571,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "noop_maintenance",
+        "delete_field",
+        "add_field",
+        "modify_convention",
+        "modify_endpoint"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 591,
+      "score": 10,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "rename_field",
+        "add_relationship",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 593,
+      "score": 10,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_endpoint",
+        "modify_convention",
+        "add_relationship",
+        "add_validation_rule",
+        "modify_convention"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 660,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "add_relationship",
+        "add_validation_rule",
+        "retype_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 661,
+      "score": 10,
+      "op_kinds": [
+        "rename_entity",
+        "noop_maintenance",
+        "modify_convention",
+        "add_relationship",
+        "add_field",
+        "rename_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 662,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "modify_endpoint",
+        "add_endpoint",
+        "delete_field",
+        "add_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 675,
+      "score": 10,
+      "op_kinds": [
+        "add_field",
+        "modify_convention",
+        "modify_convention",
+        "noop_maintenance",
+        "retype_field",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 708,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "add_field",
+        "add_relationship",
+        "modify_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 711,
+      "score": 10,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_field",
+        "rename_entity",
+        "modify_convention",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 772,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "rename_entity",
+        "modify_convention",
+        "add_relationship",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 788,
+      "score": 10,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "modify_convention",
+        "add_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 798,
+      "score": 10,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_entity",
+        "add_validation_rule",
+        "delete_entity",
+        "delete_field",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 811,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "noop_maintenance",
+        "rename_entity",
+        "add_relationship",
+        "add_endpoint",
+        "retype_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 815,
+      "score": 10,
+      "op_kinds": [
+        "rename_field",
+        "rename_field",
+        "modify_convention",
+        "add_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 843,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "modify_endpoint",
+        "add_endpoint",
+        "modify_endpoint",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 849,
+      "score": 10,
+      "op_kinds": [
+        "add_field",
+        "modify_endpoint",
+        "add_relationship",
+        "delete_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 851,
+      "score": 10,
+      "op_kinds": [
+        "add_entity",
+        "delete_entity",
+        "rename_field",
+        "rename_field",
+        "noop_maintenance",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 854,
+      "score": 10,
+      "op_kinds": [
+        "rename_entity",
+        "retype_field",
+        "retype_field",
+        "add_validation_rule",
+        "noop_maintenance",
+        "add_relationship"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 859,
+      "score": 10,
+      "op_kinds": [
+        "add_relationship",
+        "delete_field",
+        "retype_field",
+        "modify_endpoint",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 868,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "add_relationship",
+        "modify_endpoint",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 877,
+      "score": 10,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "modify_endpoint",
+        "modify_convention",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 885,
+      "score": 10,
+      "op_kinds": [
+        "retype_field",
+        "noop_maintenance",
+        "add_validation_rule",
+        "add_relationship",
+        "rename_entity",
+        "retype_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 896,
+      "score": 10,
+      "op_kinds": [
+        "modify_convention",
+        "add_field",
+        "modify_convention",
+        "delete_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 902,
+      "score": 10,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_field",
+        "modify_endpoint",
+        "add_relationship",
+        "add_endpoint",
+        "rename_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 936,
+      "score": 10,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_convention",
+        "modify_endpoint",
+        "add_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 956,
+      "score": 10,
+      "op_kinds": [
+        "delete_field",
+        "retype_field",
+        "modify_endpoint",
+        "add_relationship",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 961,
+      "score": 10,
+      "op_kinds": [
+        "rename_field",
+        "add_field",
+        "add_field",
+        "rename_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 982,
+      "score": 10,
+      "op_kinds": [
+        "rename_entity",
+        "add_entity",
+        "rename_field",
+        "add_endpoint",
+        "delete_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 993,
+      "score": 10,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "add_relationship",
+        "delete_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 210,
+      "score": 9,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "rename_entity",
+        "add_field",
+        "modify_endpoint",
+        "rename_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 237,
+      "score": 9,
+      "op_kinds": [
+        "add_field",
+        "modify_endpoint",
+        "rename_entity",
+        "noop_maintenance",
+        "modify_endpoint",
+        "modify_convention"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 239,
+      "score": 9,
+      "op_kinds": [
+        "retype_field",
+        "add_relationship",
+        "modify_endpoint",
+        "retype_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 240,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_field",
+        "modify_convention",
+        "rename_entity",
+        "noop_maintenance",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 247,
+      "score": 9,
+      "op_kinds": [
+        "delete_field",
+        "modify_convention",
+        "add_field",
+        "rename_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 259,
+      "score": 9,
+      "op_kinds": [
+        "add_field",
+        "add_endpoint",
+        "retype_field",
+        "delete_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 260,
+      "score": 9,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_field",
+        "add_relationship",
+        "rename_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 286,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "retype_field",
+        "noop_maintenance",
+        "modify_convention",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 291,
+      "score": 9,
+      "op_kinds": [
+        "add_field",
+        "add_endpoint",
+        "modify_endpoint",
+        "add_validation_rule",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 307,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "add_relationship",
+        "noop_maintenance",
+        "rename_entity",
+        "rename_field",
+        "modify_convention"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 331,
+      "score": 9,
+      "op_kinds": [
+        "add_field",
+        "retype_field",
+        "retype_field",
+        "rename_field",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 359,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "retype_field",
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 360,
+      "score": 9,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "modify_endpoint",
+        "rename_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 388,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "add_field",
+        "add_validation_rule",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 415,
+      "score": 9,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "add_endpoint",
+        "rename_entity",
+        "add_relationship",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 419,
+      "score": 9,
+      "op_kinds": [
+        "delete_field",
+        "add_entity",
+        "noop_maintenance",
+        "delete_entity",
+        "add_validation_rule",
+        "rename_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 429,
+      "score": 9,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "add_field",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 444,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "rename_entity",
+        "modify_endpoint",
+        "add_relationship",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 448,
+      "score": 9,
+      "op_kinds": [
+        "add_relationship",
+        "add_validation_rule",
+        "rename_entity",
+        "add_validation_rule",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 466,
+      "score": 9,
+      "op_kinds": [
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance",
+        "add_relationship",
+        "add_endpoint",
+        "rename_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 469,
+      "score": 9,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "modify_endpoint",
+        "modify_convention",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 481,
+      "score": 9,
+      "op_kinds": [
+        "add_relationship",
+        "delete_field",
+        "modify_convention",
+        "retype_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 502,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "noop_maintenance",
+        "modify_convention",
+        "delete_field",
+        "add_field",
+        "add_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 535,
+      "score": 9,
+      "op_kinds": [
+        "add_validation_rule",
+        "noop_maintenance",
+        "delete_field",
+        "add_field",
+        "add_relationship",
+        "rename_entity"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 540,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "noop_maintenance",
+        "add_relationship",
+        "rename_entity",
+        "delete_field",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 562,
+      "score": 9,
+      "op_kinds": [
+        "retype_field",
+        "rename_field",
+        "add_relationship",
+        "modify_endpoint",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 585,
+      "score": 9,
+      "op_kinds": [
+        "rename_entity",
+        "noop_maintenance",
+        "add_validation_rule",
+        "add_field",
+        "add_relationship",
+        "delete_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 590,
+      "score": 9,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "modify_convention",
+        "add_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 623,
+      "score": 9,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "modify_convention",
+        "add_endpoint",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 635,
+      "score": 9,
+      "op_kinds": [
+        "rename_entity",
+        "add_field",
+        "modify_convention",
+        "rename_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 644,
+      "score": 9,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "retype_field",
+        "add_field",
+        "add_endpoint",
+        "rename_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 651,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "add_relationship",
+        "modify_endpoint",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 653,
+      "score": 9,
+      "op_kinds": [
+        "add_validation_rule",
+        "retype_field",
+        "modify_endpoint",
+        "modify_convention",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 697,
+      "score": 9,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "rename_entity",
+        "rename_entity",
+        "add_relationship",
+        "modify_convention"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 715,
+      "score": 9,
+      "op_kinds": [
+        "rename_field",
+        "add_relationship",
+        "retype_field",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 726,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "add_validation_rule",
+        "add_relationship",
+        "modify_endpoint",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 742,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "delete_field",
+        "rename_entity",
+        "add_relationship",
+        "noop_maintenance",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 745,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "add_field",
+        "add_validation_rule",
+        "noop_maintenance",
+        "modify_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 746,
+      "score": 9,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "rename_entity",
+        "add_endpoint",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 791,
+      "score": 9,
+      "op_kinds": [
+        "add_relationship",
+        "modify_endpoint",
+        "add_endpoint",
+        "add_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 825,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "retype_field",
+        "add_validation_rule",
+        "add_relationship",
+        "noop_maintenance",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 827,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "add_relationship",
+        "rename_entity",
+        "modify_endpoint",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 832,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "add_validation_rule",
+        "rename_entity",
+        "retype_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 835,
+      "score": 9,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "add_field",
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 861,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "rename_field",
+        "add_relationship",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 882,
+      "score": 9,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "add_relationship",
+        "delete_field",
+        "rename_entity",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 888,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "retype_field",
+        "add_validation_rule",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 901,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "add_endpoint",
+        "modify_convention",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 907,
+      "score": 9,
+      "op_kinds": [
+        "delete_field",
+        "add_relationship",
+        "rename_entity",
+        "add_validation_rule",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 922,
+      "score": 9,
+      "op_kinds": [
+        "add_field",
+        "add_field",
+        "add_endpoint",
+        "rename_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 938,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "rename_entity",
+        "noop_maintenance",
+        "add_relationship",
+        "add_endpoint",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 943,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_endpoint",
+        "retype_field",
+        "noop_maintenance",
+        "modify_convention",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 967,
+      "score": 9,
+      "op_kinds": [
+        "add_validation_rule",
+        "noop_maintenance",
+        "retype_field",
+        "retype_field",
+        "retype_field",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 970,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_convention",
+        "modify_convention",
+        "noop_maintenance",
+        "add_relationship",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 978,
+      "score": 9,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_convention",
+        "add_field",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 985,
+      "score": 9,
+      "op_kinds": [
+        "modify_convention",
+        "add_relationship",
+        "add_endpoint",
+        "modify_endpoint",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 994,
+      "score": 9,
+      "op_kinds": [
+        "add_endpoint",
+        "add_relationship",
+        "rename_field",
+        "modify_convention",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 204,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "noop_maintenance",
+        "retype_field",
+        "modify_convention",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 206,
+      "score": 8,
+      "op_kinds": [
+        "add_relationship",
+        "delete_field",
+        "modify_convention",
+        "noop_maintenance",
+        "modify_endpoint",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 219,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "rename_field",
+        "retype_field",
+        "noop_maintenance",
+        "rename_field",
+        "add_relationship"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 224,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "add_endpoint",
+        "add_validation_rule",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 257,
+      "score": 8,
+      "op_kinds": [
+        "rename_field",
+        "retype_field",
+        "modify_endpoint",
+        "add_relationship",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 267,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "modify_convention",
+        "add_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 274,
+      "score": 8,
+      "op_kinds": [
+        "add_validation_rule",
+        "retype_field",
+        "rename_entity",
+        "modify_convention",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 279,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "rename_field",
+        "rename_entity",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 280,
+      "score": 8,
+      "op_kinds": [
+        "rename_field",
+        "modify_convention",
+        "add_endpoint",
+        "noop_maintenance",
+        "add_relationship",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 313,
+      "score": 8,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "add_validation_rule",
+        "modify_endpoint",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 324,
+      "score": 8,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "rename_field",
+        "modify_convention",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 361,
+      "score": 8,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "rename_entity",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 362,
+      "score": 8,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "add_field",
+        "delete_field",
+        "rename_field",
+        "modify_endpoint"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 368,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "add_validation_rule",
+        "retype_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 376,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "retype_field",
+        "rename_field",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 391,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance",
+        "modify_convention",
+        "add_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 395,
+      "score": 8,
+      "op_kinds": [
+        "add_relationship",
+        "modify_convention",
+        "modify_endpoint",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 399,
+      "score": 8,
+      "op_kinds": [
+        "rename_field",
+        "add_field",
+        "rename_field",
+        "add_endpoint",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 412,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "rename_entity",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 431,
+      "score": 8,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_relationship",
+        "add_endpoint",
+        "delete_field",
+        "modify_endpoint",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 432,
+      "score": 8,
+      "op_kinds": [
+        "noop_maintenance",
+        "delete_field",
+        "add_endpoint",
+        "modify_convention",
+        "add_validation_rule",
+        "add_relationship"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 462,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "add_relationship",
+        "rename_field",
+        "add_validation_rule",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 476,
+      "score": 8,
+      "op_kinds": [
+        "add_validation_rule",
+        "modify_endpoint",
+        "retype_field",
+        "add_validation_rule",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 489,
+      "score": 8,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "add_field",
+        "add_validation_rule",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 505,
+      "score": 8,
+      "op_kinds": [
+        "modify_convention",
+        "modify_convention",
+        "add_field",
+        "delete_field",
+        "noop_maintenance",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 511,
+      "score": 8,
+      "op_kinds": [
+        "rename_field",
+        "rename_entity",
+        "rename_field",
+        "add_relationship",
+        "noop_maintenance",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 537,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_endpoint",
+        "add_validation_rule",
+        "noop_maintenance",
+        "modify_convention",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 541,
+      "score": 8,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "add_validation_rule",
+        "add_validation_rule",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 558,
+      "score": 8,
+      "op_kinds": [
+        "modify_convention",
+        "modify_endpoint",
+        "modify_endpoint",
+        "add_relationship",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 564,
+      "score": 8,
+      "op_kinds": [
+        "add_validation_rule",
+        "delete_field",
+        "retype_field",
+        "add_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 579,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "rename_entity",
+        "rename_entity",
+        "add_endpoint",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 587,
+      "score": 8,
+      "op_kinds": [
+        "rename_field",
+        "noop_maintenance",
+        "add_field",
+        "modify_endpoint",
+        "modify_convention",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 594,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "modify_convention",
+        "delete_field",
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 598,
+      "score": 8,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "add_endpoint",
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 612,
+      "score": 8,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_field",
+        "delete_field",
+        "add_validation_rule",
+        "noop_maintenance",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 622,
+      "score": 8,
+      "op_kinds": [
+        "add_field",
+        "rename_entity",
+        "rename_entity",
+        "rename_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 640,
+      "score": 8,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_relationship",
+        "add_validation_rule",
+        "rename_field",
+        "retype_field",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 671,
+      "score": 8,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_entity",
+        "delete_field",
+        "noop_maintenance",
+        "rename_entity",
+        "add_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 682,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "add_relationship",
+        "add_validation_rule",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 688,
+      "score": 8,
+      "op_kinds": [
+        "delete_field",
+        "delete_field",
+        "add_field",
+        "rename_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 699,
+      "score": 8,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "modify_convention",
+        "add_field",
+        "add_validation_rule",
+        "rename_field"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 709,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "add_field",
+        "rename_field",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 713,
+      "score": 8,
+      "op_kinds": [
+        "add_field",
+        "delete_field",
+        "rename_field",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 723,
+      "score": 8,
+      "op_kinds": [
+        "delete_field",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance",
+        "modify_convention",
+        "add_relationship"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 738,
+      "score": 8,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "add_endpoint",
+        "modify_endpoint",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 740,
+      "score": 8,
+      "op_kinds": [
+        "delete_field",
+        "retype_field",
+        "rename_entity",
+        "retype_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 750,
+      "score": 8,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "delete_field",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 753,
+      "score": 8,
+      "op_kinds": [
+        "add_validation_rule",
+        "rename_field",
+        "delete_field",
+        "add_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 762,
+      "score": 8,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_relationship",
+        "delete_field",
+        "add_relationship",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 765,
+      "score": 8,
+      "op_kinds": [
+        "modify_convention",
+        "rename_field",
+        "add_validation_rule",
+        "modify_convention",
+        "noop_maintenance",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 767,
+      "score": 8,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_convention",
+        "modify_convention",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 769,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "noop_maintenance",
+        "add_field",
+        "rename_field",
+        "modify_endpoint",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 786,
+      "score": 8,
+      "op_kinds": [
+        "modify_endpoint",
+        "delete_field",
+        "add_endpoint",
+        "rename_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 833,
+      "score": 8,
+      "op_kinds": [
+        "add_endpoint",
+        "noop_maintenance",
+        "add_validation_rule",
+        "rename_entity",
+        "add_relationship",
+        "modify_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 872,
+      "score": 8,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance",
+        "add_relationship"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 876,
+      "score": 8,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "modify_convention",
+        "add_validation_rule",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 910,
+      "score": 8,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "add_endpoint",
+        "rename_entity",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 918,
+      "score": 8,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "add_entity",
+        "delete_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 940,
+      "score": 8,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_field",
+        "add_endpoint",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 959,
+      "score": 8,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "delete_field",
+        "modify_convention",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 995,
+      "score": 8,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "add_validation_rule",
+        "retype_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 231,
+      "score": 7,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_validation_rule",
+        "rename_entity",
+        "add_relationship",
+        "delete_field",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 258,
+      "score": 7,
+      "op_kinds": [
+        "add_endpoint",
+        "add_validation_rule",
+        "add_field",
+        "rename_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 261,
+      "score": 7,
+      "op_kinds": [
+        "retype_field",
+        "rename_entity",
+        "rename_field",
+        "add_validation_rule",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 272,
+      "score": 7,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "modify_convention",
+        "delete_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 276,
+      "score": 7,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_relationship",
+        "retype_field",
+        "rename_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 289,
+      "score": 7,
+      "op_kinds": [
+        "modify_endpoint",
+        "delete_field",
+        "rename_field",
+        "modify_convention",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 293,
+      "score": 7,
+      "op_kinds": [
+        "retype_field",
+        "noop_maintenance",
+        "delete_field",
+        "rename_entity",
+        "add_relationship",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 335,
+      "score": 7,
+      "op_kinds": [
+        "add_endpoint",
+        "noop_maintenance",
+        "add_relationship",
+        "delete_field",
+        "add_validation_rule",
+        "modify_endpoint"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 349,
+      "score": 7,
+      "op_kinds": [
+        "noop_maintenance",
+        "delete_field",
+        "retype_field",
+        "rename_entity",
+        "add_validation_rule",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 410,
+      "score": 7,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "add_validation_rule",
+        "retype_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 436,
+      "score": 7,
+      "op_kinds": [
+        "rename_field",
+        "add_validation_rule",
+        "add_endpoint",
+        "retype_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 443,
+      "score": 7,
+      "op_kinds": [
+        "modify_convention",
+        "retype_field",
+        "rename_entity",
+        "add_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 467,
+      "score": 7,
+      "op_kinds": [
+        "modify_convention",
+        "add_relationship",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance",
+        "delete_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 475,
+      "score": 7,
+      "op_kinds": [
+        "rename_field",
+        "noop_maintenance",
+        "modify_convention",
+        "modify_convention",
+        "rename_entity",
+        "add_validation_rule"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 536,
+      "score": 7,
+      "op_kinds": [
+        "delete_field",
+        "add_endpoint",
+        "add_relationship",
+        "add_validation_rule",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 557,
+      "score": 7,
+      "op_kinds": [
+        "rename_entity",
+        "add_validation_rule",
+        "retype_field",
+        "modify_convention",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 586,
+      "score": 7,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_endpoint",
+        "delete_field",
+        "rename_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 604,
+      "score": 7,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "rename_field",
+        "add_validation_rule",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 613,
+      "score": 7,
+      "op_kinds": [
+        "retype_field",
+        "modify_endpoint",
+        "noop_maintenance",
+        "modify_convention",
+        "delete_field",
+        "add_validation_rule"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 614,
+      "score": 7,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "add_validation_rule",
+        "modify_convention",
+        "delete_field",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 641,
+      "score": 7,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "add_validation_rule",
+        "retype_field",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 643,
+      "score": 7,
+      "op_kinds": [
+        "rename_entity",
+        "modify_convention",
+        "add_endpoint",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 652,
+      "score": 7,
+      "op_kinds": [
+        "add_validation_rule",
+        "rename_entity",
+        "rename_entity",
+        "noop_maintenance",
+        "modify_endpoint",
+        "modify_endpoint"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 695,
+      "score": 7,
+      "op_kinds": [
+        "add_relationship",
+        "delete_field",
+        "add_validation_rule",
+        "rename_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 757,
+      "score": 7,
+      "op_kinds": [
+        "add_endpoint",
+        "add_relationship",
+        "delete_field",
+        "rename_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 766,
+      "score": 7,
+      "op_kinds": [
+        "add_validation_rule",
+        "retype_field",
+        "delete_field",
+        "add_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 792,
+      "score": 7,
+      "op_kinds": [
+        "rename_field",
+        "add_relationship",
+        "add_validation_rule",
+        "rename_entity",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 801,
+      "score": 7,
+      "op_kinds": [
+        "add_relationship",
+        "rename_entity",
+        "delete_field",
+        "modify_endpoint",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 803,
+      "score": 7,
+      "op_kinds": [
+        "add_endpoint",
+        "modify_convention",
+        "modify_convention",
+        "add_validation_rule",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 818,
+      "score": 7,
+      "op_kinds": [
+        "modify_convention",
+        "modify_endpoint",
+        "noop_maintenance",
+        "delete_field",
+        "add_validation_rule",
+        "add_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 820,
+      "score": 7,
+      "op_kinds": [
+        "add_relationship",
+        "rename_field",
+        "add_validation_rule",
+        "add_endpoint",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 850,
+      "score": 7,
+      "op_kinds": [
+        "rename_entity",
+        "add_validation_rule",
+        "modify_endpoint",
+        "rename_entity",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 890,
+      "score": 7,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "add_relationship",
+        "rename_entity",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 963,
+      "score": 7,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_field",
+        "retype_field",
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 965,
+      "score": 7,
+      "op_kinds": [
+        "modify_endpoint",
+        "delete_field",
+        "add_endpoint",
+        "rename_entity",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 974,
+      "score": 7,
+      "op_kinds": [
+        "add_endpoint",
+        "add_field",
+        "add_validation_rule",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 984,
+      "score": 7,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "rename_field",
+        "modify_convention",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 988,
+      "score": 7,
+      "op_kinds": [
+        "add_field",
+        "modify_endpoint",
+        "rename_field",
+        "retype_field",
+        "noop_maintenance",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 991,
+      "score": 7,
+      "op_kinds": [
+        "modify_convention",
+        "add_endpoint",
+        "rename_entity",
+        "rename_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 992,
+      "score": 7,
+      "op_kinds": [
+        "add_validation_rule",
+        "retype_field",
+        "modify_convention",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 202,
+      "score": 6,
+      "op_kinds": [
+        "modify_convention",
+        "retype_field",
+        "rename_field",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 221,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "modify_endpoint",
+        "modify_convention",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 287,
+      "score": 6,
+      "op_kinds": [
+        "add_validation_rule",
+        "add_endpoint",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance",
+        "modify_convention"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 298,
+      "score": 6,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "add_field",
+        "noop_maintenance",
+        "rename_field",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 308,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_endpoint",
+        "add_endpoint",
+        "add_validation_rule",
+        "rename_entity",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 312,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "retype_field",
+        "modify_endpoint",
+        "add_endpoint",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 316,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "add_endpoint",
+        "modify_convention",
+        "delete_field",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 322,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "delete_field",
+        "modify_convention",
+        "modify_endpoint",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 332,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "rename_field",
+        "add_validation_rule",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 366,
+      "score": 6,
+      "op_kinds": [
+        "add_validation_rule",
+        "rename_field",
+        "add_validation_rule",
+        "modify_endpoint",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 390,
+      "score": 6,
+      "op_kinds": [
+        "rename_field",
+        "add_relationship",
+        "rename_field",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 394,
+      "score": 6,
+      "op_kinds": [
+        "rename_field",
+        "rename_entity",
+        "delete_field",
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 406,
+      "score": 6,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "modify_endpoint",
+        "rename_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 418,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "rename_entity",
+        "add_validation_rule",
+        "delete_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 422,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "delete_field",
+        "delete_field",
+        "add_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 437,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "noop_maintenance",
+        "delete_field",
+        "add_validation_rule",
+        "modify_convention",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 438,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "add_validation_rule",
+        "noop_maintenance",
+        "add_endpoint",
+        "rename_field",
+        "modify_endpoint"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 446,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "retype_field",
+        "delete_field",
+        "add_validation_rule",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 453,
+      "score": 6,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_field",
+        "rename_entity",
+        "rename_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 504,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "retype_field",
+        "delete_field",
+        "rename_entity",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 513,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "retype_field",
+        "rename_field",
+        "rename_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 515,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "retype_field",
+        "delete_field",
+        "add_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 544,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "add_endpoint",
+        "rename_entity",
+        "noop_maintenance",
+        "add_validation_rule",
+        "delete_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 570,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "add_validation_rule",
+        "retype_field",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 584,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "modify_endpoint",
+        "delete_field",
+        "noop_maintenance",
+        "add_field"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 597,
+      "score": 6,
+      "op_kinds": [
+        "delete_field",
+        "add_field",
+        "noop_maintenance",
+        "rename_entity",
+        "rename_entity",
+        "rename_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 619,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "retype_field",
+        "rename_entity",
+        "rename_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 629,
+      "score": 6,
+      "op_kinds": [
+        "modify_endpoint",
+        "modify_convention",
+        "rename_field",
+        "rename_entity",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 632,
+      "score": 6,
+      "op_kinds": [
+        "delete_field",
+        "modify_convention",
+        "add_endpoint",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 633,
+      "score": 6,
+      "op_kinds": [
+        "add_validation_rule",
+        "noop_maintenance",
+        "rename_entity",
+        "delete_field",
+        "retype_field",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 637,
+      "score": 6,
+      "op_kinds": [
+        "delete_field",
+        "rename_field",
+        "rename_entity",
+        "add_relationship",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 645,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "delete_field",
+        "add_endpoint",
+        "rename_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 654,
+      "score": 6,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "add_field",
+        "modify_endpoint",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 668,
+      "score": 6,
+      "op_kinds": [
+        "modify_convention",
+        "retype_field",
+        "add_endpoint",
+        "delete_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 670,
+      "score": 6,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "retype_field",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 677,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "retype_field",
+        "delete_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 678,
+      "score": 6,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "retype_field",
+        "add_validation_rule",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 687,
+      "score": 6,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "rename_entity",
+        "add_validation_rule",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 696,
+      "score": 6,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "add_validation_rule",
+        "add_endpoint",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 705,
+      "score": 6,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_entity",
+        "delete_field",
+        "modify_convention",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 710,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "noop_maintenance",
+        "add_validation_rule",
+        "modify_endpoint",
+        "add_validation_rule",
+        "rename_entity"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 719,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "delete_field",
+        "add_validation_rule",
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 725,
+      "score": 6,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "add_field",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 748,
+      "score": 6,
+      "op_kinds": [
+        "modify_convention",
+        "modify_convention",
+        "rename_field",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 758,
+      "score": 6,
+      "op_kinds": [
+        "retype_field",
+        "rename_entity",
+        "add_endpoint",
+        "delete_field",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 806,
+      "score": 6,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_endpoint",
+        "rename_field",
+        "add_validation_rule",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 852,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_relationship",
+        "rename_field",
+        "delete_field",
+        "add_validation_rule",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 863,
+      "score": 6,
+      "op_kinds": [
+        "add_validation_rule",
+        "modify_convention",
+        "rename_field",
+        "rename_entity",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 887,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "delete_field",
+        "modify_convention",
+        "rename_entity",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 892,
+      "score": 6,
+      "op_kinds": [
+        "delete_field",
+        "modify_endpoint",
+        "modify_endpoint",
+        "rename_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 915,
+      "score": 6,
+      "op_kinds": [
+        "add_endpoint",
+        "noop_maintenance",
+        "modify_endpoint",
+        "modify_convention",
+        "delete_field",
+        "add_validation_rule"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 916,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_endpoint",
+        "retype_field",
+        "add_endpoint",
+        "delete_field",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 926,
+      "score": 6,
+      "op_kinds": [
+        "modify_convention",
+        "rename_field",
+        "add_validation_rule",
+        "delete_field",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 952,
+      "score": 6,
+      "op_kinds": [
+        "rename_entity",
+        "add_validation_rule",
+        "rename_field",
+        "modify_convention",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 958,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "retype_field",
+        "rename_entity",
+        "add_endpoint",
+        "retype_field",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 973,
+      "score": 6,
+      "op_kinds": [
+        "add_validation_rule",
+        "retype_field",
+        "rename_entity",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 983,
+      "score": 6,
+      "op_kinds": [
+        "noop_maintenance",
+        "rename_entity",
+        "modify_endpoint",
+        "rename_field",
+        "modify_convention",
+        "add_endpoint"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 990,
+      "score": 6,
+      "op_kinds": [
+        "add_validation_rule",
+        "delete_field",
+        "modify_endpoint",
+        "add_endpoint",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 996,
+      "score": 6,
+      "op_kinds": [
+        "add_field",
+        "rename_field",
+        "noop_maintenance",
+        "rename_entity",
+        "modify_endpoint",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 269,
+      "score": 5,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "modify_convention",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 336,
+      "score": 5,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "retype_field",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 403,
+      "score": 5,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "modify_convention",
+        "rename_field",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 450,
+      "score": 5,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "delete_field",
+        "add_validation_rule",
+        "retype_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 454,
+      "score": 5,
+      "op_kinds": [
+        "add_validation_rule",
+        "rename_field",
+        "modify_endpoint",
+        "modify_convention",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 485,
+      "score": 5,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "noop_maintenance",
+        "rename_field",
+        "rename_field",
+        "add_relationship"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 520,
+      "score": 5,
+      "op_kinds": [
+        "add_endpoint",
+        "retype_field",
+        "delete_field",
+        "rename_entity",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 555,
+      "score": 5,
+      "op_kinds": [
+        "rename_entity",
+        "delete_field",
+        "add_validation_rule",
+        "rename_entity",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 681,
+      "score": 5,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "delete_field",
+        "add_validation_rule",
+        "modify_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 751,
+      "score": 5,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "modify_convention",
+        "delete_field",
+        "add_validation_rule",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 755,
+      "score": 5,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "rename_field",
+        "add_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 774,
+      "score": 5,
+      "op_kinds": [
+        "rename_field",
+        "add_endpoint",
+        "modify_endpoint",
+        "rename_field",
+        "modify_convention",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 778,
+      "score": 5,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "noop_maintenance",
+        "rename_field",
+        "rename_entity",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 794,
+      "score": 5,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "add_endpoint",
+        "rename_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 822,
+      "score": 5,
+      "op_kinds": [
+        "rename_field",
+        "rename_field",
+        "add_endpoint",
+        "modify_endpoint",
+        "rename_entity",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 900,
+      "score": 5,
+      "op_kinds": [
+        "noop_maintenance",
+        "add_endpoint",
+        "rename_field",
+        "delete_field",
+        "modify_endpoint",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 934,
+      "score": 5,
+      "op_kinds": [
+        "add_endpoint",
+        "noop_maintenance",
+        "rename_entity",
+        "delete_field",
+        "delete_field",
+        "retype_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 245,
+      "score": 4,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_field",
+        "noop_maintenance",
+        "add_validation_rule",
+        "rename_field",
+        "add_validation_rule"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 278,
+      "score": 4,
+      "op_kinds": [
+        "rename_entity",
+        "modify_endpoint",
+        "rename_field",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 364,
+      "score": 4,
+      "op_kinds": [
+        "rename_field",
+        "modify_convention",
+        "delete_field",
+        "delete_field",
+        "add_endpoint",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 393,
+      "score": 4,
+      "op_kinds": [
+        "delete_field",
+        "rename_field",
+        "add_endpoint",
+        "noop_maintenance",
+        "rename_field",
+        "modify_convention"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 512,
+      "score": 4,
+      "op_kinds": [
+        "add_endpoint",
+        "noop_maintenance",
+        "modify_convention",
+        "rename_field",
+        "delete_field",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 560,
+      "score": 4,
+      "op_kinds": [
+        "delete_field",
+        "noop_maintenance",
+        "rename_entity",
+        "add_endpoint",
+        "rename_field",
+        "rename_entity"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 592,
+      "score": 4,
+      "op_kinds": [
+        "modify_endpoint",
+        "add_validation_rule",
+        "delete_field",
+        "add_validation_rule",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 783,
+      "score": 4,
+      "op_kinds": [
+        "delete_field",
+        "add_validation_rule",
+        "add_validation_rule",
+        "add_validation_rule",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 2,
+      "additive": 3,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 790,
+      "score": 4,
+      "op_kinds": [
+        "delete_field",
+        "delete_field",
+        "delete_field",
+        "delete_field",
+        "add_relationship",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 804,
+      "score": 4,
+      "op_kinds": [
+        "noop_maintenance",
+        "modify_endpoint",
+        "rename_field",
+        "modify_endpoint",
+        "add_validation_rule",
+        "delete_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 845,
+      "score": 4,
+      "op_kinds": [
+        "rename_field",
+        "modify_endpoint",
+        "add_endpoint",
+        "rename_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 906,
+      "score": 4,
+      "op_kinds": [
+        "add_validation_rule",
+        "delete_field",
+        "rename_field",
+        "retype_field",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 939,
+      "score": 4,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "delete_field",
+        "delete_field",
+        "add_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 949,
+      "score": 4,
+      "op_kinds": [
+        "modify_convention",
+        "rename_field",
+        "noop_maintenance",
+        "rename_field",
+        "add_endpoint",
+        "rename_field"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 627,
+      "score": 3,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "add_endpoint",
+        "add_validation_rule",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 3,
+      "additive": 2,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 837,
+      "score": 3,
+      "op_kinds": [
+        "rename_field",
+        "delete_field",
+        "modify_endpoint",
+        "add_validation_rule",
+        "rename_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 962,
+      "score": 3,
+      "op_kinds": [
+        "modify_endpoint",
+        "rename_field",
+        "add_validation_rule",
+        "delete_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    },
+    {
+      "seed": 980,
+      "score": 3,
+      "op_kinds": [
+        "add_endpoint",
+        "rename_entity",
+        "rename_field",
+        "delete_field",
+        "delete_field",
+        "noop_maintenance"
+      ],
+      "drift": 4,
+      "additive": 1,
+      "behavior_preserving": 1
+    }
+  ]
+}

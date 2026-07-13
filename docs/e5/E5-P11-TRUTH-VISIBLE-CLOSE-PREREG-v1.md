@@ -54,6 +54,13 @@ new, non-sealed module and adds the post-close cycle. Consequences, pinned:
   measurement act of the probe layer, recorded per task as `probe_oracle_before` (= the
   sealed close verdicts, reused, never re-run) and `probe_oracle_after` (the post-cycle
   re-run).
+- **Chain-replay flag (pre-run amendment, 2026-07-13, before any spend):** the cycle mutates
+  the workspace AFTER each task's close snapshot, so the sealed v2 inspector's
+  `chain_replay_valid` reads FALSE for probe runs **by construction** — a declared property
+  of the probe design, not a validity incident. Retention is preserved at the probe layer:
+  full cycle transcripts (raw FILE blocks included) in `p11-cycle.json` plus a complete
+  post-cycle workspace copy per task (`p11-workspace-after/`). The probe is calibration
+  class and feeds no headline claim.
 
 ### 2.3 SHOWN/HELD-OUT partition (deterministic, outcome-blind, per seed)
 
