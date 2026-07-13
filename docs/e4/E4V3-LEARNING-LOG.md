@@ -367,3 +367,46 @@ points opposite to gold; and the M8 explicitness-penalty mechanism in residual f
 lying fell ~0.8→~0.42 in BOTH arms across the naturalization (cross-boundary observation,
 prose only). Adversarial review package: `tmp/m7-adversarial-review-prompt.md` (attack the
 arithmetic, the four cause claims, the answer key's remaining pins, and the claim language).
+
+### v3-M7 external adversarial reviews ADJUDICATED (2026-07-13; GLM-5.2 + Qwen + ChatGPT + fresh Fable)
+
+All four reproduced every verdict number exactly; **the NO-GO survives unanimously**. The
+interpretive layer took real hits, all verified before acceptance and corrected in the run
+report as v1.1 (correction log = report §9):
+
+- **Seed-140 anatomy REFUTED and rewritten:** task 1 never left the spec phase (code untouched;
+  the "delta green" was a weak-oracle 400-for-the-wrong-reason); the dominant cause is task 2's
+  convention flip implemented in neither spec nor code — closed `done` over oracle 12/26, a
+  **self-consistent false close the product gate structurally cannot see** (reconcile verifies
+  spec↔code agreement; both were stale together). Compounds 8→11 items as entities grow.
+  Leave-one-out: without seed 140 the gap is 2.03 vs 2.33 (~15%) — direction holds, the "2×"
+  magnitude is substantially one seed.
+- **NEW substrate defect (the big one): PATCH false disclosure.** The PM brief promises
+  "partial update: only the provided fields change"; sealed gold validates full bodies and
+  full-replaces regardless of method (verified in scaffold code + live by a reviewer).
+  **29 items/arm (31% of ALL counted drift; ~47% under a broader classification) — exactly
+  symmetric, contrast-neutral, but voids absolute burden readings and the prereg §0 "residual
+  drift is genuine" claim.** Pre-existing (v3-M0 brief line vs Amendment-2 server semantics);
+  subsumes most of what v1 blamed on the "match the rest of the API" phrasing. Fix at the next
+  boundary: make gold implement the disclosed partial semantics (or disclose full-replace).
+- **Explicitness mechanism downgraded:** seed-121 example refuted (prose was explicit AND
+  right; the product arm was wrong + invented seed data against a disclosure); the meter DOES
+  count prose code mistakes (seed 139 t2, both arms identically). Surviving kernel: the
+  novelty floor gives the executed arm a larger countable surface (97 vs 32 non-PATCH items);
+  not separable from "worse understanding" in this design. Proposed next-boundary design:
+  identical structured commitment sheets in both arms, execution only in treatment.
+- **Two seal-document errata** (outcome-neutral, recorded): prereg §2(b) kept a stale v0.4
+  hash line after the gate commit bumped to v0.5 (§1/§5 correct; manifests+tool honored v0.5);
+  trigger-4 tool implementation broader than the literal sealed wording (cleared both ways).
+  Process fix for future seals: stale-reference sweep before the header flip.
+- **Claim-language fixes:** "three honest stalls"→non-closes; honesty null = descriptive (no
+  equivalence test sealed); cross-boundary fc drop = consistency-not-causation with the
+  rename-residual carve-out; §6/§8 arc/"model class"/calibration-positive language removed.
+- **Rejected reviewer claims (defended):** Qwen's M7 flash-vs-pro (conflated v1-M7 with
+  v2-M7); ChatGPT's "v2-M7 GO on both legs" (c2 was false in that record).
+
+Standing after adjudication: the loop's failure mode on this boundary is **coordinated
+spec+code staleness passing every internal check** — the gate verifies self-consistency, not
+truth; and the substrate still contains one falsely-disclosed convention, so absolute
+burden/fc numbers stay uninterpretable until fixed. Next-boundary fix list: PATCH semantics,
+id-stability disclosure on rename, modify_endpoint phrasing variant, commitment-sheet design.
