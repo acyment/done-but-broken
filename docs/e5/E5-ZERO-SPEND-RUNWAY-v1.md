@@ -87,10 +87,14 @@ assert on_topic under v3.
 ## Checklist
 
 - [x] 1a. Classifier forensics from seed-220 records (why 4/4 misfires) — see Findings log
-- [ ] 1b. Classifier fix + facet tests (design pinned above; lands with the v0.8 bump)
+- [x] 1b. Classifier fix + facet tests (`e4-on-topic-close-v3`; lands with the v0.8 bump)
 - [x] 2a. P1.2w pre-registration committed — E5-P12W-DURING-WORK-PREREG-v1.md
-- [ ] 2b. Runner probe seam (boundary bump v0.8, twin re-pins, classifier fix rides)
-- [ ] 2c. P1.2w probe module + CLI + facet tests
-- [ ] 2d. Interaction-score seed scan run + recorded
+- [x] 2b. Runner probe seam (boundary bump v0.8: v2/v3 constants 0.7 -> 0.8, runner.ts +
+      on-topic.ts re-pinned, extends hash updated, budgets_note entry appended)
+- [x] 2c. P1.2w probe module + CLI + facet tests — src/e5/p12w.ts, bin/e5-p12w.ts,
+      test/e5-p12w-probe.test.ts
+- [x] 2d. Interaction-score seed scan run + recorded —
+      docs/protocols/e5-p12w-seed-scan-20260714.json (576/800 seeds pass the floor; top-3
+      582/253/451, interaction score 4 each)
 - [x] 3. Harder-substrate design note — E5-HARDER-SUBSTRATE-DESIGN-NOTE-v1.md (levers 1+2 config-only; new ops only if data demands)
 - [ ] SPEND GATE — everything above done; awaiting operator authorization
