@@ -90,6 +90,12 @@ is recorded — scoped strictly to "at-close visibility" (the during-work varian
 designated follow-up, per §1). If seed #2 yields treatment exposure with conversions, the
 probe reports UNDETERMINED to the synthesis gate with both seeds attached.
 
+**PROGRAM PAUSED (operator decision, 2026-07-14, budget): the kill-confirmation seed was
+NOT run. P1.1's standing status is UNDETERMINED — one seed, points-at-kill, zero lever
+exposure; no KEEP, no KILL, no VOID may be claimed from this record. Any resumption starts
+at seed 636 under this same pre-registration; total probe spend at pause: $4.60 of the $18
+program stop-loss.**
+
 A design lesson either way (feeds the synthesis gate): at-close visibility can only ever
 repair what a close already got wrong, and on seeds where the treatment arm happens to
 close clean it tests nothing — the during-work variant does not have this exposure problem.
