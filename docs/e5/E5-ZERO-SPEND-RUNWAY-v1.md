@@ -92,5 +92,5 @@ assert on_topic under v3.
 - [ ] 2b. Runner probe seam (boundary bump v0.8, twin re-pins, classifier fix rides)
 - [ ] 2c. P1.2w probe module + CLI + facet tests
 - [ ] 2d. Interaction-score seed scan run + recorded
-- [ ] 3. Harder-substrate design note
+- [x] 3. Harder-substrate design note — E5-HARDER-SUBSTRATE-DESIGN-NOTE-v1.md (levers 1+2 config-only; new ops only if data demands)
 - [ ] SPEND GATE — everything above done; awaiting operator authorization
