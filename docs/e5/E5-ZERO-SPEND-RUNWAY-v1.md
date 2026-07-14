@@ -66,10 +66,28 @@ pure computation). At that point the ONLY remaining step is `bin/e5-p12w.ts --li
 ~$3/seed, which requires the operator's explicit go. P1.1's seed-636 kill-confirmation
 also remains available (~$3) and unrun.
 
+## Findings log
+
+**1a DONE (2026-07-14).** Forensics from the committed seed-220 manifests: on all four
+`modify_convention` closes, BOTH channels matched zero (spec: 0 of 12–16 scenario blocks;
+code: no novel occurrences) against the 3 subjects. Root cause: `conventionSubjectLiterals`
+emits QUOTED JSON keys (`"type"`, `"detail"`, `"error"`), but the work's real footprints
+are (a) UNQUOTED object keys in code (`{ error: { type: kind, detail: msg } }`) and
+(b) DOTTED json-paths in scenario assertions (`error.type`). Neither contains a quoted-key
+substring, so the misfire is structural, not statistical — and it predates classifier v2
+(v1's substring matching had the same needles; the review panel assumed the opposite
+failure, overmatching). **Fix design (classifier v3, `e4-on-topic-close-v3`, rides the
+v0.8 bump):** for each DISTINCTIVE key K of the NEW statement (all quoted keys except the
+`error` wrapper, which appears in every rejection scenario and would over-match), emit
+three subject forms — `"K"` (JSON bodies / stringified code), `error.K` (scenario field
+paths), `K:` (unquoted object keys; the novel-occurrence rule nets out pre-existing
+TypeScript `type:` noise). Facet tests must replay the four recorded misfire shapes and
+assert on_topic under v3.
+
 ## Checklist
 
-- [ ] 1a. Classifier forensics from seed-220 records (why 4/4 misfires)
-- [ ] 1b. Classifier fix + facet tests
+- [x] 1a. Classifier forensics from seed-220 records (why 4/4 misfires) — see Findings log
+- [ ] 1b. Classifier fix + facet tests (design pinned above; lands with the v0.8 bump)
 - [ ] 2a. P1.2w pre-registration committed
 - [ ] 2b. Runner probe seam (boundary bump v0.8, twin re-pins, classifier fix rides)
 - [ ] 2c. P1.2w probe module + CLI + facet tests
