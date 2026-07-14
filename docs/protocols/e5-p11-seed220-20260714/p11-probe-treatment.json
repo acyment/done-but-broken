@@ -1,0 +1,31 @@
+{
+  "schema": "e5-p11-probe-manifest-v1",
+  "probe_id": "e5-p11-truth-visible-close-v1",
+  "prereg": "docs/e5/E5-P11-TRUTH-VISIBLE-CLOSE-PREREG-v1.md",
+  "mode": "treatment",
+  "seed": 220,
+  "partition": {
+    "probe_id": "e5-p11-truth-visible-close-v1",
+    "substrate_seed": 220,
+    "t0_families": {
+      "Category:create": "shown",
+      "Category:delete": "shown",
+      "Category:list": "shown",
+      "Category:read": "shown",
+      "Category:update": "shown",
+      "Category:validation": "shown",
+      "Widget:analytics": "held_out",
+      "Widget:create": "shown",
+      "Widget:delete": "held_out",
+      "Widget:list": "shown",
+      "Widget:read": "shown",
+      "Widget:update": "held_out",
+      "Widget:validation": "held_out"
+    },
+    "t0_shown_fraction": 0.5384615384615384,
+    "balance_flips": []
+  },
+  "harness_commit": "f985751a7c4881137234369c4a2d30da8b683ee1",
+  "model": "glm-5.2",
+  "classification": "calibration"
+}

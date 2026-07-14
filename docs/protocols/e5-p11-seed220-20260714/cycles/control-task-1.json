@@ -1,0 +1,48 @@
+{
+  "probe_id": "e5-p11-truth-visible-close-v1",
+  "mode": "control",
+  "task_index": 1,
+  "shown_message": null,
+  "turns_used": 3,
+  "verifications_used": 0,
+  "applied_paths": [],
+  "rejected_paths": [],
+  "done_emitted": true,
+  "provider_error": null,
+  "before": {
+    "held_out_pass": 12,
+    "held_out_total": 12,
+    "full_pass": 26,
+    "full_total": 26
+  },
+  "after": {
+    "held_out_pass": 12,
+    "held_out_total": 12,
+    "full_pass": 26,
+    "full_total": 26
+  },
+  "after_oracle_kind": "completed",
+  "transcript": [
+    {
+      "turn": 1,
+      "raw_output": "Looking at the workspace state, I need to verify the implementation matches the specs. Let me trace through the key areas:\n\n1. **Error format**: `schema.ts` has `errorEnvelopeStyle = \"type_detail\"` ✓, and `server.ts` `errorBody()` produces `{ error: { type, detail } }` ✓\n2. **Route specificity**: `/widgets/stats` (2 literal segments) sorts before `/widgets/{id}` (1 literal segment) ✓\n3. **Validation order**: unknown field → missing required → type → validation rule ✓\n4. **List filtering**: filters by ref field query param ✓\n5. **Analytics**: returns `{ count: table.size }` ✓\n\nLet me run the smoke test to confirm everything passes. <<<VERIFY>>>\nbun run smoke\n<<<END>>>",
+      "feedback": ""
+    },
+    {
+      "turn": 2,
+      "raw_output": "The smoke test didn't return visible output. Let me re-examine the code carefully and re-run.\n\nLet me trace through all scenarios once more:\n\n- **Widget list filter** (`GET /widgets?category_id=category-seed-1`): After POST widget-spec-1 with `category_id=category-seed-1`, seed widgets are widget-seed-1 (category-seed-1 ✓) and widget-seed-2 (category-seed-2 ✗) → 2 rows ✓\n- **Widget stats** (`GET /widgets/stats`): Route specificity sorts this (2 literal segments) before `/widgets/{id}` (1 literal segment) ✓\n- **Error envelope**: `errorBody` uses `type`/`detail` when style is `type_detail` ✓\n- **Validation order**: unknown → missing required → type → rule ✓\n\nEverything looks correct. Let me re-run the smoke test: <<<VERIFY>>>\nbun run smoke\n<<<END>>>",
+      "feedback": ""
+    },
+    {
+      "turn": 3,
+      "raw_output": "I've carefully traced through every scenario in both specs against the implementation:\n\n**Categories**: create (201), missing name (400 validation_error), missing fetch (404 not_found), update (PUT full replace, 200), delete (204 then 404), list (3 = 2 seed + 1 new) — all match.\n\n**Widgets**: create (201), missing name/non-decimal price/non-bool in_stock/invalid price range (all 400 validation_error), error envelope shape (no code/message fields), missing fetch (404), update, delete, list (3), filter by category_id (2 matching), stats (count 3) — all match.\n\n**Key correctness points verified:**\n- Route specificity: `/widgets/stats` (2 literal segments) sorts before `/widgets/{id}` (1 literal) so analytics isn't shadowed ✓\n- Error envelope: `type_detail` style produces `{error:{type,detail}}` with no `code`/`message` ✓\n- Validation order: unknown field → missing required → type → range rule ✓\n- List filtering: ref field query param filters correctly; no param returns all ✓\n- Full update semantics: PUT validates complete body and replaces record ✓\n\nNo issues found. The implementation is complete and correct.\n\n<<<DONE>>>",
+      "feedback": ""
+    }
+  ],
+  "tokens": {
+    "fresh_input_tokens": 11439,
+    "cached_input_tokens": 22144,
+    "output_tokens": 9128
+  },
+  "spend_usd": 0.06193524
+}
