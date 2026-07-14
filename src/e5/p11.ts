@@ -228,6 +228,10 @@ export type E5P11CycleRecord = {
   applied_paths: string[];
   rejected_paths: string[];
   done_emitted: boolean;
+  // Provider failure inside the cycle (retries already exhausted inside the provider stack):
+  // the cycle ends early, the after-oracle still runs, and the SEQUENCE continues — a probe
+  // cycle must never abort the sealed task chain.
+  provider_error: string | null;
   before: E5P11PartitionStats;
   after: E5P11PartitionStats | null; // null when the post-cycle oracle did not complete
   after_oracle_kind: string;
@@ -290,6 +294,7 @@ export function createE5P11PostTaskHook(input: E5P11HookInput): E4V2PostTaskHook
       applied_paths: [],
       rejected_paths: [],
       done_emitted: false,
+      provider_error: null,
       before,
       after: null,
       after_oracle_kind: "not_run",
@@ -299,7 +304,15 @@ export function createE5P11PostTaskHook(input: E5P11HookInput): E4V2PostTaskHook
     };
 
     for (let turn = 1; turn <= E5_P11_CYCLE_TURNS; turn += 1) {
-      const turnResult = await ctx.provider.runTurn({ messages });
+      let turnResult: Awaited<ReturnType<typeof ctx.provider.runTurn>>;
+
+      try {
+        turnResult = await ctx.provider.runTurn({ messages });
+      } catch (error) {
+        // The provider stack already retried internally (E1ProviderExhaustedError et al.).
+        record.provider_error = String(error);
+        break;
+      }
 
       record.turns_used = turn;
       record.tokens.fresh_input_tokens += turnResult.usage.fresh_input_tokens;

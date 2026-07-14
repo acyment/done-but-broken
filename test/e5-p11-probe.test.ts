@@ -273,6 +273,33 @@ describe("P1.1 — post-close cycle hook", () => {
     expect(record.transcript.every((turn) => !turn.raw_output.includes("Widget-"))).toBe(true);
   });
 
+  test("a provider failure inside the cycle ends it gracefully and never throws", async () => {
+    const ctx = await setUpCtx({ termination: "done", verdicts: VERDICTS });
+    const hook = createE5P11PostTaskHook({
+      mode: "control",
+      partition: PARTITION,
+      smoke_command: "bun run smoke",
+      oracle_runner: (async () => ({ kind: "completed", verdicts: VERDICTS, pass_count: 0, total: 2, transcript: [] })) as never
+    });
+
+    const usage = await hook({
+      ...ctx,
+      provider: {
+        runTurn: async () => {
+          throw new Error("provider retries exhausted after 3 attempts: The operation timed out.");
+        }
+      }
+    } as never);
+
+    expect(usage).toEqual({ tokens: { fresh_input_tokens: 0, cached_input_tokens: 0, output_tokens: 0 }, spend_usd: 0 });
+
+    const record = JSON.parse(await readFile(join(ctx.records_dir, "p11-cycle.json"), "utf8")) as E5P11CycleRecord;
+
+    expect(record.provider_error).toContain("retries exhausted");
+    expect(record.turns_used).toBe(0);
+    expect(record.after?.full_total).toBe(2); // the after-oracle still ran
+  });
+
   test("non-done tasks get no cycle", async () => {
     const partition = computeE5P11Partition(201);
     const ctx = await setUpCtx({ termination: "budget_exhausted", verdicts: VERDICTS });

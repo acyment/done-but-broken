@@ -196,4 +196,14 @@ backlog Tiers 1–3 are closed; Tier 4 items are design inputs, all landed above
 Any deviation from this document during execution is recorded here with a timestamp and
 reason, or the run is reclassified `diagnostic_invalid`.
 
-- (none yet)
+- **2026-07-14 — provider-timeout crash during treatment attempt 1 (execution-level, no
+  outcome data read).** z.ai timeouts exhausted the provider stack's internal retries during
+  task 4; the error escaped through the probe cycle's one unguarded provider call and
+  crashed the process. Treatment attempt 1 (3 complete tasks, $1.57) is preserved at
+  `treatment-attempt-1-provider-crash/` for spend provenance and is NOT scored (the run CLI
+  restarts sequences from scratch; partial sequences are never spliced). Repairs: the cycle
+  now catches provider errors, records them in `p11-cycle.json` (`provider_error`), still
+  runs the after-oracle, and never aborts the sealed chain. Spend ceiling revised $6 → $10
+  for the crash-rerun (still ≪ the $18 / 8-seed program stop-loss); only progress counts and
+  spend totals had been observed at revision time — no verdicts, dispositions, or held-out
+  outcomes were read.
