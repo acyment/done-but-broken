@@ -88,7 +88,7 @@ assert on_topic under v3.
 
 - [x] 1a. Classifier forensics from seed-220 records (why 4/4 misfires) — see Findings log
 - [ ] 1b. Classifier fix + facet tests (design pinned above; lands with the v0.8 bump)
-- [ ] 2a. P1.2w pre-registration committed
+- [x] 2a. P1.2w pre-registration committed — E5-P12W-DURING-WORK-PREREG-v1.md
 - [ ] 2b. Runner probe seam (boundary bump v0.8, twin re-pins, classifier fix rides)
 - [ ] 2c. P1.2w probe module + CLI + facet tests
 - [ ] 2d. Interaction-score seed scan run + recorded
