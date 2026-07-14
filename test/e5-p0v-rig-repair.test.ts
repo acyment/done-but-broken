@@ -451,7 +451,7 @@ const CONVENTION_DELTA = emptyDelta({
   ]
 });
 
-describe("P0-V item 5 (+[P0V.1: V1]) — off-topic close classification, classifier v2", () => {
+describe("P0-V item 5 (+[P0V.1: V1], +[V08: 1b]) — off-topic close classification, classifier v3", () => {
   const RENAME_SCENARIO_ON_TOPIC =
     "## ADDED Requirements\n### Requirement: Items are served at the new paths\n" +
     '#### Scenario: read a renamed record\n- **WHEN** I send a GET request to "/items/widget-spec-1"\n- **THEN** the response status is 200\n';
@@ -623,6 +623,103 @@ describe("P0-V item 5 (+[P0V.1: V1]) — off-topic close classification, classif
     });
 
     expect(swapped.classification).toBe("off_topic");
+  });
+
+  // [V08: 1b] Findings log 1a (docs/e5/E5-ZERO-SPEND-RUNWAY-v1.md): all four seed-220
+  // modify_convention closes (treatment tasks 1/3, control tasks 1/3, 1-indexed folder names)
+  // misfired off_topic under classifier v2 even though the accepted change genuinely addressed
+  // the convention flip. Forensics: the code channel's real footprint was UNQUOTED object keys
+  // (`error: { type: kind, detail: msg }`) and the spec channel's real footprint was DOTTED
+  // scenario-assertion paths (`error.type`) — neither matched the v2 quoted-literal-only
+  // subjects (`"type"`, `"detail"`). Each case below replays one recorded misfire's shape
+  // (statement direction + real scenario_blocks count from manifest-{treatment,control}.json)
+  // and asserts v3 now classifies it on_topic.
+  const REVERT_DELTA = emptyDelta({
+    changed_conventions: [
+      {
+        semantic_item_uid: "conv-1",
+        convention_id: "error_format",
+        kind: "error_format",
+        old_statement: CONVENTION_DELTA.changed_conventions[0].new_statement,
+        new_statement: CONVENTION_DELTA.changed_conventions[0].old_statement
+      }
+    ]
+  });
+
+  function dottedScenarioBlocks(total: number, onTopicCount: number, dottedKeys: [string, string]): string[] {
+    const [type_, detail_] = dottedKeys;
+    const onTopic =
+      '#### Scenario: reject an invalid record\n- **WHEN** I send a POST request to "/widgets" with body {}\n' +
+      `- **THEN** the response field "${type_}" is a string\n- **AND** the response field "${detail_}" is a string\n`;
+    const unrelated =
+      '#### Scenario: list widgets\n- **WHEN** I send a GET request to "/widgets"\n- **THEN** the response status is 200\n';
+
+    return Array.from({ length: total }, (_, index) => (index < onTopicCount ? onTopic : unrelated));
+  }
+
+  function unquotedErrorBody(type_: string, detail_: string): string {
+    return `function errorBody(kind, message) { return { error: { ${type_}: kind, ${detail_}: message } }; }`;
+  }
+
+  test.each([
+    ["treatment task 1 (error-format)", CONVENTION_DELTA, ["type", "detail"] as [string, string], ["code", "message"] as [string, string], 13],
+    ["treatment task 3 (error-format-revert)", REVERT_DELTA, ["code", "message"] as [string, string], ["type", "detail"] as [string, string], 16],
+    ["control task 1 (error-format)", CONVENTION_DELTA, ["type", "detail"] as [string, string], ["code", "message"] as [string, string], 12],
+    ["control task 3 (error-format-revert)", REVERT_DELTA, ["code", "message"] as [string, string], ["type", "detail"] as [string, string], 14]
+  ])("[V08: 1b] replays the seed-220 misfire: %s — real unquoted/dotted footprints now on_topic", (
+    _label,
+    delta,
+    newKeys,
+    oldKeys,
+    scenarioBlocks
+  ) => {
+    const subjects = buildE4OnTopicSubjects(delta);
+    const [newType, newDetail] = newKeys;
+    const [oldType, oldDetail] = oldKeys;
+
+    // Spec channel alone: dotted assertion paths, majority of the recorded scenario_blocks count.
+    const specOnly = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: dottedScenarioBlocks(scenarioBlocks, Math.ceil(scenarioBlocks / 2) + 1, newKeys),
+      code_writes: []
+    });
+
+    expect(specOnly.classification).toBe("on_topic");
+    expect(specOnly.spec_channel.predominant).toBe(true);
+
+    // Code channel alone: unquoted object-literal keys, novel vs. the old statement's keys.
+    const codeOnly = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: [],
+      code_writes: [
+        {
+          path: "server.ts",
+          content: unquotedErrorBody(newType, newDetail),
+          task_start_content: unquotedErrorBody(oldType, oldDetail)
+        }
+      ]
+    });
+
+    expect(codeOnly.classification).toBe("on_topic");
+    expect(codeOnly.code_channel.novel_matched_subjects.length).toBeGreaterThan(0);
+
+    // The real recorded misfire shape: BOTH channels present together, matching the actual close.
+    const combined = classifyE4TaskCloseTopic({
+      delta_is_empty: false,
+      subjects,
+      change_spec_contents: dottedScenarioBlocks(scenarioBlocks, Math.ceil(scenarioBlocks / 2) + 1, newKeys),
+      code_writes: [
+        {
+          path: "server.ts",
+          content: unquotedErrorBody(newType, newDetail),
+          task_start_content: unquotedErrorBody(oldType, oldDetail)
+        }
+      ]
+    });
+
+    expect(combined.classification).toBe("on_topic");
   });
 
   test("[P0V.1: V1] maintenance closes stay not_applicable, but authored work is flagged", () => {
@@ -968,7 +1065,7 @@ function fakeTask(
     on_topic:
       input.on_topic === undefined || input.on_topic === null
         ? null
-        : { on_topic_id: "e4-on-topic-close-v2", classification: input.on_topic, matched_subjects: [], subject_count: 3 }
+        : { on_topic_id: "e4-on-topic-close-v3", classification: input.on_topic, matched_subjects: [], subject_count: 3 }
   } as unknown as E4V2TaskRecord;
 }
 

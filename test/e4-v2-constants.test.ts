@@ -42,8 +42,12 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // operator-ratified backlog Tiers 1-3: substrate_version procedural-rest-v2.3 [variants 0/2
 // direction-neutral + add_entity ever-used-name draw-guard], workflow_protocol write-rule
 // bullet corrected, README parked-content sentence, conditional glue wording, novel-occurrence
-// plumbing in runner/turns, prng.ts sealed as a twin).
-const NON_BUDGET_PROJECTION_SHA256 = "871a98ea640df78a78d0bce86ddc4a405e11761140ab9e2b7d144ea2c7fbd8a5";
+// plumbing in runner/turns, prng.ts sealed as a twin) -> ea8c359e... (v0.8, 2026-07-14 E5
+// zero-spend runway items 1b+2b: runner.ts gains the OPTIONAL P1.2w task-loop probe seam
+// ([V08: 2b], two conditional call sites; undefined-by-default, byte-path-identical when no
+// caller attaches a probe) and is re-pinned as a twin; the classifier-v3 fix ([V08: 1b]) lives
+// entirely in the v3 twin set and does not move this projection.
+const NON_BUDGET_PROJECTION_SHA256 = "ea8c359e56b41a78a335881b2810b642a0176557d946ddecd0c276e55e82fe24";
 
 async function loadSealed() {
   return loadE4V2Constants(join(REPO_ROOT, E4_V2_CONSTANTS_PATH));
@@ -199,12 +203,17 @@ describe("v2-M5 — non-budget constants freeze", () => {
     //     of record. v0.6 full-file hash was
     //     4ea57eefcc37bac3f31531a0748894afcc48c6ca2a7edec2e44cdd404b45cbcd (historical; re-run
     //     against `git show 784e0ff:docs/protocols/e4-v2-sealed-constants-v0.json`).
+    //   -> v0.8 27/12/490000/5 (2026-07-14, E5 zero-spend runway items 1b+2b): budgets UNTOUCHED;
+    //     runner.ts gains the OPTIONAL P1.2w task-loop probe seam ([V08: 2b]) and is re-pinned as
+    //     a twin. v0.7 full-file hash was
+    //     32c6c25e8d7a74cbd58176e753c76186bc028f5088ad17c67e9dd91721590060 (historical; re-run
+    //     against `git show 188f372:docs/protocols/e4-v2-sealed-constants-v0.json`).
     const { constants } = await loadSealed();
 
     expect(hashE4V2Bytes(await Bun.file(join(REPO_ROOT, E4_V2_CONSTANTS_PATH)).arrayBuffer())).toBe(
-      "32c6c25e8d7a74cbd58176e753c76186bc028f5088ad17c67e9dd91721590060"
+      "2bba1b0f8f3969d42bbb2ca7e6e6b354060cf261adf1330b5ddd24659b8ad888"
     );
-    expect(constants.version).toBe("0.7");
+    expect(constants.version).toBe("0.8");
     expect(constants.budgets).toEqual({
       turns_per_task: 27,
       verifications_per_task: 12,

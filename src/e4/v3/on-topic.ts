@@ -1,5 +1,6 @@
-// E5 P0-V item 5 (proposal §2), rebuilt at P0-V.1 [P0V.1: V1]: off-topic close as a SCORING
-// category. The v3-M7 forensics verified the referee could not see a silently swapped task (a
+// E5 P0-V item 5 (proposal §2), rebuilt at P0-V.1 [P0V.1: V1], subject-derivation fixed at v0.8
+// [V08: 1b]: off-topic close as a SCORING category. The v3-M7 forensics verified the referee
+// could not see a silently swapped task (a
 // done-close whose change addresses a stalled predecessor's leftover, or nothing at all, instead
 // of the current request) — the composition sin then reads as an ordinary truthful/false close.
 // This module is measurement-side only: it classifies a done-close as on- or off-topic against
@@ -30,10 +31,21 @@
 // missed one): a done-close is off_topic only when NEITHER channel produces a match under the
 // rules above. proposal.md / tasks.md narration is deliberately excluded — mentioning the task
 // in prose while changing something else is exactly the failure mode being scored.
+//
+// [V08: 1b] classifier v3 — the seed-220 forensic fix (docs/e5/E5-ZERO-SPEND-RUNWAY-v1.md
+// Findings log 1a/1b). All four seed-220 modify_convention closes misfired off_topic despite
+// real accepted work: the convention subject literals were QUOTED JSON keys (`"type"`,
+// `"detail"`), but the work's real footprints were UNQUOTED object keys in code
+// (`{ error: { type: kind, detail: msg } }`) and DOTTED json-paths in scenario assertions
+// (`error.type`) — neither channel's needle was a substring of either real shape. Fix: for each
+// DISTINCTIVE key of the convention's NEW statement (every quoted key except the `error`
+// wrapper, which appears in virtually every rejection scenario/error-handling file and would
+// over-match if given the same treatment), emit three subject forms instead of one — the quoted
+// JSON-body literal, the dotted scenario-assertion path, and the unquoted object-literal key.
 import type { E4TaskDelta } from "./task-delta";
 import { pluralizeEntityName } from "../substrate/v2/pluralize";
 
-export const E4_V3_ON_TOPIC_ID = "e4-on-topic-close-v2";
+export const E4_V3_ON_TOPIC_ID = "e4-on-topic-close-v3";
 
 export type E4V3OnTopicClassification = "on_topic" | "off_topic" | "not_applicable";
 
@@ -52,11 +64,23 @@ export type E4V3OnTopicReport = {
   prior_task_subject_matches: string[];
 };
 
-// Distinctive value literals of a convention statement: the quoted JSON key names it pins
-// (e.g. "code"/"message" vs "type"/"detail" for the sealed error-envelope statements). An
-// on-topic convention change writes at least one of the NEW statement's keys somewhere.
-function conventionSubjectLiterals(statement: string): string[] {
-  return [...statement.matchAll(/"([A-Za-z_][A-Za-z0-9_]*)"/g)].map((match) => `"${match[1]}"`);
+// [V08: 1b] Subject FORMS of a convention statement's distinctive keys (every quoted JSON key
+// except the outer `error` wrapper, which every rejection scenario/error-handling file already
+// contains and would over-match). Three forms per key cover the three real shapes a change
+// addressing the statement can take: the quoted JSON-body literal (`"type"`), the dotted
+// scenario-assertion path (`error.type`), and the unquoted code object-literal key (`type:`).
+function conventionSubjectForms(statement: string): string[] {
+  const keys = [...statement.matchAll(/"([A-Za-z_][A-Za-z0-9_]*)"/g)].map((match) => match[1]);
+  const distinctive = keys.filter((key) => key !== "error");
+  const forms = new Set<string>();
+
+  for (const key of distinctive) {
+    forms.add(`"${key}"`);
+    forms.add(`error.${key}`);
+    forms.add(`${key}:`);
+  }
+
+  return [...forms];
 }
 
 // Subject strings a change addressing this delta would plausibly contain, derived from the
@@ -110,8 +134,8 @@ export function buildE4OnTopicSubjects(delta: E4TaskDelta): string[] {
   }
 
   for (const convention of delta.changed_conventions) {
-    for (const literal of conventionSubjectLiterals(convention.new_statement)) {
-      subjects.add(literal);
+    for (const form of conventionSubjectForms(convention.new_statement)) {
+      subjects.add(form);
     }
   }
 

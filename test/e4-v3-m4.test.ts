@@ -27,6 +27,13 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // budgets unchanged. The v0.6 hash was
 // 771ecd6c7a0fbc04d5ed35dd149b8af6893242cf22e965608da191d0922f9ac6 (historical; re-run against
 // `git show 784e0ff:docs/protocols/e4-v3-sealed-constants-v0.json`).
+// [E5 zero-spend runway, 2026-07-14] version 0.7 -> 0.8: items 1b+2b as one bump — [V08: 1b]
+// on_topic_id e4-on-topic-close-v3 (the seed-220 forensic fix: three subject forms per
+// distinctive convention key instead of one quoted-literal form), on-topic.ts re-pinned;
+// [V08: 2b] extends re-pin onto v2 v0.8 (runner.ts gains the OPTIONAL P1.2w task-loop probe
+// seam, byte-path-identical when unused); budgets unchanged. The v0.7 hash was
+// 02e75af1b0086b212c9ce533375eb1fe88576c5454134d9a0668355bbfe9bc8a (historical; re-run against
+// `git show 188f372:docs/protocols/e4-v3-sealed-constants-v0.json`).
 // [E5 P0-V, 2026-07-13] version 0.5 -> 0.6: rig-repair boundary (operator-ratified proposal-v2
 // §7 gate) — pm_brief_id e4-pm-brief-v2, determinacy_table_id e4-request-determinacy-v2, new
 // sealed ids on_topic_id/root_cause_burden_id/commitment_scorer_id, v3 twins re-pinned + three
@@ -47,7 +54,7 @@ const REPO_ROOT = resolve(import.meta.dir, "..");
 // fixes). The v0.2 hash was aec35e3d7db94e5be953b2bb5f318ab33d3fa3da96609579994633ffba8cf85a —
 // the compatibility_boundary.v3 stamp on every v3-M6 evidence manifest (historical; re-run that
 // verdict against `git show 5ed1d87:docs/protocols/e4-v3-sealed-constants-v0.json`).
-const FROZEN_V3_CONSTANTS_SHA256 = "02e75af1b0086b212c9ce533375eb1fe88576c5454134d9a0668355bbfe9bc8a";
+const FROZEN_V3_CONSTANTS_SHA256 = "46f6fa6634fb332f51250b42b79c3ed3dc6fcb5caf6c2a5768e418907887bd44";
 
 describe("v3-M4: constants freeze", () => {
   test("[FREEZE] the v3 constants file hash is pinned", () => {
@@ -62,7 +69,7 @@ describe("v3-M4: constants freeze", () => {
       v2Path: join(REPO_ROOT, E4_V2_CONSTANTS_PATH)
     });
 
-    expect(constants.version).toBe("0.7");
+    expect(constants.version).toBe("0.8");
     expect(constants.product_gate.mutation_kill_floor).toBeCloseTo(5 / 6, 10);
     expect(constants.product_gate.blocking_checks).not.toContain("field_never_exercised");
     // the sealed ids match the modules' own exported ids
@@ -70,7 +77,7 @@ describe("v3-M4: constants freeze", () => {
     expect(constants.compatibility_boundary.product_gate_id).toBe("e4-product-gate-v1");
     expect(constants.compatibility_boundary.pm_brief_id).toBe("e4-pm-brief-v3"); // [P0V.1: V4]
     expect(constants.compatibility_boundary.determinacy_table_id).toBe("e4-request-determinacy-v2");
-    expect(constants.compatibility_boundary.on_topic_id).toBe("e4-on-topic-close-v2"); // [P0V.1: V1]
+    expect(constants.compatibility_boundary.on_topic_id).toBe("e4-on-topic-close-v3"); // [V08: 1b]
     expect(constants.compatibility_boundary.root_cause_burden_id).toBe("e4-root-cause-burden-v1");
     expect(constants.compatibility_boundary.commitment_scorer_id).toBe("e4-commitment-vs-gold-v1");
   });

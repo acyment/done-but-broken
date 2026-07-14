@@ -146,6 +146,24 @@ export type E4V2RunTaskInput = {
     // consulted only by the classifier's maintenance-task unexpected_change_work diagnostic.
     prior_task_subjects?: string[];
   };
+  // [V08: 2b] E5 P1.2w probe seam: OPTIONAL, absent on every non-probe caller (v2 AND v3 runs).
+  // When absent, no new branch executes and control flow is byte-path-identical to before this
+  // field existed. Two delivery points only (prereg §2 P1.2w): (a) once, unconditionally, in the
+  // feedback of the turn where the spec-phase exit is accepted; (b) appended to the feedback of
+  // every ACCEPTED verification (smoke) invocation during the implementation phase. The hook
+  // returns extra feedback text to append, or null to add nothing; it owns its own recording.
+  probe?: E4V2TaskLoopProbeHook;
+};
+
+export type E4V2TaskLoopProbeContext = {
+  workspace_dir: string;
+  records_dir: string;
+  task_index: number;
+};
+
+export type E4V2TaskLoopProbeHook = {
+  onSpecExitAccepted?: (ctx: E4V2TaskLoopProbeContext) => Promise<string | null>;
+  onVerificationAccepted?: (ctx: E4V2TaskLoopProbeContext) => Promise<string | null>;
 };
 
 function zeroTokens(): E4TokenUsage {
@@ -413,6 +431,20 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
               stderrTail.length > 0 ? `\nserver stderr (tail):\n${stderrTail}` : ""
             }`;
           }
+
+          // [V08: 2b] P1.2w delivery point (b): appended to every ACCEPTED verification
+          // invocation's feedback during the implementation phase (prereg §2).
+          if (phaseAtTurnStart === "implementation" && input.probe?.onVerificationAccepted) {
+            const probeExtra = await input.probe.onVerificationAccepted({
+              workspace_dir: input.workspace_dir,
+              records_dir: input.records_dir,
+              task_index: input.task.task_index
+            });
+
+            if (probeExtra !== null && verificationFeedback !== null) {
+              verificationFeedback = `${verificationFeedback}\n\n${probeExtra}`;
+            }
+          }
         }
       }
     }
@@ -449,6 +481,20 @@ export async function runE4V2Task(input: E4V2RunTaskInput): Promise<E4V2TaskRunR
           gateFeedback = `${transitionLine} ${redLine}`;
           componentTokens[phaseAtTurnStart].gate_protocol += countE1Tokens(transitionLine);
           componentTokens[phaseAtTurnStart].oracle_feedback += countE1Tokens(redLine);
+
+          // [V08: 2b] P1.2w delivery point (a): unconditional, exactly once per task, only on a
+          // successful spec-phase exit — the exposure guarantee (prereg §2).
+          if (input.probe?.onSpecExitAccepted) {
+            const probeExtra = await input.probe.onSpecExitAccepted({
+              workspace_dir: input.workspace_dir,
+              records_dir: input.records_dir,
+              task_index: input.task.task_index
+            });
+
+            if (probeExtra !== null) {
+              gateFeedback = `${gateFeedback}\n\n${probeExtra}`;
+            }
+          }
         }
       } else {
         const claim = await gate.submitDoneClaim();

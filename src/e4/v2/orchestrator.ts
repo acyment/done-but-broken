@@ -14,7 +14,12 @@ import { E4_V2_ARM_POLICIES, validateE4V2RuntimeArmParity, type E4V2ArmRuntime }
 import type { E4V2ArmId, E4V2SealedConstants } from "./constants";
 import { inspectE4V2Sequence } from "./inspect";
 import type { E4V2RunManifest, E4V2TaskRecord, E4V3BoundaryStamp } from "./manifest";
-import { runE4V2Task, type E4V2SequenceSpendLedger, type E4V2TaskRunResult } from "./runner";
+import {
+  runE4V2Task,
+  type E4V2SequenceSpendLedger,
+  type E4V2TaskLoopProbeHook,
+  type E4V2TaskRunResult
+} from "./runner";
 import type { E4TokenUsage } from "../types";
 import {
   E4_PROVIDER_RETRY_POLICY_TEXT,
@@ -64,6 +69,10 @@ export type E4V2RunInput = {
   // prereg; probe layers retain their own state). Returned usage is added to the manifest
   // totals and the arm spend ledger so the sealed cap still binds. Never set on evidence runs.
   post_task_hook?: E4V2PostTaskHook;
+  // [V08: 2b] E5 P1.2w probe-layer seam: builds a fresh per-task loop hook (delivery points (a)
+  // and (b) inside runE4V2Task). OPTIONAL — v2 and v3 callers never set it and their control
+  // flow is byte-path-identical. Never set on evidence runs.
+  task_loop_probe?: (task: E4V2GeneratedTask, arm: E4V2ArmId) => E4V2TaskLoopProbeHook | undefined;
 };
 
 export type E4V2PostTaskHook = (ctx: {
@@ -231,6 +240,7 @@ export async function runE4V2Sequences(input: E4V2RunInput): Promise<E4V2RunResu
         captureSnapshot: () =>
           captureE4Snapshot({ workspaceDir, runRoot: input.runRoot, arm, taskIndex: task.task_index }),
         secrets,
+        ...(input.task_loop_probe ? { probe: input.task_loop_probe(task, arm) } : {}),
         ...(input.v3 && extras
           ? {
               v3: {
