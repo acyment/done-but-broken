@@ -52,6 +52,29 @@ launders the design's weaknesses produces a critique that misses them.
 
 ## Step 1 — Blind independent design (3 models, deep research, ~1 day wall clock)
 
+> ### ORDERING CORRECTION (2026-07-20): Step 1 runs BEFORE substrate selection
+>
+> Appendix F originally said the substrate scouts run before Step 0, "because the substrate choice
+> determines what goes in the packet." **That was wrong on both counts and is superseded.**
+>
+> 1. **The packet describes what exists, not what is planned.** A future substrate choice does not
+>    change the account of past runs. Appendix F was never actually a prerequisite for Step 0.
+> 2. **More importantly, it anchors the thing the step exists to buy.** Step 1 hands reviewers only
+>    the claim and the constraints and asks them to design the study from scratch — *including what
+>    to run it on*. Choosing a substrate first and then asking for a blind design discards the most
+>    valuable answer they could give.
+>
+> **Corrected order:** Step 1 (substrate question folded in as deliverable 5 of Prompt A) → then
+> Appendix F's scouts, which refine under the strict literal-Gherkin filter with the shortlist Step 1
+> produced as one input → then Steps 2–6.
+>
+> Step 1 also does not depend on the packet being finished. It consumes A1 and A4 only. Every error
+> the blind audits found sat in A2 and A3, which Step 1 never sees — so a packet with a known-error
+> register in its evidence sections does not block this step.
+>
+> **Paste-ready prompt with A1 and A4 already folded in: `STEP1-PROMPT-PASTE-READY.md`.** Use that
+> rather than Appendix B, which is retained as the unmerged draft.
+
 **Models:** three deep-research models that **have not seen this design**. Separate sessions, no
 cross-contamination.
 
@@ -543,8 +566,16 @@ change what can honestly be published.
 
 # Appendix F — Prompt E (substrate selection)
 
-**Runs before Step 0**, because the substrate choice determines what goes in the packet. Zero spend
-— deep research on chat subscriptions.
+> **SUPERSEDED ORDERING (corrected 2026-07-20).** This appendix originally ran *before* Step 0. It
+> now runs **after Step 1**. Choosing a substrate before the blind design step anchors reviewers on
+> the one question they were most valuable for answering independently; and the packet, which
+> describes past runs, never depended on a future substrate choice. Step 1's Prompt A now carries the
+> substrate question as deliverable 5, and its shortlist feeds this pass as one input among others.
+> See the ordering correction at Step 1.
+
+**Runs after Step 1.** Zero spend — deep research on chat subscriptions. This pass refines Step 1's
+substrate answers under the strict literal-Gherkin filter; it is not the first time the question is
+asked.
 
 > ## FROZEN 2026-07-20 — before any scout has run
 > 
