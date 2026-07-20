@@ -375,6 +375,18 @@ These are later because the current bottleneck is bringing E1 to evidence grade 
 - Method: features (non-locality, edit-to-failure distance, weak-oracle/coverage, scale, spec-completeness) → label gap on a **screener ensemble held out from the model the score is applied to** (non-circular) → fit predictor → **prospective held-out-task calibration**. Uses the strengthened oracle (held-out P2P + reproduction + mutation) for truer labels.
 - Cost: the expensive one (100–300 tasks × 2–3 screeners × N). **Feasibility-pilot-gated** (~30–40 tasks first; abort if no signal). A null is a valid, publishable result.
 
+### Cross-program spend ledger (flagged 2026-07-20, docs/evidence-hygiene backlog, no run)
+
+- Gap found while auditing artifacts for `docs/protocols/e2-headline-artifact-inventory-20260720.md` and `docs/protocols/e3-calibration-partial-result-20260720.md`: **no audited, cross-program USD spend total exists.** Per-run cost is missing entirely from both E2 headline pilots (the DeepSeek causal pilot and the qwen replication) and from the E3 control-arm calibration — these artifacts record `elapsed_s` only, no token counts, no billing fields.
+- Scope: audit which run artifacts do/don't carry a cost field; where missing, reconstruct an estimate from provider billing records if still available; assemble a single ledger totaling spend across E1–E5 to date, reconciled against the scattered per-mention dollar figures already in this file (e.g. "R0 smoke authorized ~$1–2", "$4.60 all-in" for P1.1) which have never been summed.
+- This is a docs/accounting task, not a model-spend task; no run is proposed here.
+
+### Reconcile run-classification vocabulary (flagged 2026-07-20, docs/evidence-hygiene backlog, no run)
+
+- Gap: the E4 program's reports label their main runs `pilot`, while the repo-wide classification vocabulary used elsewhere (`AGENTS.md`, `CLAUDE.md`) is `calibration` / `difficulty_probe` / `causal_pilot` / `diagnostic_invalid`.
+- Decide: is `pilot` a genuinely distinct class needing its own admission criteria, or should it map onto an existing term (most plausibly `causal_pilot`) — the latter requires checking each E4 `pilot` run's actual arms/design against the `causal_pilot` definition rather than assuming the label transfers.
+- Until decided: do not silently relabel any E4 `pilot` run into one of the four existing classes, and do not treat this mismatch as already resolved in any doc.
+
 ## Test-First Backlog
 
 Write or update tests before implementing each validity-critical change:
