@@ -727,6 +727,14 @@ removes the most expensive part of Route 2 — building certified episodes by ha
 >
 > Pass 3's local mechanical checks apply to these two exactly as to any scout nomination. A verified
 > paper and a released MIT dataset are still a lead, not an admission.
+>
+> **SCREENED 2026-07-21 (partial Pass 3, $0):** ChainSWE **REJECTED** (3 usable chains, co-location
+> not dependency, 1 test/step); SWE-Milestone **QUALIFIED GO for a private pilot** with four caveats
+> (model-authored DAG needing free self-verification; 3/7 repos with a public surface; SRS+native
+> suites not `.feature`; ~180 GB images and $30–120/chain — several × the remaining stop-loss). The
+> container-level Pass 3 checks (leave-one-out edges, no-op-fails, gold-passes, transfer floor) were
+> NOT run — no disk-adequate host. Full report:
+> `docs/protocols/e5-step1-blind-design-20260721/SUBSTRATE-SCREENS-v1.md`.
 
 ### Pass 1 — scouts (three fresh models, separate sessions)
 

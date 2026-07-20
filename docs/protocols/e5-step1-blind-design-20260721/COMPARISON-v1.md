@@ -255,14 +255,26 @@ So: **the dependent-multi-step half is available off the shelf and saves most of
 hidden-per-step-test half is not, and a visible/held-out split would have to be constructed over
 ChainSWE or SWE-Milestone.** Real work, far less than building the chain substrate from scratch.
 
-### The result that most threatens the claim is also real
+### The result billed as "most threatening" — read in full, it is off-target, not fatal
 
-*Specification Grounding Drives Test Effectiveness for LLM Code* (Haeri & Ghelichi, 2607.06636)
-confirmed exactly, Table 3: no spec 0/30, decomposition-without-content 2/30, **plain prose 27/30,
-structured/enumerated spec 30/30**. Specification *content* does nearly all the work; enumerated
-format adds three bugs out of thirty. This is published evidence that the format half of our claim is
-close to a rounding error, and it must be cited in any public post rather than discovered by a
-commenter.
+*Specification Grounding Drives Test Effectiveness for LLM Code* (Haeri & Ghelichi, 2607.06636). The
+citation-check confirmed Table 3 exactly (0 / 2 / 27 / 30) and the number-check was read as "the
+format half of our claim is a rounding error, cite it or a commenter will." **Reading the paper in
+full corrected that** (2026-07-21):
+
+- The labels vary **what the test-writer is shown**, never what the implementer sees. The code model
+  writes from the same prose ticket in every arm.
+- **Execution is held constant** — tests run and drive a repair loop in all arms. The paper cannot
+  speak to executable-vs-prose at all; it lives inside the executable-feedback world.
+- Its "format" axis is paragraph-vs-bulleted-English, not English-vs-executable-Gherkin.
+- The 27-vs-30 gap is one task, one tester draw, no statistical test (our binomial ≈ p=0.25), and
+  ceiling-compressed by the authors' own admission ("100% is a ceiling set by these easy tasks").
+
+What *is* robust is the **content** effect (0 → 27), and it constrains any claim that structure or
+format is the active ingredient — not any claim that execution is. Full assessment and the corrected
+citation guidance now live in `docs/e5/E5-REFERENCES-v1.md`. **Process note: this is the second
+finding in this record demoted on inspection after being written up strong — same shape as the
+briefing packet's `[CHECKED]`-but-wrong errors. A verified *number* is not a read *paper*.**
 
 ### Two corrections to the reviewer's own report
 
