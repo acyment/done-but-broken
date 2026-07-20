@@ -196,6 +196,24 @@ Route 2 does not start on a decision; it starts on passing this gate.
 4. Admit an episode only if: the no-op fails, gold passes, scenarios run on the public surface,
    results are stable across repeats, and scenario outcomes predict the separate held-out oracle
    well enough to justify the study (this is C4, measured before it is assumed).
+5. **Per-check discrimination (added 2026-07-21, Step 1 finding F3).** "The no-op fails" at the
+   *episode* level admits suites in which one check discriminates and the rest are vacuous. Each
+   individual check must be shown to fail against the empty patch. Checks that pass on a no-op are
+   removed before the freeze, and the count removed is reported — a high vacuous fraction is itself
+   a signal about the authoring protocol.
+6. **The lever must have something to act on (F1, and `AGENTS.md`).** State the event the treatment
+   acts on and its estimated base rate in this episode set, with the source named, before any spend.
+   Episodes where the control arm cannot plausibly fail contribute nothing in either direction.
+7. **The visible-versus-held-out gap is a headline figure, not a diagnostic (F3).** Report it per
+   episode. It is the only honest measure of whether an arm is satisfying what it can see rather than
+   the requirement. Sourced and verified 2026-07-21: ImpossibleBench (arXiv 2510.20270) puts frontier
+   check-gaming at 50–76% where checks are visible; SpecBench (arXiv 2605.21384) finds the
+   visible-minus-held-out gap grows ~28pp per 10× codebase size, reaching 100pp above 25K LOC;
+   *Building to the Test* (arXiv 2606.28430) found an agent's delivered library was dead code and
+   no-oping it left the score unchanged.
+8. **Record the cost of hiding checks.** ImpossibleBench's full finding is that hiding tests reduces
+   cheating to near zero **but also degrades performance on the original benchmark**. This design
+   hides checks, so that cost is ours. Do not quote the first clause without the second.
 
 ### Who authors blind — the authoring protocol
 
@@ -217,6 +235,26 @@ The protocol:
    **admit or reject the whole episode — never edit scenario content.**
 5. A failure produces a new numbered version of the authoring protocol, not a silent repair of the
    scenarios.
+6. **Instrument the authoring itself (added 2026-07-21, Step 1 finding F4).** Log, per episode:
+   wall-clock to first draft, number of reconciliation rounds, disagreements between the two authors,
+   and checks discarded at step 5 of the admission gate for failing to discriminate. This costs
+   nothing — the authoring happens anyway, at zero API spend — and it is the only measurement of the
+   practice's real bottleneck anywhere in the program. **Sub-claim C6 (is the gain worth its cost?)
+   is currently unmeasurable for want of exactly this data.**
+
+**On the content-equivalence trap, and why the chosen design already closes it.** A blind reviewer
+raised the sharpest version of this: the executable format forces the *author* to pin exact values and
+edge cases, so a separately-written prose comparator ends up genuinely vaguer, and the study measures
+spec quality while reporting it as an execution effect. **Under Appendix F's decision this cannot
+happen** — both arms receive the same OpenSpec source and the same hash-pinned `.feature` artifact,
+both may read either, and the only difference is that treatment can execute. There is no second spec
+to be vaguer. Any future variant that gives the arms *different* spec artifacts reopens this and needs
+an independent completeness review of one against the other before the run.
+
+**What remains open is the cost, not the content.** The design holds content equal by construction,
+but it does so by *paying* the authoring cost in both arms and measuring it in neither. A result
+saying "executing these scenarios helped" says nothing about whether producing them was worth it —
+which is the question a practitioner audience actually asks. Hence step 6 above.
 
 **What this does and does not buy.** A mechanically extracted manifest removes transcription error.
 It does **not** remove semantic authoring error or selection bias — those are what steps 3–5 exist
@@ -659,6 +697,36 @@ recommendation substitute for that screen.
 **Highest-value possible find:** an existing curated dataset of *dependent, multi-step* changes with
 tests. SWE-bench and its descendants are single-issue. If sequences already exist somewhere, it
 removes the most expensive part of Route 2 — building certified episodes by hand.
+
+> ### FOUND 2026-07-21 — two incumbents added, frozen criteria untouched
+>
+> Step 1 surfaced and local verification confirmed two datasets that meet the dependent-multi-step
+> requirement. **This does not amend anything sealed above** — the criteria, hard exclusions,
+> scorecard dimensions and Pass 3 checks are unchanged, the scout prompt is unchanged, and our own
+> candidate pool stays withheld from the scouts as before. These enter as **incumbents to be scored
+> on the same rubric as everything else**, per execution-discipline point 3.
+>
+> - **ChainSWE** (arXiv 2607.02606) — 304 problems, 54 Python projects, per-step fail-to-pass and
+>   pass-to-pass lists, MIT, HuggingFace, reuses pre-built SWE-bench Docker images. Ships the
+>   oracle-state-progression control we would otherwise have to build. **Known weakness: its chains
+>   are co-location dependency, not requirement dependency** — assembled by AST overlap and
+>   clean-patch-application, so step *N* touches step *N*-1's code without needing its behaviour.
+>   Filter before trusting the chain property.
+> - **SWE-Milestone** (arXiv 2603.13428, published as *EvoClaw* in v1 — cite by ID and current title)
+>   — prerequisite DAG with explicit constraints rather than inferred overlap, per-task isolated
+>   evaluation snapshots, MIT, DockerHub, adapters for four agent frameworks. **The better fit for
+>   genuine prerequisite dependency and the most mature harness.**
+> - **SWE-EVO** (arXiv 2512.18470) — real and useful as a long-horizon multi-file substrate, but its
+>   tasks are **independent**, each from a pre-release base snapshot. Does not meet the requirement.
+>
+> **The half that is still ours to build: hidden per-step checks.** None of the three hides tests by
+> default; ChainSWE and SWE-EVO expose fail-to-pass lists as part of the instance, which is exactly
+> the confound the reward-hacking literature was built to study. A visible/held-out split must be
+> constructed over whichever substrate is chosen. That is real work — and far less than building the
+> chain substrate by hand.
+>
+> Pass 3's local mechanical checks apply to these two exactly as to any scout nomination. A verified
+> paper and a released MIT dataset are still a lead, not an admission.
 
 ### Pass 1 — scouts (three fresh models, separate sessions)
 

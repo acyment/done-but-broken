@@ -1,14 +1,37 @@
 # Step 1 — blind independent design: paste-ready prompt
 
+> ## RUN 2026-07-21 — as-written text below is preserved; two defects recorded
+>
+> Executed against Qwen 3.7 Plus, Claude Opus 4.8 High, and ChatGPT 5.6 High in fresh chat sessions
+> with no repo access. Raw responses and the comparison record:
+> `docs/protocols/e5-step1-blind-design-20260721/`. **Do not silently edit the prompt text below** —
+> it is the as-run artifact. Both defects are fixed in a numbered successor before any re-run.
+>
+> **Defect 1 — the claim omits the model tier.** The claim paragraph does not say the target is
+> frontier models, and A4 merely lists both tiers as available. All three reviewers therefore designed
+> for mid-tier, one reasoning explicitly that the claim is about workflow rather than model
+> capability. The step answered an adjacent question. A successor must put the tier in the claim.
+>
+> **Defect 2 — the eligibility rule was mis-scoped (see below).**
+
 **How to run.** Three separate deep-research sessions, three different models, **no cross-contact**.
 Do not show any model another's output. Do not tell them what we built. Keep each raw response, its
 cited sources, the model name and version, and the date — those are the artifacts; any summary is
 derived.
 
-**Eligible models: Qwen, Gemini, DeepSeek** (substitutes: Kimi, GLM). **ChatGPT and Claude are
-disqualified** — both have read the existing design in conversation, so their agreement would be
-anchoring rather than corroboration. They remain eligible for later steps that do not require
-ignorance of the design.
+**Verify deep research actually ran.** ChatGPT's 2026-07-21 session reported *"0 citations, 0
+searches"* and answered the prior-art deliverable from recall; Qwen's listed no sources. **The step
+returned one sourced prior-art answer out of three.** Check the session's search count before filing
+a response, and mark any unsourced prior-art section as unciteable.
+
+**Eligible models: Qwen, Gemini, DeepSeek** (substitutes: Kimi, GLM). ~~**ChatGPT and Claude are
+disqualified**~~ — **corrected 2026-07-21.** The disqualification was written against *specific
+conversations* in which those two had read the proposal, and assumed a reviewer with code access. A
+fresh chat session with no repo access and no exposure to the design meets the requirement, and all
+three 2026-07-21 responses are admissible. **The rule is: a contaminated session is disqualified, not
+a model family.** Residual caveat to check before relying on this: account-level saved-memory features
+can carry context across sessions, so confirm memory was off, or use an account that never discussed
+the design.
 
 **Deep research mode on.** Part of what this step buys is the prior-art search.
 

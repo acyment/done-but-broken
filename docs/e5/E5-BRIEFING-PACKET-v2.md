@@ -53,6 +53,18 @@ claim carried that mark and was still wrong, so the mark means "someone looked,"
 > (deleted, which makes substrate fairness unauditable by a reviewer), and the finding that one
 > boundary's effects were "concentrated in the three seeds that drew rename cascades."
 >
+> **E5 — an omission, surfaced by Step 1's blind designs (2026-07-21).** A1 never states that the
+> claim targets **frontier** models. It is stated in the repo's operating notes ("the project is not
+> ready for public validation claims that executable feedback wins for frontier models") and it is the
+> reason the E1 sealed-task line closed — frontier models self-verify well enough on small fully
+> specified tasks that executable feedback is redundant. Because A1 omits it, **all three blind
+> reviewers designed for mid-tier models, one of them reasoning explicitly that "the claim is about
+> *workflow*, not model capability."** Step 1 therefore answered a question adjacent to the one being
+> asked, and its designs would not produce frontier evidence. Direction: **neutral-to-unfavourable** —
+> it cost the step some of its value rather than flattering the program. Any v3, and any re-run of
+> Step 1, must state the model tier in the claim itself.
+> See `docs/protocols/e5-step1-blind-design-20260721/COMPARISON-v1.md` §4 (F6).
+>
 > **Authorship note.** v1 and v2 were both written by a party involved in designing the program.
 > Three consecutive rounds produced errors under the verification mark, twice favourable. Any v3
 > should be authored by someone uninvolved.
