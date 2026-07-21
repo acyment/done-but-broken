@@ -77,10 +77,18 @@ current. HF dataset `DeepCommit-ai/SWE-Milestone-data`. **MIT.** ICML 2026, v3, 
    public surface — extra build. The existing pytest-bdd Gherkin runner is **Python-only**, so among
    the three good-surface repos only **scikit-learn** fits both "stable public API" and "runnable
    through existing tooling." Sharp narrowing.
-4. **Cost — the wall.**
-   - *Infra:* images run 15–53 GB per repo, ~180 GB total (uncompressed materially larger). **This
-     machine (32 GB free) cannot host even one repo's set** — even the free edge-verification needs a
-     cloud host with a few hundred GB of disk, or per-milestone pull-and-prune.
+4. **Cost.**
+   - *Infra — RE-ASSESSED 2026-07-21, the initial "cannot host" was overstated.* The ~180 GB figure
+     is the whole benchmark (7 repos × all milestones, summed compressed sizes). A run never needs
+     that: `run_milestone.py` runs **one milestone per container**, the anti-cheat offline policy uses
+     a **single per-repo `base-offline` dependency image**, and milestone images build FROM a shared
+     base layer so Docker stores the common part once — the summed per-image sizes overcount on-disk
+     use. Real free-disk targets (compressed sizes + harness code read + layer-sharing inference;
+     nothing pulled): **~30 GB** to start a light-repo pipeline proof, **~100 GB** comfortable for the
+     scikit-learn two-arm study without re-pull churn, **~300–400 GB** for the full 7-repo benchmark.
+     **Operator freed disk to 176 GB on 2026-07-21 — infra is no longer a blocker.** The heavy repos
+     (scikit-learn ~3.7 GB/img, nushell ~4.1 GB/img) are the ones that strained the original 32 GB;
+     the light repos (ripgrep/navidrome ~1 GB/img) fit even that.
    - *Spend:* one 4–8-milestone chain, two arms, one frontier model ≈ **$30–120 all-in**
      (agent-session-dominated); full 7-repo eval ≈ $500 (paper, Opus 4.5). **Against $13.40 remaining
      on an $18 stop-loss, this is a several-times-larger fresh authorization — an operator decision,

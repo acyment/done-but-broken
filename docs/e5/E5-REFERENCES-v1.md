@@ -79,8 +79,9 @@ Verified 2026-07-21 by an independent pass; treat as leads, not as settled evide
   mature harness, native hidden-oracle (test-masking) design. **Locally screened: QUALIFIED GO for a
   private pilot** (2026-07-21), with four caveats — the dependency DAG is model-authored not per-edge
   verified (self-verifiable for free); only 3/7 repos have a stable public surface; it ships an SRS
-  spec + native test suites, not `.feature` files; images are ~180 GB and a real run is $30–120/chain,
-  several times the remaining stop-loss. See `SUBSTRATE-SCREENS-v1.md` in the Step 1 directory.
+  spec + native test suites, not `.feature` files; a real run is $30–120/chain, several times the
+  remaining stop-loss. Infra is not a blocker (~100 GB free hosts the scikit-learn study; operator has
+  176 GB as of 2026-07-21). See `SUBSTRATE-SCREENS-v1.md` in the Step 1 directory.
 - **SWE-EVO** — arXiv:2512.18470. Real, but tasks are independent (release-to-release), not a
   dependent chain. Not an E5 fit.
 - **TDAD** — arXiv:2603.17973. TDD procedural prompting without targeted test context *raised*
