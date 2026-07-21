@@ -845,3 +845,11 @@ No model recommendation substitutes for these. Run against the top candidates on
    held-out checks.
 5. Run the pre-declared defective variants and measure visible-to-held-out agreement against the
    floor set in C4.
+
+> **For SWE-Milestone specifically, checks 2 and 4 are pre-registered and frozen (2026-07-21) in
+> `docs/protocols/e5-step1-blind-design-20260721/SWE-MILESTONE-VERIFICATION-SPEC-v1.md`** — a
+> zero-model-spend leave-one-out edge verification on scikit-learn that settles the one disqualifier a
+> container run can settle (is the dependency DAG real requirement dependency or co-location?), plus
+> per-check no-op discrimination and an on-disk calibration. Checks 3 (`.feature` runner) and 5
+> (defective-variant transfer floor) remain deferred — they need authored material, not just execution.
+> Passing the spec's gate is a lead into Step 5, not a commitment to Route 2.
