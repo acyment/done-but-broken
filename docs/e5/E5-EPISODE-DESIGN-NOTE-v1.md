@@ -130,6 +130,44 @@ Cumulative scoring in both arms (D4); one pre-named primary metric — the false
 critique record; per-episode reporting; prereg + Step-6 re-attack + fresh authorization before
 any spend (standing discipline).
 
+## D7 — Substrate-surface naturalness governs primary selection (added 2026-07-21)
+
+**Decision.** The primary substrate must be one where executable acceptance scenarios are
+*idiomatic* — an HTTP API, CLI, or service boundary — because the treatment IS executable
+acceptance testing and running it on a surface where the practice looks artificial forfeits the
+program's CTO-credibility standard. **Library-internal APIs (pandas) are demoted from co-equal
+"library arm" to corroborating real-world evidence**, not episode substrates: Given/When/Then over
+`DataFrame.idxmax` reads as a unit test in BDD costume, which a skeptic dismisses. The clean
+generalization pairing is therefore two *natural* surfaces (e.g. an HTTP service + a CLI), not
+library + service.
+
+**Consequence for standings (supersedes the D-ledger note below):** **Immich (HTTP service) is the
+primary substrate** — verified silent trap (`IMMICH-VERIFICATION-RESULTS-v1.md`), live and
+memorization-safe (`IMMICH-MEMORIZATION-PROBE-RESULTS-v1.md`: 4/4 agents default to the buggy UTC
+path), canonical acceptance-testing surface. **pandas is corroborating evidence** (the same silent
+class in a heavily-tested library, hand-verified). A second natural surface (a CLI — pip/borg-style
+candidates exist but are recency-back-burnered) is a follow-up, not a blocker.
+
+## D3-refinement-2 — Correctness defined by observable behavior, not internal convention (added 2026-07-21)
+
+**Decision.** Where the "bug" depends on an internal convention the agent cannot see (Immich: is
+the stored `Date` local-midnight or UTC-midnight?), the acceptance scenario must fix correctness by
+*observable black-box behavior*, never by the convention. The memorization probe made this concrete
+and necessary: 3 of 4 agents assumed UTC-midnight storage, and one explicitly defended UTC while
+flagging "it depends how the DB stores it." A convention-dependent oracle would score a defensible
+choice as a false regression (the structural-ceiling domain-ambiguity failure,
+[[frontier-feedback-structural-ceiling]]). The pinned Immich scenario is therefore:
+
+> A person recorded as born on 15 January 2000 must be returned by the API as `"2000-01-15"`,
+> regardless of the server's timezone.
+
+This one criterion (a) pins the precondition (only bites under a non-UTC-ahead server — the suite
+must run under such a `TZ`), (b) makes every UTC-based serialization unambiguously wrong, and
+(c) converts the storage-convention question into an implementation detail the agent must get right
+to satisfy a black-box scenario — which is exactly what executable-vs-readable measures. General
+rule: **the pinned scenario asserts what a user observes, and the precondition it pins is a
+black-box environment condition, never a white-box internal assumption.**
+
 ## Consequences for substrate attributes (delta ledger)
 
 Easier: chain requirement dropped (the scarcest property); certified-trap requirement is
