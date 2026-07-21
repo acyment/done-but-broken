@@ -1,5 +1,14 @@
 # E5 Immich pilot — pre-registration v1 (DRAFT, pre-spend, operator must authorize)
 
+> **SUPERSEDED 2026-07-21 by the Step-6 re-attack** (`docs/protocols/e5-substrate-search-v4-20260721/REATTACK-AND-RESOLUTION-v1.md`).
+> The re-attack found a fatal three-role conflation: v1's pinned scenario was simultaneously the
+> treatment's lever, the control's readable spec, and the held-out grader — making a positive
+> tautological and a null prose-contaminated. **Do not run against v1.** v2 must (a) make the
+> agent-visible scenario a realistic round-trip with NO timezone language, (b) pin the precondition
+> by harness ENVIRONMENT (non-UTC-ahead `TZ`, symmetric across arms), and (c) keep the held-out
+> grader separate from the runnable suite. Kept for provenance; the resolution doc has the details.
+
+
 Status: **draft, no external spend yet.** This is the pre-registration gate required by standing
 discipline (AGENTS.md; design note D6) before any paid run. It governs a **scoped feasibility
 pilot**, not the full study. Derived from `E5-EPISODE-DESIGN-NOTE-v1.md` (D1–D7, D3-refinements)
