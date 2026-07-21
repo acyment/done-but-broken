@@ -58,6 +58,26 @@ task whose own spec names the danger is self-verifiable — the control arm has 
 hand-checks the one named thing, and the effect vanishes. The treatment's advantage, if it
 exists, is the accumulated out-of-mind suite re-asserting what nobody is thinking about.
 
+**D3-refinement (added 2026-07-21, v4 comparison + gunicorn verification) — the establishing
+scenario must PIN THE PRECONDITION, not merely cover the feature.** The requirement as first
+written ("an establishing item under which the behavior would naturally have been specified") is
+two-sided-flawed: *gameable*, because almost any behavior can be retrofitted a plausible
+Given/When/Then after the fact; and *systematically unsatisfiable*, because silent-wrongness
+fossils live in a narrow edge configuration (a non-UTC server; an int2 column under a composite
+bloom filter queried with a cross-type literal) while real acceptance suites are written against
+the happy path and the default config. The tell that separates a real establishing item from a
+retrofitted decoy: does the scenario a team plausibly wrote **pin the exact precondition the trap
+needs to fire**, or only exercise the feature in its default configuration? A happy-path scenario
+in the default config is a decoy — the accumulated suite never fires, and the candidate fails
+silently in exactly the way the experiment is trying to detect in the agent. **Admission now
+scores establishing items on this stronger bar.** Two independent demonstrations: gunicorn's
+RFC-parser tests covered request *validity* but did not pin the keepalive-layer unframed-body
+precondition (wrong layer, blind where the trap broke); TimescaleDB's query-correctness contract
+exists but nobody scenario-tests the int2/composite/cross-type edge. **Tension to hold, not
+resolve:** this pulls against D5's practice-naturalness premium — the more service-shaped and
+intent-level the surface, the coarser the scenario, and the more likely a narrow edge slips
+through. A candidate must clear both, and the two are in genuine opposition.
+
 ## D4 — Arm workspaces: realism over artifact symmetry
 
 **Decision.**
