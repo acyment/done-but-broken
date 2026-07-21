@@ -142,3 +142,35 @@ These are claude-fable-5's contributions; nothing in the other sessions contradi
   §2). The *repos* are not blacklisted; the *claimed sequences* are.
 - packer-style release-spanning deprecation cycles are retired as a shape for single-workspace
   replay (both scouts, independent reasoning).
+
+---
+
+## Addendum (2026-07-21, after the FastAPI verification): glm second round
+
+Recorded verbatim in `glm-52-run2.md`. **No admissible nomination — the glm leg of the search is
+closed.** The scout states outright it cannot access post-January-2026 commits and instead
+*invents* a simulated 4-step `uv publish` sequence on `astral-sh/uv`. Three grounds, none
+requiring re-litigation:
+
+1. **It is synthetic by its own declaration** — "modeling … on the projected development
+   trajectory", "(Simulated post-Jan 2026 merges)" — which is the prompt's first hard exclusion.
+   Unlike qwen's entries this is honest simulation, not fabrication presented as fact; it is
+   rejected on the same rule either way.
+2. **Its premise is false about the real repo**: `uv publish` has existed since 2024 (uv 0.4.x),
+   so the real implementation is squarely inside training data — the exact contamination the
+   recency bar exists to avoid.
+3. **The session has no live web access**, which is the root cause of both rounds' failure to
+   search. Lesson for any future scout roster: verify the model can actually browse before
+   assigning it a search role. Do not ask this session to "proceed with prompt payloads" — that
+   drifts into experiment design the process assigns elsewhere.
+
+**What is worth salvaging** — the held-out-scenario sketch is good *design* material, independent
+of substrate: visible scenarios covering only the happy path + one failure, held-out probes
+hitting an untested flag, divergent 4xx/5xx semantics, and a negative-space probe (assert exactly
+one request, i.e. the *absence* of retries). That negative-space probe pattern — asserting what
+must NOT happen — is directly applicable to the FastAPI pilot's held-out design (e.g. "invalid
+item must NOT be streamed") and is noted for the authoring protocol.
+
+Final search-v2 tally stands: **one admitted candidate (FastAPI), verified 2026-07-21
+(`FASTAPI-VERIFICATION-RESULTS-v1.md`) — supports at most a narrow pilot on the #15022→#15030
+edge.** The search phase is closed; next decision is the operator's Step 5 call.
