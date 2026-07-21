@@ -50,3 +50,33 @@ the next gate. Spend the reasoning there, including the specific way coverage co
 wrong entry point, wrong granularity, behavior specified more abstractly than the regression
 manifests. That last shape (scenarios true at the level written, blind at the level broken) is
 where scout judgment is most needed.
+
+---
+
+## Exchange 2 — 2026-07-21 (operator ruling on the A1 latent-fossil tension)
+
+**Context:** the v4 mechanical pass (`MECHANICAL-PASS-v1.md`) surfaced two fossil shapes:
+regression pairs (culprit and fix both post-Jan-2026 — gunicorn) and latent-bug fossils
+(post-cutoff fix and issue, older culprit code — pip, borg, aiohttp). Strict A1 as answered
+in Exchange 1 excludes the latter.
+
+**Ruling: strict A1 stands, with a pre-declared fallback (back-burner, not a relaxation).**
+
+1. The admission bar remains: culprit AND fix post-January-2026.
+2. **Pre-declared trigger, recorded before we know whether it fires:** after both remaining
+   scout sessions and one further mechanical sweep, if the strict-passing pool holds fewer
+   than two verified conjunctions per surface shape (library-shaped, service-shaped), the
+   latent-bug shape becomes admissible — each candidate then requires a memorization probe
+   (show the model the culprit-era code without context; if it flags the bug, the candidate
+   is burned) before any use.
+3. Note recorded with the ruling: the strict pool already contains two complete conjunctions
+   covering both shapes — pandas #64478→#66250 (library) and gunicorn #3614→#3618 (service) —
+   so the fallback may never trigger.
+
+**Amendment to send scouts (append to any active v4 session):**
+
+> Amendment to the recency answer: the strict bar (culprit AND fix post-January-2026) stands
+> for nominations. However, do NOT discard latent-bug fossils — a post-January-2026 fix
+> whose culprit code is older. Report them in a clearly separated secondary list, same
+> evidence requirements, labeled "latent (back-burner)". They are being collected against a
+> pre-declared fallback, not admitted.
