@@ -1,0 +1,15 @@
+State: FULL (git checkout -f milestone-M12.4-end)
+Needed a 3rd uniform env patch beyond the 2 used for M12.3: a compatibility shim for
+_check_feature_names in sklearn/utils/validation.py. test_self_training.py imports SimpleEstimator
+from test_pipeline.py, which does `from sklearn.utils.validation import _check_feature_names,
+check_is_fitted` and calls it as `_check_feature_names(self, X, reset=True)` (free-function style).
+Checked ALL 12 milestone-end tags: _check_feature_names is a METHOD on BaseEstimator in base.py in
+every one of them -- it is never actually relocated to validation.py in this benchmark's curated
+commit set, despite M04's own milestone description claiming that refactor happens. This looks like
+a genuine gap in the benchmark's curation (description overclaims a refactor that isn't in the
+curated commits), not a DAG-ordering artifact like the other two patches.
+Fix (behavior-preserving, not a mock): added a free-function shim in validation.py that delegates to
+the existing method: `def _check_feature_names(estimator, X, *, reset): return
+estimator._check_feature_names(X, reset=reset)`.
+All 3 uniform patches consolidated into /tmp/apply_env_patches.sh inside the container for reuse.
+Result after all 3 patches: 104/104 F2P PASSED (5.95s). FULL sanity gate: PASS.

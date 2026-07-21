@@ -1,0 +1,27 @@
+State: attempted FULL (git checkout -f milestone-M12.5-end + the 3 established uniform env patches)
+Result: FULL sanity gate FAILS TO CONSTRUCT. 6 collection errors (3 distinct root causes):
+  1. ImportError: cannot import name 'ClassifierTags' from 'sklearn.utils._tags'
+  2. ImportError: cannot import name '_estimator_has' from 'sklearn.utils.validation'
+  3. ModuleNotFoundError: No module named 'sklearn.utils._test_common'
+     (sklearn/linear_model/tests/test_ridge.py needs
+     sklearn.utils._test_common.instance_generator._get_check_estimator_ids)
+
+Checked whether any of these three exist anywhere in the benchmark's own curated commit set --
+searched milestone-M04-end (the final, furthest-along checkpoint in the entire chain):
+  - ClassifierTags: absent (grep count 0)
+  - _estimator_has (module-level function/alias in validation.py): absent (grep count 0)
+  - sklearn/utils/_test_common/instance_generator.py: file does not exist
+
+This differs from the earlier 3 env patches (frozen module, _yield_masked_array_for_each_param,
+_check_feature_names), all of which had a real, extractable implementation SOMEWHERE in the 12
+milestone tags -- just temporally later than the DAG curriculum's artificial ordering. These three
+symbols are not present ANYWHERE in this repo's curated milestone set at all, meaning the test files
+at M12.5's checkpoint reference real upstream scikit-learn content beyond what any of the 12
+milestones capture. Backporting a REAL implementation isn't possible from available data; writing
+functional stand-ins would mean fabricating behavior not present in the gold data, which crosses from
+"environment compatibility fix" into exactly the kind of confident-but-wrong shortcut the spec's
+standing caution (S1) warns against.
+
+Per spec §4c: "FULL must PASS B's F2P. If it does not, the state construction is wrong -- fix it or
+mark the edge INDETERMINATE and say why." Marking INDETERMINATE. Not attempting NO-OP or any
+MINUS-A construction for B=M12.5, since the FULL sanity gate itself cannot be honestly cleared.

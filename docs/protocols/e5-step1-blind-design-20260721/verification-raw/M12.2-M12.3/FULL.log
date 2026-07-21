@@ -1,0 +1,19 @@
+State: FULL (git checkout -f milestone-M12.3-end)
+Initial run: 4 collection ERRORs (7/17 F2P tests blocked)
+  - ImportError: cannot import name 'FrozenEstimator' from 'sklearn.frozen' (unknown location)
+    Root cause: sklearn/frozen/ is introduced by M12.5's own commits, but M12.3 precedes M12.5 in
+    our chain, while the test files (which sync to the real/broad upstream timeline per the earlier
+    ancestry finding) already reference it. Same root cause the harness's own per-milestone
+    Dockerfiles work around via commit 16e222879a5 "[ENV-PATCH] Add missing sklearn.frozen module
+    for test collection" (found via `git log --all --oneline | grep -i frozen`, already present in
+    the shared history, dated as synthetic CI content, not part of the real scikit-learn repo).
+  - ImportError: cannot import name '_yield_masked_array_for_each_param' from
+    'sklearn.model_selection._search' -- same pattern; the M04 Dockerfile's own apply_patches.sh
+    stubs this exact function for the same reason ("Stub for compatibility").
+Fix applied (uniform across FULL/NO-OP/MINUS-A, NOT specific to M12.2 or M12.3, matches the harness's
+own established precedent for other milestones):
+  1. git cherry-pick --no-commit 16e222879a5 (adds the REAL sklearn/frozen/_frozen.py implementation,
+     not a mock -- this is the actual upstream FrozenEstimator code, just time-shifted earlier)
+  2. append the same _yield_masked_array_for_each_param stub used in M04's Dockerfile to
+     sklearn/model_selection/_search.py
+After fix: all 17/17 F2P tests PASSED (6.15s). FULL sanity gate: PASS.

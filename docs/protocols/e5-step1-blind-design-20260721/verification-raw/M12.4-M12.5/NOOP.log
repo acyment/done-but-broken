@@ -1,0 +1,6 @@
+State: NO-OP (git checkout -f milestone-M12.5-start + env patches, scoped 27-test subset, --timeout=15)
+Result: 27/27 FAILED (8.90s, no hangs with the timeout guard). Discrimination gate: PASS.
+Notable: test_check_array_writeable_{mmap,df,np} fail with
+"TypeError: check_array() got an unexpected keyword argument 'force_writeable'" -- confirms
+force_writeable genuinely does not exist pre-M12.5, consistent with the dependency claim being about
+a real symbol M12.5 introduces.

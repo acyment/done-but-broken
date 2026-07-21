@@ -1,0 +1,10 @@
+State: MINUS-M12.3 (git rebase --onto milestone-M12.3-start milestone-M12.3-end HEAD, from
+M12.4-end + 3 uniform env patches; rebase clean, 3 commits replayed, no conflicts)
+Build: succeeded cleanly.
+Result: 104/104 F2P PASSED (5.36s).
+Sanity check that this is a real result, not a false negative from a botched rebase: M12.3 introduces
+a `zero_division` parameter on matthews_corrcoef (verified in the M12.2->M12.3 edge's own diff).
+Confirmed via `python3 -c "import inspect; from sklearn.metrics import matthews_corrcoef;
+print(inspect.signature(matthews_corrcoef))"` in this exact MINUS-M12.3 state:
+  (y_true, y_pred, *, sample_weight=None)  -- zero_division is genuinely absent.
+The rebase did excise M12.3's contribution; M12.4's F2P set simply does not need it.

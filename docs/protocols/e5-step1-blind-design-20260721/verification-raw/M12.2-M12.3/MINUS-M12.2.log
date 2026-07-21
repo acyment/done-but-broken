@@ -1,0 +1,28 @@
+State: MINUS-M12.2 (git rebase --onto milestone-M12.2-start milestone-M12.2-end HEAD, from
+M12.3-end + 2 uniform env patches; rebase succeeded cleanly, 3 commits replayed, no conflicts)
+Build: succeeded cleanly.
+Result: 12/17 PASSED, 5/17 FAILED (1.54s).
+
+FAILED (all in sklearn/model_selection/tests/test_validation.py, all permutation_test_score-related):
+  - test_fit_param_deprecation[permutation_test_score-extra_args1]
+  - test_permutation_test_score_params
+  - test_groups_with_routing_validation[permutation_test_score-extra_args4]
+  - test_passed_unrequested_metadata[permutation_test_score-extra_args4]
+  - test_validation_functions_routing[permutation_test_score-extra_args4]
+  Traceback (test_permutation_test_score_params):
+    sklearn/model_selection/_validation.py:1679: in permutation_test_score
+      params = _check_params_groups_deprecation(fit_params, params, groups, "1.8")
+    TypeError: _check_params_groups_deprecation() takes 3 positional arguments but 4 were given
+
+  ROOT CAUSE VERIFIED (git diff milestone-M12.2-start milestone-M12.2-end -- sklearn/model_selection/_validation.py):
+  M12.2 changes the function's own signature:
+    -def _check_params_groups_deprecation(fit_params, params, groups):
+    +def _check_params_groups_deprecation(fit_params, params, groups, version):
+  and updates M12.2's own call sites (cross_val_score, cross_validate) to pass 4 args.
+  M12.3's own code (permutation_test_score, added in M12.3's commits) ALSO calls the 4-arg form.
+  With M12.2 removed, the 3-arg definition is what's left, and M12.3's 4-arg call site breaks --
+  this is a genuine, verified symbol/signature dependency, not a build/collection artifact.
+
+PASSED (12/17): all of test_matthews_corrcoef* (10 tests) and test_calibration_prefit (2 tests) --
+  unrelated to M12.2's contribution; these are the "Topological dependency" label bundling together
+  several genuinely-independent test groups under one edge/milestone pair.

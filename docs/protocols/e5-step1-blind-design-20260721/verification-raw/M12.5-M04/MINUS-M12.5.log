@@ -1,0 +1,7 @@
+State: MINUS-M12.5 (git rebase --onto milestone-M12.5-start milestone-M12.5-end milestone-M04-end, run from milestone-M04-end)
+Rebase: commits replayed (M12.5-end, M04-end] = [Start state for M13, End state for M13, Start state for M04, End state for M04]
+  "Start state for M13" was auto-dropped by git as "patch contents already upstream" (clean, no conflict)
+  Rebase completed with: "Successfully rebased and updated detached HEAD." -- no conflicts, no manual resolution needed
+Build: pip install --no-build-isolation --editable . -- succeeded cleanly
+Test: sklearn/cluster/tests/test_birch.py::test_birch_copy_deprecated
+Result: PASSED in 0.70s

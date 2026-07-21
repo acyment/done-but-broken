@@ -1,0 +1,5 @@
+State: NO-OP (git checkout -f milestone-M04-start)
+Test: sklearn/cluster/tests/test_birch.py::test_birch_copy_deprecated
+Result: FAILED in 0.92s
+Failure: DID NOT WARN. No warnings of type (<class 'FutureWarning'>,) were emitted. Emitted warnings: [].
+  at sklearn/cluster/tests/test_birch.py:249 -- pytest.warns(FutureWarning, match="`copy` was deprecated")

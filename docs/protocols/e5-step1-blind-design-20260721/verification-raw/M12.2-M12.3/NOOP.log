@@ -1,0 +1,5 @@
+State: NO-OP (git checkout -f milestone-M12.3-start, same 2 env patches reapplied)
+Result: 17/17 F2P FAILED (4.34s). Discrimination gate: PASS, no vacuous tests.
+Failure modes: mostly TypeError "unexpected keyword argument" (zero_division, params) -- metadata
+routing / new-parameter APIs not yet present pre-M12.3, plus 2 genuine AssertionErrors in
+test_calibration_prefit (array mismatch) and 3 "DID NOT WARN" deprecation-warning misses.

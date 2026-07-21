@@ -1,0 +1,29 @@
+State: attempted MINUS-M12.4 (git rebase --onto milestone-M12.4-start milestone-M12.4-end HEAD,
+from milestone-M12.5-end + env patches)
+Result: MASSIVE conflict cascade (100+ files: build configs, docs, examples, meson.build,
+pyproject.toml, ...), rebase aborted.
+
+ROOT CAUSE, verified via `git log --merges milestone-M12.4-end..milestone-M12.5-end --oneline`:
+  10de8d9109b Start state for M12.5
+  b4524d7cb84 Intermediate merge: M01
+  7fd55d19f1c Intermediate merge: M06
+  d7f30fadb28 Intermediate merge: M11
+The shared git history is NOT a simple linear chain -- it is a real DAG. M01, M06, and M11 each
+live on their own commit line and are woven into the mainline via explicit "Intermediate merge: X"
+commits before M12.5. `git rebase --onto` (the default "apply" backend) FLATTENS merge commits into
+linear patches when replaying a range that crosses one; it tried to reapply "Start state for M11"
+(an entire milestone's worth of commits, designed to apply against M11's OWN branch point) as a
+patch against our M12.4-minus'd tree, which conflicts on nearly everything.
+
+This corrects an assumption in this report's own earlier methodology section: `git merge-base
+--is-ancestor A-end B-start` returning YES proves REACHABILITY, not LINEARITY. The edges that
+constructed cleanly (M12.2->M12.3, M12.3->M12.4, M12.5->M04) all happen to sit on pure single-parent
+segments. M12.5 is the DAG's actual convergence point (5 real upstream dependencies: M12.4, M03, M01,
+M11, M06), and every edge targeting it as B hits this exact wall.
+
+Consequence: MINUS-M12.4, MINUS-M03, MINUS-M11, MINUS-M06 (i.e. the primary chain's last edge AND
+all 3 calibration edges targeting M12.5) cannot be safely constructed with the rebase-based method
+this check uses, without a proper interactive/merge-preserving rebase strategy or manual per-file
+conflict resolution across 100+ files -- out of scope for the time remaining. Marking all four
+INDETERMINATE. A follow-up with `git rebase --onto ... --rebase-merges` or a manual 3-way `git merge`
++ `git revert`-style construction might resolve this in a future pass, but was not attempted here.
