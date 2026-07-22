@@ -24,12 +24,14 @@ performs avoidance only when it recognizes the codebase (unmeasurable contaminat
 
 ## Hard constraints
 
-- **Zero external spend**: probe subjects are claude-family subagents (Immich precedent:
-  fable + opus) **plus the local Codex CLI running GPT-5.6 "Luna"** — verified ready
-  2026-07-22 (codex-cli 0.144.6, ChatGPT-subscription login, zero marginal cost;
-  `-m gpt-5.6-luna` smoke-verified same day WITH a bogus-id control proving unknown
-  models 400 loudly — no silent fallback; `gpt-5.5` also resolves if a cutoff-contrast
-  arm is wanted). No paid provider APIs, no OpenRouter, no runs. GitHub/local reads only.
+- **Spend discipline**: claude-family subagents are subscription-covered — replicate
+  freely. The Codex CLI runs on the operator's **$20/mo ChatGPT Plus account** — no
+  marginal dollars, but a **limited usage quota** the operator also needs elsewhere:
+  the core design uses **exactly 2 codex runs** (one per framing); any additional codex
+  run (replicates, the 5.5 contrast arm) only on explicit operator ok. Codex subject =
+  GPT-5.6 "Luna", verified ready 2026-07-22 (codex-cli 0.144.6; `-m gpt-5.6-luna`
+  smoke-verified with a bogus-id control proving unknown models fail loudly — no silent
+  fallback). No paid provider APIs, no OpenRouter, no runs. GitHub/local reads only.
 - **Freeze before you look.** The prereg (framings, N, scoring classes, kill thresholds)
   is committed as `PAPERLESS-MEMOPROBE-PREREG-v1.md` in the v5 protocol dir **before any
   probe agent is spawned**; the commit is the freeze evidence. Results are scored only
@@ -61,17 +63,19 @@ performs avoidance only when it recognizes the codebase (unmeasurable contaminat
 
 ## Method constraints (design details are the session's to freeze, these are pinned)
 
-- **Two framings × three subjects (fable, opus, codex/GPT-5.6-luna), N ≥ 6; replicates
-  optional** (zero marginal cost) but the count is frozen pre-run. Two model families
-  beats one: memorization is family-specific (different corpora, different cutoffs), and
-  #10256 (2025-06-24) is plausibly inside both training windows — the probe measures it
-  empirically per family and the prereg scores tells per family. The codex subject is
-  deliberately the **latest** available model: the newer the cutoff, the more likely the
-  Jan-2026 fix itself is in-corpus — the hardest memorization test and the tier that
-  would actually run episodes. *Optional, pre-declare if used:* a `gpt-5.5` contrast arm
-  (older cutoff, same family) — if 5.6 avoids where 5.5 falls in, that is suggestive of
-  cutoff-driven contamination, though capability is a confound; only explicit tells are
-  decisive either way.
+- **Core design: two framings × two subjects (fable, codex/GPT-5.6-luna) = 4 probes**,
+  count frozen pre-run. Subjects are the **current frontier of each family** — the tier
+  that would actually run episodes, and (newest cutoff) the hardest memorization test:
+  the newer the corpus, the more likely the Jan-2026 fix itself is inside it. Older
+  models (opus, gpt-5.5) are deliberately NOT core subjects — they are neither the
+  likely roster nor a strong memorization test. Claude-side replicates (extra fable
+  runs; opus rows for intra-family color) are free — allowed if frozen pre-run and
+  labeled non-load-bearing. The `gpt-5.5` cutoff-contrast arm (if 5.6 avoids where 5.5
+  falls in → suggestive of cutoff-driven contamination; capability is a confound; only
+  explicit tells are decisive) costs Plus quota — run it only if the core result is
+  ambiguous AND the operator authorizes the extra codex runs. Two model families beats
+  one: memorization is family-specific, #10256 (2025-06-24) is plausibly inside both
+  windows, and the prereg scores tells per family.
 - **Codex probe hygiene** (load the `codex:codex-cli-runtime` skill for invocation
   mechanics; pin the model explicitly — `codex exec -m gpt-5.6-luna`, and record the
   model id AND reasoning effort in the prereg — the 5.6-luna default was observed as
