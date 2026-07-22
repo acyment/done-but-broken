@@ -139,3 +139,11 @@ tests green on BUGGY; loop cold 34.5 s / warm 1.7 s, celery wait 1.3 s. The at-m
 budget (brief §7) is now spent: both nominees verified. Standing reminder: the paperless
 candidate's memorization probe is MANDATORY before any design-phase use (#10256 is
 in-window). Design-phase machinery remains an operator decision.
+
+**Update 2026-07-22 (memorization probe, prereg frozen at `0ee4314`): paperless KILLED for
+episode use — trap dead (0/4 core probes keyed by instance PK vs the frozen ≥2 bar; zero
+memorization tells in either family, including the scrubbed bare arm — avoidance is
+competence, not contamination). F5/F0–F4 records stand; mechanism goes to the trap library.
+gitea #36483→#36485 is the sole F5-verified primary candidate; next vein = CLI reserves
+(ripgrep first), operator decision.** Evidence: `PAPERLESS-MEMOPROBE-RESULTS-v1.md` +
+`raw-paperless-memoprobe/`.

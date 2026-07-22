@@ -1,0 +1,23 @@
+```python
+@staticmethod
+def from_asset(asset) -> "AssetMetadataOverrides":
+    """
+    Fills in the overrides from an asset object
+    """
+    overrides = AssetMetadataOverrides()
+    overrides.title = asset.title
+    overrides.collection_id = asset.collection.id if asset.collection else None
+    overrides.tag_ids = list(asset.tags.values_list("id", flat=True))
+    overrides.custom_fields = {
+        field_value.field.name: field_value.value
+        for field_value in asset.custom_fields.select_related("field").all()
+    }
+
+    return overrides
+```
+
+Notes:
+
+- Custom fields are keyed by `CustomField.name`.
+- The `value` property preserves the correct underlying type for strings, dates, and integers.
+- An asset with no custom fields receives an empty dictionary.
