@@ -80,7 +80,7 @@ inside the harvest reports with reasons).
 
 | Rank | Candidate | Recency | Discovery | F5 cost | Status |
 |---|---|---|---|---|---|
-| **1** | **gitea #36483 → #36485** | **Strict pair** (culprit 2026-01-17, fix 2026-01-30, issue 2026-01-29) | User-filed (CONTRIBUTOR assoc.) | Low (single Go binary, API-driven repro, loop ≪60 s) | **F5 nominee 1** |
+| **1** | **gitea #36483 → #36485** | **Strict pair** (culprit 2026-01-17, fix 2026-01-30, issue 2026-01-29) | User-filed (CONTRIBUTOR assoc.) | Low (single Go binary, API-driven repro, loop ≪60 s) | **F5 PASS 2026-07-22** — all legs + pre-culprit; `GITEA-F5-RESULTS-v1.md` |
 | **2** | **paperless #11868 → #11869** | Latent (fix+issue 2026-01-23; culprit 2023–24 era) — fallback-admissible, **memorization probe mandatory** (prior report #10256, 2025-06-24, is in training data) | User-filed (NONE assoc.) ×2, first dismissed "not a bug" | Medium (Django+Postgres+Redis compose; API-driven; async task worker in loop) | **F5 nominee 2** |
 | 3 | jellyfin #16454 | Fix in-window; culprit undetermined | User-filed | Medium | Reserve |
 | 4 | Lychee #4319 | Fix in-window; culprit undated | User-filed | Medium | Reserve (weak) |
@@ -118,3 +118,11 @@ two) F5 build sessions, in order: **gitea**, then **paperless**. Both screen doc
 Operator go is required before any F5 build session, and design-phase machinery
 (memorization probe, blind-author probe, Three Amigos, prereg v3) stays parked until after
 the operator reads this comparison.
+
+**Update 2026-07-22 (later session, operator-authorized F5 build): gitea F5 RUN — PASS on
+all four legs plus the optional pre-culprit leg; no kill found. First F5-verified
+primary-slot candidate.** Evidence: `GITEA-F5-RESULTS-v1.md` + `raw-gitea-f5/`. Kill-table
+delta: none (the falsification pass attributed every native-suite failure on the buggy
+build to environment via a fixed-tree controlled comparison; the commit-list-pinning
+integration tests pass on the buggy build — the decoy property holds). Paperless F5 and
+all design-phase machinery remain operator decisions.

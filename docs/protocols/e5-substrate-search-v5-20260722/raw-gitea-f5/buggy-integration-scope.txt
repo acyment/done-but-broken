@@ -1,0 +1,128 @@
+2026/07/22 10:56:21 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/attachments
+2026/07/22 10:56:21 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/avatars
+2026/07/22 10:56:21 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/repo-avatars
+2026/07/22 10:56:21 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/lfs
+2026/07/22 10:56:21 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/repo-archive
+2026/07/22 10:56:21 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/packages
+2026/07/22 10:56:21 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_log
+2026/07/22 10:56:21 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+2026/07/22 10:56:21 modules/git/git.go:141:InitSimple() [W] git module has been initialized already, duplicate init may work but it's better to fix it
+2026/07/22 10:56:21 routers/init.go:116:InitWebInstalled() [I] Git version: 2.50.1 (home: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/home)
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/attachments
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/avatars
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/repo-avatars
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/lfs
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/repo-archive
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/packages
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_log
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+??? [TestLogger] 2026/07/22 10:56:21 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+??? [TestLogger] 2026/07/22 10:56:21 routers/init.go:137:InitWebInstalled() [I] SQLite3 support is enabled
+??? [TestLogger] 2026/07/22 10:56:21 routers/common/db.go:24:InitDBEngine() [I] Beginning ORM engine initialization.
+??? [TestLogger] 2026/07/22 10:56:21 routers/common/db.go:31:InitDBEngine() [I] ORM engine initialization attempt #1/10...
+??? [TestLogger] 2026/07/22 10:56:21 modules/git/git.go:141:InitSimple() [W] git module has been initialized already, duplicate init may work but it's better to fix it
+??? [TestLogger] 2026/07/22 10:56:22 routers/init.go:143:InitWebInstalled() [I] ORM engine initialization successful!
+??? [TestLogger] 2026/07/22 10:56:22 .../indexer/issues/indexer.go:78:InitIssueIndexer.1() [I] PID 46906: Initializing Issue Indexer: bleve
+??? [TestLogger] 2026/07/22 10:56:22 .../indexer/code/indexer.go:152:Init.3() [I] PID: 46906 Initializing Repository Indexer at: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/indexers/repos.bleve
+??? [TestLogger] 2026/07/22 10:56:22 .../indexer/stats/indexer.go:41:populateRepoIndexer() [I] Populating the repo stats indexer with existing repositories
+??? [TestLogger] 2026/07/22 10:56:22 routers/init.go:85:syncAppConfForGit() [I] AppPath changed from '' to '/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/gitea'
+??? [TestLogger] 2026/07/22 10:56:22 routers/init.go:90:syncAppConfForGit() [I] CustomConf changed from '' to '/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/sqlite.ini'
+??? [TestLogger] 2026/07/22 10:56:22 routers/init.go:96:syncAppConfForGit() [I] re-sync repository hooks ...
+??? [TestLogger] 2026/07/22 10:56:22 routers/init.go:99:syncAppConfForGit() [I] re-write ssh public keys ...
+??? [TestLogger] 2026/07/22 10:56:22 .../indexer/issues/indexer.go:155:InitIssueIndexer.2() [I] Issue Indexer Initialization took 40.868291ms
+??? [TestLogger] 2026/07/22 10:56:22 .../indexer/code/indexer.go:227:Init.4() [I] Repository Indexer Initialization took 45.574ms
+??? [TestLogger] 2026/07/22 10:56:22 .../indexer/code/indexer.go:253:populateRepoIndexer() [I] Populating the repo indexer with existing repositories
+??? [TestLogger] 2026/07/22 10:56:22 modules/ssh/ssh.go:384:Listen() [I] Adding SSH host key: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/ssh/gitea.rsa
+??? [TestLogger] 2026/07/22 10:56:22 modules/ssh/init.go:27:Init() [I] SSH server started on "localhost:2203". Ciphers: default, key exchange algorithms: default, MACs: default
+??? [TestLogger] 2026/07/22 10:56:22 modules/graceful/server.go:52:NewServer() [I] Starting new SSH server: tcp:localhost:2203 on PID: 46906
+TestApproveAllRunsOnPullRequestPage
+TestPullRequestWorkflowConcurrency
+TestPullRequestTargetEvent
+TestPullRequestCommitStatusEvent
+TestClosePullRequestWithPath
+TestPullRequestWithPathsRebase
+TestAPIListPinnedPullrequests
+TestAPIPullCommits
+TestAPIPullReview
+TestAPIPullReviewRequest
+TestAPIPullReviewStayDismissed
+TestAPIViewPulls
+TestAPIViewPullsByBaseHead
+TestAPIMergePullWIP
+TestAPIMergePull
+TestAPICreatePullSuccess
+TestAPICreatePullBasePermission
+TestAPICreatePullHeadPermission
+TestAPICreatePullSameRepoSuccess
+TestAPICreatePullWithFieldsSuccess
+TestAPICreatePullWithFieldsFailure
+TestAPIEditPull
+TestAPICommitPullRequest
+TestAPIViewPullFilesWithHeadRepoDeleted
+TestAPICompareBranches
+TestCompareTag
+TestCompareDefault
+TestCompareBranches
+TestCompareCodeExpand
+TestAgitPullPush
+TestPushPullRefs
+TestMirrorPull
+TestPullComment
+TestListPullCommits
+TestPullCompare
+TestPullCompare_EnableAllowEditsFromMaintainer
+TestPullCreate
+TestPullCreate_TitleEscape
+TestPullBranchDelete
+TestPullCreatePrFromBaseToFork
+TestCreatePullRequestFromNestedOrgForks
+TestPullCreateParallel
+TestCreateAgitPullWithReadPermission
+TestCreatePullWhenBlocked
+TestPullDiff_CompletePRDiff
+TestPullDiff_SingleCommitPRDiff
+TestPullDiff_CommitRangePRDiff
+TestPullMerge
+TestPullRebase
+TestPullRebaseMerge
+TestPullSquash
+TestPullSquashWithHeadCommitID
+TestPullCleanUpAfterMerge
+TestPullRetargetChildOnBranchDelete
+TestPullDontRetargetChildOnWrongRepo
+TestPullRequestMergedWithNoPermissionDeleteBranch
+TestPullMergeIndexerNotifier
+TestPullAutoMergeAfterCommitStatusSucceed
+TestPullAutoMergeAfterCommitStatusSucceedAndApproval
+TestPullAutoMergeAfterCommitStatusSucceedAndApprovalForAgitFlow
+TestPullNonMergeForAdminWithBranchProtection
+TestPullSquashMergeEmpty
+TestPullSquashMessage
+TestPullView_ReviewerMissed
+TestPullView_CodeOwner
+TestPullView_GivenApproveOrRejectReviewOnClosedPR
+TestPullCreate_CommitStatus
+TestPullCreate_EmptyChangesWithDifferentCommits
+TestPullCreate_EmptyChangesWithSameCommits
+TestPullStatusDelayCheck
+TestAPIPullUpdate
+TestAPIPullUpdateByRebase
+TestAPIPullUpdateByRebase2
+Test_WebhookPullRequest
+Test_WebhookPullRequestDelete
+Test_WebhookPullRequestComment
