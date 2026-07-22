@@ -1,0 +1,342 @@
+Running go test with  -tags 'sqlite sqlite_unlock_notify sqlite sqlite_unlock_notify'...
+?   	code.gitea.io/gitea	[no test files]
+ok  	code.gitea.io/gitea/cmd	5.168s
+?   	code.gitea.io/gitea/contrib/backport	[no test files]
+ok  	code.gitea.io/gitea/models	(cached)
+ok  	code.gitea.io/gitea/models/actions	(cached)
+ok  	code.gitea.io/gitea/models/activities	(cached)
+?   	code.gitea.io/gitea/models/admin	[no test files]
+ok  	code.gitea.io/gitea/models/asymkey	(cached)
+ok  	code.gitea.io/gitea/models/auth	(cached)
+ok  	code.gitea.io/gitea/models/avatars	(cached)
+ok  	code.gitea.io/gitea/models/db	(cached)
+?   	code.gitea.io/gitea/models/db/install	[no test files]
+ok  	code.gitea.io/gitea/models/db/paginator	(cached)
+ok  	code.gitea.io/gitea/models/dbfs	(cached)
+ok  	code.gitea.io/gitea/models/git	(cached)
+ok  	code.gitea.io/gitea/models/issues	(cached)
+ok  	code.gitea.io/gitea/models/organization	(cached)
+ok  	code.gitea.io/gitea/models/packages	(cached)
+?   	code.gitea.io/gitea/models/packages/alpine	[no test files]
+?   	code.gitea.io/gitea/models/packages/arch	[no test files]
+?   	code.gitea.io/gitea/models/packages/conan	[no test files]
+?   	code.gitea.io/gitea/models/packages/conda	[no test files]
+?   	code.gitea.io/gitea/models/packages/container	[no test files]
+?   	code.gitea.io/gitea/models/packages/cran	[no test files]
+?   	code.gitea.io/gitea/models/packages/debian	[no test files]
+?   	code.gitea.io/gitea/models/packages/nuget	[no test files]
+?   	code.gitea.io/gitea/models/packages/rpm	[no test files]
+ok  	code.gitea.io/gitea/models/perm	(cached)
+ok  	code.gitea.io/gitea/models/perm/access	(cached)
+ok  	code.gitea.io/gitea/models/project	(cached)
+?   	code.gitea.io/gitea/models/pull	[no test files]
+ok  	code.gitea.io/gitea/models/renderhelper	(cached)
+ok  	code.gitea.io/gitea/models/repo	(cached)
+?   	code.gitea.io/gitea/models/secret	[no test files]
+?   	code.gitea.io/gitea/models/shared/types	[no test files]
+ok  	code.gitea.io/gitea/models/system	(cached)
+ok  	code.gitea.io/gitea/models/unit	(cached)
+ok  	code.gitea.io/gitea/models/unittest	(cached)
+ok  	code.gitea.io/gitea/models/user	2.636s
+ok  	code.gitea.io/gitea/models/webhook	(cached)
+ok  	code.gitea.io/gitea/modules/actions	(cached)
+ok  	code.gitea.io/gitea/modules/activitypub	(cached)
+ok  	code.gitea.io/gitea/modules/analyze	(cached)
+ok  	code.gitea.io/gitea/modules/assetfs	(cached)
+?   	code.gitea.io/gitea/modules/auth	[no test files]
+ok  	code.gitea.io/gitea/modules/auth/httpauth	(cached)
+ok  	code.gitea.io/gitea/modules/auth/openid	(cached)
+?   	code.gitea.io/gitea/modules/auth/pam	[no test files]
+ok  	code.gitea.io/gitea/modules/auth/password	(cached)
+ok  	code.gitea.io/gitea/modules/auth/password/hash	(cached)
+ok  	code.gitea.io/gitea/modules/auth/password/pwn	(cached)
+ok  	code.gitea.io/gitea/modules/auth/webauthn	(cached)
+ok  	code.gitea.io/gitea/modules/avatar	(cached)
+?   	code.gitea.io/gitea/modules/avatar/identicon	[no test files]
+?   	code.gitea.io/gitea/modules/badge	[no test files]
+ok  	code.gitea.io/gitea/modules/base	(cached)
+ok  	code.gitea.io/gitea/modules/cache	(cached)
+?   	code.gitea.io/gitea/modules/cachegroup	[no test files]
+ok  	code.gitea.io/gitea/modules/charset	(cached)
+?   	code.gitea.io/gitea/modules/charset/ambiguous	[no test files]
+?   	code.gitea.io/gitea/modules/charset/invisible	[no test files]
+ok  	code.gitea.io/gitea/modules/commitstatus	(cached)
+ok  	code.gitea.io/gitea/modules/container	(cached)
+ok  	code.gitea.io/gitea/modules/csv	(cached)
+ok  	code.gitea.io/gitea/modules/dump	(cached)
+ok  	code.gitea.io/gitea/modules/emoji	(cached)
+ok  	code.gitea.io/gitea/modules/eventsource	(cached)
+ok  	code.gitea.io/gitea/modules/fileicon	(cached)
+ok  	code.gitea.io/gitea/modules/generate	(cached)
+ok  	code.gitea.io/gitea/modules/git	(cached)
+ok  	code.gitea.io/gitea/modules/git/attribute	(cached)
+ok  	code.gitea.io/gitea/modules/git/foreachref	(cached)
+ok  	code.gitea.io/gitea/modules/git/gitcmd	(cached)
+?   	code.gitea.io/gitea/modules/git/internal	[no test files]
+ok  	code.gitea.io/gitea/modules/git/languagestats	(cached)
+ok  	code.gitea.io/gitea/modules/git/pipeline	(cached)
+ok  	code.gitea.io/gitea/modules/git/url	(cached)
+ok  	code.gitea.io/gitea/modules/gitrepo	(cached)
+ok  	code.gitea.io/gitea/modules/glob	(cached)
+ok  	code.gitea.io/gitea/modules/globallock	(cached)
+?   	code.gitea.io/gitea/modules/graceful	[no test files]
+ok  	code.gitea.io/gitea/modules/graceful/releasereopen	(cached)
+ok  	code.gitea.io/gitea/modules/gtprof	(cached)
+ok  	code.gitea.io/gitea/modules/hcaptcha	(cached)
+ok  	code.gitea.io/gitea/modules/highlight	(cached)
+ok  	code.gitea.io/gitea/modules/hostmatcher	(cached)
+ok  	code.gitea.io/gitea/modules/htmlutil	(cached)
+ok  	code.gitea.io/gitea/modules/httpcache	(cached)
+ok  	code.gitea.io/gitea/modules/httplib	(cached)
+?   	code.gitea.io/gitea/modules/indexer	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/code	(cached)
+?   	code.gitea.io/gitea/modules/indexer/code/bleve	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/code/bleve/token/path	(cached)
+ok  	code.gitea.io/gitea/modules/indexer/code/elasticsearch	(cached)
+ok  	code.gitea.io/gitea/modules/indexer/code/gitgrep	(cached)
+?   	code.gitea.io/gitea/modules/indexer/code/internal	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/internal	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/internal/bleve	(cached)
+?   	code.gitea.io/gitea/modules/indexer/internal/db	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/internal/elasticsearch	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/internal/meilisearch	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/issues	(cached)
+ok  	code.gitea.io/gitea/modules/indexer/issues/bleve	(cached)
+?   	code.gitea.io/gitea/modules/indexer/issues/db	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/issues/elasticsearch	(cached)
+?   	code.gitea.io/gitea/modules/indexer/issues/internal	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/issues/internal/tests	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/issues/meilisearch	(cached)
+ok  	code.gitea.io/gitea/modules/indexer/stats	(cached)
+ok  	code.gitea.io/gitea/modules/issue/template	(cached)
+ok  	code.gitea.io/gitea/modules/json	(cached)
+ok  	code.gitea.io/gitea/modules/label	(cached)
+ok  	code.gitea.io/gitea/modules/lfs	(cached)
+?   	code.gitea.io/gitea/modules/lfstransfer	[no test files]
+ok  	code.gitea.io/gitea/modules/lfstransfer/backend	(cached)
+ok  	code.gitea.io/gitea/modules/log	(cached)
+ok  	code.gitea.io/gitea/modules/markup	(cached)
+?   	code.gitea.io/gitea/modules/markup/asciicast	[no test files]
+ok  	code.gitea.io/gitea/modules/markup/common	(cached)
+ok  	code.gitea.io/gitea/modules/markup/console	(cached)
+ok  	code.gitea.io/gitea/modules/markup/csv	(cached)
+?   	code.gitea.io/gitea/modules/markup/external	[no test files]
+ok  	code.gitea.io/gitea/modules/markup/internal	(cached)
+ok  	code.gitea.io/gitea/modules/markup/markdown	(cached)
+?   	code.gitea.io/gitea/modules/markup/markdown/math	[no test files]
+ok  	code.gitea.io/gitea/modules/markup/mdstripper	(cached)
+ok  	code.gitea.io/gitea/modules/markup/orgmode	(cached)
+?   	code.gitea.io/gitea/modules/mcaptcha	[no test files]
+?   	code.gitea.io/gitea/modules/metrics	[no test files]
+ok  	code.gitea.io/gitea/modules/migration	(cached)
+ok  	code.gitea.io/gitea/modules/nosql	(cached)
+ok  	code.gitea.io/gitea/modules/optional	(cached)
+?   	code.gitea.io/gitea/modules/options	[no test files]
+ok  	code.gitea.io/gitea/modules/packages	(cached)
+ok  	code.gitea.io/gitea/modules/packages/alpine	(cached)
+ok  	code.gitea.io/gitea/modules/packages/arch	(cached)
+ok  	code.gitea.io/gitea/modules/packages/cargo	(cached)
+ok  	code.gitea.io/gitea/modules/packages/chef	(cached)
+ok  	code.gitea.io/gitea/modules/packages/composer	(cached)
+ok  	code.gitea.io/gitea/modules/packages/conan	(cached)
+ok  	code.gitea.io/gitea/modules/packages/conda	(cached)
+ok  	code.gitea.io/gitea/modules/packages/container	(cached)
+?   	code.gitea.io/gitea/modules/packages/container/helm	[no test files]
+ok  	code.gitea.io/gitea/modules/packages/cran	(cached)
+ok  	code.gitea.io/gitea/modules/packages/debian	(cached)
+ok  	code.gitea.io/gitea/modules/packages/goproxy	(cached)
+?   	code.gitea.io/gitea/modules/packages/helm	[no test files]
+ok  	code.gitea.io/gitea/modules/packages/maven	(cached)
+ok  	code.gitea.io/gitea/modules/packages/npm	(cached)
+ok  	code.gitea.io/gitea/modules/packages/nuget	(cached)
+ok  	code.gitea.io/gitea/modules/packages/pub	(cached)
+?   	code.gitea.io/gitea/modules/packages/pypi	[no test files]
+ok  	code.gitea.io/gitea/modules/packages/rpm	(cached)
+ok  	code.gitea.io/gitea/modules/packages/rubygems	(cached)
+ok  	code.gitea.io/gitea/modules/packages/swift	(cached)
+ok  	code.gitea.io/gitea/modules/packages/vagrant	(cached)
+ok  	code.gitea.io/gitea/modules/paginator	(cached)
+?   	code.gitea.io/gitea/modules/pprof	[no test files]
+ok  	code.gitea.io/gitea/modules/private	(cached)
+ok  	code.gitea.io/gitea/modules/process	(cached)
+?   	code.gitea.io/gitea/modules/proxy	[no test files]
+?   	code.gitea.io/gitea/modules/proxyprotocol	[no test files]
+ok  	code.gitea.io/gitea/modules/public	(cached)
+ok  	code.gitea.io/gitea/modules/queue	(cached)
+?   	code.gitea.io/gitea/modules/queue/lqinternal	[no test files]
+?   	code.gitea.io/gitea/modules/recaptcha	[no test files]
+ok  	code.gitea.io/gitea/modules/references	(cached)
+ok  	code.gitea.io/gitea/modules/regexplru	(cached)
+ok  	code.gitea.io/gitea/modules/repository	(cached)
+?   	code.gitea.io/gitea/modules/reqctx	[no test files]
+ok  	code.gitea.io/gitea/modules/secret	(cached)
+?   	code.gitea.io/gitea/modules/session	[no test files]
+ok  	code.gitea.io/gitea/modules/setting	(cached)
+?   	code.gitea.io/gitea/modules/setting/config	[no test files]
+ok  	code.gitea.io/gitea/modules/sitemap	(cached)
+?   	code.gitea.io/gitea/modules/ssh	[no test files]
+ok  	code.gitea.io/gitea/modules/storage	(cached)
+ok  	code.gitea.io/gitea/modules/structs	(cached)
+ok  	code.gitea.io/gitea/modules/svg	(cached)
+ok  	code.gitea.io/gitea/modules/system	(cached)
+?   	code.gitea.io/gitea/modules/tailmsg	[no test files]
+ok  	code.gitea.io/gitea/modules/tempdir	(cached)
+ok  	code.gitea.io/gitea/modules/templates	(cached)
+ok  	code.gitea.io/gitea/modules/templates/eval	(cached)
+ok  	code.gitea.io/gitea/modules/templates/scopedtmpl	(cached)
+ok  	code.gitea.io/gitea/modules/templates/vars	(cached)
+ok  	code.gitea.io/gitea/modules/test	(cached)
+?   	code.gitea.io/gitea/modules/testlogger	[no test files]
+ok  	code.gitea.io/gitea/modules/timeutil	(cached)
+ok  	code.gitea.io/gitea/modules/translation	(cached)
+ok  	code.gitea.io/gitea/modules/translation/i18n	(cached)
+?   	code.gitea.io/gitea/modules/turnstile	[no test files]
+ok  	code.gitea.io/gitea/modules/typesniffer	(cached)
+?   	code.gitea.io/gitea/modules/updatechecker	[no test files]
+ok  	code.gitea.io/gitea/modules/uri	(cached)
+ok  	code.gitea.io/gitea/modules/user	(cached)
+ok  	code.gitea.io/gitea/modules/util	(cached)
+ok  	code.gitea.io/gitea/modules/util/filebuffer	(cached)
+ok  	code.gitea.io/gitea/modules/util/rotatingfilewriter	(cached)
+ok  	code.gitea.io/gitea/modules/validation	(cached)
+ok  	code.gitea.io/gitea/modules/web	(cached)
+?   	code.gitea.io/gitea/modules/web/middleware	[no test files]
+ok  	code.gitea.io/gitea/modules/web/routing	(cached)
+?   	code.gitea.io/gitea/modules/web/types	[no test files]
+?   	code.gitea.io/gitea/modules/webhook	[no test files]
+ok  	code.gitea.io/gitea/modules/zstd	0.900s
+?   	code.gitea.io/gitea/routers	[no test files]
+?   	code.gitea.io/gitea/routers/api/actions	[no test files]
+ok  	code.gitea.io/gitea/routers/api/actions/ping	(cached)
+?   	code.gitea.io/gitea/routers/api/actions/runner	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/alpine	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/arch	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/cargo	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/chef	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/composer	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/conan	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/conda	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/container	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/cran	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/debian	[no test files]
+ok  	code.gitea.io/gitea/routers/api/packages/generic	(cached)
+?   	code.gitea.io/gitea/routers/api/packages/goproxy	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/helm	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/helper	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/maven	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/npm	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/nuget	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/pub	[no test files]
+ok  	code.gitea.io/gitea/routers/api/packages/pypi	(cached)
+?   	code.gitea.io/gitea/routers/api/packages/rpm	[no test files]
+ok  	code.gitea.io/gitea/routers/api/packages/rubygems	(cached)
+?   	code.gitea.io/gitea/routers/api/packages/swift	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/vagrant	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/activitypub	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/admin	[no test files]
+ok  	code.gitea.io/gitea/routers/api/v1/misc	(cached)
+?   	code.gitea.io/gitea/routers/api/v1/notify	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/org	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/packages	[no test files]
+ok  	code.gitea.io/gitea/routers/api/v1/repo	3.149s
+?   	code.gitea.io/gitea/routers/api/v1/settings	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/shared	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/swagger	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/user	[no test files]
+ok  	code.gitea.io/gitea/routers/api/v1/utils	(cached)
+ok  	code.gitea.io/gitea/routers/common	(cached)
+ok  	code.gitea.io/gitea/routers/install	3.458s
+ok  	code.gitea.io/gitea/routers/private	(cached)
+ok  	code.gitea.io/gitea/routers/utils	(cached)
+?   	code.gitea.io/gitea/routers/web	[no test files]
+ok  	code.gitea.io/gitea/routers/web/admin	(cached)
+ok  	code.gitea.io/gitea/routers/web/auth	(cached)
+?   	code.gitea.io/gitea/routers/web/devtest	[no test files]
+?   	code.gitea.io/gitea/routers/web/events	[no test files]
+?   	code.gitea.io/gitea/routers/web/explore	[no test files]
+ok  	code.gitea.io/gitea/routers/web/feed	(cached)
+?   	code.gitea.io/gitea/routers/web/healthcheck	[no test files]
+?   	code.gitea.io/gitea/routers/web/misc	[no test files]
+ok  	code.gitea.io/gitea/routers/web/org	(cached)
+?   	code.gitea.io/gitea/routers/web/org/setting	[no test files]
+ok  	code.gitea.io/gitea/routers/web/repo	(cached)
+ok  	code.gitea.io/gitea/routers/web/repo/actions	(cached)
+ok  	code.gitea.io/gitea/routers/web/repo/setting	(cached)
+?   	code.gitea.io/gitea/routers/web/shared/actions	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/issue	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/label	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/packages	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/project	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/secrets	[no test files]
+ok  	code.gitea.io/gitea/routers/web/shared/user	(cached)
+ok  	code.gitea.io/gitea/routers/web/user	(cached)
+ok  	code.gitea.io/gitea/routers/web/user/setting	(cached)
+ok  	code.gitea.io/gitea/routers/web/user/setting/security	(cached)
+ok  	code.gitea.io/gitea/services/actions	(cached)
+ok  	code.gitea.io/gitea/services/agit	(cached)
+ok  	code.gitea.io/gitea/services/asymkey	(cached)
+ok  	code.gitea.io/gitea/services/attachment	(cached)
+ok  	code.gitea.io/gitea/services/auth	(cached)
+?   	code.gitea.io/gitea/services/auth/source	[no test files]
+ok  	code.gitea.io/gitea/services/auth/source/db	(cached) [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/ldap	(cached) [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/oauth2	(cached)
+ok  	code.gitea.io/gitea/services/auth/source/pam	(cached) [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/smtp	(cached) [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/sspi	(cached) [no tests to run]
+?   	code.gitea.io/gitea/services/automerge	[no test files]
+?   	code.gitea.io/gitea/services/automergequeue	[no test files]
+ok  	code.gitea.io/gitea/services/context	(cached)
+ok  	code.gitea.io/gitea/services/context/upload	(cached)
+?   	code.gitea.io/gitea/services/contexttest	[no test files]
+ok  	code.gitea.io/gitea/services/convert	(cached)
+ok  	code.gitea.io/gitea/services/cron	(cached)
+ok  	code.gitea.io/gitea/services/doctor	(cached)
+?   	code.gitea.io/gitea/services/externalaccount	[no test files]
+ok  	code.gitea.io/gitea/services/feed	(cached)
+ok  	code.gitea.io/gitea/services/forms	(cached)
+?   	code.gitea.io/gitea/services/git	[no test files]
+ok  	code.gitea.io/gitea/services/gitdiff	(cached)
+?   	code.gitea.io/gitea/services/indexer	[no test files]
+ok  	code.gitea.io/gitea/services/issue	(cached)
+ok  	code.gitea.io/gitea/services/lfs	(cached)
+ok  	code.gitea.io/gitea/services/mailer	(cached)
+ok  	code.gitea.io/gitea/services/mailer/incoming	(cached)
+?   	code.gitea.io/gitea/services/mailer/incoming/payload	[no test files]
+ok  	code.gitea.io/gitea/services/mailer/sender	(cached)
+?   	code.gitea.io/gitea/services/mailer/token	[no test files]
+ok  	code.gitea.io/gitea/services/markup	(cached)
+ok  	code.gitea.io/gitea/services/migrations	(cached)
+ok  	code.gitea.io/gitea/services/mirror	(cached)
+?   	code.gitea.io/gitea/services/notify	[no test files]
+ok  	code.gitea.io/gitea/services/oauth2_provider	(cached)
+ok  	code.gitea.io/gitea/services/org	(cached)
+?   	code.gitea.io/gitea/services/packages	[no test files]
+?   	code.gitea.io/gitea/services/packages/alpine	[no test files]
+ok  	code.gitea.io/gitea/services/packages/arch	(cached)
+?   	code.gitea.io/gitea/services/packages/cargo	[no test files]
+?   	code.gitea.io/gitea/services/packages/cleanup	[no test files]
+?   	code.gitea.io/gitea/services/packages/container	[no test files]
+?   	code.gitea.io/gitea/services/packages/debian	[no test files]
+?   	code.gitea.io/gitea/services/packages/rpm	[no test files]
+ok  	code.gitea.io/gitea/services/projects	(cached)
+ok  	code.gitea.io/gitea/services/pull	3.671s
+ok  	code.gitea.io/gitea/services/release	(cached)
+ok  	code.gitea.io/gitea/services/repository	(cached)
+ok  	code.gitea.io/gitea/services/repository/archiver	(cached)
+?   	code.gitea.io/gitea/services/repository/commitstatus	[no test files]
+ok  	code.gitea.io/gitea/services/repository/files	(cached)
+ok  	code.gitea.io/gitea/services/repository/gitgraph	(cached)
+ok  	code.gitea.io/gitea/services/secrets	(cached)
+?   	code.gitea.io/gitea/services/task	[no test files]
+?   	code.gitea.io/gitea/services/uinotification	[no test files]
+ok  	code.gitea.io/gitea/services/user	(cached)
+?   	code.gitea.io/gitea/services/versioned_migration	[no test files]
+ok  	code.gitea.io/gitea/services/webhook	(cached)
+ok  	code.gitea.io/gitea/services/webtheme	(cached)
+ok  	code.gitea.io/gitea/services/wiki	(cached)
+ok  	code.gitea.io/gitea/tests/fuzz	(cached)
+ok  	code.gitea.io/gitea/tools/codeformat	(cached)
+CLEAN TEST-BACKEND EXIT: 0

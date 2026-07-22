@@ -1,0 +1,681 @@
+2026/07/22 10:56:32 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/attachments
+2026/07/22 10:56:32 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/avatars
+2026/07/22 10:56:32 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/repo-avatars
+2026/07/22 10:56:32 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/lfs
+2026/07/22 10:56:32 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/repo-archive
+2026/07/22 10:56:32 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/packages
+2026/07/22 10:56:32 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_log
+2026/07/22 10:56:32 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+2026/07/22 10:56:32 modules/git/git.go:141:InitSimple() [W] git module has been initialized already, duplicate init may work but it's better to fix it
+2026/07/22 10:56:32 routers/init.go:116:InitWebInstalled() [I] Git version: 2.50.1 (home: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/home)
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/attachments
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/avatars
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/repo-avatars
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/tests/integration/gitea-integration-sqlite/data/lfs
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/repo-archive
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/packages
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_log
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+??? [TestLogger] 2026/07/22 10:56:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+??? [TestLogger] 2026/07/22 10:56:32 routers/init.go:137:InitWebInstalled() [I] SQLite3 support is enabled
+??? [TestLogger] 2026/07/22 10:56:32 routers/common/db.go:24:InitDBEngine() [I] Beginning ORM engine initialization.
+??? [TestLogger] 2026/07/22 10:56:32 routers/common/db.go:31:InitDBEngine() [I] ORM engine initialization attempt #1/10...
+??? [TestLogger] 2026/07/22 10:56:32 modules/git/git.go:141:InitSimple() [W] git module has been initialized already, duplicate init may work but it's better to fix it
+??? [TestLogger] 2026/07/22 10:56:32 routers/init.go:143:InitWebInstalled() [I] ORM engine initialization successful!
+??? [TestLogger] 2026/07/22 10:56:32 .../indexer/issues/indexer.go:78:InitIssueIndexer.1() [I] PID 46960: Initializing Issue Indexer: bleve
+??? [TestLogger] 2026/07/22 10:56:32 .../indexer/code/indexer.go:152:Init.3() [I] PID: 46960 Initializing Repository Indexer at: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/indexers/repos.bleve
+??? [TestLogger] 2026/07/22 10:56:32 .../indexer/stats/indexer.go:41:populateRepoIndexer() [I] Populating the repo stats indexer with existing repositories
+??? [TestLogger] 2026/07/22 10:56:32 modules/ssh/ssh.go:384:Listen() [I] Adding SSH host key: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/ssh/gitea.rsa
+??? [TestLogger] 2026/07/22 10:56:32 modules/ssh/init.go:27:Init() [I] SSH server started on "localhost:2203". Ciphers: default, key exchange algorithms: default, MACs: default
+??? [TestLogger] 2026/07/22 10:56:32 modules/graceful/server.go:52:NewServer() [I] Starting new SSH server: tcp:localhost:2203 on PID: 46960
+??? [TestLogger] 2026/07/22 10:56:32 .../indexer/issues/indexer.go:155:InitIssueIndexer.2() [I] Issue Indexer Initialization took 43.360375ms
+??? [TestLogger] 2026/07/22 10:56:32 .../indexer/code/indexer.go:253:populateRepoIndexer() [I] Populating the repo indexer with existing repositories
+??? [TestLogger] 2026/07/22 10:56:32 .../indexer/code/indexer.go:227:Init.4() [I] Repository Indexer Initialization took 43.309459ms
+=== TestApproveAllRunsOnPullRequestPage (tests/integration/actions_approve_test.go:26)
++++ TestApproveAllRunsOnPullRequestPage is a slow test (run: 13.029391625s, flush: 5.886666ms)
+=== TestPullRequestWorkflowConcurrency (tests/integration/actions_concurrency_test.go:361)
++++ TestPullRequestWorkflowConcurrency is a slow test (run: 17.364576541s, flush: 12.767667ms)
+=== TestPullRequestTargetEvent (tests/integration/actions_trigger_test.go:45)
++++ TestPullRequestTargetEvent is a slow test (run: 10.667116167s, flush: 185.417µs)
+=== TestPullRequestCommitStatusEvent (tests/integration/actions_trigger_test.go:471)
++++ TestPullRequestCommitStatusEvent is a slow test (run: 14.680978416s, flush: 172.708µs)
+=== TestClosePullRequestWithPath (tests/integration/actions_trigger_test.go:1375)
++++ TestClosePullRequestWithPath is a slow test (run: 10.644012s, flush: 116.833µs)
+=== TestPullRequestWithPathsRebase (tests/integration/actions_trigger_test.go:1601)
++++ TestPullRequestWithPathsRebase is a slow test (run: 18.495502791s, flush: 151.25µs)
+=== TestAPIListPinnedPullrequests (tests/integration/api_issue_pin_test.go:161)
+=== TestAPIPullCommits (tests/integration/api_pull_commits_test.go:21)
+=== TestAPIPullReview (tests/integration/api_pull_review_test.go:29)
+=== TestAPIPullReviewRequest (tests/integration/api_pull_review_test.go:238)
+=== TestAPIPullReviewStayDismissed (tests/integration/api_pull_review_test.go:368)
+=== TestAPIViewPulls (tests/integration/api_pull_test.go:40)
+=== TestAPIViewPullsByBaseHead (tests/integration/api_pull_test.go:149)
+=== TestAPIMergePullWIP (tests/integration/api_pull_test.go:171)
+=== TestAPIMergePull (tests/integration/api_pull_test.go:194)
++++ TestAPIMergePull is a slow test (run: 1m15.988171916s, flush: 141.625µs)
+=== TestAPICreatePullSuccess (tests/integration/api_pull_test.go:264)
+=== TestAPICreatePullBasePermission (tests/integration/api_pull_test.go:291)
+=== TestAPICreatePullHeadPermission (tests/integration/api_pull_test.go:327)
+=== TestAPICreatePullSameRepoSuccess (tests/integration/api_pull_test.go:358)
+=== TestAPICreatePullWithFieldsSuccess (tests/integration/api_pull_test.go:375)
+=== TestAPICreatePullWithFieldsFailure (tests/integration/api_pull_test.go:413)
+=== TestAPIEditPull (tests/integration/api_pull_test.go:448)
+=== TestAPICommitPullRequest (tests/integration/api_pull_test.go:507)
+=== TestAPIViewPullFilesWithHeadRepoDeleted (tests/integration/api_pull_test.go:523)
+=== TestAPICompareBranches (tests/integration/api_repo_compare_test.go:20)
+=== TestAPICompareBranches/CompareBranches (tests/integration/api_repo_compare_test.go:28)
+=== TestAPICompareBranches/CompareCommits (tests/integration/api_repo_compare_test.go:40)
+=== TestCompareTag (tests/integration/compare_test.go:23)
+=== TestCompareDefault (tests/integration/compare_test.go:40)
+=== TestCompareBranches (tests/integration/compare_test.go:71)
+=== TestCompareCodeExpand (tests/integration/compare_test.go:128)
+=== TestAgitPullPush (tests/integration/git_misc_test.go:84)
+=== TestPushPullRefs (tests/integration/git_push_test.go:203)
+=== TestMirrorPull (tests/integration/mirror_pull_test.go:27)
+=== TestPullComment (tests/integration/pull_comment_test.go:99)
++++ TestPullComment is a slow test (run: 25.511540042s, flush: 116.208µs)
+=== TestListPullCommits (tests/integration/pull_commit_test.go:18)
+=== TestListPullCommits/CommitBlobExcerpt (tests/integration/pull_commit_test.go:36)
+=== TestPullCompare (tests/integration/pull_compare_test.go:23)
+=== TestPullCompare (tests/integration/pull_compare_test.go:58)
+=== TestPullCompare (tests/integration/pull_compare_test.go:59)
+=== TestPullCompare_EnableAllowEditsFromMaintainer (tests/integration/pull_compare_test.go:91)
++++ TestPullCompare_EnableAllowEditsFromMaintainer is a slow test (run: 19.10713875s, flush: 131.167µs)
+=== TestPullCreate (tests/integration/pull_create_test.go:139)
++++ TestPullCreate is a slow test (run: 15.956145083s, flush: 124.25µs)
+=== TestPullCreate_TitleEscape (tests/integration/pull_create_test.go:181)
++++ TestPullCreate_TitleEscape is a slow test (run: 16.099243167s, flush: 209.083µs)
+=== TestPullBranchDelete (tests/integration/pull_create_test.go:232)
+=== TestPullBranchDelete (tests/integration/pull_create_test.go:233)
+=== TestPullCreatePrFromBaseToFork (tests/integration/pull_create_test.go:270)
++++ TestPullCreatePrFromBaseToFork is a slow test (run: 13.985402791s, flush: 110.667µs)
+=== TestCreatePullRequestFromNestedOrgForks (tests/integration/pull_create_test.go:295)
+=== TestPullCreateParallel (tests/integration/pull_create_test.go:384)
+=== TestCreateAgitPullWithReadPermission (tests/integration/pull_create_test.go:422)
+=== TestCreatePullWhenBlocked (tests/integration/pull_create_test.go:464)
++++ TestCreatePullWhenBlocked is a slow test (run: 14.506618875s, flush: 68.333µs)
+=== TestPullDiff_CompletePRDiff (tests/integration/pull_diff_test.go:29)
+=== TestPullDiff_SingleCommitPRDiff (tests/integration/pull_diff_test.go:29)
+=== TestPullDiff_CommitRangePRDiff (tests/integration/pull_diff_test.go:29)
+=== TestPullMerge (tests/integration/pull_merge_test.go:96)
++++ TestPullMerge is a slow test (run: 23.223331666s, flush: 175.292µs)
+--- FAIL: TestPullMerge (23.22s)
+    testlogger.go:62: 2026/07/22 11:02:13 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.4ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 0.9ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 84.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.5ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 220.4ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 92.9ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:02:13 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 104.8ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:02:14 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:02:16 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 33] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:16 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3340.5ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:02:19 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3596.4ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:02:21 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[28]: unable to deliver webhook task[28] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:02:21 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:26 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[29]: unable to deliver webhook task[29] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:02:26 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10430.1ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:02:26 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13213.0ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:02:26 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 73.0ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:02:27 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 133.4ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:02:27 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 268.5ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:02:28 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1200.3ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:02:29 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:02:29 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:30 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[30]: unable to deliver webhook task[30] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": dial tcp: lookup www.example.com: no such host
+    testlogger.go:62: 2026/07/22 11:02:30 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:31 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3447.3ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:02:32 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3335.6ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:117
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:96
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullMerge
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:02:35 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[31]: unable to deliver webhook task[31] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:02:35 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 6281.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 7641.2ms @ repo/pull.go:1079(repo.MergePullRequest)
+=== TestPullRebase (tests/integration/pull_merge_test.go:133)
++++ TestPullRebase is a slow test (run: 24.888683833s, flush: 238.958µs)
+--- FAIL: TestPullRebase (24.89s)
+    testlogger.go:62: 2026/07/22 11:02:36 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.6ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 0.9ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 93.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.3ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 221.3ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 100.7ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:02:36 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 114.9ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:02:38 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:02:39 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 34] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:39 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3054.2ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:02:42 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3198.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:02:44 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[32]: unable to deliver webhook task[32] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:02:44 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:49 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[33]: unable to deliver webhook task[33] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:02:50 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10421.1ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:02:50 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13315.1ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:02:50 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 71.2ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:02:50 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 131.4ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:02:50 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 268.3ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:02:51 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1105.0ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:02:52 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:02:53 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:02:54 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3159.6ms @ repo/pull.go:1079(repo.MergePullRequest)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:154
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:133
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullRebase
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:02:56 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3967.4ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:02:58 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[34]: unable to deliver webhook task[34] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:02:58 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:00 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[35]: unable to deliver webhook task[35] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": dial tcp: lookup www.example.com: no such host
+    testlogger.go:62: 2026/07/22 11:03:00 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 7906.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullRebaseMerge (tests/integration/pull_merge_test.go:170)
++++ TestPullRebaseMerge is a slow test (run: 27.549639542s, flush: 282.5µs)
+--- FAIL: TestPullRebaseMerge (27.55s)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 9349.4ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:03:01 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 4.0ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 0.9ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 100.7ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.4ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 239.4ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 93.8ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:03:01 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 111.2ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:03:03 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:03:04 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 35] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:04 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3128.2ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:03:07 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3364.3ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:03:09 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[36]: unable to deliver webhook task[36] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:09 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:14 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[37]: unable to deliver webhook task[37] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:15 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10425.4ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:03:15 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13230.0ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:03:15 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 71.7ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:03:15 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 136.7ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:03:15 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 270.8ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:03:16 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1196.9ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:03:17 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:03:18 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:19 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3218.1ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:03:20 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3065.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:191
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:170
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullRebaseMerge
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:03:23 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[38]: unable to deliver webhook task[38] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:23 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:28 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[39]: unable to deliver webhook task[39] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:28 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10524.6ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullSquash (tests/integration/pull_merge_test.go:207)
++++ TestPullSquash is a slow test (run: 36.477573042s, flush: 290.25µs)
+--- FAIL: TestPullSquash (36.48s)
+    testlogger.go:62: 2026/07/22 11:03:28 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 11934.7ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:03:28 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:03:28 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 4.0ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:03:28 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 0.9ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:03:28 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 93.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:03:28 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.3ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:03:29 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 239.4ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:03:29 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 94.5ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:03:29 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 107.5ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:03:30 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:03:32 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 36] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:32 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3591.0ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:03:34 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[40]: unable to deliver webhook task[40] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": dial tcp: lookup www.example.com: no such host
+    testlogger.go:62: 2026/07/22 11:03:34 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:35 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3746.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:03:39 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[41]: unable to deliver webhook task[41] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:40 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 7810.2ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:03:40 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 10693.3ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:03:40 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 73.4ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:03:40 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 106.0ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:03:40 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:03:41 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 36] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:43 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3718.6ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:03:44 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3876.5ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:03:46 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[42]: unable to deliver webhook task[42] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:46 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:51 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[43]: unable to deliver webhook task[43] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:51 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10453.5ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:03:51 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 11335.8ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:03:51 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 76.9ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:03:51 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 137.9ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:03:52 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 272.0ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:03:53 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1110.8ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:03:54 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:03:54 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:03:56 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3780.9ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:03:57 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3676.4ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:221
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:207
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullSquash
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:03:59 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[44]: unable to deliver webhook task[44] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:03:59 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:04 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[45]: unable to deliver webhook task[45] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:04 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10463.8ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 11812.9ms @ repo/pull.go:1079(repo.MergePullRequest)
+=== TestPullSquashWithHeadCommitID (tests/integration/pull_merge_test.go:233)
++++ TestPullSquashWithHeadCommitID is a slow test (run: 34.590784875s, flush: 270.25µs)
+--- FAIL: TestPullSquashWithHeadCommitID (34.59s)
+    testlogger.go:62: 2026/07/22 11:04:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.5ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 0.9ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 106.7ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.7ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 225.1ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 97.1ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:04:05 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 108.3ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:04:07 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:04:08 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3109.3ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:04:09 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 37] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:11 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3076.8ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:14 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[46]: unable to deliver webhook task[46] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:14 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:19 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[47]: unable to deliver webhook task[47] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:19 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10431.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:19 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13513.3ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:04:19 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 80.2ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:04:19 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 110.2ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:04:20 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.4ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:04:20 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 37] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:22 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3406.4ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:04:23 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3506.2ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:25 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[48]: unable to deliver webhook task[48] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:25 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:30 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[49]: unable to deliver webhook task[49] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:30 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10457.6ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:30 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 11395.5ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:04:31 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 71.3ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:04:31 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 135.3ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:04:31 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 271.5ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:04:32 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1119.5ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:04:33 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.0ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:04:33 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:35 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3409.1ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:04:36 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3278.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:261
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:233
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullSquashWithHeadCommitID
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:04:38 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[50]: unable to deliver webhook task[50] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:38 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:39 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[51]: unable to deliver webhook task[51] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": dial tcp: lookup www.example.com: no such host
+    testlogger.go:62: 2026/07/22 11:04:39 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 5632.5ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:39 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 7027.5ms @ repo/pull.go:1079(repo.MergePullRequest)
+=== TestPullCleanUpAfterMerge (tests/integration/pull_merge_test.go:277)
++++ TestPullCleanUpAfterMerge is a slow test (run: 27.419379625s, flush: 292.708µs)
+--- FAIL: TestPullCleanUpAfterMerge (27.42s)
+    testlogger.go:62: 2026/07/22 11:04:39 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:04:39 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 4.9ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:04:39 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 0.8ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:04:40 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 96.9ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:04:40 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.4ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:04:40 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 233.7ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:04:40 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 98.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:04:40 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 109.0ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:04:41 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.4ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:04:43 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 38] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:43 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3520.3ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:04:46 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3593.7ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:48 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[52]: unable to deliver webhook task[52] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:48 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:53 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[53]: unable to deliver webhook task[53] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:04:53 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10329.2ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:04:53 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13295.8ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:04:53 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/feature/test/README.md for test-mock:12345, 200 OK in 75.6ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:04:53 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 98.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:04:54 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:feature/test?expand=1 for test-mock:12345, 200 OK in 267.6ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:04:55 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:feature/test for test-mock:12345, 200 OK in 1087.9ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:04:56 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:04:56 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:04:58 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3691.4ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:04:59 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3596.1ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:295
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:277
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullCleanUpAfterMerge
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:05:01 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[54]: unable to deliver webhook task[54] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:01 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:05:06 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[55]: unable to deliver webhook task[55] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:06 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10515.8ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullRetargetChildOnBranchDelete (tests/integration/pull_merge_test.go:633)
++++ TestPullRetargetChildOnBranchDelete is a slow test (run: 25.145939667s, flush: 370.041µs)
+--- FAIL: TestPullRetargetChildOnBranchDelete (25.15s)
+    testlogger.go:62: 2026/07/22 11:05:07 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 11856.8ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:05:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:05:07 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 5.1ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:05:07 HTTPRequest [I] router: completed GET /user2/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 126.2ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:05:07 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:08 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:05:10 HTTPRequest [W] router: slow      POST /user2/repo1/_edit/master/README.md for test-mock:12345, elapsed 3527.4ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:05:11 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3683.4ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:05:13 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[56]: unable to deliver webhook task[56] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:13 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 5398.8ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:05:13 HTTPRequest [I] router: completed POST /user2/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 6281.0ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:05:13 HTTPRequest [I] router: completed GET /user2/repo1/raw/branch/base-pr/README.md for test-mock:12345, 200 OK in 71.3ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:05:13 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 1.1ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:05:13 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 96.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:13 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.9ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:05:14 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 220.2ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:05:14 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 109.8ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:14 HTTPRequest [I] router: completed GET /user1/repo1/_edit/base-pr/README.md for test-mock:12345, 200 OK in 122.3ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:05:15 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:17 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 270.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:05:17 HTTPRequest [I] router: completed POST /user1/repo1/_edit/base-pr/README.md for test-mock:12345, 200 OK in 3225.6ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:05:17 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/child-pr/README.md for test-mock:12345, 200 OK in 71.7ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:05:17 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 111.4ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:17 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...base-pr?expand=1 for test-mock:12345, 200 OK in 219.2ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:05:18 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...base-pr for test-mock:12345, 200 OK in 968.9ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:05:19 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 115.7ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:19 HTTPRequest [I] router: completed GET /user2/repo1/compare/base-pr...user1/repo1:child-pr?expand=1 for test-mock:12345, 200 OK in 282.3ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:05:20 HTTPRequest [I] router: completed POST /user2/repo1/compare/base-pr...user1/repo1:child-pr for test-mock:12345, 200 OK in 1119.8ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:05:21 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:21 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:05:23 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3499.0ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:05:24 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3320.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:647
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:633
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullRetargetChildOnBranchDelete
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:05:26 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[57]: unable to deliver webhook task[57] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:26 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:05:31 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[58]: unable to deliver webhook task[58] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10502.6ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullDontRetargetChildOnWrongRepo (tests/integration/pull_merge_test.go:670)
++++ TestPullDontRetargetChildOnWrongRepo is a slow test (run: 19.87671675s, flush: 457.25µs)
+--- FAIL: TestPullDontRetargetChildOnWrongRepo (19.88s)
+    testlogger.go:62: 2026/07/22 11:05:32 .../uinotification/notify.go:56:handler() [E] Was unable to create issue notification: issue does not exist [id: 66, repo_id: 0, index: 0]
+    testlogger.go:62: 2026/07/22 11:05:32 .../actions/notifier_helper.go:114:(*notifyInput).Notify() [E] an error occurred while executing the MergePullRequest actions method: gitRepo.GetRefCommitID: object does not exist [id: 54e371f9df66907fb21a464d2bf0ed8b47f2deec, rel_path: ]
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 11919.9ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:05:32 services/pull/pull.go:498:AddTestPullRequestTask.1() [E] syncCommitDivergence: exit status 128 - fatal: Invalid symmetric difference expression master...refs/pull/3/head
+    testlogger.go:62: 2026/07/22 11:05:32 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.8ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 1.0ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 95.4ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.5ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 216.8ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:05:32 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 92.3ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:33 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 106.7ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:05:34 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:36 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 260.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:05:36 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 3239.5ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:05:36 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/base-pr/README.md for test-mock:12345, 200 OK in 69.8ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:05:36 HTTPRequest [I] router: completed GET /user1/repo1/_edit/base-pr/README.md for test-mock:12345, 200 OK in 110.5ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:05:36 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:37 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 224.1ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:05:37 HTTPRequest [I] router: completed POST /user1/repo1/_edit/base-pr/README.md for test-mock:12345, 200 OK in 1066.1ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:05:37 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/child-pr/README.md for test-mock:12345, 200 OK in 70.5ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:05:37 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 122.0ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:37 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:base-pr?expand=1 for test-mock:12345, 200 OK in 268.8ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:05:39 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:base-pr for test-mock:12345, 200 OK in 1050.9ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:05:39 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 101.8ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:39 HTTPRequest [I] router: completed GET /user1/repo1/compare/base-pr...user1/repo1:child-pr?expand=1 for test-mock:12345, 200 OK in 240.2ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:05:40 HTTPRequest [I] router: completed POST /user1/repo1/compare/base-pr...user1/repo1:child-pr for test-mock:12345, 200 OK in 907.1ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:05:41 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:41 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:05:43 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3712.1ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:05:44 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3577.6ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:686
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:670
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullDontRetargetChildOnWrongRepo
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:05:46 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[59]: unable to deliver webhook task[59] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:46 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:05:51 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[60]: unable to deliver webhook task[60] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:05:51 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10494.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullRequestMergedWithNoPermissionDeleteBranch (tests/integration/pull_merge_test.go:710)
++++ TestPullRequestMergedWithNoPermissionDeleteBranch is a slow test (run: 17.19470075s, flush: 153.667µs)
+--- FAIL: TestPullRequestMergedWithNoPermissionDeleteBranch (17.19s)
+    testlogger.go:62: 2026/07/22 11:05:52 routers/web/repo/pull.go:1282:deleteBranchAfterMergeAndFlashMessage() [E] DeleteBranchAfterMerge: DeleteBranch: issue does not exist [id: 68, repo_id: 0, index: 0]
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 500 Internal Server Error in 11922.3ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:05:52 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.8ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed GET /user4/repo1 for test-mock:12345, 404 Not Found in 0.9ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 97.8ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.3ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 216.2ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed GET /user4/repo1 for test-mock:12345, 200 OK in 100.8ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:52 HTTPRequest [I] router: completed GET /user4/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 110.3ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:05:54 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user4/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:55 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user4/repo1 for 127.0.0.1:0, 200 OK in 253.8ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:05:55 HTTPRequest [I] router: completed POST /user4/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 3061.2ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:05:56 HTTPRequest [I] router: completed GET /user4/repo1/raw/branch/base-pr/README.md for test-mock:12345, 200 OK in 71.7ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:05:56 HTTPRequest [I] router: completed GET /user4/repo1 for test-mock:12345, 200 OK in 92.4ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:05:56 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user4/repo1:base-pr?expand=1 for test-mock:12345, 200 OK in 263.9ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:05:57 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user4/repo1:base-pr for test-mock:12345, 200 OK in 1081.1ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:05:57 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 4.5ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:05:58 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:05:58 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:06:00 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3518.8ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:06:01 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3443.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:721
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:710
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullRequestMergedWithNoPermissionDeleteBranch
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:06:03 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[61]: unable to deliver webhook task[61] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:06:03 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:06:08 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[62]: unable to deliver webhook task[62] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10524.8ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 11854.8ms @ repo/pull.go:1079(repo.MergePullRequest)
+=== TestPullMergeIndexerNotifier (tests/integration/pull_merge_test.go:734)
++++ TestPullMergeIndexerNotifier is a slow test (run: 24.694298542s, flush: 135.708µs)
+--- FAIL: TestPullMergeIndexerNotifier (24.69s)
+    testlogger.go:62: 2026/07/22 11:06:09 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 4.0ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 1.2ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 105.5ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 4.2ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:06:09 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 250.4ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:06:10 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 115.6ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:06:10 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 139.2ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:06:11 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.5ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:06:13 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 42] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:06:13 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3820.3ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:06:16 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3811.3ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:06:18 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[63]: unable to deliver webhook task[63] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:06:18 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:06:23 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[64]: unable to deliver webhook task[64] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:06:23 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10399.2ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:06:23 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13452.8ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:06:23 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 72.1ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:06:23 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 134.5ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:06:24 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 275.6ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:06:25 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1101.8ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:06:26 HTTPRequest [I] router: completed GET /api/v1/repos/issues/search?q=notifier&state=closed&type=pulls for test-mock:12345, 200 OK in 2.7ms @ repo/issue.go:91(repo.SearchIssues)
+    testlogger.go:62: 2026/07/22 11:06:27 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.4ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:06:27 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:06:28 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[65]: unable to deliver webhook task[65] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": dial tcp: lookup www.example.com: no such host
+    testlogger.go:62: 2026/07/22 11:06:28 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:06:29 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3626.8ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:06:30 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3470.5ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:772
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:734
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullMergeIndexerNotifier
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:06:33 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[66]: unable to deliver webhook task[66] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:06:34 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 6509.2ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullAutoMergeAfterCommitStatusSucceed (tests/integration/pull_merge_test.go:808)
++++ TestPullAutoMergeAfterCommitStatusSucceed is a slow test (run: 25.399163834s, flush: 83.708µs)
+=== TestPullAutoMergeAfterCommitStatusSucceedAndApproval (tests/integration/pull_merge_test.go:898)
++++ TestPullAutoMergeAfterCommitStatusSucceedAndApproval is a slow test (run: 32.420281s, flush: 112.25µs)
+=== TestPullAutoMergeAfterCommitStatusSucceedAndApprovalForAgitFlow (tests/integration/pull_merge_test.go:986)
++++ TestPullAutoMergeAfterCommitStatusSucceedAndApprovalForAgitFlow is a slow test (run: 13.947490542s, flush: 331.583µs)
+=== TestPullNonMergeForAdminWithBranchProtection (tests/integration/pull_merge_test.go:1103)
++++ TestPullNonMergeForAdminWithBranchProtection is a slow test (run: 16.275235667s, flush: 89.125µs)
+=== TestPullSquashMergeEmpty (tests/integration/pull_merge_test.go:1146)
++++ TestPullSquashMergeEmpty is a slow test (run: 27.894169708s, flush: 236.125µs)
+--- FAIL: TestPullSquashMergeEmpty (27.90s)
+    testlogger.go:62: 2026/07/22 11:08:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:08:02 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.6ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:08:02 HTTPRequest [I] router: completed GET /user2/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 110.7ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:08:02 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:08:03 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:08:05 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[79]: unable to deliver webhook task[79] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": dial tcp: lookup www.example.com: no such host
+    testlogger.go:62: 2026/07/22 11:08:05 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 2226.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:08:05 HTTPRequest [I] router: completed POST /user2/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 3061.2ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:08:05 HTTPRequest [I] router: completed GET /user2/repo1/raw/branch/pr-squash-empty/README.md for test-mock:12345, 200 OK in 71.4ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:08:05 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 93.2ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:08:05 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...pr-squash-empty?expand=1 for test-mock:12345, 200 OK in 211.2ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:08:06 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...pr-squash-empty for test-mock:12345, 200 OK in 912.8ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:08:06 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 4.2ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:08:06 HTTPRequest [I] router: completed POST /user/settings/applications for test-mock:12345, 303 See Other in 4.5ms @ setting/applications.go:38(setting.ApplicationsPost)
+    testlogger.go:62: 2026/07/22 11:08:06 HTTPRequest [I] router: completed GET /user2/repo1.git/info/refs?service=git-upload-pack for 127.0.0.1:52934, 200 OK in 17.8ms @ repo/githttp.go:487(repo.GetInfoRefs)
+    testlogger.go:62: 2026/07/22 11:08:06 HTTPRequest [I] router: completed POST /user2/repo1.git/git-upload-pack for 127.0.0.1:52934, 200 OK in 20.9ms @ repo/githttp.go:465(repo.ServiceUploadPack)
+    testlogger.go:62: 2026/07/22 11:08:06 HTTPRequest [I] router: completed POST /user2/repo1.git/git-upload-pack for 127.0.0.1:52934, 200 OK in 34.5ms @ repo/githttp.go:465(repo.ServiceUploadPack)
+    testlogger.go:62: 2026/07/22 11:08:07 HTTPRequest [I] router: completed GET /user2/repo1.git/info/refs?service=git-receive-pack for 127.0.0.1:52935, 401 Unauthorized in 1.7ms @ repo/githttp.go:487(repo.GetInfoRefs)
+    testlogger.go:62: 2026/07/22 11:08:07 HTTPRequest [I] router: completed GET /user2/repo1.git/info/refs?service=git-receive-pack for 127.0.0.1:52935, 200 OK in 19.9ms @ repo/githttp.go:487(repo.GetInfoRefs)
+    testlogger.go:62: 2026/07/22 11:08:07 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:08:07 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:08:10 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3412.6ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:08:10 HTTPRequest [W] router: slow      POST /user2/repo1.git/git-receive-pack for 127.0.0.1:52935, elapsed 3894.0ms @ repo/githttp.go:470(repo.ServiceReceivePack)
+    testlogger.go:62: 2026/07/22 11:08:12 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[80]: unable to deliver webhook task[80] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:08:12 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:08:17 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[81]: unable to deliver webhook task[81] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:08:17 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10438.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:08:18 HTTPRequest [I] router: completed POST /user2/repo1.git/git-receive-pack for 127.0.0.1:52935, 200 OK in 10935.7ms @ repo/githttp.go:470(repo.ServiceReceivePack)
+    testlogger.go:62: 2026/07/22 11:08:18 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.4ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:08:19 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:08:21 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3951.2ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:08:22 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3700.9ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    pull_merge_test.go:61: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:1170
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/git_helper_for_declarative_test.go:88
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:1146
+        	Error:      	Condition never satisfied
+        	Test:       	TestPullSquashMergeEmpty
+        	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:08:24 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[82]: unable to deliver webhook task[82] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:08:24 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:08:29 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[83]: unable to deliver webhook task[83] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:08:29 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10468.7ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+=== TestPullSquashMessage (tests/integration/pull_merge_test.go:1178)
++++ TestPullSquashMessage is a slow test (run: 15.746861625s, flush: 19.252666ms)
+=== TestPullView_ReviewerMissed (tests/integration/pull_review_test.go:30)
+=== TestPullView_CodeOwner (tests/integration/pull_review_test.go:50)
++++ TestPullView_CodeOwner is a slow test (run: 39.016002917s, flush: 150.833µs)
+=== TestPullView_GivenApproveOrRejectReviewOnClosedPR (tests/integration/pull_review_test.go:218)
++++ TestPullView_GivenApproveOrRejectReviewOnClosedPR is a slow test (run: 27.610441916s, flush: 307.667µs)
+--- FAIL: TestPullView_GivenApproveOrRejectReviewOnClosedPR (27.61s)
+    testlogger.go:62: 2026/07/22 11:09:25 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/gitea-lfs-meta
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 5.2ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed POST /user/login for test-mock:12345, 303 See Other in 3.6ms @ auth/auth.go:219(auth.SignInPost)
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 404 Not Found in 1.0ms @ context/repo.go:422(context.RepoAssignment)
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed GET /user2/repo1 for test-mock:12345, 200 OK in 105.1ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed GET /user2/repo1/fork for test-mock:12345, 200 OK in 3.4ms @ repo/fork.go:126(repo.Fork)
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed POST /user2/repo1/fork for test-mock:12345, 200 OK in 214.2ms @ repo/fork.go:137(repo.ForkPost)
+    testlogger.go:62: 2026/07/22 11:09:25 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 94.7ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:09:26 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 117.0ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:09:27 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.2ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:09:29 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url6 [ID: 49] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:09:29 HTTPRequest [W] router: slow      POST /user1/repo1/_edit/master/README.md for test-mock:12345, elapsed 3891.1ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:09:31 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, elapsed 3004.1ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:09:34 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[88]: unable to deliver webhook task[88] in https://www.example.com/url6 due to error in http client: Post "https://www.example.com/url6": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:09:34 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:09:39 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[89]: unable to deliver webhook task[89] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:09:39 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 10396.0ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:09:39 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 13321.0ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:09:39 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/master/README.md for test-mock:12345, 200 OK in 70.3ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:09:39 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 129.9ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:09:39 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:master?expand=1 for test-mock:12345, 200 OK in 272.0ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:09:40 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:master for test-mock:12345, 200 OK in 1119.9ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:09:41 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 1.5ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:09:42 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:09:44 HTTPRequest [W] router: slow      POST /user2/repo1/pulls/6/merge for test-mock:12345, elapsed 3973.6ms @ repo/pull.go:1079(repo.MergePullRequest)
+    testlogger.go:62: 2026/07/22 11:09:45 HTTPRequest [W] router: slow      POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, elapsed 3827.1ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    --- FAIL: TestPullView_GivenApproveOrRejectReviewOnClosedPR/Submit_approve/reject_review_on_merged_PR (20.04s)
+        pull_merge_test.go:61: 
+            	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_merge_test.go:61
+            	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/pull_review_test.go:231
+            	Error:      	Condition never satisfied
+            	Test:       	TestPullView_GivenApproveOrRejectReviewOnClosedPR/Submit_approve/reject_review_on_merged_PR
+            	Messages:   	Timed out waiting for pull merge to succeed
+    testlogger.go:62: 2026/07/22 11:09:46 HTTPRequest [I] router: completed GET /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 149.8ms @ repo/editor.go:268(repo.EditFile)
+    testlogger.go:62: 2026/07/22 11:09:46 HTTPRequest [I] router: completed POST /api/internal/hook/pre-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 1.3ms @ private/hook_pre_receive.go:109(private.HookPreReceive)
+    testlogger.go:62: 2026/07/22 11:09:47 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user1/repo1 for 127.0.0.1:0, 200 OK in 217.5ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:09:47 HTTPRequest [I] router: completed POST /user1/repo1/_edit/master/README.md for test-mock:12345, 200 OK in 1146.5ms @ repo/editor.go:328(repo.EditFilePost)
+    testlogger.go:62: 2026/07/22 11:09:47 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[90]: unable to deliver webhook task[90] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:09:47 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url5 [ID: 5] is not set, defaulting to POST
+    testlogger.go:62: 2026/07/22 11:09:47 HTTPRequest [I] router: completed GET /user1/repo1/raw/branch/a-test-branch/README.md for test-mock:12345, 200 OK in 73.7ms @ repo/download.go:111(repo.SingleDownload)
+    testlogger.go:62: 2026/07/22 11:09:47 HTTPRequest [I] router: completed GET /user1/repo1 for test-mock:12345, 200 OK in 164.4ms @ repo/view_home.go:392(repo.Home)
+    testlogger.go:62: 2026/07/22 11:09:47 HTTPRequest [I] router: completed GET /user2/repo1/compare/master...user1/repo1:a-test-branch?expand=1 for test-mock:12345, 200 OK in 345.1ms @ repo/compare.go:592(repo.CompareDiff)
+    testlogger.go:62: 2026/07/22 11:09:48 HTTPRequest [I] router: completed POST /user2/repo1/compare/master...user1/repo1:a-test-branch for test-mock:12345, 200 OK in 1077.6ms @ repo/pull.go:1348(repo.CompareAndPullRequestPost)
+    testlogger.go:62: 2026/07/22 11:09:49 HTTPRequest [I] router: completed POST /user2/repo1/issues/7/comments for test-mock:12345, 200 OK in 240.6ms @ repo/issue_comment.go:35(repo.NewComment)
+    testlogger.go:62: 2026/07/22 11:09:49 HTTPRequest [I] router: completed POST /user2/repo1/pulls/7/files/reviews/submit for test-mock:12345, 422 Unprocessable Entity in 3.8ms @ repo/pull_review.go:223(repo.SubmitReview)
+    testlogger.go:62: 2026/07/22 11:09:49 HTTPRequest [I] router: completed POST /user2/repo1/pulls/7/files/reviews/submit for test-mock:12345, 422 Unprocessable Entity in 2.8ms @ repo/pull_review.go:223(repo.SubmitReview)
+    testlogger.go:62: 2026/07/22 11:09:52 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[91]: unable to deliver webhook task[91] in https://www.example.com/url5 due to error in http client: Post "https://www.example.com/url5": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+    testlogger.go:62: 2026/07/22 11:09:52 HTTPRequest [I] router: completed POST /api/internal/hook/post-receive/user2/repo1 for 127.0.0.1:0, 200 OK in 10462.7ms @ private/hook_post_receive.go:33(private.HookPostReceive)
+    testlogger.go:62: 2026/07/22 11:09:52 HTTPRequest [I] router: completed POST /user2/repo1/pulls/6/merge for test-mock:12345, 200 OK in 11847.9ms @ repo/pull.go:1079(repo.MergePullRequest)
+=== TestPullCreate_CommitStatus (tests/integration/pull_status_test.go:29)
+=== TestPullCreate_EmptyChangesWithDifferentCommits (tests/integration/pull_status_test.go:118)
+=== TestPullCreate_EmptyChangesWithSameCommits (tests/integration/pull_status_test.go:142)
+=== TestPullStatusDelayCheck (tests/integration/pull_status_test.go:163)
++++ TestPullStatusDelayCheck is a slow test (run: 31.913157334s, flush: 116.667µs)
+=== TestAPIPullUpdate (tests/integration/pull_update_test.go:31)
++++ TestAPIPullUpdate is a slow test (run: 20.47911425s, flush: 161.916µs)
+=== TestAPIPullUpdateByRebase (tests/integration/pull_update_test.go:74)
++++ TestAPIPullUpdateByRebase is a slow test (run: 20.053899917s, flush: 235.333µs)
+=== TestAPIPullUpdateByRebase2 (tests/integration/pull_update_test.go:125)
++++ TestAPIPullUpdateByRebase2 is a slow test (run: 20.201809334s, flush: 69.25µs)
+=== Test_WebhookPullRequest (tests/integration/repo_webhook_test.go:668)
+=== Test_WebhookPullRequestDelete (tests/integration/repo_webhook_test.go:722)
+=== Test_WebhookPullRequestComment (tests/integration/repo_webhook_test.go:760)
+FAIL
+INTEGRATION EXIT: 1

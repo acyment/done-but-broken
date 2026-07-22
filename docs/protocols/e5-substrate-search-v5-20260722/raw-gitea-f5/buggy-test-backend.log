@@ -1,0 +1,472 @@
+Running go test with  -tags 'sqlite sqlite_unlock_notify sqlite sqlite_unlock_notify'...
+?   	code.gitea.io/gitea	[no test files]
+ok  	code.gitea.io/gitea/cmd	6.836s
+?   	code.gitea.io/gitea/contrib/backport	[no test files]
+ok  	code.gitea.io/gitea/models	3.108s
+ok  	code.gitea.io/gitea/models/actions	2.224s
+ok  	code.gitea.io/gitea/models/activities	4.319s
+?   	code.gitea.io/gitea/models/admin	[no test files]
+ok  	code.gitea.io/gitea/models/asymkey	2.420s
+ok  	code.gitea.io/gitea/models/auth	2.439s
+ok  	code.gitea.io/gitea/models/avatars	2.556s
+ok  	code.gitea.io/gitea/models/db	3.205s
+?   	code.gitea.io/gitea/models/db/install	[no test files]
+ok  	code.gitea.io/gitea/models/db/paginator	1.512s
+ok  	code.gitea.io/gitea/models/dbfs	1.723s
+ok  	code.gitea.io/gitea/models/git	2.111s
+ok  	code.gitea.io/gitea/models/issues	4.243s
+ok  	code.gitea.io/gitea/models/organization	2.911s
+ok  	code.gitea.io/gitea/models/packages	2.062s
+?   	code.gitea.io/gitea/models/packages/alpine	[no test files]
+?   	code.gitea.io/gitea/models/packages/arch	[no test files]
+?   	code.gitea.io/gitea/models/packages/conan	[no test files]
+?   	code.gitea.io/gitea/models/packages/conda	[no test files]
+?   	code.gitea.io/gitea/models/packages/container	[no test files]
+?   	code.gitea.io/gitea/models/packages/cran	[no test files]
+?   	code.gitea.io/gitea/models/packages/debian	[no test files]
+?   	code.gitea.io/gitea/models/packages/nuget	[no test files]
+?   	code.gitea.io/gitea/models/packages/rpm	[no test files]
+ok  	code.gitea.io/gitea/models/perm	1.107s
+ok  	code.gitea.io/gitea/models/perm/access	1.998s
+ok  	code.gitea.io/gitea/models/project	2.407s
+?   	code.gitea.io/gitea/models/pull	[no test files]
+ok  	code.gitea.io/gitea/models/renderhelper	2.566s
+ok  	code.gitea.io/gitea/models/repo	2.345s
+?   	code.gitea.io/gitea/models/secret	[no test files]
+?   	code.gitea.io/gitea/models/shared/types	[no test files]
+ok  	code.gitea.io/gitea/models/system	2.579s
+ok  	code.gitea.io/gitea/models/unit	0.436s
+ok  	code.gitea.io/gitea/models/unittest	0.553s
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:47:49 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/attachments
+2026/07/22 10:47:49 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/avatars
+2026/07/22 10:47:49 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/repo-avatars
+2026/07/22 10:47:49 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/lfs
+2026/07/22 10:47:49 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/repo-archive
+2026/07/22 10:47:49 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/packages
+2026/07/22 10:47:49 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3854182339/actions_log
+2026/07/22 10:47:49 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:47:49 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+--- FAIL: TestUserAvatarLink (0.00s)
+    avatar_test.go:26: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/models/user/avatar_test.go:26
+        	Error:      	Not equal: 
+        	            	expected: "https://localhost/avatars/avatar.png"
+        	            	actual  : "https://localhost/assets/img/avatar_default.png"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-https://localhost/avatars/avatar.png
+        	            	+https://localhost/assets/img/avatar_default.png
+        	Test:       	TestUserAvatarLink
+    avatar_test.go:31: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/models/user/avatar_test.go:31
+        	Error:      	Not equal: 
+        	            	expected: "https://localhost/sub-path/avatars/avatar.png"
+        	            	actual  : "https://localhost/sub-path/assets/img/avatar_default.png"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-https://localhost/sub-path/avatars/avatar.png
+        	            	+https://localhost/sub-path/assets/img/avatar_default.png
+        	Test:       	TestUserAvatarLink
+2026/07/22 10:47:50 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/TestUserAvatarGenerate3984386539/001
+FAIL
+FAIL	code.gitea.io/gitea/models/user	2.699s
+ok  	code.gitea.io/gitea/models/webhook	1.679s
+ok  	code.gitea.io/gitea/modules/actions	1.013s
+ok  	code.gitea.io/gitea/modules/activitypub	3.998s
+ok  	code.gitea.io/gitea/modules/analyze	0.710s
+ok  	code.gitea.io/gitea/modules/assetfs	2.604s
+?   	code.gitea.io/gitea/modules/auth	[no test files]
+ok  	code.gitea.io/gitea/modules/auth/httpauth	1.109s
+ok  	code.gitea.io/gitea/modules/auth/openid	2.193s
+?   	code.gitea.io/gitea/modules/auth/pam	[no test files]
+ok  	code.gitea.io/gitea/modules/auth/password	2.917s
+ok  	code.gitea.io/gitea/modules/auth/password/hash	11.084s
+ok  	code.gitea.io/gitea/modules/auth/password/pwn	2.719s
+ok  	code.gitea.io/gitea/modules/auth/webauthn	2.568s
+ok  	code.gitea.io/gitea/modules/avatar	2.323s
+?   	code.gitea.io/gitea/modules/avatar/identicon	[no test files]
+?   	code.gitea.io/gitea/modules/badge	[no test files]
+ok  	code.gitea.io/gitea/modules/base	1.805s
+ok  	code.gitea.io/gitea/modules/cache	1.522s
+?   	code.gitea.io/gitea/modules/cachegroup	[no test files]
+ok  	code.gitea.io/gitea/modules/charset	1.651s
+?   	code.gitea.io/gitea/modules/charset/ambiguous	[no test files]
+?   	code.gitea.io/gitea/modules/charset/invisible	[no test files]
+ok  	code.gitea.io/gitea/modules/commitstatus	1.975s
+ok  	code.gitea.io/gitea/modules/container	2.216s
+ok  	code.gitea.io/gitea/modules/csv	2.060s
+ok  	code.gitea.io/gitea/modules/dump	1.898s
+ok  	code.gitea.io/gitea/modules/emoji	2.152s
+ok  	code.gitea.io/gitea/modules/eventsource	0.983s
+ok  	code.gitea.io/gitea/modules/fileicon	3.819s
+ok  	code.gitea.io/gitea/modules/generate	2.823s
+ok  	code.gitea.io/gitea/modules/git	6.094s
+ok  	code.gitea.io/gitea/modules/git/attribute	4.468s
+ok  	code.gitea.io/gitea/modules/git/foreachref	3.633s
+ok  	code.gitea.io/gitea/modules/git/gitcmd	2.057s
+?   	code.gitea.io/gitea/modules/git/internal	[no test files]
+ok  	code.gitea.io/gitea/modules/git/languagestats	3.831s
+ok  	code.gitea.io/gitea/modules/git/pipeline	3.350s
+ok  	code.gitea.io/gitea/modules/git/url	2.241s
+ok  	code.gitea.io/gitea/modules/gitrepo	3.681s
+ok  	code.gitea.io/gitea/modules/glob	2.852s
+ok  	code.gitea.io/gitea/modules/globallock	5.242s
+?   	code.gitea.io/gitea/modules/graceful	[no test files]
+ok  	code.gitea.io/gitea/modules/graceful/releasereopen	2.220s
+ok  	code.gitea.io/gitea/modules/gtprof	2.527s
+ok  	code.gitea.io/gitea/modules/hcaptcha	2.103s
+ok  	code.gitea.io/gitea/modules/highlight	2.077s
+ok  	code.gitea.io/gitea/modules/hostmatcher	2.399s
+ok  	code.gitea.io/gitea/modules/htmlutil	2.729s
+ok  	code.gitea.io/gitea/modules/httpcache	2.636s
+ok  	code.gitea.io/gitea/modules/httplib	2.100s
+?   	code.gitea.io/gitea/modules/indexer	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/code	4.575s
+?   	code.gitea.io/gitea/modules/indexer/code/bleve	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/code/bleve/token/path	0.412s
+ok  	code.gitea.io/gitea/modules/indexer/code/elasticsearch	1.024s
+ok  	code.gitea.io/gitea/modules/indexer/code/gitgrep	2.436s
+?   	code.gitea.io/gitea/modules/indexer/code/internal	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/internal	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/internal/bleve	2.947s
+?   	code.gitea.io/gitea/modules/indexer/internal/db	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/internal/elasticsearch	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/internal/meilisearch	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/issues	3.260s
+ok  	code.gitea.io/gitea/modules/indexer/issues/bleve	4.527s
+?   	code.gitea.io/gitea/modules/indexer/issues/db	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/issues/elasticsearch	0.494s
+?   	code.gitea.io/gitea/modules/indexer/issues/internal	[no test files]
+?   	code.gitea.io/gitea/modules/indexer/issues/internal/tests	[no test files]
+ok  	code.gitea.io/gitea/modules/indexer/issues/meilisearch	0.918s
+ok  	code.gitea.io/gitea/modules/indexer/stats	6.582s
+ok  	code.gitea.io/gitea/modules/issue/template	2.312s
+ok  	code.gitea.io/gitea/modules/json	1.850s
+ok  	code.gitea.io/gitea/modules/label	3.394s
+ok  	code.gitea.io/gitea/modules/lfs	3.614s
+?   	code.gitea.io/gitea/modules/lfstransfer	[no test files]
+ok  	code.gitea.io/gitea/modules/lfstransfer/backend	3.459s
+ok  	code.gitea.io/gitea/modules/log	9.302s
+ok  	code.gitea.io/gitea/modules/markup	4.204s
+?   	code.gitea.io/gitea/modules/markup/asciicast	[no test files]
+ok  	code.gitea.io/gitea/modules/markup/common	3.560s
+ok  	code.gitea.io/gitea/modules/markup/console	2.788s
+ok  	code.gitea.io/gitea/modules/markup/csv	3.262s
+?   	code.gitea.io/gitea/modules/markup/external	[no test files]
+ok  	code.gitea.io/gitea/modules/markup/internal	3.429s
+ok  	code.gitea.io/gitea/modules/markup/markdown	3.124s
+?   	code.gitea.io/gitea/modules/markup/markdown/math	[no test files]
+ok  	code.gitea.io/gitea/modules/markup/mdstripper	2.730s
+ok  	code.gitea.io/gitea/modules/markup/orgmode	2.604s
+?   	code.gitea.io/gitea/modules/mcaptcha	[no test files]
+?   	code.gitea.io/gitea/modules/metrics	[no test files]
+ok  	code.gitea.io/gitea/modules/migration	2.124s
+ok  	code.gitea.io/gitea/modules/nosql	2.513s
+ok  	code.gitea.io/gitea/modules/optional	2.935s
+?   	code.gitea.io/gitea/modules/options	[no test files]
+ok  	code.gitea.io/gitea/modules/packages	2.837s
+ok  	code.gitea.io/gitea/modules/packages/alpine	2.912s
+ok  	code.gitea.io/gitea/modules/packages/arch	3.209s
+ok  	code.gitea.io/gitea/modules/packages/cargo	3.377s
+ok  	code.gitea.io/gitea/modules/packages/chef	3.672s
+ok  	code.gitea.io/gitea/modules/packages/composer	3.566s
+ok  	code.gitea.io/gitea/modules/packages/conan	4.032s
+ok  	code.gitea.io/gitea/modules/packages/conda	3.507s
+ok  	code.gitea.io/gitea/modules/packages/container	3.662s
+?   	code.gitea.io/gitea/modules/packages/container/helm	[no test files]
+ok  	code.gitea.io/gitea/modules/packages/cran	3.979s
+ok  	code.gitea.io/gitea/modules/packages/debian	3.646s
+ok  	code.gitea.io/gitea/modules/packages/goproxy	3.980s
+?   	code.gitea.io/gitea/modules/packages/helm	[no test files]
+ok  	code.gitea.io/gitea/modules/packages/maven	3.576s
+ok  	code.gitea.io/gitea/modules/packages/npm	3.625s
+ok  	code.gitea.io/gitea/modules/packages/nuget	3.621s
+ok  	code.gitea.io/gitea/modules/packages/pub	3.782s
+?   	code.gitea.io/gitea/modules/packages/pypi	[no test files]
+ok  	code.gitea.io/gitea/modules/packages/rpm	3.390s
+ok  	code.gitea.io/gitea/modules/packages/rubygems	3.913s
+ok  	code.gitea.io/gitea/modules/packages/swift	3.870s
+ok  	code.gitea.io/gitea/modules/packages/vagrant	4.362s
+ok  	code.gitea.io/gitea/modules/paginator	3.922s
+?   	code.gitea.io/gitea/modules/pprof	[no test files]
+ok  	code.gitea.io/gitea/modules/private	2.506s
+ok  	code.gitea.io/gitea/modules/process	3.090s
+?   	code.gitea.io/gitea/modules/proxy	[no test files]
+?   	code.gitea.io/gitea/modules/proxyprotocol	[no test files]
+ok  	code.gitea.io/gitea/modules/public	3.009s
+ok  	code.gitea.io/gitea/modules/queue	8.192s
+?   	code.gitea.io/gitea/modules/queue/lqinternal	[no test files]
+?   	code.gitea.io/gitea/modules/recaptcha	[no test files]
+ok  	code.gitea.io/gitea/modules/references	2.803s
+ok  	code.gitea.io/gitea/modules/regexplru	3.240s
+ok  	code.gitea.io/gitea/modules/repository	4.291s
+?   	code.gitea.io/gitea/modules/reqctx	[no test files]
+ok  	code.gitea.io/gitea/modules/secret	1.855s
+?   	code.gitea.io/gitea/modules/session	[no test files]
+ok  	code.gitea.io/gitea/modules/setting	6.496s
+?   	code.gitea.io/gitea/modules/setting/config	[no test files]
+ok  	code.gitea.io/gitea/modules/sitemap	3.387s
+?   	code.gitea.io/gitea/modules/ssh	[no test files]
+ok  	code.gitea.io/gitea/modules/storage	3.161s
+ok  	code.gitea.io/gitea/modules/structs	2.542s
+ok  	code.gitea.io/gitea/modules/svg	3.583s
+ok  	code.gitea.io/gitea/modules/system	5.245s
+?   	code.gitea.io/gitea/modules/tailmsg	[no test files]
+ok  	code.gitea.io/gitea/modules/tempdir	3.679s
+ok  	code.gitea.io/gitea/modules/templates	1.800s
+ok  	code.gitea.io/gitea/modules/templates/eval	2.028s
+ok  	code.gitea.io/gitea/modules/templates/scopedtmpl	3.310s
+ok  	code.gitea.io/gitea/modules/templates/vars	3.264s
+ok  	code.gitea.io/gitea/modules/test	2.879s
+?   	code.gitea.io/gitea/modules/testlogger	[no test files]
+ok  	code.gitea.io/gitea/modules/timeutil	3.377s
+ok  	code.gitea.io/gitea/modules/translation	2.867s
+ok  	code.gitea.io/gitea/modules/translation/i18n	3.412s
+?   	code.gitea.io/gitea/modules/turnstile	[no test files]
+ok  	code.gitea.io/gitea/modules/typesniffer	3.283s
+?   	code.gitea.io/gitea/modules/updatechecker	[no test files]
+ok  	code.gitea.io/gitea/modules/uri	3.323s
+ok  	code.gitea.io/gitea/modules/user	3.697s
+ok  	code.gitea.io/gitea/modules/util	3.999s
+ok  	code.gitea.io/gitea/modules/util/filebuffer	3.805s
+ok  	code.gitea.io/gitea/modules/util/rotatingfilewriter	3.805s
+ok  	code.gitea.io/gitea/modules/validation	3.570s
+ok  	code.gitea.io/gitea/modules/web	2.968s
+?   	code.gitea.io/gitea/modules/web/middleware	[no test files]
+ok  	code.gitea.io/gitea/modules/web/routing	2.974s
+?   	code.gitea.io/gitea/modules/web/types	[no test files]
+?   	code.gitea.io/gitea/modules/webhook	[no test files]
+ok  	code.gitea.io/gitea/modules/zstd	3.743s
+?   	code.gitea.io/gitea/routers	[no test files]
+?   	code.gitea.io/gitea/routers/api/actions	[no test files]
+ok  	code.gitea.io/gitea/routers/api/actions/ping	3.146s
+?   	code.gitea.io/gitea/routers/api/actions/runner	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/alpine	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/arch	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/cargo	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/chef	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/composer	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/conan	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/conda	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/container	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/cran	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/debian	[no test files]
+ok  	code.gitea.io/gitea/routers/api/packages/generic	1.132s
+?   	code.gitea.io/gitea/routers/api/packages/goproxy	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/helm	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/helper	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/maven	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/npm	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/nuget	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/pub	[no test files]
+ok  	code.gitea.io/gitea/routers/api/packages/pypi	1.110s
+?   	code.gitea.io/gitea/routers/api/packages/rpm	[no test files]
+ok  	code.gitea.io/gitea/routers/api/packages/rubygems	1.357s
+?   	code.gitea.io/gitea/routers/api/packages/swift	[no test files]
+?   	code.gitea.io/gitea/routers/api/packages/vagrant	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/activitypub	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/admin	[no test files]
+ok  	code.gitea.io/gitea/routers/api/v1/misc	4.960s
+?   	code.gitea.io/gitea/routers/api/v1/notify	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/org	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/packages	[no test files]
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:49:03 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/attachments
+2026/07/22 10:49:03 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/avatars
+2026/07/22 10:49:03 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/repo-avatars
+2026/07/22 10:49:03 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/lfs
+2026/07/22 10:49:03 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/repo-archive
+2026/07/22 10:49:03 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/packages
+2026/07/22 10:49:03 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata3707675717/actions_log
+2026/07/22 10:49:03 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:49:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:49:05 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+2026/07/22 10:49:10 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[4]: unable to deliver webhook task[4] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+--- FAIL: TestTestHook (5.46s)
+    unit_tests.go:82: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/models/unittest/unit_tests.go:82
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/routers/api/v1/repo/hook_test.go:28
+        	Error:      	Should be true
+        	Test:       	TestTestHook
+        	Messages:   	Expected to find &{ID:0 HookID:1 UUID: PayloadContent: PayloadVersion:0 EventType: IsDelivered:false Delivered:0 IsSucceed:false RequestContent: RequestInfo:<nil> ResponseContent: ResponseInfo:<nil>} (of type *webhook.HookTask, with conditions [0x1400212a9c0]), but did not
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:49:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:1 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:49:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:2 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:49:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:3 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:49:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:5 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:49:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:11 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+FAIL
+FAIL	code.gitea.io/gitea/routers/api/v1/repo	8.539s
+?   	code.gitea.io/gitea/routers/api/v1/settings	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/shared	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/swagger	[no test files]
+?   	code.gitea.io/gitea/routers/api/v1/user	[no test files]
+ok  	code.gitea.io/gitea/routers/api/v1/utils	5.381s
+ok  	code.gitea.io/gitea/routers/common	4.637s
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:49:07 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/attachments
+2026/07/22 10:49:07 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/avatars
+2026/07/22 10:49:07 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/repo-avatars
+2026/07/22 10:49:07 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/lfs
+2026/07/22 10:49:07 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/repo-archive
+2026/07/22 10:49:07 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/packages
+2026/07/22 10:49:07 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata902555944/actions_log
+2026/07/22 10:49:07 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:49:07 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+2026/07/22 10:49:09 .../toolchain@v0.0.1-go1.25.6.darwin-arm64/src/sync/once.go:78:(*Once).doSlow() [E] No theme candidate in asset files, but Gitea requires there should be at least one usable theme
+--- FAIL: TestRoutes (0.13s)
+    routes_test.go:24: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/routers/install/routes_test.go:24
+        	Error:      	"<!DOCTYPE html>\n<html lang=\"en-US\" data-theme=\"gitea-auto\">\n<head>\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\t<title>install.install - Gitea: Git with a cup of tea</title>\n\t\n\t<meta name=\"author\" content=\"Gitea - Git with a cup of tea\">\n\t<meta name=\"description\" content=\"Gitea (Git with a cup of tea) is a painless self-hosted Git service written in Go\">\n\t<meta name=\"keywords\" content=\"go,git,self-hosted,gitea\">\n\t<meta name=\"referrer\" content=\"same-origin\">\n\n\n\t<link rel=\"icon\" href=\"/assets/img/favicon.svg\" type=\"image/svg+xml\">\n\t<link rel=\"alternate icon\" href=\"/assets/img/favicon.png\" type=\"image/png\">\n\t\n\t<meta property=\"og:title\" content=\"Gitea: Git with a cup of tea\">\n\t<meta property=\"og:type\" content=\"website\">\n\t<meta property=\"og:image\" content=\"/assets/img/logo.png\">\n\t<meta property=\"og:url\" content=\"https://try.gitea.io/\">\n\t<meta property=\"og:description\" content=\"Gitea (Git with a cup of tea) is a painless self-hosted Git service written in Go\">\n\n<meta property=\"og:site_name\" content=\"Gitea: Git with a cup of tea\">\n\n\t<link rel=\"stylesheet\" href=\"/assets/css/index.css?v=dev\">\n<link rel=\"stylesheet\" href=\"/assets/css/theme-gitea-auto.css?v=dev\">\n\n\t\n<script>\n\t\n\twindow.addEventListener('error', function(e) {window._globalHandlerErrors=window._globalHandlerErrors||[]; window._globalHandlerErrors.push(e);});\n\twindow.addEventListener('unhandledrejection', function(e) {window._globalHandlerErrors=window._globalHandlerErrors||[]; window._globalHandlerErrors.push(e);});\n\twindow.config = {\n\t\tappUrl: 'https:\\/\\/try.gitea.io\\/',\n\t\tappSubUrl: '',\n\t\tassetVersionEncoded: encodeURIComponent('dev'), \n\t\tassetUrlPrefix: '\\/assets',\n\t\trunModeIsProd:  true ,\n\t\tcustomEmojis: {\"codeberg\":\":codeberg:\",\"git\":\":git:\",\"gitea\":\":gitea:\",\"github\":\":github:\",\"gitlab\":\":gitlab:\",\"gogs\":\":gogs:\"},\n\t\tpageData:  null ,\n\t\tnotificationSettings: {\"EventSourceUpdateTime\":10000,\"MaxTimeout\":60000,\"MinTimeout\":10000,\"TimeoutStep\":10000}, \n\t\tenableTimeTracking:  false ,\n\t\t\n\t\tmentionValues: [],\n\t\t\n\t\tmermaidMaxSourceCharacters:  50000 ,\n\t\t\n\t\ti18n: {\n\t\t\tcopy_success: \"copy_success\",\n\t\t\tcopy_error: \"copy_error\",\n\t\t\terror_occurred: \"error.occurred\",\n\t\t\tremove_label_str: \"remove_label_str\",\n\t\t\tmodal_confirm: \"modal.confirm\",\n\t\t\tmodal_cancel: \"modal.cancel\",\n\t\t\tmore_items: \"more_items\",\n\t\t},\n\t};\n\t\n\twindow.config.pageData = window.config.pageData || {};\n</script>\n<script src=\"/assets/js/index.js?v=dev\" onerror=\"alert('Failed to load asset files from ' + this.src + '. Please make sure the asset files can be accessed.')\"></script>\n\n\t\n</head>\n<body hx-swap=\"outerHTML\" hx-ext=\"morph\" hx-push-url=\"false\">\n\t\n\n\t<div class=\"full height\">\n\t\t<noscript>enable_javascript</noscript>\n\n\t\t\n\n\t\t\n\n\n\n<div role=\"main\" aria-label=\"install.install\" class=\"page-content install post-install tw-h-full\">\n\t<div class=\"home tw-text-center tw-h-full tw-flex tw-flex-col tw-justify-center\">\n\t\t\n\t\t<div class=\"tw-ml-[-30px]\"><img width=\"160\" src=\"/assets/img/loading.png\" alt aria-hidden=\"true\"></div>\n\t\t<div class=\"tw-my-[2em] tw-text-[18px]\">\n\t\t\t<a id=\"goto-after-install\" href=\"/user/sign_up\">install.installing_desc</a>\n\t\t</div>\n\t</div>\n</div>\n\n\n\t\t\n\t</div>\n\t\n\t<footer class=\"page-footer\" role=\"group\" aria-label=\"aria.footer\">\n\t<div class=\"left-links\" role=\"contentinfo\" aria-label=\"aria.footer.software\">\n\t\t\n\t\t\t<a target=\"_blank\" href=\"https://about.gitea.com\">powered_by%!(EXTRA string=Gitea)</a>\n\t\t\n\t\t\n\t\t\tversion:\n\t\t\t\n\t\t\t\tdev\n\t\t\t\n\t\t\n\t\t\n\t\t\tpage: <strong>2ms</strong>\n\t\t\ttemplate: <strong>2ms</strong>\n\t\t\n\t</div>\n\t<div class=\"right-links\" role=\"group\" aria-label=\"aria.footer.links\">\n\t\t<div class=\"ui dropdown custom\" id=\"footer-theme-selector\">\n\t\t\t<span class=\"default-text\"><div class=\"theme-menu-item\" data-tooltip-content=\"\"><span>octicon-paintbrush(16/)</span> gitea-auto </div></span>\n\t\t\t<div class=\"menu theme-menu\"></div>\n\t\t</div>\n\t\t<div class=\"ui dropdown upward\">\n\t\t\t<span class=\"flex-text-inline\"><span>octicon-globe(14/)</span> English</span>\n\t\t\t<div class=\"menu language-menu\">\n\t\t\t\t</div>\n\t\t</div>\n\t\t<a href=\"/assets/licenses.txt\">licenses</a>\n\t\t<a href=\"/api/swagger\">API</a>\n\t\t\n\t</div>\n</footer>\n\n\t\n</body>\n</html>\n\n" does not contain "class=\"page-content install\""
+        	Test:       	TestRoutes
+FAIL
+FAIL	code.gitea.io/gitea/routers/install	6.941s
+ok  	code.gitea.io/gitea/routers/private	8.779s
+ok  	code.gitea.io/gitea/routers/utils	4.844s
+?   	code.gitea.io/gitea/routers/web	[no test files]
+ok  	code.gitea.io/gitea/routers/web/admin	7.768s
+ok  	code.gitea.io/gitea/routers/web/auth	5.181s
+?   	code.gitea.io/gitea/routers/web/devtest	[no test files]
+?   	code.gitea.io/gitea/routers/web/events	[no test files]
+?   	code.gitea.io/gitea/routers/web/explore	[no test files]
+ok  	code.gitea.io/gitea/routers/web/feed	4.064s
+?   	code.gitea.io/gitea/routers/web/healthcheck	[no test files]
+?   	code.gitea.io/gitea/routers/web/misc	[no test files]
+ok  	code.gitea.io/gitea/routers/web/org	3.857s
+?   	code.gitea.io/gitea/routers/web/org/setting	[no test files]
+ok  	code.gitea.io/gitea/routers/web/repo	22.599s
+ok  	code.gitea.io/gitea/routers/web/repo/actions	6.317s
+ok  	code.gitea.io/gitea/routers/web/repo/setting	9.071s
+?   	code.gitea.io/gitea/routers/web/shared/actions	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/issue	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/label	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/packages	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/project	[no test files]
+?   	code.gitea.io/gitea/routers/web/shared/secrets	[no test files]
+ok  	code.gitea.io/gitea/routers/web/shared/user	1.049s
+ok  	code.gitea.io/gitea/routers/web/user	4.409s
+ok  	code.gitea.io/gitea/routers/web/user/setting	6.659s
+ok  	code.gitea.io/gitea/routers/web/user/setting/security	7.171s
+ok  	code.gitea.io/gitea/services/actions	5.504s
+ok  	code.gitea.io/gitea/services/agit	6.659s
+ok  	code.gitea.io/gitea/services/asymkey	7.613s
+ok  	code.gitea.io/gitea/services/attachment	5.471s
+ok  	code.gitea.io/gitea/services/auth	6.024s
+?   	code.gitea.io/gitea/services/auth/source	[no test files]
+ok  	code.gitea.io/gitea/services/auth/source/db	1.197s [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/ldap	1.202s [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/oauth2	2.910s
+ok  	code.gitea.io/gitea/services/auth/source/pam	1.900s [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/smtp	2.818s [no tests to run]
+ok  	code.gitea.io/gitea/services/auth/source/sspi	3.118s [no tests to run]
+?   	code.gitea.io/gitea/services/automerge	[no test files]
+?   	code.gitea.io/gitea/services/automergequeue	[no test files]
+ok  	code.gitea.io/gitea/services/context	2.181s
+ok  	code.gitea.io/gitea/services/context/upload	2.941s
+?   	code.gitea.io/gitea/services/contexttest	[no test files]
+ok  	code.gitea.io/gitea/services/convert	4.264s
+ok  	code.gitea.io/gitea/services/cron	2.090s
+ok  	code.gitea.io/gitea/services/doctor	4.344s
+?   	code.gitea.io/gitea/services/externalaccount	[no test files]
+ok  	code.gitea.io/gitea/services/feed	4.985s
+ok  	code.gitea.io/gitea/services/forms	2.858s
+?   	code.gitea.io/gitea/services/git	[no test files]
+ok  	code.gitea.io/gitea/services/gitdiff	6.804s
+?   	code.gitea.io/gitea/services/indexer	[no test files]
+ok  	code.gitea.io/gitea/services/issue	4.975s
+ok  	code.gitea.io/gitea/services/lfs	4.196s
+ok  	code.gitea.io/gitea/services/mailer	5.104s
+ok  	code.gitea.io/gitea/services/mailer/incoming	3.121s
+?   	code.gitea.io/gitea/services/mailer/incoming/payload	[no test files]
+ok  	code.gitea.io/gitea/services/mailer/sender	4.355s
+?   	code.gitea.io/gitea/services/mailer/token	[no test files]
+ok  	code.gitea.io/gitea/services/markup	3.151s
+ok  	code.gitea.io/gitea/services/migrations	10.094s
+ok  	code.gitea.io/gitea/services/mirror	2.652s
+?   	code.gitea.io/gitea/services/notify	[no test files]
+ok  	code.gitea.io/gitea/services/oauth2_provider	1.551s
+ok  	code.gitea.io/gitea/services/org	6.953s
+?   	code.gitea.io/gitea/services/packages	[no test files]
+?   	code.gitea.io/gitea/services/packages/alpine	[no test files]
+ok  	code.gitea.io/gitea/services/packages/arch	2.920s
+?   	code.gitea.io/gitea/services/packages/cargo	[no test files]
+?   	code.gitea.io/gitea/services/packages/cleanup	[no test files]
+?   	code.gitea.io/gitea/services/packages/container	[no test files]
+?   	code.gitea.io/gitea/services/packages/debian	[no test files]
+?   	code.gitea.io/gitea/services/packages/rpm	[no test files]
+ok  	code.gitea.io/gitea/services/projects	3.572s
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:49:57 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/attachments
+2026/07/22 10:49:57 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/avatars
+2026/07/22 10:49:57 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/repo-avatars
+2026/07/22 10:49:57 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/lfs
+2026/07/22 10:49:57 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/repo-archive
+2026/07/22 10:49:57 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/packages
+2026/07/22 10:49:57 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2624998689/actions_log
+2026/07/22 10:49:57 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:49:57 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+--- FAIL: TestPullRequest_AddToTaskQueue (0.05s)
+    check_test.go:53: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/services/pull/check_test.go:53
+        	Error:      	Should be true
+        	Test:       	TestPullRequest_AddToTaskQueue
+FAIL
+FAIL	code.gitea.io/gitea/services/pull	5.807s
+ok  	code.gitea.io/gitea/services/release	17.669s
+ok  	code.gitea.io/gitea/services/repository	6.557s
+ok  	code.gitea.io/gitea/services/repository/archiver	7.474s
+?   	code.gitea.io/gitea/services/repository/commitstatus	[no test files]
+ok  	code.gitea.io/gitea/services/repository/files	6.776s
+ok  	code.gitea.io/gitea/services/repository/gitgraph	2.077s
+ok  	code.gitea.io/gitea/services/secrets	2.243s
+?   	code.gitea.io/gitea/services/task	[no test files]
+?   	code.gitea.io/gitea/services/uinotification	[no test files]
+ok  	code.gitea.io/gitea/services/user	2.801s
+?   	code.gitea.io/gitea/services/versioned_migration	[no test files]
+ok  	code.gitea.io/gitea/services/webhook	5.940s
+ok  	code.gitea.io/gitea/services/webtheme	1.822s
+ok  	code.gitea.io/gitea/services/wiki	7.417s
+ok  	code.gitea.io/gitea/tests/fuzz	2.891s
+ok  	code.gitea.io/gitea/tools/codeformat	1.461s
+FAIL
+make: *** [test-backend] Error 1
+TEST-BACKEND EXIT: 2

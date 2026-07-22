@@ -1,0 +1,133 @@
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:53:02 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/attachments
+2026/07/22 10:53:02 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/avatars
+2026/07/22 10:53:02 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/repo-avatars
+2026/07/22 10:53:02 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/lfs
+2026/07/22 10:53:02 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/repo-archive
+2026/07/22 10:53:02 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/packages
+2026/07/22 10:53:02 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata2423671411/actions_log
+2026/07/22 10:53:02 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:53:02 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+--- FAIL: TestUserAvatarLink (0.00s)
+    avatar_test.go:26: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/models/user/avatar_test.go:26
+        	Error:      	Not equal: 
+        	            	expected: "https://localhost/avatars/avatar.png"
+        	            	actual  : "https://localhost/assets/img/avatar_default.png"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-https://localhost/avatars/avatar.png
+        	            	+https://localhost/assets/img/avatar_default.png
+        	Test:       	TestUserAvatarLink
+    avatar_test.go:31: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/models/user/avatar_test.go:31
+        	Error:      	Not equal: 
+        	            	expected: "https://localhost/sub-path/avatars/avatar.png"
+        	            	actual  : "https://localhost/sub-path/assets/img/avatar_default.png"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-https://localhost/sub-path/avatars/avatar.png
+        	            	+https://localhost/sub-path/assets/img/avatar_default.png
+        	Test:       	TestUserAvatarLink
+2026/07/22 10:53:03 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/TestUserAvatarGenerate1777442930/001
+FAIL
+FAIL	code.gitea.io/gitea/models/user	2.627s
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:53:05 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/attachments
+2026/07/22 10:53:05 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/avatars
+2026/07/22 10:53:05 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/repo-avatars
+2026/07/22 10:53:05 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/lfs
+2026/07/22 10:53:05 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/repo-archive
+2026/07/22 10:53:05 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/packages
+2026/07/22 10:53:05 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata110384694/actions_log
+2026/07/22 10:53:05 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:53:05 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:53:06 services/webhook/deliver.go:40:newDefaultRequest() [I] HTTP Method for  webhook https://www.example.com/url1 [ID: 1] is not set, defaulting to POST
+2026/07/22 10:53:10 services/webhook/webhook.go:99:handler() [E] Unable to deliver webhook task[4]: unable to deliver webhook task[4] in https://www.example.com/url1 due to error in http client: Post "https://www.example.com/url1": dial tcp: lookup www.example.com: no such host
+--- FAIL: TestTestHook (3.75s)
+    unit_tests.go:82: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/models/unittest/unit_tests.go:82
+        	            				/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/routers/api/v1/repo/hook_test.go:28
+        	Error:      	Should be true
+        	Test:       	TestTestHook
+        	Messages:   	Expected to find &{ID:0 HookID:1 UUID: PayloadContent: PayloadVersion:0 EventType: IsDelivered:false Delivered:0 IsSucceed:false RequestContent: RequestInfo:<nil> ResponseContent: ResponseInfo:<nil>} (of type *webhook.HookTask, with conditions [0x14002387da0]), but did not
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:53:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:1 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:53:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:2 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:53:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:3 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:53:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:5 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+2026/07/22 10:53:10 .../indexer/issues/util.go:177:pushIssueIndexerQueue() [W] Trying to push &{ID:11 IsDelete:false IDs:[]} to issue indexer queue, but the queue is not initialized, it's OK if it's a unit test
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+FAIL
+FAIL	code.gitea.io/gitea/routers/api/v1/repo	7.229s
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:53:04 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/attachments
+2026/07/22 10:53:04 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/avatars
+2026/07/22 10:53:04 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/repo-avatars
+2026/07/22 10:53:04 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/lfs
+2026/07/22 10:53:04 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/repo-archive
+2026/07/22 10:53:04 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/packages
+2026/07/22 10:53:04 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1087375672/actions_log
+2026/07/22 10:53:04 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:53:04 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+2026/07/22 10:53:06 .../toolchain@v0.0.1-go1.25.6.darwin-arm64/src/sync/once.go:78:(*Once).doSlow() [E] No theme candidate in asset files, but Gitea requires there should be at least one usable theme
+--- FAIL: TestRoutes (0.43s)
+    routes_test.go:24: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/routers/install/routes_test.go:24
+        	Error:      	"<!DOCTYPE html>\n<html lang=\"en-US\" data-theme=\"gitea-auto\">\n<head>\n\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\t<title>install.install - Gitea: Git with a cup of tea</title>\n\t\n\t<meta name=\"author\" content=\"Gitea - Git with a cup of tea\">\n\t<meta name=\"description\" content=\"Gitea (Git with a cup of tea) is a painless self-hosted Git service written in Go\">\n\t<meta name=\"keywords\" content=\"go,git,self-hosted,gitea\">\n\t<meta name=\"referrer\" content=\"same-origin\">\n\n\n\t<link rel=\"icon\" href=\"/assets/img/favicon.svg\" type=\"image/svg+xml\">\n\t<link rel=\"alternate icon\" href=\"/assets/img/favicon.png\" type=\"image/png\">\n\t\n\t<meta property=\"og:title\" content=\"Gitea: Git with a cup of tea\">\n\t<meta property=\"og:type\" content=\"website\">\n\t<meta property=\"og:image\" content=\"/assets/img/logo.png\">\n\t<meta property=\"og:url\" content=\"https://try.gitea.io/\">\n\t<meta property=\"og:description\" content=\"Gitea (Git with a cup of tea) is a painless self-hosted Git service written in Go\">\n\n<meta property=\"og:site_name\" content=\"Gitea: Git with a cup of tea\">\n\n\t<link rel=\"stylesheet\" href=\"/assets/css/index.css?v=dev\">\n<link rel=\"stylesheet\" href=\"/assets/css/theme-gitea-auto.css?v=dev\">\n\n\t\n<script>\n\t\n\twindow.addEventListener('error', function(e) {window._globalHandlerErrors=window._globalHandlerErrors||[]; window._globalHandlerErrors.push(e);});\n\twindow.addEventListener('unhandledrejection', function(e) {window._globalHandlerErrors=window._globalHandlerErrors||[]; window._globalHandlerErrors.push(e);});\n\twindow.config = {\n\t\tappUrl: 'https:\\/\\/try.gitea.io\\/',\n\t\tappSubUrl: '',\n\t\tassetVersionEncoded: encodeURIComponent('dev'), \n\t\tassetUrlPrefix: '\\/assets',\n\t\trunModeIsProd:  true ,\n\t\tcustomEmojis: {\"codeberg\":\":codeberg:\",\"git\":\":git:\",\"gitea\":\":gitea:\",\"github\":\":github:\",\"gitlab\":\":gitlab:\",\"gogs\":\":gogs:\"},\n\t\tpageData:  null ,\n\t\tnotificationSettings: {\"EventSourceUpdateTime\":10000,\"MaxTimeout\":60000,\"MinTimeout\":10000,\"TimeoutStep\":10000}, \n\t\tenableTimeTracking:  false ,\n\t\t\n\t\tmentionValues: [],\n\t\t\n\t\tmermaidMaxSourceCharacters:  50000 ,\n\t\t\n\t\ti18n: {\n\t\t\tcopy_success: \"copy_success\",\n\t\t\tcopy_error: \"copy_error\",\n\t\t\terror_occurred: \"error.occurred\",\n\t\t\tremove_label_str: \"remove_label_str\",\n\t\t\tmodal_confirm: \"modal.confirm\",\n\t\t\tmodal_cancel: \"modal.cancel\",\n\t\t\tmore_items: \"more_items\",\n\t\t},\n\t};\n\t\n\twindow.config.pageData = window.config.pageData || {};\n</script>\n<script src=\"/assets/js/index.js?v=dev\" onerror=\"alert('Failed to load asset files from ' + this.src + '. Please make sure the asset files can be accessed.')\"></script>\n\n\t\n</head>\n<body hx-swap=\"outerHTML\" hx-ext=\"morph\" hx-push-url=\"false\">\n\t\n\n\t<div class=\"full height\">\n\t\t<noscript>enable_javascript</noscript>\n\n\t\t\n\n\t\t\n\n\n\n<div role=\"main\" aria-label=\"install.install\" class=\"page-content install post-install tw-h-full\">\n\t<div class=\"home tw-text-center tw-h-full tw-flex tw-flex-col tw-justify-center\">\n\t\t\n\t\t<div class=\"tw-ml-[-30px]\"><img width=\"160\" src=\"/assets/img/loading.png\" alt aria-hidden=\"true\"></div>\n\t\t<div class=\"tw-my-[2em] tw-text-[18px]\">\n\t\t\t<a id=\"goto-after-install\" href=\"/user/sign_up\">install.installing_desc</a>\n\t\t</div>\n\t</div>\n</div>\n\n\n\t\t\n\t</div>\n\t\n\t<footer class=\"page-footer\" role=\"group\" aria-label=\"aria.footer\">\n\t<div class=\"left-links\" role=\"contentinfo\" aria-label=\"aria.footer.software\">\n\t\t\n\t\t\t<a target=\"_blank\" href=\"https://about.gitea.com\">powered_by%!(EXTRA string=Gitea)</a>\n\t\t\n\t\t\n\t\t\tversion:\n\t\t\t\n\t\t\t\tdev\n\t\t\t\n\t\t\n\t\t\n\t\t\tpage: <strong>2ms</strong>\n\t\t\ttemplate: <strong>1ms</strong>\n\t\t\n\t</div>\n\t<div class=\"right-links\" role=\"group\" aria-label=\"aria.footer.links\">\n\t\t<div class=\"ui dropdown custom\" id=\"footer-theme-selector\">\n\t\t\t<span class=\"default-text\"><div class=\"theme-menu-item\" data-tooltip-content=\"\"><span>octicon-paintbrush(16/)</span> gitea-auto </div></span>\n\t\t\t<div class=\"menu theme-menu\"></div>\n\t\t</div>\n\t\t<div class=\"ui dropdown upward\">\n\t\t\t<span class=\"flex-text-inline\"><span>octicon-globe(14/)</span> English</span>\n\t\t\t<div class=\"menu language-menu\">\n\t\t\t\t</div>\n\t\t</div>\n\t\t<a href=\"/assets/licenses.txt\">licenses</a>\n\t\t<a href=\"/api/swagger\">API</a>\n\t\t\n\t</div>\n</footer>\n\n\t\n</body>\n</html>\n\n" does not contain "class=\"page-content install\""
+        	Test:       	TestRoutes
+FAIL
+FAIL	code.gitea.io/gitea/routers/install	2.509s
+Environment variable GITEA_TEST_CONF not set - defaulting to tests/sqlite.ini
+2026/07/22 10:53:06 modules/storage/storage.go:180:initAttachments() [I] Initialising Attachment storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/attachments
+2026/07/22 10:53:06 modules/storage/storage.go:170:initAvatars() [I] Initialising Avatar storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/avatars
+2026/07/22 10:53:06 modules/storage/storage.go:196:initRepoAvatars() [I] Initialising Repository Avatar storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/repo-avatars
+2026/07/22 10:53:06 modules/storage/storage.go:190:initLFS() [I] Initialising LFS storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/lfs
+2026/07/22 10:53:06 modules/storage/storage.go:202:initRepoArchives() [I] Initialising Repository Archive storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/repo-archive
+2026/07/22 10:53:06 modules/storage/storage.go:212:initPackages() [I] Initialising Packages storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/packages
+2026/07/22 10:53:06 modules/storage/storage.go:223:initActions() [I] Initialising Actions storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /var/folders/07/8cmbs4hn54zdpn1r9gryl4tc0000gn/T/gitea-test/appdata1677711097/actions_log
+2026/07/22 10:53:06 modules/storage/storage.go:227:initActions() [I] Initialising ActionsArtifacts storage with type: local
+2026/07/22 10:53:06 modules/storage/local.go:33:NewLocalStorage() [I] Creating new Local Storage at /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/tests/integration/gitea-integration-sqlite/data/actions_artifacts
+--- FAIL: TestPullRequest_AddToTaskQueue (0.04s)
+    check_test.go:53: 
+        	Error Trace:	/private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-buggy/services/pull/check_test.go:53
+        	Error:      	Should be true
+        	Test:       	TestPullRequest_AddToTaskQueue
+FAIL
+FAIL	code.gitea.io/gitea/services/pull	5.925s
+FAIL

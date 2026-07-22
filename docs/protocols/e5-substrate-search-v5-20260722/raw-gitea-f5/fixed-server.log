@@ -1,0 +1,12 @@
+2026/07/22 10:41:13 cmd/web.go:264:runWeb() [I] Starting Gitea on PID: 28418
+2026/07/22 10:41:13 cmd/web.go:114:showWebStartupMessage() [I] Gitea version: 1.26.0+dev-358-g208cbd5a6 built with GNU Make 3.81, go1.25.6 X:jsonv2 : sqlite, sqlite_unlock_notify
+2026/07/22 10:41:13 cmd/web.go:115:showWebStartupMessage() [I] * RunMode: prod
+2026/07/22 10:41:13 cmd/web.go:116:showWebStartupMessage() [I] * AppPath: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/gitea-fixed/gitea
+2026/07/22 10:41:13 cmd/web.go:117:showWebStartupMessage() [I] * WorkPath: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/run-fixed
+2026/07/22 10:41:13 cmd/web.go:118:showWebStartupMessage() [I] * CustomPath: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/run-fixed/custom
+2026/07/22 10:41:13 cmd/web.go:119:showWebStartupMessage() [I] * ConfigFile: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/run-fixed/app.ini
+2026/07/22 10:41:13 cmd/web.go:120:showWebStartupMessage() [I] Prepare to run web server
+2026/07/22 10:41:14 routers/init.go:116:InitWebInstalled() [I] Git version: 2.50.1 (home: /private/tmp/claude-501/-Users-acyment-dev-hit-sdd-bench/6402650e-4ecd-4a86-8510-7f3924d53aaa/scratchpad/run-fixed/data/home)
+2026/07/22 10:41:16 .../toolchain@v0.0.1-go1.25.6.darwin-arm64/src/sync/once.go:78:(*Once).doSlow() [E] No theme candidate in asset files, but Gitea requires there should be at least one usable theme
+2026/07/22 10:43:33 .../graceful/manager_unix.go:144:(*Manager).handleSignals() [W] PID 28418. Received SIGTERM. Shutting down...
+2026/07/22 10:43:33 .../graceful/manager_unix.go:154:(*Manager).handleSignals() [W] PID: 28418. Background context for manager closed - context canceled - Shutting down...
