@@ -1,0 +1,322 @@
+You are working on paperless-ngx, the Django document-management system. The bulk-edit merge operation creates a new document from existing ones; a background consumer applies a `DocumentMetadataOverrides` object to the newly created document (the consumer lives in another module).
+
+Work only from the code shown in this message; do not explore the filesystem or the web. Reply directly with your answer.
+
+Relevant existing code:
+
+```python
+# src/documents/models.py (excerpt)
+class CustomField(models.Model):
+    """
+    Defines the name and type of a custom field
+    """
+
+    class FieldDataType(models.TextChoices):
+        STRING = ("string", _("String"))
+        URL = ("url", _("URL"))
+        DATE = ("date", _("Date"))
+        BOOL = ("boolean"), _("Boolean")
+        INT = ("integer", _("Integer"))
+        FLOAT = ("float", _("Float"))
+        MONETARY = ("monetary", _("Monetary"))
+        DOCUMENTLINK = ("documentlink", _("Document Link"))
+        SELECT = ("select", _("Select"))
+        LONG_TEXT = ("longtext", _("Long Text"))
+
+    created = models.DateTimeField(
+        _("created"),
+        default=timezone.now,
+        db_index=True,
+        editable=False,
+    )
+
+    name = models.CharField(max_length=128)
+
+    data_type = models.CharField(
+        _("data type"),
+        max_length=50,
+        choices=FieldDataType.choices,
+        editable=False,
+    )
+
+    extra_data = models.JSONField(
+        _("extra data"),
+        null=True,
+        blank=True,
+        help_text=_(
+            "Extra data for the custom field, such as select options",
+        ),
+    )
+
+    class Meta:
+        ordering = ("created",)
+        verbose_name = _("custom field")
+        verbose_name_plural = _("custom fields")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name"],
+                name="%(app_label)s_%(class)s_unique_name",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.name} : {self.data_type}"
+
+
+class CustomFieldInstance(SoftDeleteModel):
+    """
+    A single instance of a field, attached to a CustomField for the name and type
+    and attached to a single Document to be metadata for it
+    """
+
+    TYPE_TO_DATA_STORE_NAME_MAP = {
+        CustomField.FieldDataType.STRING: "value_text",
+        CustomField.FieldDataType.URL: "value_url",
+        CustomField.FieldDataType.DATE: "value_date",
+        CustomField.FieldDataType.BOOL: "value_bool",
+        CustomField.FieldDataType.INT: "value_int",
+        CustomField.FieldDataType.FLOAT: "value_float",
+        CustomField.FieldDataType.MONETARY: "value_monetary",
+        CustomField.FieldDataType.DOCUMENTLINK: "value_document_ids",
+        CustomField.FieldDataType.SELECT: "value_select",
+        CustomField.FieldDataType.LONG_TEXT: "value_long_text",
+    }
+
+    created = models.DateTimeField(
+        _("created"),
+        default=timezone.now,
+        db_index=True,
+        editable=False,
+    )
+
+    document = models.ForeignKey(
+        Document,
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="custom_fields",
+        editable=False,
+    )
+
+    field = models.ForeignKey(
+        CustomField,
+        blank=False,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="fields",
+        editable=False,
+    )
+
+    # Actual data storage
+    value_text = models.CharField(max_length=128, null=True)
+
+    value_bool = models.BooleanField(null=True)
+
+    value_url = models.URLField(null=True)
+
+    value_date = models.DateField(null=True)
+
+    value_int = models.IntegerField(null=True)
+
+    value_float = models.FloatField(null=True)
+
+    value_monetary = models.CharField(null=True, max_length=128)
+
+    value_monetary_amount = models.GeneratedField(
+        expression=Case(
+            # If the value starts with a number and no currency symbol, use the whole string
+            models.When(
+                value_monetary__regex=r"^\d+",
+                then=Cast(
+                    Substr("value_monetary", 1),
+                    output_field=models.DecimalField(decimal_places=2, max_digits=65),
+                ),
+            ),
+            # If the value starts with a 3-char currency symbol, use the rest of the string
+            default=Cast(
+                Substr("value_monetary", 4),
+                output_field=models.DecimalField(decimal_places=2, max_digits=65),
+            ),
+            output_field=models.DecimalField(decimal_places=2, max_digits=65),
+        ),
+        output_field=models.DecimalField(decimal_places=2, max_digits=65),
+        db_persist=True,
+    )
+
+    value_document_ids = models.JSONField(null=True)
+
+    value_select = models.CharField(null=True, max_length=16)
+
+    value_long_text = models.TextField(null=True)
+
+    class Meta:
+        ordering = ("created",)
+        verbose_name = _("custom field instance")
+        verbose_name_plural = _("custom field instances")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["document", "field"],
+                name="%(app_label)s_%(class)s_unique_document_field",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        value = (
+            next(
+                option.get("label")
+                for option in self.field.extra_data["select_options"]
+                if option.get("id") == self.value_select
+            )
+            if (
+                self.field.data_type == CustomField.FieldDataType.SELECT
+                and self.value_select is not None
+            )
+            else self.value
+        )
+        return str(self.field.name) + f" : {value}"
+
+    @classmethod
+    def get_value_field_name(cls, data_type: CustomField.FieldDataType):
+        try:
+            return cls.TYPE_TO_DATA_STORE_NAME_MAP[data_type]
+        except KeyError:  # pragma: no cover
+            raise NotImplementedError(data_type)
+
+    @property
+    def value(self):
+        """
+        Based on the data type, access the actual value the instance stores
+        A little shorthand/quick way to get what is actually here
+        """
+        value_field_name = self.get_value_field_name(self.field.data_type)
+        return getattr(self, value_field_name)
+```
+
+```python
+# src/documents/data_models.py (excerpt)
+@dataclasses.dataclass
+class DocumentMetadataOverrides:
+    """
+    Manages overrides for document fields which normally would
+    be set from content or matching.  All fields default to None,
+    meaning no override is happening
+    """
+
+    filename: str | None = None
+    title: str | None = None
+    correspondent_id: int | None = None
+    document_type_id: int | None = None
+    tag_ids: list[int] | None = None
+    storage_path_id: int | None = None
+    created: datetime.date | None = None
+    asn: int | None = None
+    owner_id: int | None = None
+    view_users: list[int] | None = None
+    view_groups: list[int] | None = None
+    change_users: list[int] | None = None
+    change_groups: list[int] | None = None
+    custom_fields: dict | None = None
+
+    def update(self, other: "DocumentMetadataOverrides") -> "DocumentMetadataOverrides":
+        """
+        Merges two DocumentMetadataOverrides objects such that object B's overrides
+        are applied to object A or merged if multiple are accepted.
+
+        The update is an in-place modification of self
+        """
+        # only if empty
+        if other.title is not None:
+            self.title = other.title
+        if other.correspondent_id is not None:
+            self.correspondent_id = other.correspondent_id
+        if other.document_type_id is not None:
+            self.document_type_id = other.document_type_id
+        if other.storage_path_id is not None:
+            self.storage_path_id = other.storage_path_id
+        if other.owner_id is not None:
+            self.owner_id = other.owner_id
+
+        # merge
+        if self.tag_ids is None:
+            self.tag_ids = other.tag_ids
+        elif other.tag_ids is not None:
+            self.tag_ids.extend(other.tag_ids)
+            self.tag_ids = list(set(self.tag_ids))
+
+        if self.view_users is None:
+            self.view_users = other.view_users
+        elif other.view_users is not None:
+            self.view_users.extend(other.view_users)
+            self.view_users = list(set(self.view_users))
+
+        if self.view_groups is None:
+            self.view_groups = other.view_groups
+        elif other.view_groups is not None:
+            self.view_groups.extend(other.view_groups)
+            self.view_groups = list(set(self.view_groups))
+
+        if self.change_users is None:
+            self.change_users = other.change_users
+        elif other.change_users is not None:
+            self.change_users.extend(other.change_users)
+            self.change_users = list(set(self.change_users))
+
+        if self.change_groups is None:
+            self.change_groups = other.change_groups
+        elif other.change_groups is not None:
+            self.change_groups.extend(other.change_groups)
+            self.change_groups = list(set(self.change_groups))
+
+        if self.custom_fields is None:
+            self.custom_fields = other.custom_fields
+        elif other.custom_fields is not None:
+            self.custom_fields.update(other.custom_fields)
+
+        return self
+
+    @staticmethod
+    def from_document(doc) -> "DocumentMetadataOverrides":
+        """
+        Fills in the overrides from a document object
+        """
+        overrides = DocumentMetadataOverrides()
+        overrides.title = doc.title
+        overrides.correspondent_id = doc.correspondent.id if doc.correspondent else None
+        overrides.document_type_id = doc.document_type.id if doc.document_type else None
+        overrides.storage_path_id = doc.storage_path.id if doc.storage_path else None
+        overrides.owner_id = doc.owner.id if doc.owner else None
+        overrides.tag_ids = list(doc.tags.values_list("id", flat=True))
+        overrides.created = doc.created
+
+        overrides.view_users = list(
+            get_users_with_perms(
+                doc,
+                only_with_perms_in=["view_document"],
+            ).values_list("id", flat=True),
+        )
+        overrides.change_users = list(
+            get_users_with_perms(
+                doc,
+                only_with_perms_in=["change_document"],
+            ).values_list("id", flat=True),
+        )
+
+        groups_with_perms = get_groups_with_perms(
+            doc,
+            attach_perms=True,
+        )
+        overrides.view_groups = [
+            group.id
+            for group in groups_with_perms
+            if "view_document" in groups_with_perms[group]
+        ]
+        overrides.change_groups = [
+            group.id
+            for group in groups_with_perms
+            if "change_document" in groups_with_perms[group]
+        ]
+
+        return overrides
+```
+
+Task: `from_document()` does not yet carry over custom-field metadata. Implement that: populate `overrides.custom_fields` from the source document's custom-field values, so that a document produced by a merge gets the same custom-field metadata as the source document. Reply with the complete updated `from_document()` method, plus any brief notes you'd give a reviewer.
