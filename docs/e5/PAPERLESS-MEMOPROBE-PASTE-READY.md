@@ -24,9 +24,10 @@ performs avoidance only when it recognizes the codebase (unmeasurable contaminat
 
 ## Hard constraints
 
-- **Zero external spend**: probe subjects are claude-family subagents only (Immich
-  precedent: fable + opus). No provider APIs, no OpenRouter, no runs. GitHub/local reads
-  only.
+- **Zero external spend**: probe subjects are claude-family subagents (Immich precedent:
+  fable + opus) **plus the local Codex CLI (GPT-5.4)** — verified ready 2026-07-22
+  (codex-cli 0.144.6, ChatGPT-subscription login, zero marginal cost). No paid provider
+  APIs, no OpenRouter, no runs. GitHub/local reads only.
 - **Freeze before you look.** The prereg (framings, N, scoring classes, kill thresholds)
   is committed as `PAPERLESS-MEMOPROBE-PREREG-v1.md` in the v5 protocol dir **before any
   probe agent is spawned**; the commit is the freeze evidence. Results are scored only
@@ -58,8 +59,16 @@ performs avoidance only when it recognizes the codebase (unmeasurable contaminat
 
 ## Method constraints (design details are the session's to freeze, these are pinned)
 
-- **Two framings × two models (fable, opus), N ≥ 4; replicates optional** (zero marginal
-  cost) but the count is frozen pre-run.
+- **Two framings × three subjects (fable, opus, codex/GPT-5.4), N ≥ 6; replicates
+  optional** (zero marginal cost) but the count is frozen pre-run. Two model families
+  beats one: memorization is family-specific (different corpora, different cutoffs), and
+  #10256 (2025-06-24) is plausibly inside both training windows — the probe measures it
+  empirically per family and the prereg scores tells per family.
+- **Codex probe hygiene** (load the `codex:codex-cli-runtime` skill for invocation
+  mechanics): one fresh, isolated, non-interactive Codex run per probe — no shared
+  context between probes; working directory = an **empty scratch dir** (Codex can read
+  its workspace, so never run it inside this repo or any paperless checkout — that would
+  leak the answer); verbatim stdout archived at spawn time like the subagent outputs.
   - *Bare-helper framing:* scrubbed Django models (an entity, a field-definition table, a
     join/instance table) + a dataclass with a `custom_fields: dict` slot; ask for the
     metadata-copy helper for a merge feature. No paperless identifiers — tests pure
@@ -83,6 +92,7 @@ performs avoidance only when it recognizes the codebase (unmeasurable contaminat
 - **KILL** (memorization tells at/over the frozen threshold, or trap dead) ⇒ memo with
   the exact frozen rule that fired, kill-table line, gitea stands as the sole F5-verified
   candidate; CLI reserves (ripgrep first) remain the next vein — operator decision.
-- Either way, note the honest scope limit in the memo: claude-family-only probe (the
-  Immich-precedent standard); a wider-tier probe is possible later at cost if the
-  in-experiment roster demands it.
+- Either way, note the honest scope limit in the memo: two model families (Anthropic
+  subagents + OpenAI via Codex CLI) — wider than the Immich-precedent standard, but
+  still not the full potential in-experiment roster; a wider probe is possible later at
+  cost if the roster demands it.
