@@ -1,0 +1,18 @@
+```go
+	if !fileOnly {
+		revisionRange := fmt.Sprintf(
+			"%s%s%s",
+			rangeInfo.CommonAncestor,
+			rangeInfo.RangeSeparator,
+			rangeInfo.HeadRefID,
+		)
+		rangeInfo.Commits, err = headGitRepo.ListCommitsInRange(ctx, revisionRange)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		rangeInfo.Commits = []*gitutil.Commit{}
+	}
+```
+
+This uses `base..head` for direct comparisons and `mergeBase...head` for three-dot comparisons. When `fileOnly` is enabled, commit listing is skipped and `Commits` is explicitly initialized as an empty list.

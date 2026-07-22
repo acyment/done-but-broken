@@ -157,3 +157,15 @@ culprit `d79add3` 2016-10-11); no F5 was run or needed — probe-before-build wo
 intended. Kill-table line 30 → KILL. CLI slot stays open (next: restic #5767, anomaly check
 first, probe early); gitea remains the sole verified primary.** Evidence:
 `RIPGREP-MEMOPROBE-RESULTS-v1.md` + `raw-ripgrep-memoprobe/`.
+
+**Update 2026-07-22 (gitea memoprobe, operator-authorized, prereg frozen at `209e713`):
+gitea KILLED for episode use at the frozen fable/Luna episode tier — trap dead at core
+(0/4 falls-in vs the ≥2 bar; zero tells, the scrub held) while FULLY LIVE one tier down
+(opus color rows 2/2 falls-in; the ctx row reproduces the culprit-era range line verbatim
+with the exact git-diff-vs-git-log confusion the fix comment documents). F0–F4/F5 records
+stand; mechanism → trap library with tier annotation. **The v5 pool now holds ZERO
+candidates both F5-verified and probe-live at the frozen tier — the brief §7 exhaustion
+branch: operator decision point (widen classes / screen restic probe-first / revisit
+episode tier, named as post-hoc / reconsider fossil-trap strategy given the
+tier-absorption pattern).** Evidence: `GITEA-MEMOPROBE-RESULTS-v1.md` +
+`raw-gitea-memoprobe/`.

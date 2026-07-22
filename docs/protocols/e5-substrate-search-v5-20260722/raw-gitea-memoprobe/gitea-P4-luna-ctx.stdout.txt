@@ -1,0 +1,11 @@
+```go
+if !fileOnly {
+	revisionRange := fmt.Sprintf("%s..%s", compareInfo.MergeBase, compareInfo.HeadCommitID)
+	compareInfo.Commits, err = headGitRepo.ShowPrettyFormatLogToList(ctx, revisionRange)
+	if err != nil {
+		return nil, err
+	}
+}
+```
+
+The merge base is the correct left endpoint for the commit list: for direct comparisons it equals `BaseCommitID`; otherwise it is the common ancestor. A file-only comparison skips `git log`, leaving `Commits` empty.
