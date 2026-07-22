@@ -1,0 +1,12 @@
+# Environment manifest — paperless F5 (2026-07-22)
+
+host: macOS Darwin 25.5.0 arm64, Docker 29.4.0, Compose v5.1.2
+paperless-f5:fixed 841e81d3cf8d
+paperless-f5:buggy 8b764f2663de
+paperless-f5:buggy label f5.commit=56c744fd5620b072e1724990eda892673bbda9e4
+paperless-f5:fixed label f5.commit=32d04e1fd3be7b3256b76ac86dbb3e50f362e4b1
+tika apache/tika@sha256:90b7fa1dc018434075fce9e1d9b88b1e3d0ea6979d0cf86e116c79a8073ae973
+gotenberg gotenberg/gotenberg@sha256:f9104080d9a7ecab253fb5ebe75100329cf5699c33ec0448f2ea02d885dfde4b
+postgres postgres@sha256:3a82e1f56c8f0f5616a11103ac3d47e632c3938698946a7ad26da0df1334744a
+redis redis@sha256:234c902a2db49461a129e2d4aeff85b28cf20187ed274a67f6e50995fa713c7b
+suite python: 3.12.12 (image system interpreter), uv 0.9.15, deps from uv.lock --frozen (--dev --group testing)

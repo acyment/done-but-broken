@@ -1,0 +1,24 @@
+services:
+  broker:
+    image: docker.io/library/redis:8
+  db:
+    image: docker.io/library/postgres:18
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless
+  webserver:
+    image: paperless-f5:fixed
+    depends_on:
+      - db
+      - broker
+    ports:
+      - "18200:8000"
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_SECRET_KEY: f5-secret-key-not-for-production
+      PAPERLESS_ADMIN_USER: f5admin
+      PAPERLESS_ADMIN_PASSWORD: f5password
+      PAPERLESS_TIME_ZONE: UTC
+      PAPERLESS_OCR_LANGUAGE: eng

@@ -81,7 +81,7 @@ inside the harvest reports with reasons).
 | Rank | Candidate | Recency | Discovery | F5 cost | Status |
 |---|---|---|---|---|---|
 | **1** | **gitea #36483 → #36485** | **Strict pair** (culprit 2026-01-17, fix 2026-01-30, issue 2026-01-29) | User-filed (CONTRIBUTOR assoc.) | Low (single Go binary, API-driven repro, loop ≪60 s) | **F5 PASS 2026-07-22** — all legs + pre-culprit; `GITEA-F5-RESULTS-v1.md` |
-| **2** | **paperless #11868 → #11869** | Latent (fix+issue 2026-01-23; culprit 2023–24 era) — fallback-admissible, **memorization probe mandatory** (prior report #10256, 2025-06-24, is in training data) | User-filed (NONE assoc.) ×2, first dismissed "not a bug" | Medium (Django+Postgres+Redis compose; API-driven; async task worker in loop) | **F5 nominee 2** |
+| **2** | **paperless #11868 → #11869** | Latent (fix+issue 2026-01-23; culprit 2023–24 era) — fallback-admissible, **memorization probe mandatory** (prior report #10256, 2025-06-24, is in training data) | User-filed (NONE assoc.) ×2, first dismissed "not a bug" | Medium as expected (compose build; measured loop: cold 34.5 s, warm 1.7 s, celery wait 1.3 s) | **F5 PASS 2026-07-22** — all legs; `PAPERLESS-F5-RESULTS-v1.md` |
 | 3 | jellyfin #16454 | Fix in-window; culprit undetermined | User-filed | Medium | Reserve |
 | 4 | Lychee #4319 | Fix in-window; culprit undated | User-filed | Medium | Reserve (weak) |
 | — | ollama #15678 | In-window | User-filed | **Prohibitive** (LLM in loop) | Parked |
@@ -126,3 +126,16 @@ delta: none (the falsification pass attributed every native-suite failure on the
 build to environment via a fixed-tree controlled comparison; the commit-list-pinning
 integration tests pass on the buggy build — the decoy property holds). Paperless F5 and
 all design-phase machinery remain operator decisions.
+
+**Update 2026-07-22 (paperless F5 build session, operator-authorized): paperless F5 RUN —
+PASS on all four legs; no kill found. Second F5-verified primary-slot candidate (latent
+class).** Evidence: `PAPERLESS-F5-RESULTS-v1.md` + `raw-paperless-f5/`. Kill-table delta:
+none. Both wrongness forms reproduced through the public REST surface on the buggy build
+(collision: field-A's value onto field-D; divergence: field-B's value silently gone; merge
+reports OK, logs silent); fixed build correct under the identical recipe; full native
+suite failure set byte-identical across the one-token delta (18F/1404P on both trees —
+all environmental by controlled comparison), with all 215 bulk-edit/consumer/custom-field
+tests green on BUGGY; loop cold 34.5 s / warm 1.7 s, celery wait 1.3 s. The at-most-two F5
+budget (brief §7) is now spent: both nominees verified. Standing reminder: the paperless
+candidate's memorization probe is MANDATORY before any design-phase use (#10256 is
+in-window). Design-phase machinery remains an operator decision.

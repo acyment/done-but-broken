@@ -1,0 +1,819 @@
+F.......F.EFFEEEEEEE                                                     [100%]
+==================================== ERRORS ====================================
+_________ ERROR at setup of TestParserLive.test_generate_pdf_from_mail _________
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-p7f0hcdb'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+___________ ERROR at setup of TestParser.test_generate_pdf_from_mail ___________
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-giugvnu9'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+__________ ERROR at setup of TestParser.test_generate_pdf_html_email ___________
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-wili1ak5'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+_ ERROR at setup of TestParser.test_generate_pdf_html_email_html_to_pdf_failure _
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-_oy0u9lp'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+___ ERROR at setup of TestParser.test_generate_pdf_html_email_merge_failure ____
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-o4l5hxic'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+________ ERROR at setup of TestParser.test_generate_pdf_layout_options _________
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-kybfhy48'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+_________ ERROR at setup of TestParser.test_generate_pdf_simple_email __________
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-tq_az_i9'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+_____________ ERROR at setup of TestTikaHtmlParse.test_tika_parse ______________
+
+    @pytest.fixture()
+    def mail_parser() -> MailDocumentParser:
+>       return MailDocumentParser(logging_group=None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/tests/conftest.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/parsers.py:350: in __init__
+    tempfile.mkdtemp(prefix="paperless-", dir=settings.SCRATCH_DIR),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+suffix = '', prefix = 'paperless-', dir = PosixPath('/tmp/paperless')
+
+    def mkdtemp(suffix=None, prefix=None, dir=None):
+        """User-callable function to create and return a unique temporary
+        directory.  The return value is the pathname of the directory.
+    
+        Arguments are as for mkstemp, except that the 'text' argument is
+        not accepted.
+    
+        The directory is readable, writable, and searchable only by the
+        creating user.
+    
+        Caller is responsible for deleting the directory when done with it.
+        """
+    
+        prefix, suffix, dir, output_type = _sanitize_params(prefix, suffix, dir)
+    
+        names = _get_candidate_names()
+        if output_type is bytes:
+            names = map(_os.fsencode, names)
+    
+        for seq in range(TMP_MAX):
+            name = next(names)
+            file = _os.path.join(dir, prefix + name + suffix)
+            _sys.audit("tempfile.mkdtemp", file)
+            try:
+>               _os.mkdir(file, 0o700)
+E               PermissionError: [Errno 13] Permission denied: '/tmp/paperless/paperless-r1dbriov'
+
+/usr/local/lib/python3.12/tempfile.py:384: PermissionError
+=================================== FAILURES ===================================
+_____________________ TestSystemStatus.test_system_status ______________________
+
+self = <documents.tests.test_api_status.TestSystemStatus testMethod=test_system_status>
+
+    def test_system_status(self):
+        """
+        GIVEN:
+            - A user is logged in
+        WHEN:
+            - The user requests the system status
+        THEN:
+            - The response contains relevant system status information
+        """
+        self.client.force_login(self.user)
+        response = self.client.get(self.ENDPOINT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["pngx_version"], version.__full_version_str__)
+        self.assertIsNotNone(response.data["server_os"])
+>       self.assertEqual(response.data["install_type"], "bare-metal")
+E       AssertionError: 'docker' != 'bare-metal'
+E       - docker
+E       + bare-metal
+
+src/documents/tests/test_api_status.py:37: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[1m
+
+  This is a one-time only migration to generate thumbnails for all of your
+  documents so that future UIs will have something to work with.  If you have
+  a lot of documents though, this may take a while, so a coffee break may be
+  in order.
+[0m
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:31:00,428] [ERROR] [paperless.api] System status detected a possible problem while connecting to redis: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/localci/src/documents/views.py", line 2984, in get
+    client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+[2026-07-22 15:31:06,506] [ERROR] [paperless.api] System status detected a possible problem while connecting to celery: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 951, in create_channel
+    return self._avail_channels.pop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: pop from empty list
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 472, in _reraise_as_library_errors
+    yield
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 459, in _ensure_connection
+    return retry_over_time(
+           ^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/utils/functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 938, in _connection_factory
+    self._connection = self._establish_connection()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 860, in _establish_connection
+    conn = self.transport.establish_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 975, in establish_connection
+    self._avail_channels.append(self.create_channel(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 953, in create_channel
+    channel = self.Channel(connection)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/redis.py", line 751, in __init__
+    self.client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/localci/src/documents/views.py", line 2996, in get
+    celery_ping = celery_app.control.inspect().ping()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 294, in ping
+    return self._request('ping')
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 106, in _request
+    return self._prepare(self.app.control.broadcast(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 777, in broadcast
+    return self.mailbox(conn)._broadcast(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/pidbox.py", line 330, in _broadcast
+    chan = channel or self.connection.default_channel
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 957, in default_channel
+    self._ensure_connection(**conn_opts)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 458, in _ensure_connection
+    with ctx():
+         ^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 476, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: Error 111 connecting to localhost:6379. Connection refused.
+------------------------------ Captured log call -------------------------------
+DEBUG    celery.utils.functional:functional.py:335 
+def delete(doc_ids):
+    return 1
+
+DEBUG    celery.utils.functional:functional.py:335 
+def process_mail_accounts(account_ids=0):
+    return 1
+
+ERROR    paperless.api:views.py:2988 System status detected a possible problem while connecting to redis: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/localci/src/documents/views.py", line 2984, in get
+    client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+ERROR    paperless.api:views.py:3003 System status detected a possible problem while connecting to celery: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 951, in create_channel
+    return self._avail_channels.pop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: pop from empty list
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 472, in _reraise_as_library_errors
+    yield
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 459, in _ensure_connection
+    return retry_over_time(
+           ^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/utils/functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 938, in _connection_factory
+    self._connection = self._establish_connection()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 860, in _establish_connection
+    conn = self.transport.establish_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 975, in establish_connection
+    self._avail_channels.append(self.create_channel(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 953, in create_channel
+    channel = self.Channel(connection)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/redis.py", line 751, in __init__
+    self.client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/localci/src/documents/views.py", line 2996, in get
+    celery_ping = celery_app.control.inspect().ping()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 294, in ping
+    return self._request('ping')
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 106, in _request
+    return self._prepare(self.app.control.broadcast(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 777, in broadcast
+    return self.mailbox(conn)._broadcast(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/pidbox.py", line 330, in _broadcast
+    chan = channel or self.connection.default_channel
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 957, in default_channel
+    self._ensure_connection(**conn_opts)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 458, in _ensure_connection
+    with ctx():
+         ^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 476, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: Error 111 connecting to localhost:6379. Connection refused.
+____________________ TestParser.test_rtl_language_detection ____________________
+
+self = <paperless_tesseract.tests.test_parser.TestParser testMethod=test_rtl_language_detection>
+
+    def test_rtl_language_detection(self):
+        """
+        GIVEN:
+            - File with text in an RTL language
+        WHEN:
+            - Document is parsed
+        THEN:
+            - Text from the document is extracted
+        """
+        parser = RasterisedDocumentParser(None)
+    
+        parser.parse(
+            str(self.SAMPLE_FILES / "rtl-test.pdf"),
+            "application/pdf",
+        )
+    
+        # Copied from the PDF to here.  Don't even look at it
+>       self.assertIn("ةﯾﻠﺧﺎدﻻ ةرازو", parser.get_text())
+E       AssertionError: 'ةﯾﻠﺧﺎدﻻ ةرازو' not found in '\u202bال\u202c\n\n\n\n\n\u202bا\u202c\n\n\n\n\n\u202bخ\u202c\n\n\n\n\n\u202bل\u202c\n\n\n\n\n\u202bي\u202c\n\n\n\n\n\u202bد ةرازو\u202c \u202bة\u202c'
+
+src/paperless_tesseract/tests/test_parser.py:851: AssertionError
+----------------------------- Captured stderr call -----------------------------
+
+
+
+
+
+
+------------------------------ Captured log call -------------------------------
+INFO     paperless.parsing.tesseract:utils.py:93 pdftotext exited 0
+DEBUG    paperless.parsing.tesseract:parsers.py:383 Calling OCRmyPDF with args: {'input_file': '/localci/src/paperless_tesseract/tests/samples/rtl-test.pdf', 'output_file': PosixPath('/tmp/tmpexr00865/paperless-8aic4h56/archive.pdf'), 'use_threads': True, 'jobs': 10, 'language': 'eng', 'output_type': 'pdfa', 'progress_bar': False, 'color_conversion_strategy': 'RGB', 'skip_text': True, 'clean': True, 'deskew': True, 'rotate_pages': True, 'rotate_pages_threshold': 12.0, 'sidecar': PosixPath('/tmp/tmpexr00865/paperless-8aic4h56/sidecar.txt')}
+INFO     ocrmypdf._pipeline:_pipeline.py:343 skipping all processing on this page
+INFO     ocrmypdf._pipelines.ocr:ocr.py:144 Postprocessing...
+INFO     ocrmypdf._pipeline:_pipeline.py:1002 Image optimization ratio: 1.00 savings: 0.0%
+INFO     ocrmypdf._pipeline:_pipeline.py:1005 Total file size ratio: 0.96 savings: -3.7%
+INFO     ocrmypdf._pipelines._common:_common.py:474 Output file is a PDF/A-2b (as expected)
+DEBUG    paperless.parsing.tesseract:parsers.py:174 Incomplete sidecar file: discarding.
+INFO     paperless.parsing.tesseract:utils.py:93 pdftotext exited 0
+______________ TestUrlCanary.test_is_online_image_still_available ______________
+
+self = <paperless_mail.tests.test_parsers_live.TestUrlCanary object at 0xffff7c246840>
+
+    def test_is_online_image_still_available(self):
+        """
+        GIVEN:
+            - Fresh start
+        WHEN:
+            - A public image used in the html sample file is requested
+        THEN:
+            - No exception shall be thrown
+        """
+        """
+        A public image is used in the html sample file. We have no control
+        whether this image stays online forever, so here we check if it is still there
+        """
+    
+        # Now check the URL used in samples/sample.html
+        resp = httpx.get(
+            "https://docs.paperless-ngx.com/assets/logo_full_white.svg",
+        )
+>       resp.raise_for_status()
+
+src/paperless_mail/tests/test_parsers_live.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Response [403 Forbidden]>
+
+    def raise_for_status(self) -> Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+>       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/logo_full_white.svg'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+/venv/lib/python3.12/site-packages/httpx/_models.py:829: HTTPStatusError
+__________ TestUrlCanary.test_online_image_exception_on_not_available __________
+
+self = <paperless_mail.tests.test_parsers_live.TestUrlCanary object at 0xffff7c07a6f0>
+
+    def test_online_image_exception_on_not_available(self):
+        """
+        GIVEN:
+            - Fresh start
+        WHEN:
+            - nonexistent image is requested
+        THEN:
+            - An exception shall be thrown
+        """
+        """
+        A public image is used in the html sample file. We have no control
+        whether this image stays online forever, so here we check if we can detect if is not
+        available anymore.
+        """
+        resp = httpx.get(
+            "https://docs.paperless-ngx.com/assets/non-existent.png",
+        )
+        with pytest.raises(httpx.HTTPStatusError) as exec_info:
+            resp.raise_for_status()
+    
+>       assert exec_info.value.response.status_code == httpx.codes.NOT_FOUND
+E       assert 403 == <codes.NOT_FOUND: 404>
+E        +  where 403 = <Response [403 Forbidden]>.status_code
+E        +    where <Response [403 Forbidden]> = HTTPStatusError("Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/non-existent.png'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403").response
+E        +      where HTTPStatusError("Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/non-existent.png'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403") = <ExceptionInfo HTTPStatusError("Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/non-existent.png'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403") tblen=2>.value
+E        +  and   <codes.NOT_FOUND: 404> = <enum 'codes'>.NOT_FOUND
+E        +    where <enum 'codes'> = httpx.codes
+
+src/paperless_mail/tests/test_parsers_live.py:76: AssertionError
+=============================== warnings summary ===============================
+src/documents/tests/test_api_status.py::TestSystemStatus::test_system_status
+  /venv/lib/python3.12/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /localci/static/
+    mw_instance = middleware(adapted_handler)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED src/documents/tests/test_api_status.py::TestSystemStatus::test_system_status
+FAILED src/paperless_tesseract/tests/test_parser.py::TestParser::test_rtl_language_detection
+FAILED src/paperless_mail/tests/test_parsers_live.py::TestUrlCanary::test_is_online_image_still_available
+FAILED src/paperless_mail/tests/test_parsers_live.py::TestUrlCanary::test_online_image_exception_on_not_available
+ERROR src/paperless_mail/tests/test_parsers_live.py::TestParserLive::test_generate_pdf_from_mail
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_from_mail
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email_html_to_pdf_failure
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email_merge_failure
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_layout_options
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_simple_email
+ERROR src/paperless_mail/tests/test_parsers.py::TestTikaHtmlParse::test_tika_parse
+4 failed, 8 passed, 1 warning, 8 errors in 15.61s

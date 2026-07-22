@@ -1,0 +1,176 @@
+#0 building with "orbstack" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 9.42kB 0.0s done
+#1 DONE 0.1s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 0.7s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
+#3 CACHED
+
+#4 [internal] load metadata for ghcr.io/astral-sh/uv:0.9.15-python3.12-trixie-slim
+#4 ...
+
+#5 [internal] load metadata for docker.io/library/node:20-trixie-slim
+#5 DONE 0.6s
+
+#4 [internal] load metadata for ghcr.io/astral-sh/uv:0.9.15-python3.12-trixie-slim
+#4 DONE 1.2s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 417B done
+#6 DONE 0.1s
+
+#7 [s6-overlay-base 1/4] FROM ghcr.io/astral-sh/uv:0.9.15-python3.12-trixie-slim@sha256:6998c298bc8047b036a70b69fb65d7ff70768ce5e5adc06f8d1d084c6bb15a50
+#7 DONE 0.0s
+
+#8 [compile-frontend 1/6] FROM docker.io/library/node:20-trixie-slim@sha256:abfbe12cc943141a0c9e8c0a57d710df1dadd95d35e8662cc02958b284d1f35b
+#8 DONE 0.0s
+
+#9 [internal] load build context
+#9 transferring context: 62.52MB 0.4s done
+#9 DONE 0.5s
+
+#10 [main-app 3/7] COPY --chown=1000:1000 [pyproject.toml, uv.lock, /usr/src/paperless/src/]
+#10 CACHED
+
+#11 [main-app 2/7] WORKDIR /usr/src/paperless/src/
+#11 CACHED
+
+#12 [s6-overlay-base 4/4] COPY ./docker/rootfs /
+#12 CACHED
+
+#13 [main-app 1/7] RUN set -eux   echo "Installing system packages"     && apt-get update     && apt-get install --yes --quiet --no-install-recommends   curl   gosu   tzdata   fonts-liberation   gettext   ghostscript   gnupg   icc-profiles-free   imagemagick   postgresql-client   mariadb-client   tesseract-ocr   tesseract-ocr-eng   tesseract-ocr-deu   tesseract-ocr-fra   tesseract-ocr-ita   tesseract-ocr-spa   unpaper   pngquant   jbig2dec   libxml2   libxslt1.1   qpdf   file   libmagic1   media-types   zlib1g   libzbar0   poppler-utils     && echo "Installing pre-built updates"       && curl --fail --silent --no-progress-meter --show-error --location --remote-name-all         https://github.com/paperless-ngx/builder/releases/download/jbig2enc-trixie-v0.30/jbig2enc_0.30-1_arm64.deb       && echo "Installing jbig2enc"         && dpkg --install ./jbig2enc_0.30-1_arm64.deb       && echo "Configuring imagemagick"         && cp /etc/ImageMagick-6/paperless-policy.xml /etc/ImageMagick-6/policy.xml       && echo "Cleaning up image layer"         && rm --force --verbose *.deb     && rm --recursive --force --verbose /var/lib/apt/lists/*
+#13 CACHED
+
+#14 [s6-overlay-base 3/4] RUN set -eux     && echo "Installing build time packages"       && apt-get update       && apt-get install --yes --quiet --no-install-recommends curl                         xz-utils     && echo "Determining arch"       && S6_ARCH=""       && if [ "arm64" = "amd64" ]; then S6_ARCH="x86_64";       elif [ "arm64" = "arm64" ]; then S6_ARCH="aarch64"; fi      && if [ -z "${S6_ARCH}" ]; then { echo "Error: Not able to determine arch"; exit 1; }; fi     && echo "Installing s6-overlay for ${S6_ARCH}"       && curl --fail --silent --no-progress-meter --show-error --location --remote-name-all --parallel --parallel-max 4         "https://github.com/just-containers/s6-overlay/releases/download/v3.2.1.0/s6-overlay-noarch.tar.xz"         "https://github.com/just-containers/s6-overlay/releases/download/v3.2.1.0/s6-overlay-noarch.tar.xz.sha256"         "https://github.com/just-containers/s6-overlay/releases/download/v3.2.1.0/s6-overlay-${S6_ARCH}.tar.xz"         "https://github.com/just-containers/s6-overlay/releases/download/v3.2.1.0/s6-overlay-${S6_ARCH}.tar.xz.sha256"       && echo "Validating s6-archive checksums"         && sha256sum --check ./*.sha256       && echo "Unpacking archives"         && tar --directory / -Jxpf s6-overlay-noarch.tar.xz         && tar --directory / -Jxpf s6-overlay-${S6_ARCH}.tar.xz       && echo "Removing downloaded archives"         && rm ./*.tar.xz         && rm ./*.sha256     && echo "Cleaning up image"       && apt-get --yes purge curl                         xz-utils       && apt-get --yes autoremove --purge       && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [s6-overlay-base 2/4] WORKDIR /usr/src/s6
+#15 CACHED
+
+#16 [main-app 4/7] RUN --mount=type=cache,target=/cache/uv/,id=python-cache   set -eux   && echo "Installing build system packages"     && apt-get update     && apt-get install --yes --quiet --no-install-recommends   build-essential   default-libmysqlclient-dev   pkg-config   && echo "Installing Python requirements"     && uv export --quiet --no-dev --all-extras --format requirements-txt --output-file requirements.txt     && uv pip install --system --no-python-downloads --python-preference system --requirements requirements.txt   && echo "Installing NLTK data"     && python3 -W ignore::RuntimeWarning -m nltk.downloader -d "/usr/share/nltk_data" snowball_data     && python3 -W ignore::RuntimeWarning -m nltk.downloader -d "/usr/share/nltk_data" stopwords     && python3 -W ignore::RuntimeWarning -m nltk.downloader -d "/usr/share/nltk_data" punkt_tab   && echo "Cleaning up image"     && apt-get --yes purge   build-essential   default-libmysqlclient-dev   pkg-config     && apt-get --yes autoremove --purge     && apt-get clean --yes     && rm --recursive --force --verbose *.whl     && rm --recursive --force --verbose /var/lib/apt/lists/*     && rm --recursive --force --verbose /tmp/*     && rm --recursive --force --verbose /var/tmp/*     && rm --recursive --force --verbose /var/cache/apt/archives/*     && truncate --size 0 /var/log/*log
+#16 CACHED
+
+#17 [compile-frontend 2/6] COPY ./src-ui /src/src-ui
+#17 CACHED
+
+#18 [compile-frontend 4/6] RUN set -eux   && npm update -g pnpm   && npm install -g corepack@latest   && corepack enable   && pnpm install
+#18 CACHED
+
+#19 [compile-frontend 5/6] RUN set -eux && case "" in   dev|beta|fix*|feature*)     sed -i -E "s/tag: '([a-z\.]+)'/tag: ''/g" /src/src-ui/src/environments/environment.prod.ts     ;; esac
+#19 CACHED
+
+#20 [compile-frontend 3/6] WORKDIR /src/src-ui
+#20 CACHED
+
+#21 [compile-frontend 6/6] RUN set -eux   && ./node_modules/.bin/ng build --configuration production
+#21 CACHED
+
+#22 [main-app 5/7] COPY --chown=1000:1000 ./src ./
+#22 DONE 0.4s
+
+#23 [main-app 6/7] COPY --from=compile-frontend --chown=1000:1000 /src/src/documents/static/frontend/ ./documents/static/frontend/
+#23 DONE 0.2s
+
+#24 [main-app 7/7] RUN set -eux   && sed -i '1s|^#!/usr/bin/env python3|#!/command/with-contenv python3|' manage.py   && echo "Setting up user/group"     && addgroup --gid 1000 paperless     && useradd --uid 1000 --gid paperless --home-dir /usr/src/paperless paperless   && echo "Creating volume directories"     && mkdir --parents --verbose /usr/src/paperless/data     && mkdir --parents --verbose /usr/src/paperless/media     && mkdir --parents --verbose /usr/src/paperless/consume     && mkdir --parents --verbose /usr/src/paperless/export   && echo "Creating gnupg directory"     && mkdir -m700 --verbose /usr/src/paperless/.gnupg   && echo "Adjusting all permissions"     && chown --from root:root --changes --recursive paperless:paperless /usr/src/paperless   && echo "Collecting static files"     && s6-setuidgid paperless python3 manage.py collectstatic --clear --no-input --link     && s6-setuidgid paperless python3 manage.py compilemessages     && /usr/local/bin/deduplicate.py --verbose /usr/src/paperless/static/
+#24 0.212 + sed -i 1s|^#!/usr/bin/env python3|#!/command/with-contenv python3| manage.py
+#24 0.216 + echo Setting up user/group
+#24 0.216 + addgroup --gid 1000 paperless
+#24 0.216 Setting up user/group
+#24 0.291 + useradd --uid 1000 --gid paperless --home-dir /usr/src/paperless paperless
+#24 0.333 Creating volume directories
+#24 0.333 + echo Creating volume directories
+#24 0.333 + mkdir --parents --verbose /usr/src/paperless/data
+#24 0.334 mkdir: created directory '/usr/src/paperless/data'
+#24 0.334 + mkdir --parents --verbose /usr/src/paperless/media
+#24 0.334 mkdir: created directory '/usr/src/paperless/media'
+#24 0.335 + mkdir --parents --verbose /usr/src/paperless/consume
+#24 0.335 mkdir: created directory '/usr/src/paperless/consume'
+#24 0.335 + mkdir --parents --verbose /usr/src/paperless/export
+#24 0.336 mkdir: created directory '/usr/src/paperless/export'
+#24 0.336 + echo Creating gnupg directory
+#24 0.337 Creating gnupg directory
+#24 0.337 + mkdir -m700 --verbose /usr/src/paperless/.gnupg
+#24 0.337 mkdir: created directory '/usr/src/paperless/.gnupg'
+#24 0.337 + echo Adjusting all permissions
+#24 0.338 + chown --from root:root --changes --recursiveAdjusting all permissions
+#24 0.338  paperless:paperless /usr/src/paperless
+#24 0.355 changed ownership of '/usr/src/paperless/src/requirements.txt' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless/src' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless/data' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless/media' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless/consume' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless/export' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless/.gnupg' from root:root to paperless:paperless
+#24 0.355 changed ownership of '/usr/src/paperless' from root:root to paperless:paperless
+#24 0.355 Collecting static files
+#24 0.355 + echo Collecting static files
+#24 0.355 + s6-setuidgid paperless python3 manage.py collectstatic --clear --no-input --link
+#24 3.553 
+#24 3.553 805 static files symlinked to '/usr/src/paperless/static'.
+#24 3.736 + s6-setuidgid paperless python3 manage.py compilemessages
+#24 6.512 processing file django.po in /usr/src/paperless/src/locale/cs_CZ/LC_MESSAGES
+#24 6.513 processing file django.po in /usr/src/paperless/src/locale/hu_HU/LC_MESSAGES
+#24 6.514 processing file django.po in /usr/src/paperless/src/locale/fa_IR/LC_MESSAGES
+#24 6.514 processing file django.po in /usr/src/paperless/src/locale/zh_CN/LC_MESSAGES
+#24 6.515 processing file django.po in /usr/src/paperless/src/locale/fi_FI/LC_MESSAGES
+#24 6.515 processing file django.po in /usr/src/paperless/src/locale/hi_IN/LC_MESSAGES
+#24 6.516 processing file django.po in /usr/src/paperless/src/locale/pt_BR/LC_MESSAGES
+#24 6.516 processing file django.po in /usr/src/paperless/src/locale/es_ES/LC_MESSAGES
+#24 6.516 processing file django.po in /usr/src/paperless/src/locale/mk_MK/LC_MESSAGES
+#24 6.520 processing file django.po in /usr/src/paperless/src/locale/sl_SI/LC_MESSAGES
+#24 6.520 processing file django.po in /usr/src/paperless/src/locale/ca_ES/LC_MESSAGES
+#24 6.520 processing file django.po in /usr/src/paperless/src/locale/ru_RU/LC_MESSAGES
+#24 6.521 processing file django.po in /usr/src/paperless/src/locale/de_DE/LC_MESSAGES
+#24 6.521 processing file django.po in /usr/src/paperless/src/locale/sr_CS/LC_MESSAGES
+#24 6.522 processing file django.po in /usr/src/paperless/src/locale/nb_NO/LC_MESSAGES
+#24 6.522 processing file django.po in /usr/src/paperless/src/locale/th_TH/LC_MESSAGES
+#24 6.523 processing file django.po in /usr/src/paperless/src/locale/lb_LU/LC_MESSAGES
+#24 6.523 processing file django.po in /usr/src/paperless/src/locale/zh_TW/LC_MESSAGES
+#24 6.524 processing file django.po in /usr/src/paperless/src/locale/tr_TR/LC_MESSAGES
+#24 6.525 processing file django.po in /usr/src/paperless/src/locale/ms_MY/LC_MESSAGES
+#24 6.525 processing file django.po in /usr/src/paperless/src/locale/he_IL/LC_MESSAGES
+#24 6.526 processing file django.po in /usr/src/paperless/src/locale/bg_BG/LC_MESSAGES
+#24 6.526 processing file django.po in /usr/src/paperless/src/locale/pl_PL/LC_MESSAGES
+#24 6.527 processing file django.po in /usr/src/paperless/src/locale/la_LA/LC_MESSAGES
+#24 6.528 processing file django.po in /usr/src/paperless/src/locale/xh_ZA/LC_MESSAGES
+#24 6.528 processing file django.po in /usr/src/paperless/src/locale/km_KH/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/nl_NL/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/ro_RO/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/et_EE/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/sv_SE/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/uk_UA/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/en_GB/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/lt_LT/LC_MESSAGES
+#24 6.530 processing file django.po in /usr/src/paperless/src/locale/el_GR/LC_MESSAGES
+#24 6.531 processing file django.po in /usr/src/paperless/src/locale/lv_LV/LC_MESSAGES
+#24 6.531 processing file django.po in /usr/src/paperless/src/locale/af_ZA/LC_MESSAGES
+#24 6.532 processing file django.po in /usr/src/paperless/src/locale/vi_VN/LC_MESSAGES
+#24 6.532 processing file django.po in /usr/src/paperless/src/locale/da_DK/LC_MESSAGES
+#24 6.532 processing file django.po in /usr/src/paperless/src/locale/hr_HR/LC_MESSAGES
+#24 6.532 processing file django.po in /usr/src/paperless/src/locale/fr_FR/LC_MESSAGES
+#24 6.532 processing file django.po in /usr/src/paperless/src/locale/id_ID/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/ja_JP/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/it_IT/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/ar_AR/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/pt_PT/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/en_US/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/sk_SK/LC_MESSAGES
+#24 6.534 processing file django.po in /usr/src/paperless/src/locale/no_NO/LC_MESSAGES
+#24 6.535 processing file django.po in /usr/src/paperless/src/locale/be_BY/LC_MESSAGES
+#24 6.535 processing file django.po in /usr/src/paperless/src/locale/ko_KR/LC_MESSAGES
+#24 6.724 + /usr/local/bin/deduplicate.py --verbose /usr/src/paperless/static/
+#24 6.909 Scanning directory: /usr/src/paperless/static
+#24 6.909 Calculating file hashes...
+#24 6.915 No duplicate files found!
+#24 DONE 7.0s
+
+#25 exporting to image
+#25 exporting layers
+#25 exporting layers 0.6s done
+#25 writing image sha256:841e81d3cf8d1c3f49dcca462883cc4fba51cf02dd171caefe4aa3703ff475e3 done
+#25 naming to docker.io/library/paperless-f5:fixed done
+#25 DONE 0.6s

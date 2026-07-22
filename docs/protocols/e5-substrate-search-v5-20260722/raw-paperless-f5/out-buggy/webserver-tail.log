@@ -1,0 +1,60 @@
+webserver-1  | [2026-07-22 15:09:10,338] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:10,990] [INFO] [paperless.parsing] convert exited 0
+webserver-1  | [2026-07-22 15:09:11,107] [INFO] [paperless.consumer] Document 2026-07-22 scratch consumption finished
+webserver-1  | [2026-07-22 15:09:11,110] [INFO] [paperless.tasks] ConsumeTaskPlugin completed with: Success. New document id 1 created
+webserver-1  | [2026-07-22 15:09:11,114] [INFO] [celery.app.trace] Task documents.tasks.consume_file[89fb779c-cf73-4879-b162-a9286b088c1c] succeeded in 1.5136522700049682s: 'Success. New document id 1 created'
+webserver-1  | [2026-07-22 15:09:11,479] [INFO] [paperless.tasks] ConsumerPreflightPlugin completed with no message
+webserver-1  | [2026-07-22 15:09:11,485] [INFO] [paperless.tasks] WorkflowTriggerPlugin completed with: 
+webserver-1  | [2026-07-22 15:09:11,485] [INFO] [paperless.consumer] Consuming double-sided-even.pdf
+webserver-1  | [2026-07-22 15:09:11,503] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:11,825] [INFO] [ocrmypdf._pipelines.ocr] Start processing 2 pages concurrently
+webserver-1  | [2026-07-22 15:09:11,827] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:11,827] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:11,828] [INFO] [ocrmypdf._pipelines.ocr] Postprocessing...
+webserver-1  | [2026-07-22 15:09:11,918] [INFO] [ocrmypdf._pipeline] Image optimization ratio: 1.00 savings: 0.2%
+webserver-1  | [2026-07-22 15:09:11,918] [INFO] [ocrmypdf._pipeline] Total file size ratio: 0.50 savings: -99.9%
+webserver-1  | [2026-07-22 15:09:11,919] [INFO] [ocrmypdf._pipelines._common] Output file is a PDF/A-2b (as expected)
+webserver-1  | [2026-07-22 15:09:11,953] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:12,559] [INFO] [paperless.parsing] convert exited 0
+webserver-1  | [2026-07-22 15:09:12,685] [INFO] [paperless.consumer] Document 2026-07-22 source consumption finished
+webserver-1  | [2026-07-22 15:09:12,693] [INFO] [paperless.tasks] ConsumeTaskPlugin completed with: Success. New document id 2 created
+webserver-1  | [2026-07-22 15:09:12,699] [INFO] [celery.app.trace] Task documents.tasks.consume_file[f83e1a2f-d6e6-4642-b955-f9f10a94bb87] succeeded in 1.2629973479924956s: 'Success. New document id 2 created'
+webserver-1  | [2026-07-22 15:09:13,055] [INFO] [paperless.tasks] ConsumerPreflightPlugin completed with no message
+webserver-1  | [2026-07-22 15:09:13,061] [INFO] [paperless.tasks] WorkflowTriggerPlugin completed with: 
+webserver-1  | [2026-07-22 15:09:13,061] [INFO] [paperless.consumer] Consuming double-sided-odd.pdf
+webserver-1  | [2026-07-22 15:09:13,079] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:13,397] [INFO] [ocrmypdf._pipelines.ocr] Start processing 3 pages concurrently
+webserver-1  | [2026-07-22 15:09:13,398] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:13,398] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:13,399] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:13,400] [INFO] [ocrmypdf._pipelines.ocr] Postprocessing...
+webserver-1  | [2026-07-22 15:09:13,482] [INFO] [ocrmypdf._pipeline] Image optimization ratio: 1.00 savings: 0.3%
+webserver-1  | [2026-07-22 15:09:13,482] [INFO] [ocrmypdf._pipeline] Total file size ratio: 0.52 savings: -90.8%
+webserver-1  | [2026-07-22 15:09:13,483] [INFO] [ocrmypdf._pipelines._common] Output file is a PDF/A-2b (as expected)
+webserver-1  | [2026-07-22 15:09:13,527] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:14,270] [INFO] [paperless.parsing] convert exited 0
+webserver-1  | [2026-07-22 15:09:14,467] [INFO] [paperless.consumer] Document 2026-07-22 other consumption finished
+webserver-1  | [2026-07-22 15:09:14,473] [INFO] [paperless.tasks] ConsumeTaskPlugin completed with: Success. New document id 3 created
+webserver-1  | [2026-07-22 15:09:14,485] [INFO] [celery.app.trace] Task documents.tasks.consume_file[2a4a829c-2ea2-468e-864a-c7c3b47952b5] succeeded in 1.468720574004692s: 'Success. New document id 3 created'
+webserver-1  | [2026-07-22 15:09:15,617] [INFO] [paperless.bulk_edit] Attempting to merge 2 documents into a single document.
+webserver-1  | [2026-07-22 15:09:15,631] [INFO] [paperless.bulk_edit] Adding merged document to the task queue.
+webserver-1  | [2026-07-22 15:09:15,658] [INFO] [celery.worker.strategy] Task documents.tasks.consume_file[34c22dfe-89f5-465a-805a-28f2ed2faef3] received
+webserver-1  | [2026-07-22 15:09:15,705] [INFO] [paperless.tasks] ConsumerPreflightPlugin completed with no message
+webserver-1  | [2026-07-22 15:09:15,712] [INFO] [paperless.tasks] WorkflowTriggerPlugin completed with: 
+webserver-1  | [2026-07-22 15:09:15,712] [INFO] [paperless.consumer] Consuming 2_3_merged.pdf
+webserver-1  | [2026-07-22 15:09:15,735] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:16,005] [INFO] [ocrmypdf._pipelines.ocr] Start processing 5 pages concurrently
+webserver-1  | [2026-07-22 15:09:16,006] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:16,006] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:16,006] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:16,006] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:16,006] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+webserver-1  | [2026-07-22 15:09:16,008] [INFO] [ocrmypdf._pipelines.ocr] Postprocessing...
+webserver-1  | [2026-07-22 15:09:16,100] [INFO] [ocrmypdf._pipeline] Image optimization ratio: 1.01 savings: 0.5%
+webserver-1  | [2026-07-22 15:09:16,100] [INFO] [ocrmypdf._pipeline] Total file size ratio: 0.97 savings: -3.0%
+webserver-1  | [2026-07-22 15:09:16,101] [INFO] [ocrmypdf._pipelines._common] Output file is a PDF/A-2b (as expected)
+webserver-1  | [2026-07-22 15:09:16,155] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+webserver-1  | [2026-07-22 15:09:16,621] [INFO] [paperless.parsing] convert exited 0
+webserver-1  | [2026-07-22 15:09:16,699] [INFO] [paperless.consumer] Document 2026-07-22 source (merged) consumption finished
+webserver-1  | [2026-07-22 15:09:16,703] [INFO] [paperless.tasks] ConsumeTaskPlugin completed with: Success. New document id 4 created
+webserver-1  | [2026-07-22 15:09:16,707] [INFO] [celery.app.trace] Task documents.tasks.consume_file[34c22dfe-89f5-465a-805a-28f2ed2faef3] succeeded in 1.0463444619963411s: 'Success. New document id 4 created'

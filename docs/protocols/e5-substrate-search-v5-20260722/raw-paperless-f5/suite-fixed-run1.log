@@ -1,0 +1,1989 @@
+bringing up nodes...
+bringing up nodes...
+
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+........................................................................ [ 25%]
+........................................................................ [ 30%]
+.............................................................F.......... [ 35%]
+.....F.................................................................. [ 40%]
+..........................................................F............. [ 45%]
+..F.................................................................F... [ 50%]
+F....................................................................... [ 55%]
+....................................................................FE.. [ 60%]
+........s..................................................s............ [ 65%]
+........................................................................ [ 70%]
+........................................................................ [ 75%]
+...............................................F..F..................... [ 80%]
+........................................................................ [ 85%]
+......s................F................................................ [ 90%]
+...............................................................F.....FEF [ 95%]
+E.E.E.FFEF.F...........s...........F.....................s.......        [100%]
+==================================== ERRORS ====================================
+__________ ERROR at teardown of TestChecks.test_paths_check_no_access __________
+[gw7] linux -- Python 3.12.12 /venv/bin/python
+
+self = <unittest.case._Outcome object at 0xffff8878d490>
+test_case = <paperless.tests.test_checks.TestChecks testMethod=test_paths_check_no_access>
+subTest = False
+
+    @contextlib.contextmanager
+    def testPartExecutor(self, test_case, subTest=False):
+        old_success = self.success
+        self.success = True
+        try:
+>           yield
+
+/usr/local/lib/python3.12/unittest/case.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.12/unittest/case.py:671: in doCleanups
+    self._callCleanup(function, *args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <paperless.tests.test_checks.TestChecks testMethod=test_paths_check_no_access>
+function = <built-in function chmod>
+args = (PosixPath('/tmp/tmpbm3qnlrk'), 511), kwargs = {}
+
+    def _callCleanup(self, function, /, *args, **kwargs):
+>       function(*args, **kwargs)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpbm3qnlrk'
+
+/usr/local/lib/python3.12/unittest/case.py:597: FileNotFoundError
+________ ERROR at teardown of TestParser.test_generate_pdf_simple_email ________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffff37f851c0>
+request = <SubRequest 'httpx_mock' for <Function test_generate_pdf_simple_email>>
+
+    @pytest.fixture
+    def httpx_mock(
+        monkeypatch: MonkeyPatch,
+        request: FixtureRequest,
+    ) -> Generator[HTTPXMock, None, None]:
+        options = {}
+        for marker in request.node.iter_markers("httpx_mock"):
+            options = marker.kwargs | options
+        __tracebackhide__ = methodcaller("errisinstance", TypeError)
+        options = _HTTPXMockOptions(**options)
+    
+        mock = HTTPXMock(options)
+    
+        # Mock synchronous requests
+        real_handle_request = httpx.HTTPTransport.handle_request
+    
+        def mocked_handle_request(
+            transport: httpx.HTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return mock._handle_request(transport, request)
+            return real_handle_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.HTTPTransport,
+            "handle_request",
+            mocked_handle_request,
+        )
+    
+        # Mock asynchronous requests
+        real_handle_async_request = httpx.AsyncHTTPTransport.handle_async_request
+    
+        async def mocked_handle_async_request(
+            transport: httpx.AsyncHTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return await mock._handle_async_request(transport, request)
+            return await real_handle_async_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.AsyncHTTPTransport,
+            "handle_async_request",
+            mocked_handle_async_request,
+        )
+    
+        yield mock
+        try:
+>           mock._assert_options()
+
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37f87f20>
+
+    def _assert_options(self) -> None:
+        callbacks_not_executed = [
+            matcher for matcher, _ in self._callbacks if matcher.should_have_matched()
+        ]
+        matchers_description = "\n".join(
+            [f"- {matcher}" for matcher in callbacks_not_executed]
+        )
+    
+>       assert not callbacks_not_executed, (
+            "The following responses are mocked but not requested:\n"
+            f"{matchers_description}\n"
+            "\n"
+            "If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
+        )
+E       AssertionError: The following responses are mocked but not requested:
+E         - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E         
+E         If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested
+E       assert not [<pytest_httpx._request_matcher._RequestMatcher object at 0xffff37f861b0>]
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:319: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,074] [INFO] [paperless.parsing.mail] Converting mail to PDF
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file simple_text.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+DEBUG    paperless.parsing.mail:parsers.py:189 Creating a PDF from the email
+INFO     paperless.parsing.mail:parsers.py:350 Converting mail to PDF
+_________ ERROR at teardown of TestParser.test_generate_pdf_html_email _________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffff394f8140>
+request = <SubRequest 'httpx_mock' for <Function test_generate_pdf_html_email>>
+
+    @pytest.fixture
+    def httpx_mock(
+        monkeypatch: MonkeyPatch,
+        request: FixtureRequest,
+    ) -> Generator[HTTPXMock, None, None]:
+        options = {}
+        for marker in request.node.iter_markers("httpx_mock"):
+            options = marker.kwargs | options
+        __tracebackhide__ = methodcaller("errisinstance", TypeError)
+        options = _HTTPXMockOptions(**options)
+    
+        mock = HTTPXMock(options)
+    
+        # Mock synchronous requests
+        real_handle_request = httpx.HTTPTransport.handle_request
+    
+        def mocked_handle_request(
+            transport: httpx.HTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return mock._handle_request(transport, request)
+            return real_handle_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.HTTPTransport,
+            "handle_request",
+            mocked_handle_request,
+        )
+    
+        # Mock asynchronous requests
+        real_handle_async_request = httpx.AsyncHTTPTransport.handle_async_request
+    
+        async def mocked_handle_async_request(
+            transport: httpx.AsyncHTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return await mock._handle_async_request(transport, request)
+            return await real_handle_async_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.AsyncHTTPTransport,
+            "handle_async_request",
+            mocked_handle_async_request,
+        )
+    
+        yield mock
+        try:
+>           mock._assert_options()
+
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff380ff6b0>
+
+    def _assert_options(self) -> None:
+        callbacks_not_executed = [
+            matcher for matcher, _ in self._callbacks if matcher.should_have_matched()
+        ]
+        matchers_description = "\n".join(
+            [f"- {matcher}" for matcher in callbacks_not_executed]
+        )
+    
+>       assert not callbacks_not_executed, (
+            "The following responses are mocked but not requested:\n"
+            f"{matchers_description}\n"
+            "\n"
+            "If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
+        )
+E       AssertionError: The following responses are mocked but not requested:
+E         - Match PUT request on http://localhost:9998/tika/text
+E         - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E         - Match POST request on http://localhost:3000/forms/pdfengines/merge
+E         
+E         If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested
+E       assert not [<pytest_httpx._request_matcher._RequestMatcher object at 0xffff381854f0>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff37e37440>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff37e34d70>]
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:319: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,541] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+_ ERROR at teardown of TestParser.test_generate_pdf_html_email_html_to_pdf_failure _
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffff380002f0>
+request = <SubRequest 'httpx_mock' for <Function test_generate_pdf_html_email_html_to_pdf_failure>>
+
+    @pytest.fixture
+    def httpx_mock(
+        monkeypatch: MonkeyPatch,
+        request: FixtureRequest,
+    ) -> Generator[HTTPXMock, None, None]:
+        options = {}
+        for marker in request.node.iter_markers("httpx_mock"):
+            options = marker.kwargs | options
+        __tracebackhide__ = methodcaller("errisinstance", TypeError)
+        options = _HTTPXMockOptions(**options)
+    
+        mock = HTTPXMock(options)
+    
+        # Mock synchronous requests
+        real_handle_request = httpx.HTTPTransport.handle_request
+    
+        def mocked_handle_request(
+            transport: httpx.HTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return mock._handle_request(transport, request)
+            return real_handle_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.HTTPTransport,
+            "handle_request",
+            mocked_handle_request,
+        )
+    
+        # Mock asynchronous requests
+        real_handle_async_request = httpx.AsyncHTTPTransport.handle_async_request
+    
+        async def mocked_handle_async_request(
+            transport: httpx.AsyncHTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return await mock._handle_async_request(transport, request)
+            return await real_handle_async_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.AsyncHTTPTransport,
+            "handle_async_request",
+            mocked_handle_async_request,
+        )
+    
+        yield mock
+        try:
+>           mock._assert_options()
+
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff380019a0>
+
+    def _assert_options(self) -> None:
+        callbacks_not_executed = [
+            matcher for matcher, _ in self._callbacks if matcher.should_have_matched()
+        ]
+        matchers_description = "\n".join(
+            [f"- {matcher}" for matcher in callbacks_not_executed]
+        )
+    
+>       assert not callbacks_not_executed, (
+            "The following responses are mocked but not requested:\n"
+            f"{matchers_description}\n"
+            "\n"
+            "If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
+        )
+E       AssertionError: The following responses are mocked but not requested:
+E         - Match PUT request on http://localhost:9998/tika/text
+E         - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E         - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E         
+E         If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested
+E       assert not [<pytest_httpx._request_matcher._RequestMatcher object at 0xffff38000770>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff38003320>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff38001850>]
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:319: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,835] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+__ ERROR at teardown of TestParser.test_generate_pdf_html_email_merge_failure __
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffff380003b0>
+request = <SubRequest 'httpx_mock' for <Function test_generate_pdf_html_email_merge_failure>>
+
+    @pytest.fixture
+    def httpx_mock(
+        monkeypatch: MonkeyPatch,
+        request: FixtureRequest,
+    ) -> Generator[HTTPXMock, None, None]:
+        options = {}
+        for marker in request.node.iter_markers("httpx_mock"):
+            options = marker.kwargs | options
+        __tracebackhide__ = methodcaller("errisinstance", TypeError)
+        options = _HTTPXMockOptions(**options)
+    
+        mock = HTTPXMock(options)
+    
+        # Mock synchronous requests
+        real_handle_request = httpx.HTTPTransport.handle_request
+    
+        def mocked_handle_request(
+            transport: httpx.HTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return mock._handle_request(transport, request)
+            return real_handle_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.HTTPTransport,
+            "handle_request",
+            mocked_handle_request,
+        )
+    
+        # Mock asynchronous requests
+        real_handle_async_request = httpx.AsyncHTTPTransport.handle_async_request
+    
+        async def mocked_handle_async_request(
+            transport: httpx.AsyncHTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return await mock._handle_async_request(transport, request)
+            return await real_handle_async_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.AsyncHTTPTransport,
+            "handle_async_request",
+            mocked_handle_async_request,
+        )
+    
+        yield mock
+        try:
+>           mock._assert_options()
+
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff38002b40>
+
+    def _assert_options(self) -> None:
+        callbacks_not_executed = [
+            matcher for matcher, _ in self._callbacks if matcher.should_have_matched()
+        ]
+        matchers_description = "\n".join(
+            [f"- {matcher}" for matcher in callbacks_not_executed]
+        )
+    
+>       assert not callbacks_not_executed, (
+            "The following responses are mocked but not requested:\n"
+            f"{matchers_description}\n"
+            "\n"
+            "If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
+        )
+E       AssertionError: The following responses are mocked but not requested:
+E         - Match PUT request on http://localhost:9998/tika/text
+E         - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E         - Match POST request on http://localhost:3000/forms/pdfengines/merge
+E         
+E         If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested
+E       assert not [<pytest_httpx._request_matcher._RequestMatcher object at 0xffff380039b0>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff38002000>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff38000530>]
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:319: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,890] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+_______ ERROR at teardown of TestParser.test_generate_pdf_layout_options _______
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffff37faa2d0>
+request = <SubRequest 'httpx_mock' for <Function test_generate_pdf_layout_options>>
+
+    @pytest.fixture
+    def httpx_mock(
+        monkeypatch: MonkeyPatch,
+        request: FixtureRequest,
+    ) -> Generator[HTTPXMock, None, None]:
+        options = {}
+        for marker in request.node.iter_markers("httpx_mock"):
+            options = marker.kwargs | options
+        __tracebackhide__ = methodcaller("errisinstance", TypeError)
+        options = _HTTPXMockOptions(**options)
+    
+        mock = HTTPXMock(options)
+    
+        # Mock synchronous requests
+        real_handle_request = httpx.HTTPTransport.handle_request
+    
+        def mocked_handle_request(
+            transport: httpx.HTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return mock._handle_request(transport, request)
+            return real_handle_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.HTTPTransport,
+            "handle_request",
+            mocked_handle_request,
+        )
+    
+        # Mock asynchronous requests
+        real_handle_async_request = httpx.AsyncHTTPTransport.handle_async_request
+    
+        async def mocked_handle_async_request(
+            transport: httpx.AsyncHTTPTransport, request: httpx.Request
+        ) -> httpx.Response:
+            if options.should_mock(request):
+                return await mock._handle_async_request(transport, request)
+            return await real_handle_async_request(transport, request)
+    
+        monkeypatch.setattr(
+            httpx.AsyncHTTPTransport,
+            "handle_async_request",
+            mocked_handle_async_request,
+        )
+    
+        yield mock
+        try:
+>           mock._assert_options()
+
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37faa660>
+
+    def _assert_options(self) -> None:
+        callbacks_not_executed = [
+            matcher for matcher, _ in self._callbacks if matcher.should_have_matched()
+        ]
+        matchers_description = "\n".join(
+            [f"- {matcher}" for matcher in callbacks_not_executed]
+        )
+    
+>       assert not callbacks_not_executed, (
+            "The following responses are mocked but not requested:\n"
+            f"{matchers_description}\n"
+            "\n"
+            "If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested"
+        )
+E       AssertionError: The following responses are mocked but not requested:
+E         - Match PUT request on http://localhost:9998/tika/text
+E         - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E         - Match POST request on http://localhost:3000/forms/pdfengines/merge
+E         
+E         If this is on purpose, refer to https://github.com/Colin-b/pytest_httpx/blob/master/README.md#allow-to-register-more-responses-than-what-will-be-requested
+E       assert not [<pytest_httpx._request_matcher._RequestMatcher object at 0xffff37faa990>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff37fab4d0>, <pytest_httpx._request_matcher._RequestMatcher object at 0xffff37fc6300>]
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:319: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:14,090] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+=================================== FAILURES ===================================
+___________ TestFileHandling.test_file_renaming_missing_permissions ____________
+[gw4] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_file_handling.TestFileHandling testMethod=test_file_renaming_missing_permissions>
+
+    @override_settings(FILENAME_FORMAT="{correspondent}/{correspondent}")
+    def test_file_renaming_missing_permissions(self):
+        document = Document()
+        document.mime_type = "application/pdf"
+        document.storage_type = Document.STORAGE_TYPE_UNENCRYPTED
+        document.save()
+    
+        # Ensure that filename is properly generated
+        document.filename = generate_filename(document)
+        self.assertEqual(document.filename, Path("none/none.pdf"))
+        create_source_path_directory(document.source_path)
+        document.source_path.touch()
+    
+        # Test source_path
+        self.assertEqual(
+            document.source_path,
+            settings.ORIGINALS_DIR / "none" / "none.pdf",
+        )
+    
+        # Make the folder read- and execute-only (no writing and no renaming)
+        (settings.ORIGINALS_DIR / "none").chmod(0o555)
+    
+        # Set a correspondent and save the document
+        document.correspondent = Correspondent.objects.get_or_create(name="test")[0]
+        document.save()
+    
+        # Check proper handling of files
+>       self.assertIsFile(
+            settings.ORIGINALS_DIR / "none" / "none.pdf",
+        )
+
+src/documents/tests/test_file_handling.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/tests/utils.py:173: in assertIsFile
+    self.assertTrue(Path(path).resolve().is_file(), f"File does not exist: {path}")
+E   AssertionError: False is not true : File does not exist: /tmp/tmp4qozxny5/documents/originals/none/none.pdf
+_______________ TestExportImport.test_export_target_not_writable _______________
+[gw4] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_management_exporter.TestExportImport testMethod=test_export_target_not_writable>
+
+    def test_export_target_not_writable(self):
+        """
+        GIVEN:
+            - Request to export documents to directory that's not writeable
+        WHEN:
+            - Export command is called
+        THEN:
+            - Error is raised
+        """
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            Path(tmp_dir).chmod(0o000)
+    
+            args = ["document_exporter", tmp_dir]
+    
+            with self.assertRaises(CommandError) as e:
+>               call_command(*args)
+
+src/documents/tests/test_management_exporter.py:609: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/venv/lib/python3.12/site-packages/django/core/management/__init__.py:194: in call_command
+    return command.execute(*args, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/django/core/management/base.py:460: in execute
+    output = self.handle(*args, **options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/documents/management/commands/document_exporter.py:233: in handle
+    self.dump()
+src/documents/management/commands/document_exporter.py:334: in dump
+    self.copy_document_files(
+src/documents/management/commands/document_exporter.py:507: in copy_document_files
+    self.check_and_copy(
+src/documents/management/commands/document_exporter.py:588: in check_and_copy
+    copy_file_with_basic_stats(source, target)
+src/documents/utils.py:56: in copy_file_with_basic_stats
+    shutil.copy(source, dest)
+/usr/local/lib/python3.12/shutil.py:435: in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def copyfile(src, dst, *, follow_symlinks=True):
+        """Copy data from src to dst in the most efficient way possible.
+    
+        If follow_symlinks is not set and src is a symbolic link, a new
+        symlink will be created instead of copying the file it points to.
+    
+        """
+        sys.audit("shutil.copyfile", src, dst)
+    
+        if _samefile(src, dst):
+            raise SameFileError("{!r} and {!r} are the same file".format(src, dst))
+    
+        file_size = 0
+        for i, fn in enumerate([src, dst]):
+            try:
+                st = _stat(fn)
+            except OSError:
+                # File most likely does not exist
+                pass
+            else:
+                # XXX What about other special files? (sockets, devices...)
+                if stat.S_ISFIFO(st.st_mode):
+                    fn = fn.path if isinstance(fn, os.DirEntry) else fn
+                    raise SpecialFileError("`%s` is a named pipe" % fn)
+                if _WINDOWS and i == 0:
+                    file_size = st.st_size
+    
+        if not follow_symlinks and _islink(src):
+            os.symlink(os.readlink(src), dst)
+        else:
+>           with open(src, 'rb') as fsrc:
+                 ^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmp15vchy8v/documents/originals/0000001.pdf'
+
+/usr/local/lib/python3.12/shutil.py:260: FileNotFoundError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:25:41,545] [CRITICAL] [paperless.handlers] Document 2026-07-22 wow_dec: File /ci/media/documents/originals/0000004.pdf.gpg doesn't exist.
+[2026-07-22 15:25:41,545] [WARNING] [paperless.handlers] Exception during file handling: Document 2026-07-22 wow_dec: File /ci/media/documents/originals/0000004.pdf.gpg doesn't exist.
+  0%|                                                    | 0/4 [00:00<?, ?it/s]  0%|                                                    | 0/4 [00:00<?, ?it/s]
+------------------------------ Captured log call -------------------------------
+CRITICAL paperless.handlers:handlers.py:433 Document 2026-07-22 wow_dec: File /ci/media/documents/originals/0000004.pdf.gpg doesn't exist.
+WARNING  paperless.handlers:handlers.py:547 Exception during file handling: Document 2026-07-22 wow_dec: File /ci/media/documents/originals/0000004.pdf.gpg doesn't exist.
+_____________________ TestSystemStatus.test_system_status ______________________
+[gw9] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_api_status.TestSystemStatus testMethod=test_system_status>
+
+    def test_system_status(self):
+        """
+        GIVEN:
+            - A user is logged in
+        WHEN:
+            - The user requests the system status
+        THEN:
+            - The response contains relevant system status information
+        """
+        self.client.force_login(self.user)
+        response = self.client.get(self.ENDPOINT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["pngx_version"], version.__full_version_str__)
+        self.assertIsNotNone(response.data["server_os"])
+>       self.assertEqual(response.data["install_type"], "bare-metal")
+E       AssertionError: 'docker' != 'bare-metal'
+E       - docker
+E       + bare-metal
+
+src/documents/tests/test_api_status.py:37: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:25:40,034] [ERROR] [paperless.api] System status detected a possible problem while connecting to redis: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/ci/src/documents/views.py", line 2984, in get
+    client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+[2026-07-22 15:25:46,286] [ERROR] [paperless.api] System status detected a possible problem while connecting to celery: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 951, in create_channel
+    return self._avail_channels.pop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: pop from empty list
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 472, in _reraise_as_library_errors
+    yield
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 459, in _ensure_connection
+    return retry_over_time(
+           ^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/utils/functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 938, in _connection_factory
+    self._connection = self._establish_connection()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 860, in _establish_connection
+    conn = self.transport.establish_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 975, in establish_connection
+    self._avail_channels.append(self.create_channel(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 953, in create_channel
+    channel = self.Channel(connection)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/redis.py", line 751, in __init__
+    self.client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/ci/src/documents/views.py", line 2996, in get
+    celery_ping = celery_app.control.inspect().ping()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 294, in ping
+    return self._request('ping')
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 106, in _request
+    return self._prepare(self.app.control.broadcast(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 777, in broadcast
+    return self.mailbox(conn)._broadcast(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/pidbox.py", line 330, in _broadcast
+    chan = channel or self.connection.default_channel
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 957, in default_channel
+    self._ensure_connection(**conn_opts)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 458, in _ensure_connection
+    with ctx():
+         ^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 476, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: Error 111 connecting to localhost:6379. Connection refused.
+------------------------------ Captured log call -------------------------------
+ERROR    paperless.api:views.py:2988 System status detected a possible problem while connecting to redis: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/ci/src/documents/views.py", line 2984, in get
+    client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+ERROR    paperless.api:views.py:3003 System status detected a possible problem while connecting to celery: Error 111 connecting to localhost:6379. Connection refused.
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 951, in create_channel
+    return self._avail_channels.pop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: pop from empty list
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 357, in connect
+    sock = self.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/retry.py", line 62, in call_with_retry
+    return do()
+           ^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 358, in <lambda>
+    lambda: self._connect(), lambda error: self.disconnect(error)
+            ^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 730, in _connect
+    raise err
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 718, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 472, in _reraise_as_library_errors
+    yield
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 459, in _ensure_connection
+    return retry_over_time(
+           ^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/utils/functional.py", line 318, in retry_over_time
+    return fun(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 938, in _connection_factory
+    self._connection = self._establish_connection()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 860, in _establish_connection
+    conn = self.transport.establish_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 975, in establish_connection
+    self._avail_channels.append(self.create_channel(self))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/virtual/base.py", line 953, in create_channel
+    channel = self.Channel(connection)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/transport/redis.py", line 751, in __init__
+    self.client.ping()
+  File "/venv/lib/python3.12/site-packages/redis/commands/core.py", line 1212, in ping
+    return self.execute_command("PING", **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 559, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/client.py", line 565, in _execute_command
+    conn = self.connection or pool.get_connection(command_name, **options)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 1422, in get_connection
+    connection.connect()
+  File "/venv/lib/python3.12/site-packages/redis/connection.py", line 363, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:6379. Connection refused.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/ci/src/documents/views.py", line 2996, in get
+    celery_ping = celery_app.control.inspect().ping()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 294, in ping
+    return self._request('ping')
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 106, in _request
+    return self._prepare(self.app.control.broadcast(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/celery/app/control.py", line 777, in broadcast
+    return self.mailbox(conn)._broadcast(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/pidbox.py", line 330, in _broadcast
+    chan = channel or self.connection.default_channel
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 957, in default_channel
+    self._ensure_connection(**conn_opts)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 458, in _ensure_connection
+    with ctx():
+         ^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/venv/lib/python3.12/site-packages/kombu/connection.py", line 476, in _reraise_as_library_errors
+    raise ConnectionError(str(exc)) from exc
+kombu.exceptions.OperationalError: Error 111 connecting to localhost:6379. Connection refused.
+____________________ TestSanityCheck.test_archive_no_access ____________________
+[gw2] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_sanity_check.TestSanityCheck testMethod=test_archive_no_access>
+
+    def test_archive_no_access(self):
+        doc = self.make_test_data()
+        Path(doc.archive_path).chmod(0o000)
+>       self.assertSanityError(doc, "Cannot read archive file of document")
+
+src/documents/tests/test_sanity_check.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/tests/test_sanity_check.py:63: in assertSanityError
+    self.assertTrue(messages.has_error)
+E   AssertionError: False is not true
+___________________ TestSanityCheck.test_original_no_access ____________________
+[gw6] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_sanity_check.TestSanityCheck testMethod=test_original_no_access>
+
+    def test_original_no_access(self):
+        doc = self.make_test_data()
+        Path(doc.source_path).chmod(0o000)
+>       self.assertSanityError(doc, "Cannot read original file of document")
+
+src/documents/tests/test_sanity_check.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/tests/test_sanity_check.py:63: in assertSanityError
+    self.assertTrue(messages.has_error)
+E   AssertionError: False is not true
+___________________ TestSanityCheck.test_thumbnail_no_access ___________________
+[gw6] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_sanity_check.TestSanityCheck testMethod=test_thumbnail_no_access>
+
+    def test_thumbnail_no_access(self):
+        doc = self.make_test_data()
+        Path(doc.thumbnail_path).chmod(0o000)
+>       self.assertSanityError(doc, "Cannot read thumbnail file of document")
+
+src/documents/tests/test_sanity_check.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/documents/tests/test_sanity_check.py:63: in assertSanityError
+    self.assertTrue(messages.has_error)
+E   AssertionError: False is not true
+____________________ TestChecks.test_paths_check_no_access _____________________
+[gw7] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless.tests.test_checks.TestChecks testMethod=test_paths_check_no_access>
+
+    def test_paths_check_no_access(self):
+        Path(self.dirs.data_dir).chmod(0o000)
+        Path(self.dirs.media_dir).chmod(0o000)
+        Path(self.dirs.consumption_dir).chmod(0o000)
+    
+        self.addCleanup(os.chmod, self.dirs.data_dir, 0o777)
+        self.addCleanup(os.chmod, self.dirs.media_dir, 0o777)
+        self.addCleanup(os.chmod, self.dirs.consumption_dir, 0o777)
+    
+        msgs = paths_check(None)
+>       self.assertEqual(len(msgs), 3)
+E       AssertionError: 0 != 3
+
+src/paperless/tests/test_checks.py:50: AssertionError
+________________ TestCommandImport.test_import_permission_error ________________
+[gw3] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_management_importer.TestCommandImport testMethod=test_import_permission_error>
+
+    def test_import_permission_error(self):
+        """
+        GIVEN:
+            - Original file which cannot be read from
+            - Archive file which cannot be read from
+        WHEN:
+            - Import is attempted
+        THEN:
+            - CommandError is raised indicating the issue
+        """
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Create empty files
+            original_path = Path(temp_dir) / "original.pdf"
+            archive_path = Path(temp_dir) / "archive.pdf"
+            original_path.touch()
+            archive_path.touch()
+    
+            # No read permissions
+            original_path.chmod(0o222)
+    
+            cmd = Command()
+            cmd.source = Path(temp_dir)
+            cmd.manifest = [
+                {
+                    "model": "documents.document",
+                    EXPORTER_FILE_NAME: "original.pdf",
+                    EXPORTER_ARCHIVE_NAME: "archive.pdf",
+                },
+            ]
+            cmd.data_only = False
+>           with self.assertRaises(CommandError) as cm:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: CommandError not raised
+
+src/documents/tests/test_management_importer.py:130: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Checking the manifest
+______________ TestCommandImport.test_import_source_not_readable _______________
+[gw3] linux -- Python 3.12.12 /venv/bin/python
+
+self = <documents.tests.test_management_importer.TestCommandImport testMethod=test_import_source_not_readable>
+
+    def test_import_source_not_readable(self):
+        """
+        GIVEN:
+            - Source given isn't readable
+        WHEN:
+            - Import is attempted
+        THEN:
+            - CommandError is raised indicating the issue
+        """
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir)
+            path.chmod(0o222)
+            with self.assertRaises(CommandError) as cm:
+                call_command("document_importer", path)
+>           self.assertIn(
+                "That path doesn't appear to be readable",
+                str(cm.exception),
+            )
+E           AssertionError: "That path doesn't appear to be readable" not found in "That directory doesn't appear to contain a manifest.json file."
+
+src/documents/tests/test_management_importer.py:168: AssertionError
+____________________ TestParser.test_rtl_language_detection ____________________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_tesseract.tests.test_parser.TestParser testMethod=test_rtl_language_detection>
+
+    def test_rtl_language_detection(self):
+        """
+        GIVEN:
+            - File with text in an RTL language
+        WHEN:
+            - Document is parsed
+        THEN:
+            - Text from the document is extracted
+        """
+        parser = RasterisedDocumentParser(None)
+    
+        parser.parse(
+            str(self.SAMPLE_FILES / "rtl-test.pdf"),
+            "application/pdf",
+        )
+    
+        # Copied from the PDF to here.  Don't even look at it
+>       self.assertIn("ةﯾﻠﺧﺎدﻻ ةرازو", parser.get_text())
+E       AssertionError: 'ةﯾﻠﺧﺎدﻻ ةرازو' not found in '\u202bال\u202c\n\n\n\n\n\u202bا\u202c\n\n\n\n\n\u202bخ\u202c\n\n\n\n\n\u202bل\u202c\n\n\n\n\n\u202bي\u202c\n\n\n\n\n\u202bد ةرازو\u202c \u202bة\u202c'
+
+src/paperless_tesseract/tests/test_parser.py:851: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:01,941] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+
+[2026-07-22 15:27:02,201] [INFO] [ocrmypdf._pipeline] skipping all processing on this page
+
+[2026-07-22 15:27:02,205] [INFO] [ocrmypdf._pipelines.ocr] Postprocessing...
+
+
+
+
+[2026-07-22 15:27:02,303] [INFO] [ocrmypdf._pipeline] Image optimization ratio: 1.00 savings: 0.0%
+[2026-07-22 15:27:02,304] [INFO] [ocrmypdf._pipeline] Total file size ratio: 0.96 savings: -3.7%
+[2026-07-22 15:27:02,306] [INFO] [ocrmypdf._pipelines._common] Output file is a PDF/A-2b (as expected)
+[2026-07-22 15:27:02,346] [INFO] [paperless.parsing.tesseract] pdftotext exited 0
+------------------------------ Captured log call -------------------------------
+INFO     paperless.parsing.tesseract:utils.py:93 pdftotext exited 0
+DEBUG    paperless.parsing.tesseract:parsers.py:383 Calling OCRmyPDF with args: {'input_file': '/ci/src/paperless_tesseract/tests/samples/rtl-test.pdf', 'output_file': PosixPath('/tmp/tmpq9h2n5bi/paperless-lix4wguz/archive.pdf'), 'use_threads': True, 'jobs': 10, 'language': 'eng', 'output_type': 'pdfa', 'progress_bar': False, 'color_conversion_strategy': 'RGB', 'skip_text': True, 'clean': True, 'deskew': True, 'rotate_pages': True, 'rotate_pages_threshold': 12.0, 'sidecar': PosixPath('/tmp/tmpq9h2n5bi/paperless-lix4wguz/sidecar.txt')}
+INFO     ocrmypdf._pipeline:_pipeline.py:343 skipping all processing on this page
+INFO     ocrmypdf._pipelines.ocr:ocr.py:144 Postprocessing...
+INFO     ocrmypdf._pipeline:_pipeline.py:1002 Image optimization ratio: 1.00 savings: 0.0%
+INFO     ocrmypdf._pipeline:_pipeline.py:1005 Total file size ratio: 0.96 savings: -3.7%
+INFO     ocrmypdf._pipelines._common:_common.py:474 Output file is a PDF/A-2b (as expected)
+DEBUG    paperless.parsing.tesseract:parsers.py:174 Incomplete sidecar file: discarding.
+INFO     paperless.parsing.tesseract:utils.py:93 pdftotext exited 0
+______________________ TestTikaHtmlParse.test_tika_parse _______________________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.tests.test_parsers.TestTikaHtmlParse object at 0xffff8939ed50>
+httpx_mock = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff894fa9f0>
+mail_parser = <paperless_mail.parsers.MailDocumentParser object at 0xffff894fa9c0>
+
+    def test_tika_parse(self, httpx_mock: HTTPXMock, mail_parser: MailDocumentParser):
+        """
+        GIVEN:
+            - Fresh start
+        WHEN:
+            - tika parsing is called
+        THEN:
+            - a web request to tika shall be done and the reply es returned
+        """
+        html = '<html><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"></head><body><p>Some Text</p></body></html>'
+        expected_text = "Some Text"
+    
+        httpx_mock.add_response(
+            json={
+                "Content-Type": "text/html",
+                "X-TIKA:Parsed-By": [],
+                "X-TIKA:content": expected_text,
+            },
+        )
+        parsed = mail_parser.tika_parse(html)
+        assert expected_text == parsed.strip()
+>       assert "http://localhost:9998" in str(httpx_mock.get_request().url)
+E       AssertionError: assert 'http://localhost:9998' in 'http://tika:9998/tika/text'
+E        +  where 'http://tika:9998/tika/text' = str(URL('http://tika:9998/tika/text'))
+E        +    where URL('http://tika:9998/tika/text') = <Request('PUT', 'http://tika:9998/tika/text')>.url
+E        +      where <Request('PUT', 'http://tika:9998/tika/text')> = get_request()
+E        +        where get_request = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff894fa9f0>.get_request
+
+src/paperless_mail/tests/test_parsers.py:311: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:12,650] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+__________________ TestParser.test_generate_pdf_simple_email ___________________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.parsers.MailDocumentParser object at 0xffff37f86510>
+mail = <imap_tools.message.MailMessage object at 0xffff37e34bf0>
+
+    def generate_pdf_from_mail(self, mail: MailMessage) -> Path:
+        """
+        Creates a PDF based on the given email, using the email's values in a
+        an HTML template
+        """
+        self.log.info("Converting mail to PDF")
+    
+        css_file = Path(__file__).parent / "templates" / "output.css"
+        email_html_file = self.mail_to_html(mail)
+    
+        with (
+            GotenbergClient(
+                host=settings.TIKA_GOTENBERG_ENDPOINT,
+                timeout=settings.CELERY_TASK_TIME_LIMIT,
+            ) as client,
+            client.chromium.html_to_pdf() as route,
+        ):
+            # Configure requested PDF/A formatting, if any
+            pdf_a_format = self._settings_to_gotenberg_pdfa()
+            if pdf_a_format is not None:
+                route.pdf_format(pdf_a_format)
+    
+            try:
+                response = (
+                    route.index(email_html_file)
+                    .resource(css_file)
+                    .margins(
+                        PageMarginsType(
+                            top=Measurement(0.1, MeasurementUnitType.Inches),
+                            bottom=Measurement(0.1, MeasurementUnitType.Inches),
+                            left=Measurement(0.1, MeasurementUnitType.Inches),
+                            right=Measurement(0.1, MeasurementUnitType.Inches),
+                        ),
+                    )
+                    .size(A4)
+                    .scale(1.0)
+>                   .run()
+                     ^^^^^
+                )
+
+src/paperless_mail/parsers.py:381: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/venv/lib/python3.12/site-packages/gotenberg_client/_base/routes.py:431: in run
+    response = self._post_data()
+               ^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/gotenberg_client/_base/routes.py:351: in _post_data
+    resp = self._client.post(
+/venv/lib/python3.12/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+/venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+/venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+/venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:40: in mocked_handle_request
+    return mock._handle_request(transport, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:163: in _handle_request
+    self._request_not_matched(real_transport, request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37f87f20>
+real_transport = <httpx.HTTPTransport object at 0xffff37fcecc0>
+request = <Request('POST', 'http://gotenberg:3000/forms/chromium/convert/html')>
+
+    def _request_not_matched(
+        self,
+        real_transport: Union[httpx.AsyncHTTPTransport, httpx.HTTPTransport],
+        request: httpx.Request,
+    ) -> NoReturn:
+        self._requests_not_matched.append(request)
+>       raise httpx.TimeoutException(
+            self._explain_that_no_response_was_found(real_transport, request),
+            request=request,
+        )
+E       httpx.TimeoutException: No response can be found for POST request on http://gotenberg:3000/forms/chromium/convert/html amongst:
+E       - Match POST request on http://localhost:3000/forms/chromium/convert/html
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:191: TimeoutException
+
+The above exception was the direct cause of the following exception:
+
+self = <paperless_mail.tests.test_parsers.TestParser object at 0xffff89625940>
+httpx_mock = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37f87f20>
+mail_parser = <paperless_mail.parsers.MailDocumentParser object at 0xffff37f86510>
+simple_txt_email_file = PosixPath('/ci/src/paperless_mail/tests/samples/simple_text.eml')
+simple_txt_email_pdf_file = PosixPath('/ci/src/paperless_mail/tests/samples/simple_text.eml.pdf')
+
+    def test_generate_pdf_simple_email(
+        self,
+        httpx_mock: HTTPXMock,
+        mail_parser: MailDocumentParser,
+        simple_txt_email_file: Path,
+        simple_txt_email_pdf_file: Path,
+    ):
+        """
+        GIVEN:
+            - Simple text email with no HTML content
+        WHEN:
+            - Email is parsed
+        THEN:
+            - Gotenberg is called to generate a PDF from HTML
+            - Archive file is generated
+        """
+    
+        httpx_mock.add_response(
+            url="http://localhost:3000/forms/chromium/convert/html",
+            method="POST",
+            content=simple_txt_email_pdf_file.read_bytes(),
+        )
+    
+>       mail_parser.parse(simple_txt_email_file, "message/rfc822")
+
+src/paperless_mail/tests/test_parsers.py:497: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/paperless_mail/parsers.py:194: in parse
+    self.archive_path = self.generate_pdf(mail)
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+src/paperless_mail/parsers.py:238: in generate_pdf
+    mail_pdf_file = self.generate_pdf_from_mail(mail_message)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <paperless_mail.parsers.MailDocumentParser object at 0xffff37f86510>
+mail = <imap_tools.message.MailMessage object at 0xffff37e34bf0>
+
+    def generate_pdf_from_mail(self, mail: MailMessage) -> Path:
+        """
+        Creates a PDF based on the given email, using the email's values in a
+        an HTML template
+        """
+        self.log.info("Converting mail to PDF")
+    
+        css_file = Path(__file__).parent / "templates" / "output.css"
+        email_html_file = self.mail_to_html(mail)
+    
+        with (
+            GotenbergClient(
+                host=settings.TIKA_GOTENBERG_ENDPOINT,
+                timeout=settings.CELERY_TASK_TIME_LIMIT,
+            ) as client,
+            client.chromium.html_to_pdf() as route,
+        ):
+            # Configure requested PDF/A formatting, if any
+            pdf_a_format = self._settings_to_gotenberg_pdfa()
+            if pdf_a_format is not None:
+                route.pdf_format(pdf_a_format)
+    
+            try:
+                response = (
+                    route.index(email_html_file)
+                    .resource(css_file)
+                    .margins(
+                        PageMarginsType(
+                            top=Measurement(0.1, MeasurementUnitType.Inches),
+                            bottom=Measurement(0.1, MeasurementUnitType.Inches),
+                            left=Measurement(0.1, MeasurementUnitType.Inches),
+                            right=Measurement(0.1, MeasurementUnitType.Inches),
+                        ),
+                    )
+                    .size(A4)
+                    .scale(1.0)
+                    .run()
+                )
+            except Exception as err:
+>               raise ParseError(
+                    f"Error while converting email to PDF: {err}",
+                ) from err
+E               documents.parsers.ParseError: Error while converting email to PDF: No response can be found for POST request on http://gotenberg:3000/forms/chromium/convert/html amongst:
+E               - Match POST request on http://localhost:3000/forms/chromium/convert/html
+
+src/paperless_mail/parsers.py:384: ParseError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,074] [INFO] [paperless.parsing.mail] Converting mail to PDF
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file simple_text.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+DEBUG    paperless.parsing.mail:parsers.py:189 Creating a PDF from the email
+INFO     paperless.parsing.mail:parsers.py:350 Converting mail to PDF
+___________________ TestParser.test_generate_pdf_html_email ____________________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.parsers.MailDocumentParser object at 0xffff380ff0e0>
+html = '<html>\n  <head>\n\n    <meta http-equiv="content-type" content="text/html; charset=utf-8">\n  </head>\n\t<body>\n\t\...cument.getElementById("changeme").innerHTML = "Paragraph changed via Java Script.";\n\t\t</script>\n\t</body>\n</html>'
+
+    def tika_parse(self, html: str):
+        self.log.info("Sending content to Tika server")
+    
+        try:
+            with TikaClient(tika_url=settings.TIKA_ENDPOINT) as client:
+>               parsed = client.tika.as_text.from_buffer(html, "text/html")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/parsers.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/venv/lib/python3.12/site-packages/tika_client/_resource_tika.py:79: in from_buffer
+    return self.decoded_response(self.put_content(PLAIN_TEXT_ENDPOINT, content, mime_type))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/tika_client/_base.py:196: in put_content
+    response = self.client.put(endpoint, content=content_bytes, headers=headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:1181: in put
+    return self.request(
+/venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+/venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+/venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:40: in mocked_handle_request
+    return mock._handle_request(transport, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:163: in _handle_request
+    self._request_not_matched(real_transport, request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff380ff6b0>
+real_transport = <httpx.HTTPTransport object at 0xffff37e35e50>
+request = <Request('PUT', 'http://tika:9998/tika/text')>
+
+    def _request_not_matched(
+        self,
+        real_transport: Union[httpx.AsyncHTTPTransport, httpx.HTTPTransport],
+        request: httpx.Request,
+    ) -> NoReturn:
+        self._requests_not_matched.append(request)
+>       raise httpx.TimeoutException(
+            self._explain_that_no_response_was_found(real_transport, request),
+            request=request,
+        )
+E       httpx.TimeoutException: No response can be found for PUT request on http://tika:9998/tika/text amongst:
+E       - Match PUT request on http://localhost:9998/tika/text
+E       - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E       - Match POST request on http://localhost:3000/forms/pdfengines/merge
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:191: TimeoutException
+
+The above exception was the direct cause of the following exception:
+
+self = <paperless_mail.tests.test_parsers.TestParser object at 0xffff89397800>
+httpx_mock = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff380ff6b0>
+mail_parser = <paperless_mail.parsers.MailDocumentParser object at 0xffff380ff0e0>
+html_email_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml')
+html_email_pdf_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml.pdf')
+
+    @pytest.mark.httpx_mock(can_send_already_matched_responses=True)
+    def test_generate_pdf_html_email(
+        self,
+        httpx_mock: HTTPXMock,
+        mail_parser: MailDocumentParser,
+        html_email_file: Path,
+        html_email_pdf_file: Path,
+    ):
+        """
+        GIVEN:
+            - email with HTML content
+        WHEN:
+            - Email is parsed
+        THEN:
+            - Gotenberg is called to generate a PDF from HTML
+            - Gotenberg is used to merge the two PDFs
+            - Archive file is generated
+        """
+        httpx_mock.add_response(
+            url="http://localhost:9998/tika/text",
+            method="PUT",
+            json={
+                "Content-Type": "text/html",
+                "X-TIKA:Parsed-By": [],
+                "X-TIKA:content": "This is some Tika HTML text",
+            },
+        )
+        httpx_mock.add_response(
+            url="http://localhost:3000/forms/chromium/convert/html",
+            method="POST",
+            content=html_email_pdf_file.read_bytes(),
+        )
+        httpx_mock.add_response(
+            url="http://localhost:3000/forms/pdfengines/merge",
+            method="POST",
+            content=b"Pretend merged PDF content",
+        )
+>       mail_parser.parse(html_email_file, "message/rfc822")
+
+src/paperless_mail/tests/test_parsers.py:538: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/paperless_mail/parsers.py:182: in parse
+    self.text = build_formatted_text(mail)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/paperless_mail/parsers.py:172: in build_formatted_text
+    fmt_text += "HTML content: " + strip_text(self.tika_parse(mail.html))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <paperless_mail.parsers.MailDocumentParser object at 0xffff380ff0e0>
+html = '<html>\n  <head>\n\n    <meta http-equiv="content-type" content="text/html; charset=utf-8">\n  </head>\n\t<body>\n\t\...cument.getElementById("changeme").innerHTML = "Paragraph changed via Java Script.";\n\t\t</script>\n\t</body>\n</html>'
+
+    def tika_parse(self, html: str):
+        self.log.info("Sending content to Tika server")
+    
+        try:
+            with TikaClient(tika_url=settings.TIKA_ENDPOINT) as client:
+                parsed = client.tika.as_text.from_buffer(html, "text/html")
+    
+                if parsed.content is not None:
+                    return parsed.content.strip()
+                return ""
+        except Exception as err:
+>           raise ParseError(
+                f"Could not parse content with tika server at "
+                f"{settings.TIKA_ENDPOINT}: {err}",
+            ) from err
+E           documents.parsers.ParseError: Could not parse content with tika server at http://tika:9998: No response can be found for PUT request on http://tika:9998/tika/text amongst:
+E           - Match PUT request on http://localhost:9998/tika/text
+E           - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E           - Match POST request on http://localhost:3000/forms/pdfengines/merge
+
+src/paperless_mail/parsers.py:226: ParseError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,541] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+____________________ TestParser.test_generate_pdf_from_mail ____________________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.tests.test_parsers.TestParser object at 0xffff8938c230>
+httpx_mock = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37e58260>
+mail_parser = <paperless_mail.parsers.MailDocumentParser object at 0xffff37e59d00>
+html_email_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml')
+
+    def test_generate_pdf_from_mail(
+        self,
+        httpx_mock: HTTPXMock,
+        mail_parser: MailDocumentParser,
+        html_email_file: Path,
+    ):
+        """
+        GIVEN:
+            - Email message with HTML content
+        WHEN:
+            - Email is parsed
+        THEN:
+            - Gotenberg is used to convert HTML to PDF
+        """
+    
+        httpx_mock.add_response(content=b"Content")
+    
+        mail = mail_parser.parse_file_to_message(html_email_file)
+    
+        retval = mail_parser.generate_pdf_from_mail(mail)
+        assert retval.read_bytes() == b"Content"
+    
+        request = httpx_mock.get_request()
+    
+>       assert str(request.url) == "http://localhost:3000/forms/chromium/convert/html"
+E       AssertionError: assert 'http://goten.../convert/html' == 'http://local.../convert/html'
+E         
+E         - http://localhost:3000/forms/chromium/convert/html
+E         ?        ^ ------
+E         + http://gotenberg:3000/forms/chromium/convert/html
+E         ?        ^  ++++++
+
+src/paperless_mail/tests/test_parsers.py:665: AssertionError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:13,987] [INFO] [paperless.parsing.mail] Converting mail to PDF
+------------------------------ Captured log call -------------------------------
+INFO     paperless.parsing.mail:parsers.py:350 Converting mail to PDF
+_________________ TestParser.test_generate_pdf_layout_options __________________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.parsers.MailDocumentParser object at 0xffff37fa9700>
+html = '<html>\n  <head>\n\n    <meta http-equiv="content-type" content="text/html; charset=utf-8">\n  </head>\n\t<body>\n\t\...cument.getElementById("changeme").innerHTML = "Paragraph changed via Java Script.";\n\t\t</script>\n\t</body>\n</html>'
+
+    def tika_parse(self, html: str):
+        self.log.info("Sending content to Tika server")
+    
+        try:
+            with TikaClient(tika_url=settings.TIKA_ENDPOINT) as client:
+>               parsed = client.tika.as_text.from_buffer(html, "text/html")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src/paperless_mail/parsers.py:220: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/venv/lib/python3.12/site-packages/tika_client/_resource_tika.py:79: in from_buffer
+    return self.decoded_response(self.put_content(PLAIN_TEXT_ENDPOINT, content, mime_type))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/tika_client/_base.py:196: in put_content
+    response = self.client.put(endpoint, content=content_bytes, headers=headers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:1181: in put
+    return self.request(
+/venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+/venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+/venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/pytest_httpx/__init__.py:40: in mocked_handle_request
+    return mock._handle_request(transport, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:163: in _handle_request
+    self._request_not_matched(real_transport, request)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37faa660>
+real_transport = <httpx.HTTPTransport object at 0xffff37fc6d50>
+request = <Request('PUT', 'http://tika:9998/tika/text')>
+
+    def _request_not_matched(
+        self,
+        real_transport: Union[httpx.AsyncHTTPTransport, httpx.HTTPTransport],
+        request: httpx.Request,
+    ) -> NoReturn:
+        self._requests_not_matched.append(request)
+>       raise httpx.TimeoutException(
+            self._explain_that_no_response_was_found(real_transport, request),
+            request=request,
+        )
+E       httpx.TimeoutException: No response can be found for PUT request on http://tika:9998/tika/text amongst:
+E       - Match PUT request on http://localhost:9998/tika/text
+E       - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E       - Match POST request on http://localhost:3000/forms/pdfengines/merge
+
+/venv/lib/python3.12/site-packages/pytest_httpx/_httpx_mock.py:191: TimeoutException
+
+The above exception was the direct cause of the following exception:
+
+self = <paperless_mail.tests.test_parsers.TestParser object at 0xffff8938c6e0>
+mock_mailrule_get = <MagicMock name='get' id='281471620907232'>
+mock_merge_route = <MagicMock name='merge' id='281471620920576'>
+httpx_mock = <pytest_httpx._httpx_mock.HTTPXMock object at 0xffff37faa660>
+mail_parser = <paperless_mail.parsers.MailDocumentParser object at 0xffff37fa9700>
+html_email_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml')
+html_email_pdf_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml.pdf')
+
+    @pytest.mark.httpx_mock(can_send_already_matched_responses=True)
+    @mock.patch("gotenberg_client._merge.routes.SyncMergePdfsRoute.merge")
+    @mock.patch("paperless_mail.models.MailRule.objects.get")
+    def test_generate_pdf_layout_options(
+        self,
+        mock_mailrule_get: mock.Mock,
+        mock_merge_route: mock.Mock,
+        httpx_mock: HTTPXMock,
+        mail_parser: MailDocumentParser,
+        html_email_file: Path,
+        html_email_pdf_file: Path,
+    ):
+        """
+        GIVEN:
+            - Email message
+        WHEN:
+            - Email is parsed with different layout options
+        THEN:
+            - Gotenberg is called with the correct layout option
+        """
+        httpx_mock.add_response(
+            url="http://localhost:9998/tika/text",
+            method="PUT",
+            json={
+                "Content-Type": "text/html",
+                "X-TIKA:Parsed-By": [],
+                "X-TIKA:content": "This is some Tika HTML text",
+            },
+        )
+        httpx_mock.add_response(
+            url="http://localhost:3000/forms/chromium/convert/html",
+            method="POST",
+            content=html_email_pdf_file.read_bytes(),
+        )
+        httpx_mock.add_response(
+            url="http://localhost:3000/forms/pdfengines/merge",
+            method="POST",
+            content=b"Pretend merged PDF content",
+        )
+    
+        def test_layout_option(layout_option, expected_calls, expected_pdf_names):
+            mock_mailrule_get.return_value = mock.Mock(pdf_layout=layout_option)
+            mail_parser.parse(
+                document_path=html_email_file,
+                mime_type="message/rfc822",
+                mailrule_id=1,
+            )
+            args, _ = mock_merge_route.call_args
+            assert len(args[0]) == expected_calls
+            for i, pdf in enumerate(expected_pdf_names):
+                assert args[0][i].name == pdf
+    
+        # 1 = MailRule.PdfLayout.TEXT_HTML
+>       test_layout_option(1, 2, ["email_as_pdf.pdf", "html.pdf"])
+
+src/paperless_mail/tests/test_parsers.py:720: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/paperless_mail/tests/test_parsers.py:709: in test_layout_option
+    mail_parser.parse(
+src/paperless_mail/parsers.py:182: in parse
+    self.text = build_formatted_text(mail)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/paperless_mail/parsers.py:172: in build_formatted_text
+    fmt_text += "HTML content: " + strip_text(self.tika_parse(mail.html))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <paperless_mail.parsers.MailDocumentParser object at 0xffff37fa9700>
+html = '<html>\n  <head>\n\n    <meta http-equiv="content-type" content="text/html; charset=utf-8">\n  </head>\n\t<body>\n\t\...cument.getElementById("changeme").innerHTML = "Paragraph changed via Java Script.";\n\t\t</script>\n\t</body>\n</html>'
+
+    def tika_parse(self, html: str):
+        self.log.info("Sending content to Tika server")
+    
+        try:
+            with TikaClient(tika_url=settings.TIKA_ENDPOINT) as client:
+                parsed = client.tika.as_text.from_buffer(html, "text/html")
+    
+                if parsed.content is not None:
+                    return parsed.content.strip()
+                return ""
+        except Exception as err:
+>           raise ParseError(
+                f"Could not parse content with tika server at "
+                f"{settings.TIKA_ENDPOINT}: {err}",
+            ) from err
+E           documents.parsers.ParseError: Could not parse content with tika server at http://tika:9998: No response can be found for PUT request on http://tika:9998/tika/text amongst:
+E           - Match PUT request on http://localhost:9998/tika/text
+E           - Match POST request on http://localhost:3000/forms/chromium/convert/html
+E           - Match POST request on http://localhost:3000/forms/pdfengines/merge
+
+src/paperless_mail/parsers.py:226: ParseError
+----------------------------- Captured stderr call -----------------------------
+[2026-07-22 15:27:14,090] [INFO] [paperless.parsing.mail] Sending content to Tika server
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+__________ TestUrlCanary.test_online_image_exception_on_not_available __________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.tests.test_parsers_live.TestUrlCanary object at 0xffff880cfc20>
+
+    def test_online_image_exception_on_not_available(self):
+        """
+        GIVEN:
+            - Fresh start
+        WHEN:
+            - nonexistent image is requested
+        THEN:
+            - An exception shall be thrown
+        """
+        """
+        A public image is used in the html sample file. We have no control
+        whether this image stays online forever, so here we check if we can detect if is not
+        available anymore.
+        """
+        resp = httpx.get(
+            "https://docs.paperless-ngx.com/assets/non-existent.png",
+        )
+        with pytest.raises(httpx.HTTPStatusError) as exec_info:
+            resp.raise_for_status()
+    
+>       assert exec_info.value.response.status_code == httpx.codes.NOT_FOUND
+E       assert 403 == <codes.NOT_FOUND: 404>
+E        +  where 403 = <Response [403 Forbidden]>.status_code
+E        +    where <Response [403 Forbidden]> = HTTPStatusError("Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/non-existent.png'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403").response
+E        +      where HTTPStatusError("Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/non-existent.png'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403") = <ExceptionInfo HTTPStatusError("Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/non-existent.png'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403") tblen=2>.value
+E        +  and   <codes.NOT_FOUND: 404> = <enum 'codes'>.NOT_FOUND
+E        +    where <enum 'codes'> = httpx.codes
+
+src/paperless_mail/tests/test_parsers_live.py:76: AssertionError
+______________ TestUrlCanary.test_is_online_image_still_available ______________
+[gw5] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.tests.test_parsers_live.TestUrlCanary object at 0xffff8810c110>
+
+    def test_is_online_image_still_available(self):
+        """
+        GIVEN:
+            - Fresh start
+        WHEN:
+            - A public image used in the html sample file is requested
+        THEN:
+            - No exception shall be thrown
+        """
+        """
+        A public image is used in the html sample file. We have no control
+        whether this image stays online forever, so here we check if it is still there
+        """
+    
+        # Now check the URL used in samples/sample.html
+        resp = httpx.get(
+            "https://docs.paperless-ngx.com/assets/logo_full_white.svg",
+        )
+>       resp.raise_for_status()
+
+src/paperless_mail/tests/test_parsers_live.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Response [403 Forbidden]>
+
+    def raise_for_status(self) -> Response:
+        """
+        Raise the `HTTPStatusError` if one occurred.
+        """
+        request = self._request
+        if request is None:
+            raise RuntimeError(
+                "Cannot call `raise_for_status` as the request "
+                "instance has not been set on this response."
+            )
+    
+        if self.is_success:
+            return self
+    
+        if self.has_redirect_location:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "Redirect location: '{0.headers[location]}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+        else:
+            message = (
+                "{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\n"
+                "For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}"
+            )
+    
+        status_class = self.status_code // 100
+        error_types = {
+            1: "Informational response",
+            3: "Redirect response",
+            4: "Client error",
+            5: "Server error",
+        }
+        error_type = error_types.get(status_class, "Invalid status code")
+        message = message.format(self, error_type=error_type)
+>       raise HTTPStatusError(message, request=request, response=self)
+E       httpx.HTTPStatusError: Client error '403 Forbidden' for url 'https://docs.paperless-ngx.com/assets/logo_full_white.svg'
+E       For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+/venv/lib/python3.12/site-packages/httpx/_models.py:829: HTTPStatusError
+__________________ TestParserLive.test_generate_pdf_from_mail __________________
+[gw6] linux -- Python 3.12.12 /venv/bin/python
+
+self = <paperless_mail.tests.test_parsers_live.TestParserLive object at 0xffff8d9e6270>
+mail_parser = <paperless_mail.parsers.MailDocumentParser object at 0xffff693a7e00>
+html_email_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml')
+html_email_pdf_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml.pdf')
+html_email_thumbnail_file = PosixPath('/ci/src/paperless_mail/tests/samples/html.eml.pdf.webp')
+
+    def test_generate_pdf_from_mail(
+        self,
+        mail_parser: MailDocumentParser,
+        html_email_file: Path,
+        html_email_pdf_file: Path,
+        html_email_thumbnail_file: Path,
+    ):
+        """
+        GIVEN:
+            - Fresh start
+        WHEN:
+            - pdf generation from simple eml file is requested
+        THEN:
+            - Gotenberg is called and the resulting file is returned and look as expected.
+        """
+    
+        util_call_with_backoff(mail_parser.parse, [html_email_file, "message/rfc822"])
+    
+        # Check the archive PDF
+        archive_path = mail_parser.get_archive_path()
+        archive_text = extract_text(archive_path)
+        expected_archive_text = extract_text(html_email_pdf_file)
+    
+        # Archive includes the HTML content, so use in
+        assert expected_archive_text in archive_text
+    
+        # Check the thumbnail
+        generated_thumbnail = mail_parser.get_thumbnail(
+            html_email_file,
+            "message/rfc822",
+        )
+        generated_thumbnail_hash = self.imagehash(generated_thumbnail)
+    
+        # The created pdf is not reproducible. But the converted image should always look the same.
+        expected_hash = self.imagehash(html_email_thumbnail_file)
+    
+>       assert generated_thumbnail_hash == expected_hash, (
+            f"PDF looks different. Check if {generated_thumbnail} looks weird."
+        )
+E       AssertionError: PDF looks different. Check if /tmp/tmpz5w61rts/paperless-02q5a46p/convert.webp looks weird.
+E       assert '000000000000...fffffffffffff' == '000000000000...fffffffffffff'
+E         
+E         Skipping 57 identical trailing characters in diff, use -v to show
+E         - 000000000000001fffffffff
+E         ?               ^
+E         + 000000000000003fffffffff
+E         ?               ^
+
+src/paperless_mail/tests/test_parsers_live.py:233: AssertionError
+------------------------------ Captured log call -------------------------------
+DEBUG    paperless.parsing.mail:parsers.py:178 Parsing file html.eml into an email
+DEBUG    paperless.parsing.mail:parsers.py:181 Building formatted text from email
+INFO     paperless.parsing.mail:parsers.py:216 Sending content to Tika server
+DEBUG    paperless.parsing.mail:parsers.py:189 Creating a PDF from the email
+INFO     paperless.parsing.mail:parsers.py:350 Converting mail to PDF
+INFO     paperless.parsing.mail:parsers.py:410 Converting message html to PDF
+DEBUG    paperless.parsing.mail:parsers.py:254 Merging email text and HTML content into single PDF
+DEBUG    paperless.parsing:parsers.py:174 Execute: convert -density 300 -scale 500x5000> -alpha remove -strip -auto-orient -define pdf:use-cropbox=true /tmp/tmpz5w61rts/paperless-02q5a46p/merged.pdf[0] /tmp/tmpz5w61rts/paperless-02q5a46p/convert.webp
+INFO     paperless.parsing:utils.py:93 convert exited 0
+=============================== warnings summary ===============================
+../venv/lib/python3.12/site-packages/django/core/handlers/base.py:61: 20 warnings
+src/documents/tests/test_api_permissions.py: 5 warnings
+src/documents/tests/test_api_profile.py: 3 warnings
+src/documents/tests/test_api_schema.py: 1 warning
+src/documents/tests/test_api_status.py: 15 warnings
+src/documents/tests/test_api_objects.py: 4 warnings
+src/documents/tests/test_tag_hierarchy.py: 10 warnings
+src/documents/tests/test_api_trash.py: 5 warnings
+src/documents/tests/test_workflows.py: 3 warnings
+src/documents/tests/test_api_remote_version.py: 5 warnings
+  /venv/lib/python3.12/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /ci/static/
+    mw_instance = middleware(adapted_handler)
+
+src/documents/tests/test_api_app_config.py::TestApiAppConfig::test_create_not_allowed
+  /usr/local/lib/python3.12/weakref.py:73: ResourceWarning: unclosed file <_io.BufferedReader name='/tmp/tmp99z1xgb_/logo/simple.jpg'>
+    return self._meth_type(func, obj)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_document_deletion
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_document_deletion
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_empty_content
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_empty_content
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_no_matches
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_no_matches
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_with_3_matches
+src/documents/tests/test_management_fuzzy.py::TestFuzzyMatchCommand::test_with_3_matches
+  /usr/local/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=204) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+src/documents/tests/test_migration_archive_files.py: 16 warnings
+  /usr/local/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=198) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+src/documents/tests/test_migration_archive_files.py: 24 warnings
+  /usr/local/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=201) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+---------------------- generated xml file: /ci/junit.xml -----------------------
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.12-final-0 _______________
+
+Coverage HTML written to dir htmlcov
+Coverage XML written to file coverage.xml
+============================= slowest 50 durations =============================
+76.64s call     src/documents/tests/test_migration_mime_type.py::TestMigrateMimeType::testMimeTypesMigrated
+72.88s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFiles::test_filenames
+63.41s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesErrors::test_parser_no_archive
+57.94s call     src/documents/tests/test_migration_webp_conversion.py::TestMigrateWebPThumbnails::test_convert_errors_out
+55.13s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesErrors::test_parser_error
+45.60s call     src/documents/tests/test_migration_consumption_templates.py::TestReverseMigrateConsumptionTemplate::test_remove_consumptiontemplate_permissions
+43.28s call     src/documents/tests/test_migration_workflows.py::TestReverseMigrateWorkflow::test_remove_workflow_permissions_and_migrate_workflows_to_consumption_templates
+42.94s call     src/paperless_mail/tests/test_parsers_live.py::TestParserLive::test_generate_pdf_from_mail
+42.94s call     src/documents/tests/test_migration_workflows.py::TestMigrateWorkflow::test_users_with_add_documents_get_add_and_workflow_templates_get_migrated
+40.50s call     src/documents/tests/test_migration_mime_type.py::TestMigrateMimeTypeBackwards::testMimeTypesReverted
+39.95s call     src/documents/tests/test_migration_tag_colors.py::TestMigrateTagColorBackwards::testMimeTypesReverted
+37.32s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesWithFilenameFormat::testArchiveFilesMigrated
+36.54s call     src/documents/tests/test_migration_document_pages_count.py::TestMigrateDocumentPageCount::testDocumentPageCountMigrated
+34.52s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFiles::testArchiveFilesMigrated
+31.08s call     src/documents/tests/test_migration_customfields.py::TestReverseMigrateCustomFields::test_remove_consumptiontemplate_permissions
+31.07s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesBackwards::testArchiveFilesReverted
+30.56s call     src/documents/tests/test_migration_encrypted_webp_conversion.py::TestMigrateToEncrytpedWebPThumbnails::test_convert_errors_out
+30.30s call     src/documents/tests/test_migration_webp_conversion.py::TestMigrateWebPThumbnails::test_convert_mixed
+24.57s call     src/documents/tests/test_migration_consumption_templates.py::TestMigrateConsumptionTemplate::test_users_with_add_documents_get_add_consumptiontemplate
+24.08s call     src/documents/tests/test_migration_encrypted_webp_conversion.py::TestMigrateToEncrytpedWebPThumbnails::test_do_nothing_if_converted
+24.01s call     src/documents/tests/test_migration_customfields.py::TestMigrateCustomFields::test_users_with_add_documents_get_add_customfields
+24.01s call     src/documents/tests/test_migration_created.py::TestMigrateDocumentCreated::testDocumentCreatedMigrated
+23.87s call     src/documents/tests/test_migration_document_pages_count.py::TestMigrateDocumentPageCountBackwards::test_remove_number_of_pages_to_page_count
+23.83s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesWithFilenameFormat::test_filenames
+23.13s call     src/paperless_mail/tests/test_parsers_live.py::TestParserLive::test_generate_pdf_gotenberg_merging
+22.48s call     src/paperless_tika/tests/test_live_tika.py::TestTikaParserAgainstServer::test_basic_parse_odt
+21.86s call     src/paperless_tika/tests/test_live_tika.py::TestTikaParserAgainstServer::test_tika_fails_multi_part
+21.83s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesBackwardsWithFilenameFormat::testArchiveFilesReverted
+21.54s call     src/paperless_tika/tests/test_live_tika.py::TestTikaParserAgainstServer::test_basic_parse_doc
+21.42s call     src/documents/tests/test_migration_remove_null_characters.py::TestMigrateNullCharacters::testMimeTypesMigrated
+21.09s call     src/documents/tests/test_migration_webp_conversion.py::TestMigrateWebPThumbnails::test_convert_single_thumbnail
+20.95s call     src/documents/tests/test_migration_encrypted_webp_conversion.py::TestMigrateToEncrytpedWebPThumbnails::test_convert_mixed
+20.88s call     src/paperless_tika/tests/test_live_tika.py::TestTikaParserAgainstServer::test_basic_parse_docx
+19.76s call     src/documents/tests/test_migration_tag_colors.py::TestMigrateTagColor::testMimeTypesMigrated
+19.59s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesBackwardsErrors::test_filename_exists
+19.23s call     src/documents/tests/test_migration_archive_files.py::TestMigrateArchiveFilesBackwardsErrors::test_filename_clash
+18.86s setup    src/documents/tests/test_api_search.py::TestDocumentSearchApi::test_corrected_query_error
+18.66s setup    src/documents/tests/test_api_bulk_edit.py::TestBulkEditAPI::test_delete_pages
+18.65s setup    src/documents/tests/test_api_documents.py::TestDocumentApi::test_get_existing_notes
+18.54s setup    src/documents/tests/test_api_bulk_download.py::TestBulkDownload::test_formatted_download_both
+18.14s call     src/documents/tests/test_migration_webp_conversion.py::TestMigrateWebPThumbnails::test_do_nothing_if_converted
+18.12s setup    src/documents/tests/test_api_email.py::TestEmail::test_email_empty_document_list
+18.10s setup    src/documents/tests/test_api_documents.py::TestDocumentApi::test_tag_color
+18.09s setup    src/documents/tests/test_api_filter_by_custom_fields.py::TestCustomFieldsSearch::test_logical_or
+17.96s setup    src/documents/tests/test_admin.py::TestDocumentAdmin::test_created
+17.95s setup    src/documents/tests/test_api_custom_fields.py::TestCustomFieldsAPI::test_custom_field_value_short_text_validation
+17.84s call     src/documents/tests/test_migration_encrypted_webp_conversion.py::TestMigrateToEncrytpedWebPThumbnails::test_convert_thumbnails
+17.48s setup    src/documents/tests/test_api_permissions.py::TestApiAuth::test_basic_auth_mfa_enabled
+16.16s call     src/paperless_tesseract/tests/test_parser.py::TestParser::test_multi_page_tiff
+15.02s call     src/paperless_tesseract/tests/test_parser.py::TestParser::test_multi_page_tiff_alpha_srgb
+=========================== short test summary info ============================
+FAILED src/documents/tests/test_file_handling.py::TestFileHandling::test_file_renaming_missing_permissions
+FAILED src/documents/tests/test_management_exporter.py::TestExportImport::test_export_target_not_writable
+FAILED src/documents/tests/test_api_status.py::TestSystemStatus::test_system_status
+FAILED src/documents/tests/test_sanity_check.py::TestSanityCheck::test_archive_no_access
+FAILED src/documents/tests/test_sanity_check.py::TestSanityCheck::test_original_no_access
+FAILED src/documents/tests/test_sanity_check.py::TestSanityCheck::test_thumbnail_no_access
+FAILED src/paperless/tests/test_checks.py::TestChecks::test_paths_check_no_access
+FAILED src/documents/tests/test_management_importer.py::TestCommandImport::test_import_permission_error
+FAILED src/documents/tests/test_management_importer.py::TestCommandImport::test_import_source_not_readable
+FAILED src/paperless_tesseract/tests/test_parser.py::TestParser::test_rtl_language_detection
+FAILED src/paperless_mail/tests/test_parsers.py::TestTikaHtmlParse::test_tika_parse
+FAILED src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_simple_email
+FAILED src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email
+FAILED src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_from_mail
+FAILED src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_layout_options
+FAILED src/paperless_mail/tests/test_parsers_live.py::TestUrlCanary::test_online_image_exception_on_not_available
+FAILED src/paperless_mail/tests/test_parsers_live.py::TestUrlCanary::test_is_online_image_still_available
+FAILED src/paperless_mail/tests/test_parsers_live.py::TestParserLive::test_generate_pdf_from_mail
+ERROR src/paperless/tests/test_checks.py::TestChecks::test_paths_check_no_access
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_simple_email
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email_html_to_pdf_failure
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_html_email_merge_failure
+ERROR src/paperless_mail/tests/test_parsers.py::TestParser::test_generate_pdf_layout_options
+18 failed, 1404 passed, 5 skipped, 120 warnings, 6 errors in 329.50s (0:05:29)
