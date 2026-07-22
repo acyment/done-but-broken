@@ -1,0 +1,11 @@
+{
+  "name": "immich-pilot-acceptance",
+  "private": true,
+  "description": "Runner deps for the committed acceptance glue (cucumber --strict). Installed with bun (repo rule), executed with node (pinned via mise in stack/lib.sh).",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
+    "@types/node": "^24.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.0"
+  }
+}

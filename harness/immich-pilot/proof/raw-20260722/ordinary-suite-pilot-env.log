@@ -1,0 +1,728 @@
+
+> immich@3.0.0 test /Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/server
+> vitest --config test/vitest.config.mjs -- --run
+
+
+ RUN  v3.2.4 /Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/server
+
+[tsconfig-paths] An error occurred while parsing "/Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/web/tsconfig.json". See below for details. To disable this message, set the `ignoreConfigErrors` option to true.
+[tsconfig-paths] An error occurred while parsing "/Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/docs/tsconfig.json". See below for details.
+(node:15176) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15173) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15171) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15174) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15175) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15179) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15177) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15172) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15178) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/database-backup.service.spec.ts (51 tests) 1825ms
+ ✓ |server:unit| src/services/library.service.spec.ts (71 tests) 1874ms
+ ✓ |server:unit| src/services/storage-template.service.spec.ts (32 tests) 2126ms
+ ✓ |server:unit| src/services/album.service.spec.ts (63 tests) 2589ms
+   ✓ AlbumService > addAssetsToAlbums > should not allow unauthorized shared link access to the album  366ms
+ ✓ |server:unit| src/services/auth.service.spec.ts (79 tests) 3133ms
+ ❯ |server:unit| src/services/person.service.spec.ts (73 tests | 1 failed) 3195ms
+   ✓ PersonService > should be defined 35ms
+   ✓ PersonService > getAll > should get all hidden and visible people with thumbnails 10ms
+   ✓ PersonService > getAll > should get all visible people and favorites should be first in the array 5ms
+   ✓ PersonService > getById > should require person.read permission 13ms
+   ✓ PersonService > getById > should throw a bad request when person is not found 9ms
+   ✓ PersonService > getById > should get a person by id 9ms
+   ✓ PersonService > getThumbnail > should require person.read permission 8ms
+   ✓ PersonService > getThumbnail > should throw an error when personId is invalid 11ms
+   ✓ PersonService > getThumbnail > should throw an error when person has no thumbnail 30ms
+   ✓ PersonService > getThumbnail > should serve the thumbnail 27ms
+   ✓ PersonService > update > should require person.write permission 136ms
+   ✓ PersonService > update > should throw an error when personId is invalid 102ms
+   ✓ PersonService > update > should update a person's name 45ms
+   ✓ PersonService > update > should update a person's date of birth 48ms
+   ✓ PersonService > update > should update a person visibility 28ms
+   ✓ PersonService > update > should update a person favorite status 8ms
+   ✓ PersonService > update > should update a person's thumbnailPath 18ms
+   ✓ PersonService > update > should throw an error when the face feature assetId is invalid 45ms
+   ✓ PersonService > updateAll > should throw an error when personId is invalid 212ms
+   ✓ PersonService > reassignFaces > should throw an error if user has no access to the person 47ms
+   ✓ PersonService > reassignFaces > should reassign a face 30ms
+   ✓ PersonService > handlePersonMigration > should not move person files 15ms
+   ✓ PersonService > getFacesById > should get the bounding boxes for an asset 34ms
+   ✓ PersonService > getFacesById > should reject if the user has not access to the asset 25ms
+   ✓ PersonService > createFace > should create a manual face and initialize the person feature photo creation 44ms
+   ✓ PersonService > createFace > should not update the person feature photo if one already exists 32ms
+   ✓ PersonService > createFace > should reject creating a face on an asset the user does not own 20ms
+   ✓ PersonService > createNewFeaturePhoto > should change person feature photo 67ms
+   ✓ PersonService > reassignFacesById > should create a new person 92ms
+   ✓ PersonService > reassignFacesById > should fail if user has not the correct permissions on the asset 292ms
+   ✓ PersonService > createPerson > should create a new person 53ms
+   ✓ PersonService > handlePersonCleanup > should delete people without faces 47ms
+   ✓ PersonService > handleQueueDetectFaces > should skip if machine learning is disabled 128ms
+   ✓ PersonService > handleQueueDetectFaces > should queue missing assets 59ms
+   ✓ PersonService > handleQueueDetectFaces > should queue all assets 48ms
+   ✓ PersonService > handleQueueDetectFaces > should refresh all assets 51ms
+   ✓ PersonService > handleQueueDetectFaces > should delete existing people and faces if forced 186ms
+   ✓ PersonService > handleQueueRecognizeFaces > should skip if machine learning is disabled 55ms
+   ✓ PersonService > handleQueueRecognizeFaces > should skip if recognition jobs are already queued 42ms
+   ✓ PersonService > handleQueueRecognizeFaces > should queue missing assets 76ms
+   ✓ PersonService > handleQueueRecognizeFaces > should queue all assets 42ms
+   ✓ PersonService > handleQueueRecognizeFaces > should run nightly if new face has been added since last run 62ms
+   ✓ PersonService > handleQueueRecognizeFaces > should skip nightly if no new face has been added since last run 64ms
+   ✓ PersonService > handleQueueRecognizeFaces > should delete existing people if forced 56ms
+   ✓ PersonService > handleDetectFaces > should skip if machine learning is disabled 57ms
+   ✓ PersonService > handleDetectFaces > should skip when no resize path 139ms
+   ✓ PersonService > handleDetectFaces > should handle no results 23ms
+   ✓ PersonService > handleDetectFaces > should create a face with no person and queue recognition job 24ms
+   ✓ PersonService > handleDetectFaces > should delete an existing face not among the new detected faces 28ms
+   ✓ PersonService > handleDetectFaces > should add new face and delete an existing face not among the new detected faces 7ms
+   ✓ PersonService > handleDetectFaces > should add embedding to matching metadata face 6ms
+   ✓ PersonService > handleDetectFaces > should not add embedding to non-matching metadata face 6ms
+   ✓ PersonService > handleRecognizeFaces > should fail if face does not exist 15ms
+   ✓ PersonService > handleRecognizeFaces > should fail if face does not have asset 9ms
+   ✓ PersonService > handleRecognizeFaces > should skip if face already has an assigned person 79ms
+   ✓ PersonService > handleRecognizeFaces > should match existing person 8ms
+   ✓ PersonService > handleRecognizeFaces > should match existing person if their birth date is unknown 6ms
+   ✓ PersonService > handleRecognizeFaces > should match existing person if their birth date is before file creation 6ms
+   ✓ PersonService > handleRecognizeFaces > should create a new person if the face is a core point with no person 51ms
+   ✓ PersonService > handleRecognizeFaces > should not queue face with no matches 9ms
+   ✓ PersonService > handleRecognizeFaces > should defer non-core faces to end of queue 5ms
+   ✓ PersonService > handleRecognizeFaces > should not assign person to deferred non-core face with no matching person 4ms
+   ✓ PersonService > mergePerson > should require person.write and person.merge permission 20ms
+   ✓ PersonService > mergePerson > should merge two people without smart merge 51ms
+   ✓ PersonService > mergePerson > should merge two people with smart merge 4ms
+   ✓ PersonService > mergePerson > should throw an error when the primary person is not found 7ms
+   ✓ PersonService > mergePerson > should handle invalid merge ids 10ms
+   ✓ PersonService > mergePerson > should handle an error reassigning faces 12ms
+   ✓ PersonService > getStatistics > should get correct number of person 5ms
+   ✓ PersonService > getStatistics > should require person.read permission 5ms
+   × PersonService > mapFace > should map a face 96ms
+     → expected { …(9) } to deeply equal { boundingBoxX1: 100, …(8) }
+   ✓ PersonService > mapFace > should not map person if person is null 12ms
+   ✓ PersonService > mapFace > should not map person if person does not match auth user id 21ms
+ ✓ |server:unit| src/services/asset-media.service.spec.ts (131 tests) 3562ms
+ ❯ |server:unit| src/services/metadata.service.spec.ts (116 tests | 1 failed) 3694ms
+   ✓ MetadataService > should be defined 16ms
+   ✓ MetadataService > onBootstrapEvent > should pause and resume queue during init 7ms
+   ✓ MetadataService > onConfigInit > should update metadata processing concurrency 5ms
+   ✓ MetadataService > onConfigUpdate > should update metadata processing concurrency 9ms
+   ✓ MetadataService > handleQueueMetadataExtraction > should queue metadata extraction for all assets without exif values 6ms
+   ✓ MetadataService > handleQueueMetadataExtraction > should queue metadata extraction for all assets 4ms
+   ✓ MetadataService > handleMetadataExtraction > should handle an asset that could not be found 12ms
+   ✓ MetadataService > handleMetadataExtraction > should handle a date in a sidecar file 19ms
+   ✓ MetadataService > handleMetadataExtraction > should take the file modification date when missing exif and earlier than creation date 19ms
+   ✓ MetadataService > handleMetadataExtraction > should take the file creation date when missing exif and earlier than modification date 70ms
+   ✓ MetadataService > handleMetadataExtraction > should determine dateTimeOriginal regardless of the server time zone 237ms
+   ✓ MetadataService > handleMetadataExtraction > should handle lists of numbers 54ms
+   ✓ MetadataService > handleMetadataExtraction > should not delete latituide and longitude without reverse geocode 57ms
+   ✓ MetadataService > handleMetadataExtraction > should apply reverse geocoding 101ms
+   ✓ MetadataService > handleMetadataExtraction > should discard latitude and longitude on null island 44ms
+   ✓ MetadataService > handleMetadataExtraction > should extract tags from TagsList 18ms
+   ✓ MetadataService > handleMetadataExtraction > should extract hierarchy from TagsList 9ms
+   ✓ MetadataService > handleMetadataExtraction > should extract tags from Keywords as a string 113ms
+   ✓ MetadataService > handleMetadataExtraction > should extract tags from Keywords as a list 11ms
+   ✓ MetadataService > handleMetadataExtraction > should extract tags from Keywords as a list with a number 14ms
+   ✓ MetadataService > handleMetadataExtraction > should extract hierarchal tags from Keywords 22ms
+   ✓ MetadataService > handleMetadataExtraction > should ignore Keywords when TagsList is present 17ms
+   ✓ MetadataService > handleMetadataExtraction > should extract hierarchy from HierarchicalSubject 21ms
+   ✓ MetadataService > handleMetadataExtraction > should extract tags from HierarchicalSubject as a list with a number 44ms
+   ✓ MetadataService > handleMetadataExtraction > should extract ignore / characters in a HierarchicalSubject tag 72ms
+   ✓ MetadataService > handleMetadataExtraction > should ignore HierarchicalSubject when TagsList is present 53ms
+   ✓ MetadataService > handleMetadataExtraction > should remove existing tags 34ms
+   ✓ MetadataService > handleMetadataExtraction > should not apply motion photos if asset is video 287ms
+   ✓ MetadataService > handleMetadataExtraction > should handle an invalid Directory Item 49ms
+   ✓ MetadataService > handleMetadataExtraction > should extract the correct video orientation 139ms
+   ✓ MetadataService > handleMetadataExtraction > should persist CICP smallints and profile/level for HDR10 video 39ms
+   ✓ MetadataService > handleMetadataExtraction > should persist Dolby Vision fields 33ms
+   ✓ MetadataService > handleMetadataExtraction > should persist packet-derived HLS fields 16ms
+   ✓ MetadataService > handleMetadataExtraction > should omit the keyframe row when the probe returns no keyframes 20ms
+   ✓ MetadataService > handleMetadataExtraction > should prefer ffprobe frameRate over exiftool VideoFrameRate 50ms
+   ✓ MetadataService > handleMetadataExtraction > should not insert audio/video/keyframe rows for image assets 50ms
+   ✓ MetadataService > handleMetadataExtraction > should extract the MotionPhotoVideo tag from Samsung HEIC motion photos 139ms
+   ✓ MetadataService > handleMetadataExtraction > should extract the EmbeddedVideo tag from Samsung JPEG motion photos 53ms
+   ✓ MetadataService > handleMetadataExtraction > should extract the motion photo video from the XMP directory entry  26ms
+   ✓ MetadataService > handleMetadataExtraction > should delete old motion photo video assets if they do not match what is extracted 23ms
+   ✓ MetadataService > handleMetadataExtraction > should not create a new motion photo video asset if the hash of the extracted video matches an existing asset 43ms
+   ✓ MetadataService > handleMetadataExtraction > should link and hide motion video asset to still asset if the hash of the extracted video matches an existing asset 55ms
+   ✓ MetadataService > handleMetadataExtraction > should not update storage usage if motion photo is external 62ms
+   ✓ MetadataService > handleMetadataExtraction > should save all metadata 91ms
+   ✓ MetadataService > handleMetadataExtraction > should extract +00:00 timezone from raw value 207ms
+   ✓ MetadataService > handleMetadataExtraction > should extract duration 51ms
+   ✓ MetadataService > handleMetadataExtraction > should only extract duration for videos 57ms
+   ✓ MetadataService > handleMetadataExtraction > should omit duration of zero 43ms
+   ✓ MetadataService > handleMetadataExtraction > should a handle duration of 1 week 21ms
+   ✓ MetadataService > handleMetadataExtraction > should use Duration from exif 11ms
+   ✓ MetadataService > handleMetadataExtraction > should prefer Duration from exif over sidecar 20ms
+   ✓ MetadataService > handleMetadataExtraction > should ignore all Duration tags for definitely static images 41ms
+   ✓ MetadataService > handleMetadataExtraction > should ignore Duration from exif for videos 11ms
+   ✓ MetadataService > handleMetadataExtraction > should trim whitespace from description 36ms
+   ✓ MetadataService > handleMetadataExtraction > should handle a numeric description 11ms
+   ✓ MetadataService > handleMetadataExtraction > should skip importing metadata when the feature is disabled 12ms
+   ✓ MetadataService > handleMetadataExtraction > should skip importing metadata face for assets without tags.RegionInfo 6ms
+   ✓ MetadataService > handleMetadataExtraction > should skip importing faces without name 6ms
+   ✓ MetadataService > handleMetadataExtraction > should skip importing faces with empty name 59ms
+   ✓ MetadataService > handleMetadataExtraction > should apply metadata face tags creating new people 13ms
+   ✓ MetadataService > handleMetadataExtraction > should assign metadata face tags to existing persons 9ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'undefined' 6ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'Horizontal = 1' 38ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'MirrorHorizontal = 2' 8ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'Rotate180 = 3' 6ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'MirrorVertical = 4' 13ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'MirrorHorizontalRotate270CW = 5' 7ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'Rotate90CW = 6' 4ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'MirrorHorizontalRotate90CW = 7' 12ms
+   ✓ MetadataService > handleMetadataExtraction > handleFaceTagOrientation > should transform RegionInfo geometry according to exif orientation 'Rotate270CW = 8' 9ms
+   ✓ MetadataService > handleMetadataExtraction > should handle invalid modify date 21ms
+   ✓ MetadataService > handleMetadataExtraction > should handle invalid rating value 23ms
+   ✓ MetadataService > handleMetadataExtraction > should handle valid rating value 9ms
+   ✓ MetadataService > handleMetadataExtraction > should handle 0 as unrated -> null 8ms
+   ✓ MetadataService > handleMetadataExtraction > should handle valid negative rating value 49ms
+   ✓ MetadataService > handleMetadataExtraction > should handle livePhotoCID not set 14ms
+   ✓ MetadataService > handleMetadataExtraction > should handle not finding a match 29ms
+   ✓ MetadataService > handleMetadataExtraction > should link photo and video 48ms
+   ✓ MetadataService > handleMetadataExtraction > should notify clients on live photo link 4ms
+   ✓ MetadataService > handleMetadataExtraction > should search by libraryId 54ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera make and model { Make: '1', Model: '2', …(3) } -> { make: '1', model: '2' } 20ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera make and model { Device: { …(2) }, …(2) } -> { make: '1', model: '2' } 4ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera make and model { AndroidMake: '1', AndroidModel: '2' } -> { make: '1', model: '2' } 4ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera make and model { DeviceManufacturer: '1', …(1) } -> { make: '1', model: '2' } 7ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera make and model { Make: '1', Model: '2', …(2) } -> { make: '1', model: '2' } 4ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information {} -> null 6ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensID: '1', LensSpec: '2', …(2) } -> '1' 16ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensSpec: '2', LensType: '3', …(1) } -> '3' 4ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensSpec: '2', LensModel: '4' } -> '2' 4ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensModel: '4' } -> '4' 22ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensID: '----' } -> null 6ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensID: 'Unknown (0 ff ff)' } -> null 8ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { Object (LensID) } -> null 4ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensID: ' Unknown 6-30mm' } -> null 50ms
+   ✓ MetadataService > handleMetadataExtraction > should read camera lens information { LensID: '' } -> null 44ms
+   ✓ MetadataService > handleMetadataExtraction > should properly set width/height for normal images 18ms
+   ✓ MetadataService > handleMetadataExtraction > should properly swap asset width/height for rotated images 6ms
+   ✓ MetadataService > handleMetadataExtraction > should overwrite existing width/height for unedited assets 5ms
+   ✓ MetadataService > handleMetadataExtraction > should not overwrite existing width/height for edited assets 6ms
+   ✓ MetadataService > handleQueueSidecar > should queue assets with sidecar files 20ms
+   ✓ MetadataService > handleQueueSidecar > should queue assets without sidecar files 4ms
+   ✓ MetadataService > handleSidecarCheck > should do nothing if asset could not be found 4ms
+   ✓ MetadataService > handleSidecarCheck > should detect a new sidecar at .jpg.xmp 6ms
+   ✓ MetadataService > handleSidecarCheck > should detect a new sidecar at .xmp 4ms
+   ✓ MetadataService > handleSidecarCheck > should unset sidecar path if file no longer exist 4ms
+   ✓ MetadataService > handleSidecarCheck > should do nothing if the sidecar file still exists 5ms
+   ✓ MetadataService > handleSidecarWrite > should skip assets that no longer exist 5ms
+   ✓ MetadataService > handleSidecarWrite > should skip jobs with no metadata 7ms
+   × MetadataService > handleSidecarWrite > should write tags 117ms
+     → expected "spy" to be called with arguments: [ …(2) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[33m@@ -1,9 +1,9 @@[90m
+[2m  [[22m
+[2m    "/data/12/34/thumbs/a3/8d/a38ddb21-195f-478f-a94c-8341bf3eecd4.jpg",[22m
+[2m    {[22m
+[32m-     "DateTimeOriginal": "2023-11-21T22:56:12.196-06:00",[90m
+[31m+     "DateTimeOriginal": null,[90m
+[2m      "Description": "this is a description",[22m
+[2m      "GPSLatitude": 12,[22m
+[2m      "GPSLongitude": 12,[22m
+[2m      "ImageDescription": "this is a description",[22m
+[2m    },[22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+   ✓ MetadataService > handleSidecarWrite > should write rating 7ms
+   ✓ MetadataService > handleSidecarWrite > should write null rating as 0 5ms
+   ✓ MetadataService > firstDateTime > should ignore date-only tags like GPSDateStamp 11ms
+   ✓ MetadataService > firstDateTime > should respect full priority order with all date tags present 4ms
+   ✓ MetadataService > firstDateTime > should handle missing SubSec tags and use available date tags 3ms
+   ✓ MetadataService > firstDateTime > should handle invalid date formats gracefully 4ms
+   ✓ MetadataService > firstDateTime > should prefer CreationDate over CreateDate 3ms
+ ✓ |server:unit| src/utils/editor.spec.ts (33 tests) 7ms
+ ✓ |server:unit| src/services/media.service.spec.ts (192 tests) 4144ms
+   ✓ MediaService > handleGenerateThumbnails > should not skip intra frames for MTS file  387ms
+(node:15258) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15259) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15263) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15270) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15262) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15271) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15266) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15274) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15276) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/duplicate.service.spec.ts (29 tests) 441ms
+ ✓ |server:unit| src/services/asset.service.spec.ts (52 tests) 540ms
+ ✓ |server:unit| src/services/shared-link.service.spec.ts (28 tests) 276ms
+ ✓ |server:unit| src/services/notification.service.spec.ts (43 tests) 381ms
+ ✓ |server:unit| src/repositories/media.repository.spec.ts (32 tests) 1140ms
+ ✓ |server:unit| src/services/transcoding.service.spec.ts (58 tests) 495ms
+ ✓ |server:unit| src/services/system-config.service.spec.ts (28 tests) 246ms
+ ✓ |server:unit| src/controllers/asset.controller.spec.ts (43 tests) 518ms
+ ✓ |server:unit| src/services/database.service.spec.ts (33 tests) 205ms
+ ✓ |server:unit| src/utils/transform.spec.ts (20 tests) 6ms
+ ✓ |server:unit| src/utils/mime-types.spec.ts (253 tests) 15ms
+(node:15278) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15280) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15283) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15282) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15287) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15290) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15292) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/download.service.spec.ts (22 tests) 276ms
+ ✓ |server:unit| src/services/user.service.spec.ts (27 tests) 285ms
+(node:15296) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/tag.service.spec.ts (24 tests) 168ms
+ ✓ |server:unit| src/maintenance/maintenance-worker.service.spec.ts (17 tests) 172ms
+ ✓ |server:unit| src/services/hls.service.spec.ts (17 tests) 136ms
+(node:15298) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/smart-info.service.spec.ts (23 tests) 144ms
+ ❯ |server:unit| src/services/search.service.spec.ts (22 tests | 1 failed) 179ms
+   ✓ SearchService > should work 8ms
+   ✓ SearchService > searchPerson > should pass options to search 6ms
+   ✓ SearchService > searchPlaces > should search places 4ms
+   × SearchService > getExploreData > should get recent assets and assets by city and tag 17ms
+     → expected [ { …(2) }, …(1) ] to deeply equal [ { …(2) }, …(1) ]
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for country 5ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for country (including null) 4ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for state 6ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for state (including null) 6ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for city 4ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for city (including null) 7ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for camera make 22ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for camera make (including null) 5ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for camera model 4ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for camera model (including null) 12ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for camera lens model 5ms
+   ✓ SearchService > getSearchSuggestions > should return search suggestions for camera lens model (including null) 4ms
+   ✓ SearchService > searchSmart > should raise a BadRequestException if machine learning is disabled 13ms
+   ✓ SearchService > searchSmart > should raise a BadRequestException if smart search is disabled 6ms
+   ✓ SearchService > searchSmart > should work 26ms
+   ✓ SearchService > searchSmart > should consider page and size parameters 5ms
+   ✓ SearchService > searchSmart > should use clip model specified in config 4ms
+   ✓ SearchService > searchSmart > should use language specified in request 4ms
+ ✓ |server:unit| src/services/stack.service.spec.ts (19 tests) 119ms
+ ✓ |server:unit| src/repositories/config.repository.spec.ts (33 tests) 16ms
+ ✓ |server:unit| src/services/memory.service.spec.ts (21 tests) 155ms
+(node:15300) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15301) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15306) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15307) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15310) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15311) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/api-key.service.spec.ts (18 tests) 155ms
+(node:15314) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/ocr.service.spec.ts (19 tests) 171ms
+ ✓ |server:unit| src/services/queue.service.spec.ts (18 tests) 113ms
+(node:15318) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15315) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/auth.controller.spec.ts (22 tests) 277ms
+ ✓ |server:unit| src/services/server.service.spec.ts (14 tests) 136ms
+ ✓ |server:unit| src/services/version.service.spec.ts (19 tests) 176ms
+ ✓ |server:unit| src/utils/duplicate.spec.ts (15 tests) 6ms
+ ✓ |server:unit| src/services/storage.service.spec.ts (11 tests) 53ms
+ ✓ |server:unit| src/controllers/person.controller.spec.ts (22 tests) 200ms
+ ✓ |server:unit| src/controllers/search.controller.spec.ts (23 tests) 239ms
+(node:15320) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15322) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15323) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15324) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15329) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/timeline.service.spec.ts (11 tests) 61ms
+ ✓ |server:unit| src/services/activity.service.spec.ts (13 tests) 107ms
+ ✓ |server:unit| src/services/user-admin.service.spec.ts (14 tests) 140ms
+(node:15332) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15334) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/cli.service.spec.ts (13 tests) 140ms
+(node:15336) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15337) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/memory.controller.spec.ts (18 tests) 239ms
+ ✓ |server:unit| src/controllers/asset-media.controller.spec.ts (10 tests | 2 skipped) 121ms
+ ✓ |server:unit| src/services/partner.service.spec.ts (9 tests) 45ms
+ ✓ |server:unit| src/controllers/system-config.controller.spec.ts (9 tests) 204ms
+ ✓ |server:unit| src/controllers/user-admin.controller.spec.ts (12 tests) 229ms
+(node:15341) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15342) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15346) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15340) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15348) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/maintenance.service.spec.ts (9 tests) 89ms
+ ✓ |server:unit| src/services/job.service.spec.ts (26 tests) 176ms
+ ✓ |server:unit| src/repositories/storage.repository.spec.ts (14 tests) 102ms
+ ✓ |server:unit| src/services/notification-admin.service.spec.ts (6 tests) 48ms
+(node:15350) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15353) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15351) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15356) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/workflow.controller.spec.ts (10 tests) 223ms
+ ✓ |server:unit| src/services/map.service.spec.ts (4 tests) 26ms
+ ✓ |server:unit| src/controllers/partner.controller.spec.ts (9 tests) 270ms
+ ✓ |server:unit| src/controllers/notification.controller.spec.ts (10 tests) 278ms
+ ✓ |server:unit| src/services/trash.service.spec.ts (10 tests) 56ms
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should work (drain to stdout)
+bash exited (0)
+
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should throw on non-zero exit code
+bash exited (1)
+
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should accept stdin / output stdout
+cat exited (0)
+
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should drain stdin on process exit
+bash exited (0)
+
+ ✓ |server:unit| src/repositories/process.repository.spec.ts (4 tests) 92ms
+(node:15360) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15359) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15358) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15364) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/api-key.controller.spec.ts (10 tests) 242ms
+ ✓ |server:unit| src/controllers/album.controller.spec.ts (11 tests) 296ms
+(node:15366) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/activity.controller.spec.ts (9 tests) 117ms
+(node:15368) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/sync.controller.spec.ts (7 tests) 121ms
+(node:15370) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15374) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/user.controller.spec.ts (9 tests) 125ms
+ ✓ |server:unit| src/utils/misc.spec.ts (16 tests) 4ms
+(node:15465) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/timeline.controller.spec.ts (6 tests) 183ms
+ ✓ |server:unit| src/services/session.service.spec.ts (5 tests) 45ms
+ ✓ |server:unit| src/repositories/email.repository.spec.ts (4 tests) 276ms
+ ✓ |server:unit| src/controllers/tag.controller.spec.ts (7 tests) 185ms
+ ✓ |server:unit| src/dtos/user.dto.spec.ts (4 tests) 4ms
+(node:15467) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15470) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/validation.spec.ts (3 tests) 3ms
+(node:15473) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/system-metadata.service.spec.ts (7 tests) 44ms
+(node:15476) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15475) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/plugin.controller.spec.ts (4 tests) 163ms
+ ❯ |server:unit| src/services/view.service.spec.ts (3 tests | 1 failed) 26ms
+   ✓ ViewService > should work 8ms
+   ✓ ViewService > getUniqueOriginalPaths > should return unique original paths 4ms
+   × ViewService > getAssetsByOriginalPath > should return assets by original path 13ms
+     → expected [ { …(32) }, { …(32) } ] to deeply equal [ { …(32) }, { …(32) } ]
+ ✓ |server:unit| src/repositories/logging.repository.spec.ts (2 tests) 4ms
+(node:15481) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15482) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/duplicate.controller.spec.ts (4 tests) 183ms
+ ✓ |server:unit| src/controllers/shared-link.controller.spec.ts (3 tests) 116ms
+(node:15486) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/utils/request.spec.ts (6 tests) 2ms
+ ✓ |server:unit| src/utils/workflow.spec.ts (5 tests) 2ms
+ ✓ |server:unit| src/cores/storage.core.spec.ts (4 tests) 2ms
+ ✓ |server:unit| src/controllers/app.controller.spec.ts (4 tests) 212ms
+ ✓ |server:unit| src/controllers/maintenance.controller.spec.ts (2 tests) 141ms
+ ✓ |server:unit| src/utils/fetch.spec.ts (1 test) 3ms
+ ✓ |server:unit| src/controllers/download.controller.spec.ts (2 tests) 131ms
+ ❯ |server:unit| src/dtos/album-response.dto.spec.ts (2 tests | 1 failed) 8ms
+   × mapAlbum > should set start and end dates 7ms
+     → expected 2023-02-22T05:06:29.716Z to deeply equal '2023-02-22T05:06:29.716Z'
+   ✓ mapAlbum > should not set start and end dates for empty assets 0ms
+(node:15491) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15493) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/api.service.spec.ts (3 tests) 2ms
+(node:15495) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/notification-admin.controller.spec.ts (2 tests) 139ms
+ ✓ |server:unit| src/controllers/server.controller.spec.ts (1 test) 117ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |server:unit| src/dtos/album-response.dto.spec.ts > mapAlbum > should set start and end dates
+AssertionError: expected 2023-02-22T05:06:29.716Z to deeply equal '2023-02-22T05:06:29.716Z'
+
+[32m- Expected:[39m 
+"2023-02-22T05:06:29.716Z"
+
+[31m+ Received:[39m 
+2023-02-22T05:06:29.716Z
+
+ ❯ src/dtos/album-response.dto.spec.ts:14:27
+     12|       .build();
+     13|     const dto = mapAlbum(getForAlbum(album));
+     14|     expect(dto.startDate).toEqual(startDate.toISOString());
+       |                           ^
+     15|     expect(dto.endDate).toEqual(endDate.toISOString());
+     16|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |server:unit| src/services/metadata.service.spec.ts > MetadataService > handleSidecarWrite > should write tags
+AssertionError: expected "spy" to be called with arguments: [ …(2) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[33m@@ -1,9 +1,9 @@[90m
+[2m  [[22m
+[2m    "/data/12/34/thumbs/a3/8d/a38ddb21-195f-478f-a94c-8341bf3eecd4.jpg",[22m
+[2m    {[22m
+[32m-     "DateTimeOriginal": "2023-11-21T22:56:12.196-06:00",[90m
+[31m+     "DateTimeOriginal": null,[90m
+[2m      "Description": "this is a description",[22m
+[2m      "GPSLatitude": 12,[22m
+[2m      "GPSLongitude": 12,[22m
+[2m      "ImageDescription": "this is a description",[22m
+[2m    },[22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+ ❯ src/services/metadata.service.spec.ts:1990:40
+    1988|         }),
+    1989|       ).resolves.toBe(JobStatus.Success);
+    1990|       expect(mocks.metadata.writeTags).toHaveBeenCalledWith(asset.file…
+       |                                        ^
+    1991|         DateTimeOriginal: date,
+    1992|         Description: description,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |server:unit| src/services/person.service.spec.ts > PersonService > mapFace > should map a face
+AssertionError: expected { …(9) } to deeply equal { boundingBoxX1: 100, …(8) }
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -12,9 +12,9 @@[39m
+[2m      "id": "8955c6fe-f474-4235-b3f8-a31294eeb8a6",[22m
+[2m      "isFavorite": false,[22m
+[2m      "isHidden": false,[22m
+[2m      "name": "person",[22m
+[2m      "thumbnailPath": "/data/thumbs/person-thumbnail.jpg",[22m
+[32m-     "updatedAt": "2026-01-15T01:00:10.717Z",[39m
+[31m+     "updatedAt": 2026-01-15T01:00:10.717Z,[39m
+[2m    },[22m
+[2m    "sourceType": "machine-learning",[22m
+[2m  }[22m
+
+ ❯ src/services/person.service.spec.ts:1350:53
+    1348|       const face = AssetFaceFactory.from().person(person).build();
+    1349| 
+    1350|       expect(mapFaces(getForAssetFace(face), auth)).toEqual({
+       |                                                     ^
+    1351|         boundingBoxX1: 100,
+    1352|         boundingBoxX2: 200,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |server:unit| src/services/search.service.spec.ts > SearchService > getExploreData > should get recent assets and assets by city and tag
+AssertionError: expected [ { …(2) }, …(1) ] to deeply equal [ { …(2) }, …(1) ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -9,11 +9,11 @@[39m
+[2m            "duplicateId": null,[22m
+[2m            "duration": null,[22m
+[2m            "exifInfo": {[22m
+[2m              "city": "city",[22m
+[2m              "country": "country",[22m
+[32m-             "dateTimeOriginal": 2026-01-15T01:00:03.712Z,[39m
+[31m+             "dateTimeOriginal": "2026-01-15T01:00:03.712Z",[39m
+[2m              "description": "",[22m
+[2m              "exifImageHeight": 420,[22m
+[2m              "exifImageWidth": 42,[22m
+[2m              "exposureTime": null,[22m
+[2m              "fNumber": 1.7,[22m
+[33m@@ -23,11 +23,11 @@[39m
+[2m              "latitude": 42,[22m
+[2m              "lensModel": null,[22m
+[2m              "longitude": 69,[22m
+[2m              "make": "Google",[22m
+[2m              "model": "Pixel 7",[22m
+[32m-             "modifyDate": 2026-01-15T01:00:03.712Z,[39m
+[31m+             "modifyDate": "2026-01-15T01:00:03.712Z",[39m
+[2m              "orientation": "1",[22m
+[2m              "projectionType": null,[22m
+[2m              "rating": 4,[22m
+[2m              "state": "state",[22m
+[2m              "timeZone": "UTC-6",[22m
+[33m@@ -51,11 +51,11 @@[39m
+[2m            "owner": {[22m
+[2m              "avatarColor": "blue",[22m
+[2m              "email": "test@immich.cloud",[22m
+[2m              "id": "e7395c75-1709-4e67-9797-78bd0e1793ee",[22m
+[2m              "name": "Test User",[22m
+[32m-             "profileChangedAt": 2026-01-15T01:00:03.712Z,[39m
+[31m+             "profileChangedAt": "2026-01-15T01:00:03.712Z",[39m
+[2m              "profileImagePath": "",[22m
+[2m            },[22m
+[2m            "ownerId": "e7395c75-1709-4e67-9797-78bd0e1793ee",[22m
+[2m            "people": [],[22m
+[2m            "resized": true,[22m
+[33m@@ -81,11 +81,11 @@[39m
+[2m            "duplicateId": null,[22m
+[2m            "duration": null,[22m
+[2m            "exifInfo": {[22m
+[2m              "city": "city",[22m
+[2m              "country": "country",[22m
+[32m-             "dateTimeOriginal": 2026-01-15T01:00:03.712Z,[39m
+[31m+             "dateTimeOriginal": "2026-01-15T01:00:03.712Z",[39m
+[2m              "description": "",[22m
+[2m              "exifImageHeight": 420,[22m
+[2m              "exifImageWidth": 42,[22m
+[2m              "exposureTime": null,[22m
+[2m              "fNumber": 1.7,[22m
+[33m@@ -95,11 +95,11 @@[39m
+[2m              "latitude": 42,[22m
+[2m              "lensModel": null,[22m
+[2m              "longitude": 69,[22m
+[2m              "make": "Google",[22m
+[2m              "model": "Pixel 7",[22m
+[32m-             "modifyDate": 2026-01-15T01:00:03.712Z,[39m
+[31m+             "modifyDate": "2026-01-15T01:00:03.712Z",[39m
+[2m              "orientation": "1",[22m
+[2m              "projectionType": null,[22m
+[2m              "rating": 4,[22m
+[2m              "state": "state",[22m
+[2m              "timeZone": "UTC-6",[22m
+[33m@@ -123,11 +123,11 @@[39m
+[2m            "owner": {[22m
+[2m              "avatarColor": "blue",[22m
+[2m              "email": "test@immich.cloud",[22m
+[2m              "id": "e7395c75-1709-4e67-9797-78bd0e1793ee",[22m
+[2m              "name": "Test User",[22m
+[32m-             "profileChangedAt": 2026-01-15T01:00:03.712Z,[39m
+[31m+             "profileChangedAt": "2026-01-15T01:00:03.712Z",[39m
+[2m              "profileImagePath": "",[22m
+[2m            },[22m
+[2m            "ownerId": "e7395c75-1709-4e67-9797-78bd0e1793ee",[22m
+[2m            "people": [],[22m
+[2m            "resized": true,[22m
+
+ ❯ src/services/search.service.spec.ts:92:22
+     90|       const result = await sut.getExploreData(auth);
+     91| 
+     92|       expect(result).toEqual(expectedResponse);
+       |                      ^
+     93|     });
+     94|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |server:unit| src/services/view.service.spec.ts > ViewService > getAssetsByOriginalPath > should return assets by original path
+AssertionError: expected [ { …(32) }, { …(32) } ] to deeply equal [ { …(32) }, { …(32) } ]
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -24,11 +24,11 @@[39m
+[2m      "owner": {[22m
+[2m        "avatarColor": "blue",[22m
+[2m        "email": "test@immich.cloud",[22m
+[2m        "id": "2f385c89-b9c3-4291-834f-3fe3756b8bac",[22m
+[2m        "name": "Test User",[22m
+[32m-       "profileChangedAt": 2026-01-15T01:00:03.379Z,[39m
+[31m+       "profileChangedAt": "2026-01-15T01:00:03.379Z",[39m
+[2m        "profileImagePath": "",[22m
+[2m      },[22m
+[2m      "ownerId": "2f385c89-b9c3-4291-834f-3fe3756b8bac",[22m
+[2m      "people": [],[22m
+[2m      "resized": true,[22m
+[33m@@ -65,11 +65,11 @@[39m
+[2m      "owner": {[22m
+[2m        "avatarColor": "blue",[22m
+[2m        "email": "test@immich.cloud",[22m
+[2m        "id": "b1270a37-4ce5-4bc0-960f-8a7e089efe23",[22m
+[2m        "name": "Test User",[22m
+[32m-       "profileChangedAt": 2026-01-15T01:00:03.379Z,[39m
+[31m+       "profileChangedAt": "2026-01-15T01:00:03.379Z",[39m
+[2m        "profileImagePath": "",[22m
+[2m      },[22m
+[2m      "ownerId": "b1270a37-4ce5-4bc0-960f-8a7e089efe23",[22m
+[2m      "people": [],[22m
+[2m      "resized": true,[22m
+
+ ❯ src/services/view.service.spec.ts:46:22
+     44| 
+     45|       const result = await sut.getAssetsByOriginalPath(authStub.admin,…
+     46|       expect(result).toEqual(mockAssetReponseDto);
+       |                      ^
+     47|       await expect(mocks.view.getAssetsByOriginalPath(authStub.admin.u…
+     48|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  5 failed | 84 passed (89)
+      Tests  5 failed | 2216 passed | 2 skipped (2223)
+   Start at  12:00:03
+   Duration  41.60s (transform 5.95s, setup 0ms, collect 290.55s, tests 39.13s, environment 12ms, prepare 8.89s)
+
+ ELIFECYCLE  Test failed. See above for more details.

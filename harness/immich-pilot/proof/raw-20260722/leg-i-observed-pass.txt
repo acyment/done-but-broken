@@ -1,0 +1,17 @@
+== leg-i observed: acceptance run on BUGGY (pinned-commit) code, server pinned TZ=Australia/Sydney @2026-01-15T12:00:00+11:00 ==
+serving pid 15127 (started 08:49:45) >= newest src edit (08:49:40); ping OK
+...
+
+1 scenario (1 passed)
+3 steps (3 passed)
+0m00.149s (executing steps: 0m00.140s)
+exit=0
+
+== POST/GET and PUT/GET round-trips (buggy code, pinned clock) ==
+POST -> {"id":"d5e7afeb-fee2-4a5c-9e00-e1b70f36a51a","name":"Evidence RT","birthDate":"1948-03-17","thumbnailPath":"","isHidden":false,"isFavorite":false,"updatedAt":"2026-07-22T11:50:59.380Z"}
+GET  -> {"id":"d5e7afeb-fee2-4a5c-9e00-e1b70f36a51a","name":"Evidence RT","birthDate":"1948-03-17","thumbnailPath":"","isHidden":false,"isFavorite":false,"updatedAt":"2026-07-22T11:50:59.380Z"}
+PUT'48-03-17 then GET -> 1948-03-17
+
+== live column type ==
+ birthDate     | date                     |           |          | 
+    "person_birthDate_chk" CHECK ("birthDate" <= CURRENT_DATE)

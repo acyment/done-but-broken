@@ -1,0 +1,265 @@
+
+> immich@3.0.0 test /Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/server
+> vitest --config test/vitest.config.mjs -- --run
+
+
+ RUN  v3.2.4 /Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/server
+
+[tsconfig-paths] An error occurred while parsing "/Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/docs/tsconfig.json". See below for details. To disable this message, set the `ignoreConfigErrors` option to true.
+[tsconfig-paths] An error occurred while parsing "/Users/acyment/dev/hit-sdd-bench/harness/immich-pilot/substrate/immich/web/tsconfig.json". See below for details.
+ ✓ |server:unit| src/dtos/album-response.dto.spec.ts (2 tests) 5ms
+(node:15671) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15678) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15674) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15676) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15677) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15679) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15673) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15672) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15689) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/view.service.spec.ts (3 tests) 27ms
+ ✓ |server:unit| src/services/search.service.spec.ts (22 tests) 296ms
+ ✓ |server:unit| src/services/storage-template.service.spec.ts (32 tests) 664ms
+ ✓ |server:unit| src/services/album.service.spec.ts (63 tests) 1002ms
+ ✓ |server:unit| src/services/person.service.spec.ts (73 tests) 1129ms
+ ✓ |server:unit| src/services/auth.service.spec.ts (79 tests) 1552ms
+ ✓ |server:unit| src/services/asset-media.service.spec.ts (131 tests) 1686ms
+ ✓ |server:unit| src/services/metadata.service.spec.ts (116 tests) 1926ms
+ ✓ |server:unit| src/services/media.service.spec.ts (192 tests) 2223ms
+(node:15695) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15692) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15698) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15700) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15701) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15704) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15694) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15706) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15708) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/asset.service.spec.ts (52 tests) 595ms
+ ✓ |server:unit| src/services/library.service.spec.ts (71 tests) 667ms
+ ✓ |server:unit| src/services/transcoding.service.spec.ts (58 tests) 698ms
+ ✓ |server:unit| src/services/duplicate.service.spec.ts (29 tests) 380ms
+ ✓ |server:unit| src/controllers/asset.controller.spec.ts (43 tests) 702ms
+ ✓ |server:unit| src/services/database-backup.service.spec.ts (51 tests) 579ms
+ ✓ |server:unit| src/repositories/media.repository.spec.ts (32 tests) 1272ms
+   ✓ MediaRepository > applyEdits (multiple sequential edits) > should apply 180° rotation  328ms
+ ✓ |server:unit| src/services/notification.service.spec.ts (43 tests) 245ms
+ ✓ |server:unit| src/controllers/album.controller.spec.ts (11 tests) 207ms
+(node:15712) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15716) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15710) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15711) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15720) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15719) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15718) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/download.service.spec.ts (22 tests) 153ms
+ ✓ |server:unit| src/services/user.service.spec.ts (27 tests) 154ms
+(node:15724) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/repositories/email.repository.spec.ts (4 tests) 186ms
+ ✓ |server:unit| src/controllers/notification.controller.spec.ts (10 tests) 248ms
+ ✓ |server:unit| src/services/shared-link.service.spec.ts (28 tests) 174ms
+(node:15726) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/partner.controller.spec.ts (9 tests) 299ms
+ ✓ |server:unit| src/controllers/auth.controller.spec.ts (22 tests) 269ms
+ ✓ |server:unit| src/services/system-config.service.spec.ts (28 tests) 193ms
+ ✓ |server:unit| src/controllers/api-key.controller.spec.ts (10 tests) 195ms
+(node:15729) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15728) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15732) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15733) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15736) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15738) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15740) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/workflow.controller.spec.ts (10 tests) 282ms
+ ✓ |server:unit| src/controllers/user-admin.controller.spec.ts (12 tests) 297ms
+ ✓ |server:unit| src/controllers/memory.controller.spec.ts (18 tests) 317ms
+ ✓ |server:unit| src/controllers/search.controller.spec.ts (23 tests) 277ms
+ ✓ |server:unit| src/services/database.service.spec.ts (33 tests) 189ms
+ ✓ |server:unit| src/controllers/app.controller.spec.ts (4 tests) 205ms
+(node:15742) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/system-config.controller.spec.ts (9 tests) 216ms
+(node:15744) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/person.controller.spec.ts (22 tests) 187ms
+ ✓ |server:unit| src/controllers/tag.controller.spec.ts (7 tests) 183ms
+(node:15748) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15747) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15746) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15749) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15754) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15758) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15755) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/version.service.spec.ts (19 tests) 176ms
+ ✓ |server:unit| src/controllers/duplicate.controller.spec.ts (4 tests) 257ms
+ ✓ |server:unit| src/controllers/timeline.controller.spec.ts (6 tests) 287ms
+ ✓ |server:unit| src/services/job.service.spec.ts (26 tests) 171ms
+ ✓ |server:unit| src/maintenance/maintenance-worker.service.spec.ts (17 tests) 131ms
+ ✓ |server:unit| src/services/ocr.service.spec.ts (19 tests) 145ms
+(node:15760) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/tag.service.spec.ts (24 tests) 119ms
+(node:15762) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/plugin.controller.spec.ts (4 tests) 160ms
+ ✓ |server:unit| src/services/api-key.service.spec.ts (18 tests) 97ms
+(node:15764) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15766) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15770) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15767) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15772) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15773) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15776) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/memory.service.spec.ts (21 tests) 175ms
+ ✓ |server:unit| src/services/smart-info.service.spec.ts (23 tests) 174ms
+ ✓ |server:unit| src/services/cli.service.spec.ts (13 tests) 124ms
+ ✓ |server:unit| src/controllers/maintenance.controller.spec.ts (2 tests) 119ms
+ ✓ |server:unit| src/services/user-admin.service.spec.ts (14 tests) 98ms
+ ✓ |server:unit| src/controllers/notification-admin.controller.spec.ts (2 tests) 179ms
+ ✓ |server:unit| src/services/server.service.spec.ts (14 tests) 95ms
+(node:15778) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15780) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/hls.service.spec.ts (17 tests) 108ms
+ ✓ |server:unit| src/controllers/download.controller.spec.ts (2 tests) 212ms
+(node:15787) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15785) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15783) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15786) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15793) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15791) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/sync.controller.spec.ts (7 tests) 186ms
+ ✓ |server:unit| src/services/stack.service.spec.ts (19 tests) 236ms
+(node:15795) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/controllers/user.controller.spec.ts (9 tests) 167ms
+ ✓ |server:unit| src/controllers/asset-media.controller.spec.ts (10 tests | 2 skipped) 130ms
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should work (drain to stdout)
+bash exited (0)
+
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should throw on non-zero exit code
+bash exited (1)
+
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should accept stdin / output stdout
+cat exited (0)
+
+stdout | src/repositories/process.repository.spec.ts > ProcessRepository > createSpawnDuplexStream > should drain stdin on process exit
+bash exited (0)
+
+ ✓ |server:unit| src/repositories/process.repository.spec.ts (4 tests) 114ms
+ ✓ |server:unit| src/controllers/server.controller.spec.ts (1 test) 142ms
+ ✓ |server:unit| src/controllers/activity.controller.spec.ts (9 tests) 162ms
+ ✓ |server:unit| src/controllers/shared-link.controller.spec.ts (3 tests) 99ms
+(node:15797) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15799) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/queue.service.spec.ts (18 tests) 106ms
+ ✓ |server:unit| src/services/activity.service.spec.ts (13 tests) 63ms
+(node:15805) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15801) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15807) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15898) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15900) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15901) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/repositories/storage.repository.spec.ts (14 tests) 84ms
+ ✓ |server:unit| src/services/maintenance.service.spec.ts (9 tests) 86ms
+(node:15904) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/timeline.service.spec.ts (11 tests) 60ms
+ ✓ |server:unit| src/services/trash.service.spec.ts (10 tests) 77ms
+ ✓ |server:unit| src/services/storage.service.spec.ts (11 tests) 59ms
+ ✓ |server:unit| src/utils/mime-types.spec.ts (253 tests) 14ms
+ ✓ |server:unit| src/services/notification-admin.service.spec.ts (6 tests) 48ms
+ ✓ |server:unit| src/utils/editor.spec.ts (33 tests) 8ms
+ ✓ |server:unit| src/services/session.service.spec.ts (5 tests) 33ms
+ ✓ |server:unit| src/repositories/config.repository.spec.ts (33 tests) 16ms
+(node:15906) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/utils/transform.spec.ts (20 tests) 5ms
+ ✓ |server:unit| src/utils/duplicate.spec.ts (15 tests) 6ms
+ ✓ |server:unit| src/dtos/user.dto.spec.ts (4 tests) 4ms
+(node:15908) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/utils/request.spec.ts (6 tests) 2ms
+ ✓ |server:unit| src/utils/misc.spec.ts (16 tests) 4ms
+ ✓ |server:unit| src/utils/fetch.spec.ts (1 test) 3ms
+ ✓ |server:unit| src/utils/workflow.spec.ts (5 tests) 2ms
+ ✓ |server:unit| src/validation.spec.ts (3 tests) 3ms
+ ✓ |server:unit| src/services/partner.service.spec.ts (9 tests) 46ms
+ ✓ |server:unit| src/services/system-metadata.service.spec.ts (7 tests) 34ms
+ ✓ |server:unit| src/repositories/logging.repository.spec.ts (2 tests) 3ms
+ ✓ |server:unit| src/cores/storage.core.spec.ts (4 tests) 2ms
+(node:15910) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/map.service.spec.ts (4 tests) 23ms
+(node:15936) ExperimentalWarning: WASI is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ |server:unit| src/services/api.service.spec.ts (3 tests) 2ms
+
+ Test Files  89 passed (89)
+      Tests  2221 passed | 2 skipped (2223)
+   Start at  21:51:59
+   Duration  39.33s (transform 4.48s, setup 0ms, collect 283.59s, tests 24.73s, environment 11ms, prepare 8.18s)
+
