@@ -1,0 +1,88 @@
+Add a per-chain canonical base to `IgnoreInner`:
+
+```rust
+struct IgnoreInner {
+    // existing fields...
+
+    /// Canonical path passed to `add_parents`, if applicable.
+    absolute_base: Option<Arc<PathBuf>>,
+}
+```
+
+Initialize the builder’s root with:
+
+```rust
+absolute_base: None,
+```
+
+Propagate it in `add_child_path`:
+
+```rust
+absolute_base: self.inner.absolute_base.clone(),
+```
+
+Replace the existing `let mut ig = self.clone();` and loop with:
+
+```rust
+let mut base_inner = (*self.inner).clone();
+base_inner.absolute_base = Some(absolute_base.clone());
+base_inner.is_absolute_parent = false;
+
+let mut ig = Ignore {
+    inner: Arc::new(base_inner),
+};
+
+for parent in parents.into_iter().rev() {
+    let key = parent.as_os_str().to_os_string();
+
+    let cached = {
+        let compiled = self.inner.compiled.read().unwrap();
+        compiled.get(&key).and_then(|weak| weak.upgrade())
+    };
+    let reused = cached.is_some();
+
+    let mut inner = match cached {
+        Some(cached) => (*cached).clone(),
+        None => {
+            let (inner, err) = ig.add_child_path(parent);
+            if let Some(err) = err {
+                errs.add(err);
+            }
+            inner
+        }
+    };
+
+    // The parent link and base are chain-specific, so reattach them even
+    // when reusing a cached matcher.
+    inner.parent = Some(ig.clone());
+    inner.is_absolute_parent = true;
+    inner.absolute_base = Some(absolute_base.clone());
+
+    if inner.opts.require_git && inner.opts.git_ignore {
+        inner.has_git =
+            parent.join(".git").exists() || parent.join(".jj").exists();
+    }
+
+    let inner = Arc::new(inner);
+
+    if !reused {
+        self.inner
+            .compiled
+            .write()
+            .unwrap()
+            .insert(key, Arc::downgrade(&inner));
+    }
+
+    ig = Ignore { inner };
+}
+```
+
+Implement `TODO(2)` as:
+
+```rust
+fn absolute_base(&self) -> Option<&Path> {
+    self.inner.absolute_base.as_deref().map(PathBuf::as_path)
+}
+```
+
+Cached matchers are cloned only as matcher records; their parent link and canonical base are rewritten for the current search-root chain, avoiding stale ancestry when multiple roots share the cache.

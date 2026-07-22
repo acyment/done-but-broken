@@ -1,0 +1,81 @@
+```rust
+#[derive(Clone, Debug)]
+pub(crate) struct RuleStack {
+    inner: Arc<RuleStackInner>,
+
+    // Per-root state. This must not live in RuleStackInner because ancestor
+    // inners are shared through the built cache.
+    canonical_base: Option<Arc<PathBuf>>,
+}
+```
+
+Update `add_ancestors`:
+
+```rust
+let mut errs = PartialErrorBuilder::default();
+let mut stack = self.clone();
+
+// Preserve the canonical root even when there are no ancestors.
+stack.canonical_base = Some(canonical.clone());
+
+for ancestor in ancestors.into_iter().rev() {
+    let key = ancestor.as_os_str().to_os_string();
+
+    let inner = {
+        let mut built = self.inner.built.write().unwrap();
+
+        if let Some(inner) = built.get(&key).and_then(|weak| weak.upgrade()) {
+            inner
+        } else {
+            let (mut inner, err) = stack.child_inner(ancestor);
+            errs.add(err);
+
+            inner.is_ancestor = true;
+
+            let inner = Arc::new(inner);
+            built.insert(key, Arc::downgrade(&inner));
+            inner
+        }
+    };
+
+    stack = RuleStack {
+        inner,
+        canonical_base: Some(canonical.clone()),
+    };
+}
+```
+
+Update `add_child`:
+
+```rust
+pub(crate) fn add_child<P: AsRef<Path>>(
+    &self,
+    dir: P,
+) -> (RuleStack, Option<Error>) {
+    let (inner, err) = self.child_inner(dir.as_ref());
+
+    (
+        RuleStack {
+            inner: Arc::new(inner),
+            canonical_base: self.canonical_base.clone(),
+        },
+        err,
+    )
+}
+```
+
+Implement `canonical_base`:
+
+```rust
+fn canonical_base(&self) -> Option<&Path> {
+    self.canonical_base.as_ref().map(|base| base.as_path())
+}
+```
+
+The builder’s top-level `RuleStack` construction must also initialize:
+
+```rust
+canonical_base: None,
+```
+
+The canonical base is stored on the `RuleStack` handle rather than the cached inner node, because the same cached ancestor matcher can be reused for different index roots with different canonical bases.

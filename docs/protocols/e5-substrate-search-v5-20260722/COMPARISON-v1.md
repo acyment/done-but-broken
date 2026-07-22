@@ -147,3 +147,13 @@ competence, not contamination). F5/F0–F4 records stand; mechanism goes to the 
 gitea #36483→#36485 is the sole F5-verified primary candidate; next vein = CLI reserves
 (ripgrep first), operator decision.** Evidence: `PAPERLESS-MEMOPROBE-RESULTS-v1.md` +
 `raw-paperless-memoprobe/`.
+
+**Update 2026-07-22 (ripgrep admission session, prereg frozen at `3cf49ff`): ripgrep KILLED
+for episode use at the probe — decisive bare-arm memorization tell (fable and opus both name
+ripgrep's ignore crate through a full scrub; opus reproduces the withheld identifiers) AND
+independently trap-weak (1/4 core falls-in vs the ≥2 bar; the one fall-in reproduces elided
+pre-fix text verbatim). F0–F4 screen had PASSED (`RIPGREP-SCREEN-v1.md`, latent class,
+culprit `d79add3` 2016-10-11); no F5 was run or needed — probe-before-build worked as
+intended. Kill-table line 30 → KILL. CLI slot stays open (next: restic #5767, anomaly check
+first, probe early); gitea remains the sole verified primary.** Evidence:
+`RIPGREP-MEMOPROBE-RESULTS-v1.md` + `raw-ripgrep-memoprobe/`.
