@@ -1,4 +1,4 @@
-# Immich pilot harness — build artifact (PRE-SPEND; **§7.2 gate FAILED — pilot blocked on operator decision**)
+# Immich pilot harness — build artifact (PRE-SPEND; **§7.2 gate FAILED; Batch A re-anchor verification KILLED option 1 — blocked on operator decision**)
 
 Governed by `docs/e5/E5-IMMICH-PILOT-PREREG-v2.md`. **No pilot has been run and none is
 authorized.** This directory holds build artifacts produced under the zero-external-spend gates
@@ -19,6 +19,7 @@ written; nothing here authorizes proceeding without a redesign + fresh review.
 | Gate §7.3 suite audit | DONE — ordinary server suite **89/89 files green** under `TZ=Australia/Sydney` agent-shell env (`proof/raw-20260722/ordinary-suite-agent-env.log`); zero TZ-flipping tests to quarantine (suite self-pins `TZ=UTC` — also the certified native-suite-blindness property). Pin-clock shim must never ride agent test commands (5 cross-realm artifacts otherwise; see finding §7.3 note) |
 | Gate §7.4 contamination | Checkout posture DONE — substrate is a single-commit shallow detached fetch of the parent; `git log` = exactly `4a8c3b6`, fix absent by construction. Network-policy statement for a live run: deferred with the redesign |
 | Gate §7.6 arm-parity manifest | N/A until a redesigned episode exists |
+| Batch A re-anchor verification (2026-07-22) | **RUN — KILL for option 1.** The fix is behaviorally a rename on every timestamp surface (its only real change is the birthDate date-only encoder, already zero-exposure), and every timestamp column is `timestamptz` → byte-identical API output under Sydney vs UTC, proven end-to-end on the shipped code. No trap exists to re-anchor on. Memo: `proof/BATCH-A-FINDING-v1.md`; evidence: `proof/raw-20260722-batch-a/`. Batches B–D moot; operator decides option 2 |
 
 ## Stack quick reference (`stack/`)
 
