@@ -134,8 +134,10 @@ the claim when only the covered (mirrored) part of the hidden surface improves;
 authoring firewalls (scenario authors never open hidden test files; the coverage map is
 built in a separate session); stated error rates plus a decision rule for the pilot
 floor gate; a pre-declared switch to an event-count primary if the pilot base rate
-saturates the yes/no outcome; class-level screening for the flaky interactive-fixture
-test class; a "claim takes the weaker reading" rule across all claim-relevant
+saturates the yes/no outcome; class-level screening AND a class-level in-run grading
+rule (majority-vote) for the flaky interactive-fixture test class; a pre-stated
+agreement threshold between the treatment's visible suite and the hidden grader, with a
+calibration-failure response; a "claim takes the weaker reading" rule across all claim-relevant
 sensitivity analyses; the primary defined as Claude-agent pairs only (Codex slice never
 pooled); a minimum-evidence rule so the Codex criterion can't pass vacuously;
 an exposure-normalized secondary for the risk-set asymmetry (treatment keeps more
