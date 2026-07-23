@@ -235,6 +235,31 @@ Net-new (ordered roughly by risk; all are OUR code in the fork):
    posture per our probe-first discipline (canary GUIDs present; probe still mandatory
    before spend).
 
+## 6. Subscription-auth terms-of-service check (2026-07-23, documentation-level, not legal advice)
+
+- **Anthropic / Claude Code on Max: sanctioned.** Consumer Terms §3 ban automated access
+  "except when you are accessing our Services via an Anthropic API Key or where we
+  otherwise explicitly permit it"; the explicit permission is the official docs'
+  `claude setup-token` → `CLAUDE_CODE_OAUTH_TOKEN`, described verbatim as "for CI
+  pipelines and scripts where browser login isn't available", Pro/Max/Team/Enterprise
+  required (code.claude.com/docs/en/authentication). The fork drives the official pinned
+  CLI with an officially minted token — the documented path. Anthropic's 2026 enforcement
+  targets third-party clients riding consumer OAuth against the API directly, which this
+  is not.
+- **OpenAI / Codex on Plus: permitted with conditions, discouraged as default.**
+  `codex exec` is officially documented for "repeatable workflows and pipelines", and
+  OpenAI's own CI/CD auth page documents the mounted-`auth.json` pattern the harness
+  uses — but states "The right way to authenticate automation is with an API key. Use
+  this guide only if you specifically need to run the workflow as your Codex account,"
+  with conditions: trusted private infrastructure, persistent refreshed auth.json,
+  **one machine / serialized job stream per copy**, never public repos
+  (developers.openai.com/codex/auth/ci-cd-auth). Local single-machine use meets every
+  stated condition. Riders for the build list: codex arm runs with one worker
+  (serialized); `auth.json` treated as a secret (excluded from run artifacts/telemetry).
+  Conservative option, operator's call: a small metered API-key budget for the GPT slice
+  destined for public write-ups. Residual: OpenAI's full consumer ToU blocks automated
+  readers; no benchmark-publication clause found in the readable versions.
+
 Honest-scope notes: everything above is engineering-planning output from a reading pass —
 no protocol is frozen here, no run is authorized, and the Stage-1 prereg draft (which
 inherits deltas D1-D10 and this build list) remains a separate, operator-authorized step.
