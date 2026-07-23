@@ -151,7 +151,71 @@ LinkedIn flagship material comes from.
    not here.
 6. Codex run-count authorization for the GPT slice.
 
-## 6. What this buys the public narrative
+## 6a. Addendum 2026-07-23 — verified frontier rosters and the gap map
+
+Verified from the papers' own HTML (not the deep-research reports):
+
+- **SWE-Milestone/EvoClaw:** Claude Sonnet/Opus 4.5 & 4.6, GPT-5.2/5.2-Codex/5.3-Codex,
+  Gemini 3/3.1 Pro, MiniMax M2.5, Kimi K2.5 — run through **Claude Code, Codex CLI, Gemini
+  CLI, OpenHands**. Measures the >80%→38.03% collapse; **tests no mitigation** (observes
+  post-hoc that "moderate, disciplined verification" correlates with better outcomes).
+- **TensorBench:** Claude Opus 4.7 & 4.6, GPT-5.5/5.4/5.3-Codex (xhigh), Gemini 3.1 Pro,
+  Qwen3-Coder-480B. **Opus 4.7 breaks pre-existing tests in 16% of patches** (27% for
+  4.6). No mitigation tested.
+- **SlopCodeBench (v2):** 15 agents incl. Opus 4.5–4.7, Sonnet 4.6, GPT-5.2–5.5, Composer 2,
+  GLM 5.1, Kimi K2.5/2.6, MiniMax M2.7. Best (GPT-5.5) = 14.8% strict checkpoints. Tested
+  **prompting-only** mitigations (anti-slop, plan-first): improve initial quality, **"do
+  not slow the degradation."**
+- **SWE-EVO:** 2025-era roster (GPT-5-08-07 etc.) — less relevant.
+
+**Gap map:** toy tasks × weak models has both breakage measurement AND the executable-gate
+cure (parent paper); frontier agents × realistic work has breakage measured three ways and
+**no verification-style mitigation ever tested**. The empty cell is our experiment. The
+frontier-null risk is therefore scale-dependent: real at function-level toys, effectively
+foreclosed at repo/checkpoint scale by published data.
+
+## 6b. Addendum 2026-07-23 — fork-target ranking (best codebase to build our two-arm OpenSpec probe on)
+
+Criteria: license; harness maturity; native fit for accumulating-spec chains with per-turn
+regression grading; agent pluggability (our roster = Claude Code + Codex CLI); ease of
+inserting the OpenSpec workspace layer identically in both arms; published frontier
+breakage at that scale (kills the null risk); run cost.
+
+1. **SlopCodeBench — `SprocketLab/slop-code-bench` (MIT, 91★, active; problems in
+   `gabeorlanski/scb-problems`, Apache-2.0).** The standout. Purpose-built for *iterative
+   specification refinement*; **strict scoring already re-runs all earlier checkpoints'
+   tests at every checkpoint** — our accumulated-surface hidden grader, pre-built;
+   Docker-isolated environments; **native agent configs for `claude_code` and `codex`**
+   (plus gemini/openhands/cursor/kimi); Jinja prompt templates → clean insertion point for
+   the OpenSpec workspace + per-checkpoint Gherkin scenario blocks, byte-identical across
+   arms; frontier breakage at this scale is published (best agent 14.8% strict). To
+   verify before prereg: whether checkpoint test results are visible to the agent by
+   default (arm-C requires hiding them; arm-T requires gating on them — likely a
+   prompt/environment config, confirm in `docs/evaluation/`); whether the Claude Code CLI
+   inside their Docker can ride subscription auth (cost lever).
+2. **SWE-Milestone — `DeepCommit-ai/SWE-Milestone` (MIT, 62★, active).** Already screened
+   by us 2026-07-21: mature harness, **native hidden-oracle test-masking**, QUALIFIED-GO
+   with recorded caveats (model-authored dependency DAG not per-edge verified; only 3/7
+   repos with stable public surface; ships an SRS). Repo-level realism, real agent CLIs,
+   frontier collapse published. Heavier per-run cost and a bigger Gherkin-authoring lift →
+   **Stage-2 flagship fork**, not the first build.
+3. **Parent 2607.01855.** Fork for *protocol and comparability numbers*, not
+   infrastructure: chat-completion scripts on function-level tasks; artifacts anonymized
+   and 403 to automation (operator browser check pending). Remains the source for the
+   optional cheapest dry run and for metric alignment.
+4. **EvoCode-Bench (2605.24110):** no public artifact found; GitHub's `EvoCodeBench` hits
+   are a **different 2024 benchmark with a colliding name** — flagged, do not confuse.
+5. **SWE-CI / TensorBench / FeatBench / TDAD:** no public harness found by search (SWE-CI
+   data figure-locked; TensorBench's substrate is a bespoke compiler repo — heavy,
+   single-domain; TDAD is a method paper). `SWE-EVO/SWE-EVO` (MIT, empty description)
+   exists but is low-signal — check only if needed.
+
+**Staging consequence:** Stage 1 re-anchors on a SlopCodeBench fork (checkpoint scale —
+frontier breakage guaranteed, harness ready) with the OpenSpec+Gherkin layer added
+identically in both arms and the parent's gate policy ported as arm-T; the parent-protocol
+toy dry run becomes optional. Stage 2 remains the SWE-Milestone-style repo-level flagship.
+
+## 7. What this buys the public narrative
 
 The post sequence becomes: (1) "the research is in" (verified literature, incl. the
 parent's own prose-vs-executable result); (2) "we ran the frontier version in a real
