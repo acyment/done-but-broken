@@ -215,6 +215,22 @@ frontier breakage guaranteed, harness ready) with the OpenSpec+Gherkin layer add
 identically in both arms and the parent's gate policy ported as arm-T; the parent-protocol
 toy dry run becomes optional. Stage 2 remains the SWE-Milestone-style repo-level flagship.
 
+**Prior-knowledge correction (operator-prompted, 2026-07-23):** SlopCodeBench, EvoClaw
+(SWE-Milestone's v1 name), and TDAD were already catalogued in this repo during the E4
+design phase — `E4-DESIGN-BRIEF.md` §12/§15 deferred "real-repo substrates (EvoClaw,
+rallly, SlopCodeBench)" to v2 behind an `E4SubstrateProvider` interface (never executed;
+no prior runs, so no contamination/precedent concerns), and
+`docs/research/executable-feedback-frontier-hardness-synthesis-v1.md` used their numbers
+(with the CORRECT SlopCodeBench v2 figures, corroborating our verification) to justify E4
+levers, calling SlopCodeBench the "closest published cousin; differentiate in docs". Two
+consequences: (1) the deep-research round partially re-found what the E4 literature pass
+already knew — future searches should grep `docs/research/` first; (2) a real design fork
+exists for Stage 1: fork *their* harness (agents+Docker+accumulated grading ready) vs plug
+SlopCodeBench problems into *our* E4 harness via the already-designed substrate-provider
+interface (our two-arm/OpenSpec/custody machinery native). To be decided in the
+pre-prereg verification pass after reading both codebases; the ranking above concerns
+their harness's forkability and stands either way.
+
 ## 7. What this buys the public narrative
 
 The post sequence becomes: (1) "the research is in" (verified literature, incl. the
