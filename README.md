@@ -13,9 +13,10 @@ answers — *before* it declares a task done, and seeing whether that reduces co
 > Spec-Driven Development**: agents driving work from an *authored* executable spec (e.g.
 > OpenSpec/Gherkin scenarios) run on every loop as the definition of done. What's below is early
 > evidence for the *executable-feedback mechanism* HIT-SDD relies on — **not** the full practice. After
-> the latest results, the immediate research step is shifting to a stricter operational question:
-> whether executable feedback reduces **regressions after several sequential changes in the same
-> brownfield repo** (see "What's next").
+> the latest results, the active next design is **E5 Stage 1**: whether executable acceptance
+> feedback reduces regressions that accumulate across a growing checkpoint chain, on a harder
+> brownfield substrate, inside a realistic OpenSpec/Gherkin workflow shared identically by both arms —
+> still a pre-registration draft, not yet frozen (see "What's next").
 
 ---
 
@@ -71,8 +72,10 @@ it does not author a spec.
 
 **Not yet:** *HIT-SDD proper.* The full practice — an agent developing against an **authored**
 executable spec (OpenSpec/Gherkin scenarios as the definition of done) — is **not** what these runs
-tested. It's the pre-registered future direction. Treat "HIT-SDD" throughout as the **vision/narrative
-frame**, never an experimental condition.
+tested. It's the pre-registered future direction. The next concrete step toward it, **E5 Stage 1**,
+tests the same prose-vs-executable contrast on a harder, growing-checkpoint brownfield substrate —
+still a pre-registration draft, not frozen (see "What's next"). Treat "HIT-SDD" throughout as the
+**vision/narrative frame**, never an experimental condition.
 
 ## How the work is structured
 
@@ -123,11 +126,35 @@ proto-paper §7.
 
 ## What's next (drafted, not yet run)
 
-Drafted or gated in `docs/protocols/`:
+Drafted or gated in `docs/protocols/` and `docs/e5/`:
 
-- **Sequential brownfield regression measurement** — the immediate pivot after the latest results:
-  measure whether agents introduce true regressions after several changes in the same real repo, then
-  test whether official executable feedback reduces that regression accumulation.
+- **E5 Stage 1 — executable acceptance scenarios on a harder, growing-checkpoint brownfield substrate
+  (the current next causal-run design).** Same causal variable as above — supplied executable
+  acceptance feedback vs. none — carried onto per-checkpoint chains on a SlopCodeBench-fork substrate.
+  Both arms work inside the **same shared** OpenSpec/Gherkin workspace and see **byte-identical,
+  pre-authored** scenario text; only the treatment arm gets that content wired to a runner (an
+  on-demand runner while working, plus one guaranteed completion-time run). OpenSpec here is a shared
+  task-environment property present identically in both arms, **never** a between-arm comparator —
+  this is not "durable executable specs vs. a disposable spec-as-prompt workflow"; it stays the same
+  executable-vs-prose contrast, just on harder ground (see `AGENTS.md`'s `e1-openspec-workflow-v0`
+  scoping). Pre-authoring and freezing the scenario text (rather than having the agent author it) is
+  itself a design choice made to sidestep the oracle-authoring-fidelity bottleneck the authored-spec
+  calibration exposed (next bullet). **Status: pre-registration draft, not frozen — freeze
+  candidate.** A Step-6 adversarial re-attack (no fatal findings; 15 major + 9 minor) was applied
+  into a resolved v2 draft; a seven-model external Three-Amigos panel then reviewed it (all seven
+  verdicts "fix first"; the structural branch did not fire) and the reconciliation produced the v3
+  freeze candidate. What remains before freeze: operator ratification of the named inputs, then
+  seal — and every run rung, including the memorization-probe and control-only-pilot rungs, still
+  requires its own explicit authorization after that.
+  ([`E5-STAGE1-PREREG-DRAFT-v3.md`](docs/e5/E5-STAGE1-PREREG-DRAFT-v3.md); re-attack findings:
+  [`E5-STAGE1-REATTACK-v1.md`](docs/e5/E5-STAGE1-REATTACK-v1.md); reconciliation:
+  [`docs/e5/amigos-1/RECONCILIATION-v1.md`](docs/e5/amigos-1/RECONCILIATION-v1.md))
+  *(This shared-environment scoping is specific to E5 Stage 1; it doesn't carry over to the directions
+  below, none of which have been re-designed under it — a future stage that genuinely needs a
+  comparator-arm spec-format design isn't foreclosed by this.)*
+- **Sequential brownfield regression measurement (E3)** — measure whether agents introduce true
+  regressions after several changes in the same real repo, then test whether executable feedback
+  reduces that regression accumulation.
   ([`e3-brownfield-regression-after-several-changes-design-v1.md`](docs/protocols/e3-brownfield-regression-after-several-changes-design-v1.md))
 - **Full HIT-SDD (authored specs, OpenSpec/Gherkin)** — still the north-star product study, but no
   longer the next immediate causal run after the authored-spec calibration exposed oracle-authoring
