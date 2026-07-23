@@ -1,6 +1,6 @@
 # E5 Stage-1 amigos reconciliation brief v1 — paste-ready, fresh session
 
-Purpose: reconcile the six external Three-Amigos reviews of prereg DRAFT v2 into (a) a
+Purpose: reconcile the seven external Three-Amigos reviews of prereg DRAFT v2 into (a) a
 reconciliation record and (b) the freeze-candidate draft v3, per
 `docs/methodology/THREE-AMIGOS-DESIGN-REVIEW-v1.md` ("the main loop reconciles — it holds
 the ground truth"). This is the last gate before operator ratification + freeze.
@@ -13,10 +13,11 @@ existence-check sweeps; no codex; zero model spend (reads + writing only).
 
 **Preconditions — do not start reconciliation until all hold:**
 - `docs/e5/E5-STAGE1-PREREG-DRAFT-v2.md` exists and is committed.
-- All six raw reviewer outputs exist under `docs/e5/amigos-1/` (Product: kimi-2.6-instant,
-  chatgpt-sol-5.6; Development: qwen-3.8, glm-5.2; Testing/QA: deepseek-4-pro,
-  claude-fable-5-max) and were committed VERBATIM in a commit that precedes this session's
-  work (record that commit hash — the raw archive must be frozen before synthesis).
+- All seven raw reviewer outputs exist under `docs/e5/amigos-1/` (Product:
+  kimi-2.6-instant, chatgpt-sol-5.6; Development: qwen-3.8, glm-5.2; Testing/QA:
+  deepseek-4-pro, claude-fable-5-max, gemini-3.1-pro — the QA trio per the prompts doc
+  §1) and were committed VERBATIM in a commit that precedes this session's work (record
+  that commit hash — the raw archive must be frozen before synthesis).
 - If any output is missing, STOP and report; do not reconcile a partial panel silently.
 
 Paste the fenced block below into the fresh session verbatim.
@@ -24,7 +25,7 @@ Paste the fenced block below into the fresh session verbatim.
 ---
 
 ```
-Reconcile the six external Three-Amigos reviews of the Stage-1 prereg draft v2. Your
+Reconcile the seven external Three-Amigos reviews of the Stage-1 prereg draft v2. Your
 role: the reconciler who holds the ground truth — you have repo access and the reviewers
 did not, so you verify before you adopt, and you neither rubber-stamp the reviewers nor
 defend the draft. Zero model spend: reads and writing only. No runs, no builds, no
@@ -41,7 +42,7 @@ corpus work, no freeze.
 3. `docs/e5/E5-STAGE1-PREREG-DRAFT-v2.md` — the document under review.
 4. `docs/e5/E5-STAGE1-AMIGOS-PROMPTS-v1.md` — what each reviewer was told (roles, the
    shared context block, settled-inputs list, output format, the same-family caveat).
-5. The six raw outputs in `docs/e5/amigos-1/` — the input data.
+5. The seven raw outputs in `docs/e5/amigos-1/` — the input data.
 6. As needed: `docs/e5/E5-STAGE1-REATTACK-v1.md` (what was already fixed and why),
    `docs/e5/adversarial-1/SYNTHESIS-v1.md` (D1–D10),
    `docs/e5/E5-FORKPLUG-VERDICT-v1.md` (code-verified facts).
@@ -59,7 +60,9 @@ corpus work, no freeze.
   escalated to the operator, not resolved silently.
 - Same-family caveat: a claude-fable-5-max finding that merely echoes the draft
   author's own framing carries reduced independent weight; the same finding raised
-  independently by any non-Anthropic reviewer restores full weight.
+  independently by any non-Anthropic reviewer restores full weight. A QA finding raised
+  by both deepseek-4-pro and gemini-3.1-pro is full-weight within-role convergence
+  between two non-Anthropic families — the reason QA carries a third reviewer.
 - Do not average verdicts. Reconcile findings one by one.
 
 ### The procedure
@@ -69,7 +72,7 @@ corpus work, no freeze.
    deviations (wrong format, browsing, visible confusion about the task). A reviewer
    whose output shows it misunderstood the design is still ingested, with the
    misunderstanding recorded — it is evidence about the draft's clarity.
-2. **Deduplicate into a findings ledger.** Merge overlapping findings across all six
+2. **Deduplicate into a findings ledger.** Merge overlapping findings across all seven
    outputs into single ledger entries. For each: sources (which reviewers, which roles),
    convergence class (within-role / across-role / solo), the draft section it lands on,
    and the reviewers' proposed changes.
@@ -80,7 +83,7 @@ corpus work, no freeze.
 4. **Insisted requirements.** Collect every reviewer's insisted requirements/guardrails
    (section C of their outputs). Each is either folded into v3 or declined with reasons
    — a table, no silent drops.
-5. **Verdict-line tally.** Record the six verdict lines as stated. If ≥2 reviewers —
+5. **Verdict-line tally.** Record the seven verdict lines as stated. If ≥2 reviewers —
    or any two from different roles — raise the same STRUCTURAL concern (one that
    invalidates the estimand, the referee architecture, or the staging rather than
    amending a rule), do NOT produce a freeze candidate: write the reconciliation doc,

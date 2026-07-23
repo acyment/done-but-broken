@@ -1,10 +1,11 @@
 # E5 Stage-1 Three-Amigos external panel — self-contained prompts v1
 
-Six external thinking models review the RESOLVED Stage-1 prereg draft (v2), three roles ×
-two models per role, per `docs/methodology/THREE-AMIGOS-DESIGN-REVIEW-v1.md`. The
-reviewers have NO repo access — every prompt is self-contained once assembled. Two models
-share each role so convergence-within-role and convergence-across-role are both readable
-at reconciliation (convergent findings rank highest).
+Seven external thinking models review the RESOLVED Stage-1 prereg draft (v2), three
+roles — two models per role, three for Testing/QA — per
+`docs/methodology/THREE-AMIGOS-DESIGN-REVIEW-v1.md`. The reviewers have NO repo access —
+every prompt is self-contained once assembled. Multiple models share each role so
+convergence-within-role and convergence-across-role are both readable at reconciliation
+(convergent findings rank highest).
 
 **Do not run this panel until `docs/e5/E5-STAGE1-PREREG-DRAFT-v2.md` exists** (revision
 brief: `docs/e5/E5-STAGE1-V2-REVISION-BRIEF-v1.md`). The amigos review the resolved
@@ -22,12 +23,16 @@ design, not v1.
 | GLM 5.2 | Development | Fresh chat; deep-thinking mode ON; no web search |
 | DeepSeek 4 Pro | Testing/QA | Fresh chat; DeepThink ON; no web search |
 | Claude Fable 5 | Testing/QA | claude.ai fresh chat; extended thinking, **max** effort; NO project/repo context, memory OFF |
+| Gemini 3.1 Pro | Testing/QA | Fresh chat; deepest thinking mode the tier offers; no web search |
 
-Pairing rationale: each role has two model families (Product: Moonshot + OpenAI; Dev:
-Alibaba + Zhipu; QA: DeepSeek + Anthropic) so no role depends on one family's blind
-spots. Recorded caveat for reconciliation: the draft was authored with Claude assistance,
-so Fable-5 findings that merely agree with the main loop carry less independent weight
-than DeepSeek's; Fable is paired with DeepSeek in QA for exactly that reason.
+Pairing rationale: each role spans multiple model families (Product: Moonshot + OpenAI;
+Dev: Alibaba + Zhipu; QA: DeepSeek + Anthropic + Google) so no role depends on one
+family's blind spots. Recorded caveat for reconciliation: the draft was authored with
+Claude assistance, so Fable-5 findings that merely agree with the main loop carry less
+independent weight than DeepSeek's or Gemini's. QA carries a THIRD reviewer (Gemini 3.1
+Pro, added 2026-07-23) precisely to offset that discount: a QA finding raised by both
+DeepSeek and Gemini is full-weight within-role convergence between two non-Anthropic
+families.
 
 ## 2. Assembly instructions (operator)
 
@@ -35,7 +40,7 @@ Each prompt = three parts concatenated, in this order:
 
 1. The ROLE PROMPT for that model's role (§4, §5, or §6 below) — identical for both
    models sharing the role.
-2. The SHARED CONTEXT BLOCK (§3) — identical for all six, pasted where marked.
+2. The SHARED CONTEXT BLOCK (§3) — identical for all seven, pasted where marked.
 3. The full text of `docs/e5/E5-STAGE1-PREREG-DRAFT-v2.md`, pasted where marked.
 
 Protocol (binding, per the methodology doc):
@@ -50,7 +55,7 @@ Protocol (binding, per the methodology doc):
 
 ---
 
-## 3. SHARED CONTEXT BLOCK (identical for all six; paste where the role prompt says)
+## 3. SHARED CONTEXT BLOCK (identical for all seven; paste where the role prompt says)
 
 ```
 === SHARED CONTEXT (verified facts; treat as given) ===
@@ -261,7 +266,7 @@ E. Any new factual claims you introduced, each marked [VERIFY].
 
 ---
 
-## 6. ROLE PROMPT — Testing/QA (DeepSeek 4 Pro; Claude Fable 5 max)
+## 6. ROLE PROMPT — Testing/QA (DeepSeek 4 Pro; Claude Fable 5 max; Gemini 3.1 Pro)
 
 ```
 You are the Testing/QA reviewer in a Three-Amigos-style design review of an experiment
@@ -319,11 +324,12 @@ E. Any new factual claims you introduced, each marked [VERIFY].
 
 ## 7. After collection (pointer only — not part of this doc's scope)
 
-Archive all six raw outputs verbatim under `docs/e5/amigos-1/`, commit the archive, then
+Archive all seven raw outputs verbatim under `docs/e5/amigos-1/`, commit the archive, then
 run reconciliation in a separate main-loop session per the methodology doc: convergent
 findings rank highest (within-role and across-role), every insisted requirement is folded
 into the prereg or declined on record, disagreements adjudicated explicitly, and any
 reviewer factual claim existence-checked before use. Fable-5 findings that merely echo
-the main loop's own views are weighted below DeepSeek's per the §1 same-family caveat.
+the main loop's own views are weighted below DeepSeek's and Gemini's per the §1
+same-family caveat.
 Then: operator ratifies §14 inputs → freeze (hashes + commit). Every run rung after that
 still requires separate explicit operator authorization.
