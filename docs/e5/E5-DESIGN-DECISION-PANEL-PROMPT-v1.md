@@ -1,47 +1,4 @@
-Here is the experimental design for Part A, built to survive hostile practitioner scrutiny by strictly isolating executability while holding workflow, specs, and agent identity constant.
-
-### 1. Substrate and Task Structure
-**Harness:** We will fork the open-source MIT-licensed SlopCodeBench harness (arXiv:2603.24755), which already provides Docker isolation and native adapters for Claude Code and Codex CLI in their natural agentic modes.
-
-**Task Structure:** We will construct 100 evolving repository-level task sequences (10 turns each, 1,000 total agent turns per agent). The substrate will be a moderately complex Python codebase (e.g., a markdown-to-HTML parser or financial calculation library). Each "turn" presents a new requirement that is additive but interacts with prior behavior (e.g., Turn 3 adds table parsing, which must not break the inline formatting from Turn 1). 
-
-**Workflow:** All work happens via OpenSpec. Specifications and change deltas exist as markdown files in the repo, with scenarios written in standard Given/When/Then format.
-
-### 2. The Two Groups and Exactly What Differs
-The *only* difference between groups is whether the OpenSpec scenarios are inert text or executable checks that push back on the agent. 
-
-*   **Group A (Control - Text Only):** The OpenSpec scenarios exist purely as readable markdown. The agent is instructed to follow the OpenSpec workflow and read the specs to understand requirements.
-*   **Group B (Treatment - Executable Gate):** The identical OpenSpec markdown exists, but OpenSpec's tooling is wired to `pytest-bdd`. When the agent completes a turn, the harness runs the executable scenarios. If they fail, the agent is fed the test failure output and granted exactly one retry with rollback (matching the protocol in arXiv:2607.01855). 
-
-### 3. What the Agent Sees Each Step
-*   **System Prompt (Both):** "You are working on a repository using OpenSpec. Implement the change delta in `openspec/changes/turn-N.md`. Ensure your code aligns with the specifications in `openspec/specs/`."
-*   **Group A (Control):** The agent reads the markdown spec, writes code, and signals task completion. It receives no automated behavioral feedback. (To control for iteration time, the agent is allowed one "self-reflection" turn where it can review its own diff against the text spec before finalizing).
-*   **Group B (Treatment):** The agent reads the markdown spec, writes code, and runs `openspec verify`. 
-    *   *If pass:* Task completes.
-    *   *If fail:* The harness intercepts, rolls back the code to the last commit, and sends the agent a message: "Verification failed with the following output: [pytest-bdd trace]. Please correct your implementation." The agent retries, then completes.
-
-### 4. How Breakage is Measured (and on what surface)
-**The Referee Surface:** Breakage is measured via a frozen, hidden "Referee Test Suite" that the agents *never* see. This suite contains comprehensive edge-case tests for all 10 turns, written by the experimenters prior to the run. 
-
-**Measurement:** After the agent completes Turn $N$, the harness applies the agent's final code state to the hidden Referee Suite. 
-We measure **Silent Breakage Rate**: the percentage of Referee tests for Turns $1$ through $N-1$ that passed at the end of Turn $N-1$ but fail at the end of Turn $N$. (Per arXiv:2603.24755 and arXiv:2503.15223, we expect agents to pass their own visible tests while failing hidden ones, making this hidden grading essential).
-
-### 5. Sample Sizes with Power Argument
-We will run 100 task sequences per group, across 2 agents (Claude Opus 4.7, GPT-5.5-Codex). Total: 400 sequences, 4,000 turns.
-
-**Power Argument:** Literature anchor arXiv:2606.05570 (TensorBench) shows frontier agents break previously-passing tests in ~16% of patches. TDAD (arXiv:2603.17973) showed executable test context roughly quartered regressions (6.08% → 1.82%), while text instructions made it worse (9.94%). 
-Assuming a baseline breakage rate of 15% in Group A, we want to detect a reduction to 7.5% in Group B. Using a two-proportion z-test ($\alpha = 0.05$, power = 0.80), we need ~82 sequences per group to detect this absolute 7.5% difference. Our $n=100$ provides ample power to detect a practically significant mitigation effect, and honest nulls will be published if the effect is smaller.
-
-### 6. Biggest Validity Threat and Neutralization
-**Threat: Confounding "Executability" with "Iteration Budget."** 
-Hostile critics will argue: *"Group B didn't break things because it got to see test failures and iterate; Group A was artificially handicapped by a single shot attempt."* If we don't neutralize this, we aren't proving executability is the cure; we're just proving retries help.
-
-**Neutralization:** Group A (Control) is granted an equivalent iteration budget, but without executable feedback. After Group A signals completion, the harness prompts: *"Review your diff against the OpenSpec text scenarios. You have one retry to fix any issues you find."* Thus, both groups get two attempts at every turn. Group A relies on reading text to self-correct; Group B relies on executable pushback. This perfectly isolates the causal variable: executability.
-
-### 7. Expected Cost Profile
-*   **Compute/Infrastructure:** Minimal. SlopCodeBench harness runs locally via Docker.
-*   **API/Subscription Costs:** Low. We use Claude Code (unmetered vendor subscription) and Codex CLI (subscription-covered). Assuming an average of ~50k tokens per turn (including retries), 4,000 turns yields ~200M tokens. This fits well within subscription rate limits over a 2-week execution window, resulting in $0 marginal API spend.
-*   **Engineering Time:** ~2 weeks to fork the harness, write the 100 sequences and hidden Referee suite, and wire OpenSpec to `pytest-bdd` for Group B. Pre-registration of the Referee suite is the highest-risk bottleneck.# E5 continuation-design adversarial panel — operator-run prompt v1
+# E5 continuation-design adversarial panel — operator-run prompt v1
 
 Drafted 2026-07-23, after the continuation design note (`e537b50` state). Purpose:
 direction-level adversarial evaluation of the Stage-1 design decision by several external
