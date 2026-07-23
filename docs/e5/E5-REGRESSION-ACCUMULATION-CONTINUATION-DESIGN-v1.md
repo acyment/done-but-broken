@@ -238,3 +238,27 @@ parent's own prose-vs-executable result); (2) "we ran the frontier version in a 
 spec-driven workflow — here's the curve" (Stage 1); (3) "here's it working on a real
 system" (Stage 2, the tool's proof-of-concept). Each post stands on frozen, replayable,
 honestly-reported runs — the credibility asset that survives hostile comments.
+
+## 8. Addendum 2026-07-23 — adversarial-1 panel verdicts (design deltas accepted)
+
+The seven-model adversarial panel (`docs/e5/adversarial-1/`, synthesis
+`docs/e5/adversarial-1/SYNTHESIS-v1.md`) unanimously reproduced this design's skeleton in
+blind Part A (7/7 fork SlopCodeBench) and unanimously broke two pieces of §3 as written:
+the hidden grader must NOT include the accumulated scenario suite arm T optimizes against
+(primary moves to a treatment-hidden surface: harness checkpoint tests + authored held-out
+probes, with a pre-registered coverage map and covered/uncovered split), and the ported
+keep-if-≥-as-many gate bundles feedback with selection (primary becomes C-final vs T-final
+with a matched revise turn in arm C and no harness keep-best; all attempts snapshotted and
+referee-graded for a deterrence/feedback/selection decomposition; the parent's gate policy
+survives only as a secondary continuity analysis). Also accepted: self-verification allowed
+in both arms and instrumented (ITT primary; pilot measures arm-C mechanization rate, which
+conditions N); arm C structurally contains no execution infrastructure; the §3 pilot
+escalation becomes a finite numeric control-conditioned ladder with separate pools and a
+new prereg per escalation ("rather than buy a null" retired); precise regression risk-set /
+lifecycle / flake / tamper / clustering / scheduling machinery goes into the prereg; the
+"faithful continuation" framing of §3's title weakens to "conceptual extension with adopted
+design elements" (the accumulated-surface gate is a stronger treatment than the parent's
+original-tests-only gate — no cross-paper effect-size claims). Open operator decision:
+on-demand runner in arm T vs post-hoc gate only (recommendation: on-demand + guaranteed
+completion-time run). Deltas D1–D10 in the synthesis are the input to the Stage-1 prereg
+draft, which remains a separate, operator-authorized step.
