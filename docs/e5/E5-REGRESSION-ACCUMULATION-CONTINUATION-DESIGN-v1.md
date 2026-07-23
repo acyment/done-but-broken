@@ -258,7 +258,9 @@ new prereg per escalation ("rather than buy a null" retired); precise regression
 lifecycle / flake / tamper / clustering / scheduling machinery goes into the prereg; the
 "faithful continuation" framing of §3's title weakens to "conceptual extension with adopted
 design elements" (the accumulated-surface gate is a stronger treatment than the parent's
-original-tests-only gate — no cross-paper effect-size claims). Open operator decision:
-on-demand runner in arm T vs post-hoc gate only (recommendation: on-demand + guaranteed
-completion-time run). Deltas D1–D10 in the synthesis are the input to the Stage-1 prereg
+original-tests-only gate — no cross-paper effect-size claims). **D10 DECIDED (operator,
+2026-07-23): on-demand runner in arm T** — the executable checks are runnable by the agent
+at any time while working (BDD-like inner loop), plus the guaranteed run at
+completion-declaration; proactive usage is logged as a mechanism measure. Post-hoc-gate-only
+is rejected. Deltas D1–D10 in the synthesis are the input to the Stage-1 prereg
 draft, which remains a separate, operator-authorized step.
