@@ -1,5 +1,9 @@
 # E5 probe-validity external critique — operator-run prompt v1
 
+> **SUPERSEDED 2026-07-23 — do not run.** The program pivoted from the fossil-trap probe
+> question to the regression-accumulation continuation design; the active panel prompt is
+> `E5-DESIGN-DECISION-PANEL-PROMPT-v1.md`. Kept for the record.
+
 Drafted 2026-07-22, immediately after the gitea memoprobe kill (`4ea9eb9`) and the
 probe-validity discussion. Purpose: independent methodological critique of the liveness
 probe's construct validity from several external thinking models, operator-run on
